@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: usercenter
+  mvc:
+    date-format: yyyy-MM-dd
+#    static-path-pattern: /static/**
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/usercenter?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: 1
+
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  type-aliases-package: com.xyc.userc.entity
+  config-location: classpath:mybatis/mybatis-config.xml
+
+logging:
+#  level:
+#   com.xyc.dao.mapper: debug
+#   org.activiti.engine.impl.persistence.entity: trace
+  config: classpath:logback-spring.xml
+#  path: d:/log/activitiService.log
+
+swagger:
+  enable: true

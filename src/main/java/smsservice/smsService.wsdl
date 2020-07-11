@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="com.shasteel.erp.sms" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="SMSService" targetNamespace="com.shasteel.erp.sms">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="com.shasteel.erp.sms" elementFormDefault="unqualified" targetNamespace="com.shasteel.erp.sms" version="1.0">
+
+  <xs:element name="SMSSend" type="tns:SMSSend"/>
+
+  <xs:element name="SMSSendResponse" type="tns:SMSSendResponse"/>
+
+  <xs:complexType name="SMSSend">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SMSSendResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="SMSSend">
+    <wsdl:part element="tns:SMSSend" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SMSSendResponse">
+    <wsdl:part element="tns:SMSSendResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ISMS">
+    <wsdl:operation name="SMSSend">
+      <wsdl:input message="tns:SMSSend" name="SMSSend">
+    </wsdl:input>
+      <wsdl:output message="tns:SMSSendResponse" name="SMSSendResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SMSServiceSoapBinding" type="tns:ISMS">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="SMSSend">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="SMSSend">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="SMSSendResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SMSService">
+    <wsdl:port binding="tns:SMSServiceSoapBinding" name="SMSImplPort">
+      <soap:address location="http://10.88.0.73:8080/sms/service/smsService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

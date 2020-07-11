@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyc.userc.dao.ApplicationMapper">
+
+  <resultMap id="BaseResultMap" type="com.xyc.userc.entity.Application">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="app_name" jdbcType="VARCHAR" property="appName" />
+    <result column="app_uri" jdbcType="VARCHAR" property="appUri" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="user_create" jdbcType="BIGINT" property="userCreate" />
+    <result column="user_modified" jdbcType="BIGINT" property="userModified" />
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sys_application
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.xyc.userc.entity.Application">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into sys_application (id, app_id, app_name, app_uri, parent_id,
+      is_deleted, gmt_create, gmt_modified, 
+      user_create, user_modified)
+      values (#{id,jdbcType=BIGINT}, #{appId,jdbcType=VARCHAR}, #{appName,jdbcType=VARCHAR}, #{appUri,jdbcType=VARCHAR},
+      #{parentId,jdbcType=BIGINT}, #{isDeleted,jdbcType=TINYINT}, #{gmtCreate,jdbcType=TIMESTAMP},
+      #{gmtModified,jdbcType=TIMESTAMP}, #{userCreate,jdbcType=BIGINT}, #{userModified,jdbcType=BIGINT})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.xyc.userc.entity.Application">
+    update sys_application
+    set app_name = #{appName,jdbcType=VARCHAR},
+      app_uri = #{appUri,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      is_deleted = #{isDeleted,jdbcType=TINYINT},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      user_create = #{userCreate,jdbcType=BIGINT},
+      user_modified = #{userModified,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select id, app_id, app_name, app_uri, parent_id, is_deleted, gmt_create, gmt_modified, user_create,
+    user_modified
+    from sys_application
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, app_id, app_name, app_uri, gmt_create, gmt_modified,
+    user_create, user_modified
+    from sys_application
+  </select>
+
+  <select id="selectApplication" resultMap="BaseResultMap">
+    select a.id, a.app_id, a.app_name, a.app_uri, a.gmt_create, a.gmt_modified,
+      a.user_create, a.user_modified
+    from sys_application a
+    left join sys_user b
+    on a.user_create = b.id
+    <where>
+      <if test="appId != null">
+        and a.app_id = #{appId}
+      </if>
+      <if test="appName != null">
+        and a.app_name = #{appName}
+      </if>
+      <if test="createUserNum != null">
+        and b.user_name = #{createUserNum}
+      </if>
+      <if test="createUsername != null">
+        and b.user_realname = #{createUsername}
+      </if>
+      and a.is_deleted = #{isDeleted}
+    </where>
+  </select>
+
+</mapper>
