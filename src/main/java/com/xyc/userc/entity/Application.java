@@ -1,5 +1,7 @@
 package com.xyc.userc.entity;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -10,6 +12,7 @@ import java.util.Date;
  *
  * @mbggenerated do_not_delete_during_merge
  */
+
 public class Application implements Serializable
 {
     private static final long serialVersionUID = 1L;
@@ -17,24 +20,28 @@ public class Application implements Serializable
     /**
      * id
      */
+    @ApiModelProperty(value="主键id", example="1")
     private Long id;
 
     /**
      * 系统appid
      * app_id
      */
+    @ApiModelProperty(value="系统appid", example="0004")
     private String appId;
 
     /**
      * 系统名称
      * app_name
      */
+    @ApiModelProperty(value="系统名称", example="购销系统")
     private String appName;
 
     /**
      * 系统访问路径
      * app_uri
      */
+    @ApiModelProperty(value="系统访问路径", example="ddddd")
     private String appUri;
 
     /**

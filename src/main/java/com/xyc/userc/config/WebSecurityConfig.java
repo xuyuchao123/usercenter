@@ -33,13 +33,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
     @Autowired
     MyAuthenticationEntryPoint myAuthenticationEntryPoint;
 
-    //登录成功处理逻辑
+    //登录成功处理类
     @Autowired
     MyAuthenticationSuccessHandler myAuthenticationSuccessHandler;
 
-    //登录失败处理器
+    //登录失败处理类
     @Autowired
     MyAuthenticationFailureHandler myAuthenticationFailureHandler;
+
+    //退出登录成功处理类
+    @Autowired
+    MyLogoutSuccessHandler myLogoutSuccessHandler;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception
@@ -53,7 +57,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
     protected void configure(HttpSecurity http) throws Exception
     {
         http.cors().and().csrf().disable();
-        http.authorizeRequests().antMatchers("/mes/**","/swagger-ui.html").permitAll()
+        http.authorizeRequests().antMatchers("/mes/**","/v2/api-docs", "/swagger-resources/**", "/images/**",
+                "/configuration/security", "/configuration/ui", "/swagger-ui.html", "/webjars/**").permitAll()
                 .anyRequest().authenticated()
             .and().exceptionHandling()
                 .authenticationEntryPoint(myAuthenticationEntryPoint)   //用户未登录或无访问权限的异常处理逻辑
@@ -61,7 +66,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
                 .loginProcessingUrl("/login")                       //登录form表单action的地址，即处理登录认证的请求地址
                 .permitAll()                                        //允许所有用户
                 .successHandler(myAuthenticationSuccessHandler)     //登录成功处理逻辑
-                .failureHandler(myAuthenticationFailureHandler);    //登录失败处理逻辑
+                .failureHandler(myAuthenticationFailureHandler)    //登录失败处理逻辑
+            .and().logout().
+                    permitAll().//允许所有用户
+                    logoutSuccessHandler(myLogoutSuccessHandler). //登出成功处理逻辑
+                    deleteCookies("JSESSIONID");                //登出之后删除cookie;
 
         MesCodeAuthenticationFilter mesCodeAuthenticationFilter = new MesCodeAuthenticationFilter();
         mesCodeAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));

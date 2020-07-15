@@ -5,6 +5,10 @@ import com.xyc.userc.service.MobileService;
 import com.xyc.userc.service.UserService;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -26,6 +30,7 @@ import java.util.Random;
 @Controller
 @CrossOrigin
 @RequestMapping("/mes")
+@Api(tags = "手机登录相关api")
 public class MobileController
 {
     protected static final Logger LOGGER = LoggerFactory.getLogger(MobileController.class);
@@ -39,10 +44,12 @@ public class MobileController
     //发送验证码
     @RequestMapping(value = "/sendMesCode",method = RequestMethod.GET)
     @ResponseBody
-    public Object addUser(String mobile)
+    @ApiOperation(value="发送短信验证码")
+    @ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType =  "String")
+    public JsonResultObj sendMesCode(String mobile)
     {
         LOGGER.debug("开始生成发送短信验证码 mobile={}",mobile);
-        Object jsonObj = null;
+        JsonResultObj resultObj = null;
         try
         {
             //检查手机号是否存在,mobileExist=1表示存在
@@ -63,119 +70,115 @@ public class MobileController
                 //发送验证码短信功能。。。
                 ISMS smsService = new SMSService().getSMSImplPort();
                 smsService.smsSend(mobile,mesCode);
-                JsonResultObj resultObj = new JsonResultObj(true);
-                jsonObj = JSONObject.toJSON(resultObj);
+                resultObj = new JsonResultObj(true);
             }
             else
             {
                 LOGGER.error("短信验证码生成发送失败，手机号不存在 mobile={}",mobile);
-                JsonResultObj resultObj = new JsonResultObj(false, JsonResultEnum.USER_MOBILE_NOT_EXIST);
-                jsonObj = JSONObject.toJSON(resultObj);
+                resultObj = new JsonResultObj(false, JsonResultEnum.USER_MOBILE_NOT_EXIST);
             }
         }
         catch (Exception e)
         {
             e.printStackTrace();
             LOGGER.error("短信验证码生成发送失败：{}",e.getMessage());
-            JsonResultObj resultObj = new JsonResultObj(false);
-            jsonObj = JSONObject.toJSON(resultObj);
+            resultObj = new JsonResultObj(false);
         }
         LOGGER.debug("结束生成发送短信验证码");
-        return jsonObj;
+        return resultObj;
     }
 
     //重置密码
     @RequestMapping(value = "/resetPassword",method = RequestMethod.GET)
     @ResponseBody
-    public Object resetPassword(String mobile, String newPassword)
+    @ApiOperation(value="重置密码")
+    @ApiImplicitParams({@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "newPassword", value = "新密码", required = true, dataType = "String")})
+    public JsonResultObj resetPassword(String mobile, String newPassword)
     {
         LOGGER.debug("开始重置密码 mobile={} newPassword={}",mobile,newPassword);
-        Object jsonObj = null;
+        JsonResultObj resultObj = null;
         try
         {
             userService.updatePassword(mobile,newPassword);
-            JsonResultObj resultObj = new JsonResultObj(true);
-            jsonObj = JSONObject.toJSON(resultObj);
+            resultObj = new JsonResultObj(true);
             LOGGER.debug("重置密码成功 mobile={} newPassword={}",mobile,newPassword);
         }
         catch(Exception e)
         {
             e.printStackTrace();
             LOGGER.error("重置密码失败：",e.getMessage());
-            JsonResultObj resultObj = new JsonResultObj(false);
-            jsonObj = JSONObject.toJSON(resultObj);
+            resultObj = new JsonResultObj(false);
         }
         LOGGER.debug("结束重置密码 mobile={} newPassword={}",mobile,newPassword);
-        return jsonObj;
+        return resultObj;
     }
 
     //测试用户名是否已注册
     @RequestMapping(value = "/checkUsernameExist",method = RequestMethod.POST)
     @ResponseBody
-    public Object checkUsernameExist(String username)
+    @ApiOperation(value="测试用户名是否已注册")
+    @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String")
+    public JsonResultObj checkUsernameExist(String username)
     {
         LOGGER.debug("开始检查用户名是否已注册 username={}",username);
-        Object jsonObj = null;
+        JsonResultObj resultObj = null;
         try
         {
             int usernameExist = userService.checkUserRegByUsername(username);
             if(usernameExist == 0)
             {
                 LOGGER.debug("用户名未注册 username={}",username);
-                JsonResultObj resultObj = new JsonResultObj(true);
-                jsonObj = JSONObject.toJSON(resultObj);
+                resultObj = new JsonResultObj(true);
             }
             else
             {
                 LOGGER.debug("用户名已注册 username={}",username);
-                JsonResultObj resultObj = new JsonResultObj(false,JsonResultEnum.USER_ACCOUNT_EXIST);
-                jsonObj = JSONObject.toJSON(resultObj);
+                resultObj = new JsonResultObj(false,JsonResultEnum.USER_ACCOUNT_EXIST);
             }
         }
         catch(Exception e)
         {
             e.printStackTrace();
             LOGGER.error("检查用户名是否已注册失败：",e.getMessage());
-            JsonResultObj resultObj = new JsonResultObj(false);
-            jsonObj = JSONObject.toJSON(resultObj);
+            resultObj = new JsonResultObj(false);
         }
         LOGGER.debug("结束检查用户名是否已注册 username={}",username);
-        return jsonObj;
+        return resultObj;
 
     }
 
     //测试手机号是否已注册
     @RequestMapping(value = "/checkMobileExist",method = RequestMethod.POST)
     @ResponseBody
-    public Object checkMobileExist(String mobile)
+    @ApiOperation(value="测试手机号是否已注册")
+    @ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String")
+    public JsonResultObj checkMobileExist(String mobile)
     {
         LOGGER.debug("开始检查手机号是否已注册 mobile={}",mobile);
-        Object jsonObj = null;
+        JsonResultObj resultObj = null;
         try
         {
             int mobileExist = userService.checkUserRegByMobile(mobile);
             if(mobileExist == 0)
             {
                 LOGGER.debug("手机号未注册 mobile={}",mobile);
-                JsonResultObj resultObj = new JsonResultObj(true);
-                jsonObj = JSONObject.toJSON(resultObj);
+                resultObj = new JsonResultObj(true);
             }
             else
             {
                 LOGGER.debug("手机号已注册 mobile={}",mobile);
-                JsonResultObj resultObj = new JsonResultObj(false,JsonResultEnum.USER_MOBILE_EXIST);
-                jsonObj = JSONObject.toJSON(resultObj);
+                resultObj = new JsonResultObj(false,JsonResultEnum.USER_MOBILE_EXIST);
             }
         }
         catch(Exception e)
         {
             e.printStackTrace();
             LOGGER.error("检查手机号是否已注册失败：",e.getMessage());
-            JsonResultObj resultObj = new JsonResultObj(false);
-            jsonObj = JSONObject.toJSON(resultObj);
+            resultObj = new JsonResultObj(false);
         }
         LOGGER.debug("结束检查用户名是否已注册 mobile={}",mobile);
-        return jsonObj;
+        return resultObj;
     }
 
 }

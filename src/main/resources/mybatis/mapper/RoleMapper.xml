@@ -58,8 +58,8 @@
   </select>
 
   <resultMap id="selectByUserIdMap" extends="BaseResultMap"  type="com.xyc.userc.entity.Role">
-    <association column="{id=permission_id}" fetchType="lazy" property="permission" select="com.xyc.userc.dao.PermissionMapper.selectByPrimaryKey" />
-    <association column="{id=application_id}" fetchType="lazy" property="application" select="com.xyc.userc.dao.ApplicationMapper.selectByPrimaryKey" />
+    <association column="{id=permission_id}" fetchType="eager" property="permission" select="com.xyc.userc.dao.PermissionMapper.selectByPrimaryKey" />
+    <association column="{id=application_id}" fetchType="eager" property="application" select="com.xyc.userc.dao.ApplicationMapper.selectByPrimaryKey" />
   </resultMap>
 
   <select id="selectByUserId" resultMap="selectByUserIdMap">

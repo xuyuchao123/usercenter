@@ -1,6 +1,8 @@
 package com.xyc.userc.util;
 
 import com.github.pagehelper.Page;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -8,11 +10,16 @@ import java.io.Serializable;
  * Created by 1 on 2020/6/29.
  * 统一json返回结果实体
  */
+@ApiModel(value="统一接口返回值类型")
 public class JsonResultObj<T> implements Serializable
 {
+    @ApiModelProperty(value="请求是否成功", example="true", position=0)
     private Boolean isSuccess;
+    @ApiModelProperty(value="请求结果代码", example="000", position=1)
     private Integer resCode;
+    @ApiModelProperty(value="请求结果信息", example="成功", position=2)
     private String resMsg;
+    @ApiModelProperty(value="请求结果对象", position=3)
     private T resData;
 
     public JsonResultObj()

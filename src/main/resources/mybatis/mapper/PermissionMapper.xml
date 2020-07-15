@@ -41,7 +41,7 @@
   </update>
 
   <resultMap id="selectByPrimaryKeyMap" type="com.xyc.userc.entity.Permission" extends="BaseResultMap">
-    <collection property="menus" column="{permissionId=id}" fetchType="lazy"
+    <collection property="menus" column="{permissionId=id}" fetchType="eager"
                 select="com.xyc.userc.dao.MenuMapper.selectByPermissionId" />
   </resultMap>
 

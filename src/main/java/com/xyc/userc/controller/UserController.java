@@ -6,6 +6,10 @@ import com.xyc.userc.entity.User;
 import com.xyc.userc.service.ApplicationService;
 import com.xyc.userc.service.UserService;
 import com.xyc.userc.util.JsonResultObj;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +30,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/user")
+@Api(tags = "系统用户管理相关api")
 public class UserController
 {
     protected static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
@@ -35,10 +40,16 @@ public class UserController
 
     @RequestMapping(value = "/addUser",method = RequestMethod.POST)
     @ResponseBody
-    public Object addUser(String username, String password, String userRealName, String userCreate)
+    @ApiOperation(value="注册用户")
+    @ApiImplicitParams({@ApiImplicitParam(name="username", value="用户名", required=true, dataType="String"),
+            @ApiImplicitParam(name="password", value="密码", required=true, dataType="String"),
+            @ApiImplicitParam(name="userRealName", value="真实姓名", required=true, dataType="String"),
+            @ApiImplicitParam(name="userCreate", value="创建人", required=true, dataType="String")})
+
+    public JsonResultObj addUser(String username, String password, String userRealName, String userCreate)
     {
         LOGGER.debug("开始新增用户");
-        Object jsonObj = null;
+        JsonResultObj resultObj = null;
         try
         {
             byte isDelete = 0;
@@ -46,36 +57,30 @@ public class UserController
             byte isLocked = 0;
             userService.addUser( username, password, userRealName, isDelete,
                     isEnable, isLocked, Long.valueOf(userCreate));
-            JsonResultObj resultObj = new JsonResultObj(true);
-            jsonObj = JSONObject.toJSON(resultObj);
+            resultObj = new JsonResultObj(true);
         }
         catch (Exception e)
         {
             e.printStackTrace();
             LOGGER.error("新增用户失败：{}",e.getMessage());
-            JsonResultObj resultObj = new JsonResultObj(false);
-            jsonObj = JSONObject.toJSON(resultObj);
+            resultObj = new JsonResultObj(false);
         }
         LOGGER.debug("结束新增用户");
-        return jsonObj;
+        return resultObj;
     }
 
     @RequestMapping(value = "/getCurrentUser",method = RequestMethod.GET)
     @ResponseBody
-    public Object getCurrentUser(HttpSession session)
+    @ApiOperation(value="获取当前用户信息")
+    public JsonResultObj getCurrentUser()
     {
         LOGGER.debug("开始获取当前用户信息");
-//        session.getAttribute("")
-        Object jsonObj = null;
         User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        System.out.println(user);
         JsonResultObj resultObj = new JsonResultObj(true,user);
-        jsonObj = JSONObject.toJSON(resultObj);
         LOGGER.debug("结束获取当前用户信息");
-        return jsonObj;
+        return resultObj;
     }
-
-
 
 
 }
