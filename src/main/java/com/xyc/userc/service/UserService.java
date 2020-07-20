@@ -12,8 +12,8 @@ import java.util.List;
  */
 public interface UserService extends UserDetailsService
 {
-     void addUser(String userName, String password, String userRealName, Byte isDelete,
-                        Byte isEnable, Byte isLocked, Long userCreate) throws Exception;
+     void addUser(String userName, String password, String mobile, String userRealName, Byte isDelete,
+                        Byte isEnable, Byte isLocked, Long userCreate, String mesCode) throws Exception;
      User loadUserByMobile(String var1) throws UsernameNotFoundException;
 
      int checkUserExistByMobile(String mobile) throws Exception;

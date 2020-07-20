@@ -3,8 +3,11 @@ package com.xyc.userc.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.xyc.userc.entity.Application;
 import com.xyc.userc.entity.User;
+import com.xyc.userc.security.MesCodeErrorException;
+import com.xyc.userc.security.MesCodeExpiredException;
 import com.xyc.userc.service.ApplicationService;
 import com.xyc.userc.service.UserService;
+import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -43,10 +46,11 @@ public class UserController
     @ApiOperation(value="注册用户")
     @ApiImplicitParams({@ApiImplicitParam(name="username", value="用户名", required=true, dataType="String"),
             @ApiImplicitParam(name="password", value="密码", required=true, dataType="String"),
-            @ApiImplicitParam(name="userRealName", value="真实姓名", required=true, dataType="String"),
-            @ApiImplicitParam(name="userCreate", value="创建人", required=true, dataType="String")})
+            @ApiImplicitParam(name="mobile", value="手机号", required=true, dataType="String"),
+            @ApiImplicitParam(name="mesCode", value="短信验证码", required=true, dataType="String"),
+            })
 
-    public JsonResultObj addUser(String username, String password, String userRealName, String userCreate)
+    public JsonResultObj addUser(String username, String password, String mobile, String mesCode)
     {
         LOGGER.debug("开始新增用户");
         JsonResultObj resultObj = null;
@@ -55,15 +59,26 @@ public class UserController
             byte isDelete = 0;
             byte isEnable = 1;
             byte isLocked = 0;
-            userService.addUser( username, password, userRealName, isDelete,
-                    isEnable, isLocked, Long.valueOf(userCreate));
+            userService.addUser(username, password, mobile, "", isDelete,
+                    isEnable, isLocked, 1L,mesCode);
             resultObj = new JsonResultObj(true);
         }
         catch (Exception e)
         {
-            e.printStackTrace();
             LOGGER.error("新增用户失败：{}",e.getMessage());
-            resultObj = new JsonResultObj(false);
+            if(e instanceof MesCodeExpiredException)
+            {
+                resultObj = new JsonResultObj(false, JsonResultEnum.USER_MESCODE_EXPIRED);
+            }
+            else if(e instanceof MesCodeErrorException)
+            {
+                resultObj = new JsonResultObj(false, JsonResultEnum.USER_MESCODE_ERROR);
+            }
+            else
+            {
+                e.printStackTrace();
+                resultObj = new JsonResultObj(false);
+            }
         }
         LOGGER.debug("结束新增用户");
         return resultObj;

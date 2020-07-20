@@ -5,7 +5,6 @@
   <resultMap id="BaseResultMap" type="com.xyc.userc.entity.Menu">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
-    <result column="menu_url" jdbcType="VARCHAR" property="menuUrl" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
     <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
     <result column="parent_id" jdbcType="BIGINT" property="parentId" />
@@ -20,10 +19,10 @@
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into sys_menu (id, menu_name, menu_url, 
+    insert into sys_menu (id, menu_name,
       gmt_create, gmt_modified, parent_id
       )
-    values (#{id,jdbcType=BIGINT}, #{menuName,jdbcType=VARCHAR}, #{menuUrl,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{menuName,jdbcType=VARCHAR},
       #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, #{parentId,jdbcType=BIGINT}
       )
   </insert>
@@ -31,7 +30,6 @@
   <update id="updateByPrimaryKey" parameterType="com.xyc.userc.entity.Menu">
     update sys_menu
     set menu_name = #{menuName,jdbcType=VARCHAR},
-      menu_url = #{menuUrl,jdbcType=VARCHAR},
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
       parent_id = #{parentId,jdbcType=BIGINT}
@@ -39,18 +37,18 @@
   </update>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap">
-    select id, menu_name, menu_url, gmt_create, gmt_modified, parent_id
+    select id, menu_name, gmt_create, gmt_modified, parent_id
     from sys_menu
     where id = #{id,jdbcType=BIGINT}
   </select>
 
   <select id="selectAll" resultMap="BaseResultMap">
-    select id, menu_name, menu_url, gmt_create, gmt_modified, parent_id
+    select id, menu_name, gmt_create, gmt_modified, parent_id
     from sys_menu
   </select>
 
   <select id="selectByPermissionId" resultMap="BaseResultMap">
-    select m.id, m.menu_name, m.menu_url, m.gmt_create, m.gmt_modified, m.parent_id from
+    select m.id, m.menu_name, m.gmt_create, m.gmt_modified, m.parent_id from
     sys_permission_menu pm
     left join sys_menu m on pm.menu_id = m.id
     where pm.permission_id = #{permissionId}

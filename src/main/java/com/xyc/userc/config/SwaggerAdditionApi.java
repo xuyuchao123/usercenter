@@ -2,21 +2,22 @@ package com.xyc.userc.config;
 
 import com.fasterxml.classmate.TypeResolver;
 import com.google.common.collect.Sets;
+import com.xyc.userc.util.JsonResultObj;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import springfox.documentation.builders.OperationBuilder;
 import springfox.documentation.builders.ParameterBuilder;
+import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiDescription;
+import springfox.documentation.service.ResponseMessage;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.ApiListingScannerPlugin;
 import springfox.documentation.spi.service.contexts.DocumentationContext;
 import springfox.documentation.spring.web.readers.operation.CachingOperationNameGenerator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by 1 on 2020/7/14.
@@ -83,6 +84,7 @@ public class SwaggerAdditionApi implements ApiListingScannerPlugin
                                         .build()
                                 )
                             )
+                            .responseMessages(responseMessages())
                             .build()
                     ),
                     false
@@ -106,6 +108,28 @@ public class SwaggerAdditionApi implements ApiListingScannerPlugin
             )
         );
     }
+
+    /**
+     * 接口响应信息集合
+     */
+    private Set<ResponseMessage> responseMessages()
+    {
+        return Collections.singleton
+        (
+            new ResponseMessageBuilder()
+                .code(200)
+                .message("OK")
+                .responseModel
+                (
+                    new ModelRef
+                    (
+                        JsonResultObj.class.getSimpleName()
+                    )
+                )
+                .build()
+        );
+    }
+
 
     @Override
     public boolean supports(DocumentationType documentationType)

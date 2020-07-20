@@ -26,10 +26,10 @@ public class Menu implements Serializable
     private String menuName;
 
     /**
-     * 菜单url
+     * requestpath
      * menu_url
      */
-    private String menuUrl;
+    private Requestpath requestpath;
 
     /**
      * 创建时间
@@ -65,12 +65,12 @@ public class Menu implements Serializable
         this.menuName = menuName;
     }
 
-    public String getMenuUrl() {
-        return menuUrl;
+    public Requestpath getRequestpath() {
+        return requestpath;
     }
 
-    public void setMenuUrl(String menuUrl) {
-        this.menuUrl = menuUrl;
+    public void setRequestpath(Requestpath requestpath) {
+        this.requestpath = requestpath;
     }
 
     public Date getGmtCreate() {

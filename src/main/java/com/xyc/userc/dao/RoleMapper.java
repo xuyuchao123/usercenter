@@ -15,4 +15,6 @@ public interface RoleMapper {
     int updateByPrimaryKey(Role record);
 
     List<Role> selectByUserId(Long userId);
+
+    List<Long> selectIdsByPath(String url);
 }

@@ -1,8 +1,11 @@
 package com.xyc.userc.service.impl;
 
+import com.xyc.userc.dao.MobileMapper;
 import com.xyc.userc.dao.UserMapper;
 import com.xyc.userc.entity.Role;
 import com.xyc.userc.entity.User;
+import com.xyc.userc.security.MesCodeErrorException;
+import com.xyc.userc.security.MesCodeExpiredException;
 import com.xyc.userc.security.MobileNotFoundException;
 import com.xyc.userc.service.UserService;
 import org.slf4j.Logger;
@@ -30,6 +33,9 @@ public class UserServiceImpl implements UserService
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private MobileMapper mobileMapper;
 
 //    重写认证方法,实现自定义springsecurity用户认证（用户名密码登录）
     @Override
@@ -117,13 +123,31 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public void addUser(String userName, String password, String userRealName, Byte isDelete,
-                        Byte isEnable, Byte isLocked, Long userCreate) throws Exception
+    public void addUser(String userName, String password, String mobile, String userRealName, Byte isDelete,
+                        Byte isEnable, Byte isLocked, Long userCreate, String mesCode) throws Exception
     {
-        LOGGER.debug("进入新增用户方法");
+        LOGGER.debug("进入新增用户方法 mobile={} mesCode={}",mobile,mesCode);
+        String storedMesCode = mobileMapper.selectMesCodeByMobile(mobile);
+        if(storedMesCode == null)
+        {
+            LOGGER.debug("短信验证码过期 mobile={}",mobile);
+            throw new MesCodeExpiredException("短信验证码过期，请点击重新发送");
+        }
+        if(!storedMesCode.equals(mesCode))
+        {
+            LOGGER.debug("短信验证码错误 mobile={} storedMesCode={} mesCode={}",mobile,storedMesCode,mesCode);
+            throw new MesCodeErrorException("短信验证码错误");
+        }
+        else        //验证通过，将当前验证码改为无效状态
+        {
+            byte status = 0;
+            LOGGER.debug("验证通过，将当前验证码改为无效状态 mobile={} storedMesCode={}",mobile,storedMesCode);
+            mobileMapper.updateMesCodeStatus(mobile,status,new Date());
+        }
         User user = new User();
         user.setUserName(userName);
         user.setPassword(password);
+        user.setMobile(mobile);
         user.setUserRealName(userRealName);
         user.setIsDeleted(isDelete);
         user.setIsEnable(isEnable);
@@ -134,7 +158,7 @@ public class UserServiceImpl implements UserService
         user.setUserModified(userCreate);
         int id = userMapper.insert(user);
         System.out.println(id);
-        LOGGER.debug("结束新增用户方法");
+        LOGGER.debug("结束新增用户方法 mobile={} mesCode={}",mobile,mesCode);
     }
 
 

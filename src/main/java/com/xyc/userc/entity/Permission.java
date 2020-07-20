@@ -26,7 +26,7 @@ public class Permission implements Serializable
      */
     private String permissionName;
 
-    private List<Menu> menus;
+    private List<Requestpath> requestpaths;
 
     /**
      * 1：已删除 0：未删除
@@ -74,12 +74,12 @@ public class Permission implements Serializable
         this.permissionName = permissionName;
     }
 
-    public List<Menu> getMenus() {
-        return menus;
+    public List<Requestpath> getRequestpaths() {
+        return requestpaths;
     }
 
-    public void setMenus(List<Menu> menus) {
-        this.menus = menus;
+    public void setRequestpaths(List<Requestpath> requestpaths) {
+        this.requestpaths = requestpaths;
     }
 
     public Byte getIsDeleted() {
