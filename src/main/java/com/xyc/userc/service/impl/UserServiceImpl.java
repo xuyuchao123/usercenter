@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,9 @@ public class UserServiceImpl implements UserService
 
     @Autowired
     private MobileMapper mobileMapper;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 //    重写认证方法,实现自定义springsecurity用户认证（用户名密码登录）
     @Override
@@ -146,7 +150,7 @@ public class UserServiceImpl implements UserService
         }
         User user = new User();
         user.setUserName(userName);
-        user.setPassword(password);
+        user.setPassword(bCryptPasswordEncoder.encode(password));
         user.setMobile(mobile);
         user.setUserRealName(userRealName);
         user.setIsDeleted(isDelete);
