@@ -41,48 +41,6 @@ public class UserController
     @Resource
     UserService userService;
 
-    @RequestMapping(value = "/addUser",method = RequestMethod.POST)
-    @ResponseBody
-    @ApiOperation(value="注册用户")
-    @ApiImplicitParams({@ApiImplicitParam(name="username", value="用户名", required=true, dataType="String"),
-            @ApiImplicitParam(name="password", value="密码", required=true, dataType="String"),
-            @ApiImplicitParam(name="mobile", value="手机号", required=true, dataType="String"),
-            @ApiImplicitParam(name="mesCode", value="短信验证码", required=true, dataType="String"),
-            })
-
-    public JsonResultObj addUser(String username, String password, String mobile, String mesCode)
-    {
-        LOGGER.debug("开始新增用户");
-        JsonResultObj resultObj = null;
-        try
-        {
-            byte isDelete = 0;
-            byte isEnable = 1;
-            byte isLocked = 0;
-            userService.addUser(username, password, mobile, "", isDelete,
-                    isEnable, isLocked, 1L,mesCode);
-            resultObj = new JsonResultObj(true);
-        }
-        catch (Exception e)
-        {
-            LOGGER.error("新增用户失败：{}",e.getMessage());
-            if(e instanceof MesCodeExpiredException)
-            {
-                resultObj = new JsonResultObj(false, JsonResultEnum.USER_MESCODE_EXPIRED);
-            }
-            else if(e instanceof MesCodeErrorException)
-            {
-                resultObj = new JsonResultObj(false, JsonResultEnum.USER_MESCODE_ERROR);
-            }
-            else
-            {
-                e.printStackTrace();
-                resultObj = new JsonResultObj(false);
-            }
-        }
-        LOGGER.debug("结束新增用户");
-        return resultObj;
-    }
 
     @RequestMapping(value = "/getCurrentUser",method = RequestMethod.GET)
     @ResponseBody
