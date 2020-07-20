@@ -24,11 +24,11 @@
   </delete>
 
   <insert id="insert" parameterType="com.xyc.userc.entity.User">
-    insert into sys_user (user_name, user_Realname,mobile,
+    insert into sys_user (user_name, password, user_Realname,mobile,
       is_deleted, is_enable, is_locked, gmt_create,
       gmt_modified, user_create, user_modified, last_login_time
       )
-    values (#{userName,jdbcType=VARCHAR}, #{userRealName,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},
+    values (#{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{userRealName,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},
       #{isDeleted,jdbcType=TINYINT}, #{isEnable,jdbcType=TINYINT}, #{isLocked,jdbcType=TINYINT}, #{gmtCreate,jdbcType=TIMESTAMP},
       #{gmtModified,jdbcType=TIMESTAMP}, #{userCreate,jdbcType=BIGINT}, #{userModified,jdbcType=BIGINT},
       #{lastLoginTime,jdbcType=TIMESTAMP}
