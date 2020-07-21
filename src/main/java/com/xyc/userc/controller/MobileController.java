@@ -44,39 +44,43 @@ public class MobileController
     @RequestMapping(value = "/sendMesCode",method = RequestMethod.GET)
     @ResponseBody
     @ApiOperation(value="发送短信验证码")
-    @ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType =  "String")
+    @ApiImplicitParams({@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType =  "String"),
+            @ApiImplicitParam(name = "type", value = "操作类型", required = true, dataType =  "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：发送成功 isSuccess=false：发送失败，resMsg为错误信息")})
-    public JsonResultObj sendMesCode(String mobile)
+    public JsonResultObj sendMesCode(String mobile, String type)
     {
-        LOGGER.debug("开始生成发送短信验证码 mobile={}",mobile);
+        LOGGER.debug("开始生成发送短信验证码 mobile={},type={}",mobile,type);
         JsonResultObj resultObj = null;
         try
         {
-            //检查手机号是否存在,mobileExist=1表示存在
-            int mobileExist =  userService.checkUserExistByMobile(mobile);
-            if(mobileExist == 1)
+            if(!"register".equals(type))
             {
-                String mesCode = null;
-                //检查是否存在有效的短信验证码
-                mesCode = mobileService.loadMesCodeByMobile(mobile);
-                if(mesCode == null)
+                //检查手机号是否存在,mobileExist=1表示存在
+                int mobileExist =  userService.checkUserExistByMobile(mobile);
+                if(mobileExist != 1)
                 {
-                    //不存在有效验证码就随机生成一个6位数短信验证码
-                    mesCode = String.valueOf(new Random().nextInt(899999) + 100000);
-                    //将新生成的验证码存入数据库
-                    mobileService.addMesCode(mobile, mesCode);
+                    LOGGER.error("短信验证码生成发送失败，手机号不存在 mobile={}",mobile);
+                    resultObj = new JsonResultObj(false, JsonResultEnum.USER_MOBILE_NOT_EXIST);
+                    return resultObj;
                 }
-                LOGGER.debug("成功生成短信验证码 mesCode={}",mesCode);
-                //发送验证码短信功能。。。
-                ISMS smsService = new SMSService().getSMSImplPort();
-                smsService.smsSend(mobile,mesCode);
-                resultObj = new JsonResultObj(true);
             }
-            else
+
+            String mesCode = null;
+            //检查是否存在有效的短信验证码
+            mesCode = mobileService.loadMesCodeByMobile(mobile);
+            if(mesCode == null)
             {
-                LOGGER.error("短信验证码生成发送失败，手机号不存在 mobile={}",mobile);
-                resultObj = new JsonResultObj(false, JsonResultEnum.USER_MOBILE_NOT_EXIST);
+                //不存在有效验证码就随机生成一个6位数短信验证码
+                mesCode = String.valueOf(new Random().nextInt(899999) + 100000);
+                //将新生成的验证码存入数据库
+                mobileService.addMesCode(mobile, mesCode);
             }
+            LOGGER.debug("成功生成短信验证码 mesCode={}",mesCode);
+            //发送验证码短信功能。。。
+            ISMS smsService = new SMSService().getSMSImplPort();
+            smsService.smsSend(mobile,mesCode);
+            resultObj = new JsonResultObj(true);
+
         }
         catch (Exception e)
         {
