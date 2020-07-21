@@ -9,10 +9,7 @@ import com.xyc.userc.service.ApplicationService;
 import com.xyc.userc.service.UserService;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -45,6 +42,7 @@ public class UserController
     @RequestMapping(value = "/getCurrentUser",method = RequestMethod.GET)
     @ResponseBody
     @ApiOperation(value="获取当前用户信息")
+    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：获取成功 isSuccess=false：获取失败，resMsg为错误信息")})
     public JsonResultObj getCurrentUser()
     {
         LOGGER.debug("开始获取当前用户信息");

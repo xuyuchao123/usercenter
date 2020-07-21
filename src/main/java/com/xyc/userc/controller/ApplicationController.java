@@ -34,6 +34,8 @@ public class ApplicationController
     @RequestMapping(value = "/queryAllApplication",method = RequestMethod.GET)
     @ResponseBody
     @ApiOperation(value="查询所有已注册系统列表")
+    @ApiResponses(
+            {@ApiResponse(code = 200, message = "isSuccess=true：查询成功，resDat返回系统对象列表 isSuccess=false：查询失败，resMsg为错误信息，resData为空")})
     public JsonResultObj queryAllApplication()
     {
         LOGGER.debug("开始查询已注册系统列表");
@@ -69,7 +71,8 @@ public class ApplicationController
             @ApiImplicitParam(name = "createUsername", value = "创建人姓名", required = false, dataType = "String"),
             @ApiImplicitParam(name = "pageNum", value = "要显示第几页的数据", required = false, dataType = "String"),
             @ApiImplicitParam(name = "pageSize", value = "每页显示条数", required = false, dataType = "String")})
-
+    @ApiResponses(
+            {@ApiResponse(code = 200, message = "isSuccess=true：查询成功，resData返回系统对象列表 isSuccess=false：查询失败，resMsg为错误信息，resData为空")})
     public JsonResultObj queryApplication(String appId, String appName, String createUserNum,
                                    String createUsername, String pageNum, String pageSize)
     {

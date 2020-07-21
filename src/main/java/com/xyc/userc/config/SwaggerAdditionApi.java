@@ -84,7 +84,7 @@ public class SwaggerAdditionApi implements ApiListingScannerPlugin
                                         .build()
                                 )
                             )
-                            .responseMessages(responseMessages())
+                            .responseMessages(loginResponseMessages())
                             .build()
                     ),
                     false
@@ -101,6 +101,7 @@ public class SwaggerAdditionApi implements ApiListingScannerPlugin
                             .summary("用户退出登录")
 //                            .notes("用户登录3")//方法描述
                             .tags(Sets.newHashSet("系统用户登入登出相关api"))//归类标签
+                            .responseMessages(logoutResponseMessages())
                             .build()
                     ),
                     false
@@ -110,15 +111,36 @@ public class SwaggerAdditionApi implements ApiListingScannerPlugin
     }
 
     /**
-     * 接口响应信息集合
+     * 登录接口响应信息集合
      */
-    private Set<ResponseMessage> responseMessages()
+    private Set<ResponseMessage> loginResponseMessages()
     {
         return Collections.singleton
         (
             new ResponseMessageBuilder()
                 .code(200)
-                .message("OK")
+                .message("isSuccess=true：登录成功，resData返回用户信息对象 isSuccess=false：登录失败，resMsg为错误信息，resData为空")
+                .responseModel
+                (
+                    new ModelRef
+                    (
+                        JsonResultObj.class.getSimpleName()
+                    )
+                )
+                .build()
+        );
+    }
+
+    /**
+     * 退出登录接口响应信息集合
+     */
+    private Set<ResponseMessage> logoutResponseMessages()
+    {
+        return Collections.singleton
+        (
+            new ResponseMessageBuilder()
+                .code(200)
+                .message("isSuccess=true：退出登录成功 isSuccess=false：退出登录失败，resMsg为错误信息")
                 .responseModel
                 (
                     new ModelRef
