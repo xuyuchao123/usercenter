@@ -93,7 +93,7 @@ public class MobileController
     }
 
     //重置密码
-    @RequestMapping(value = "/resetPassword",method = RequestMethod.GET)
+    @RequestMapping(value = "/resetPassword",method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(value="重置密码")
     @ApiImplicitParams({@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String"),

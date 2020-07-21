@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService
     public void updatePassword(String mobile, String newPassword) throws Exception
     {
         LOGGER.debug("进入更改用户密码方法mobile={} newPassword={}",mobile,newPassword);
-        userMapper.updatePwdByMobile(mobile,newPassword);
+        userMapper.updatePwdByMobile(mobile,bCryptPasswordEncoder.encode(newPassword));
         LOGGER.debug("结束更改用户密码方法mobile={} newPassword={}",mobile,newPassword);
 
     }

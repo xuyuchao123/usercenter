@@ -130,7 +130,7 @@
 
   <update id="updatePwdByMobile" >
     update sys_user
-    set password = #{newPassword,jdbcType=VARCHAR},
+    set password = #{newPassword,jdbcType=VARCHAR} 
     where mobile = #{mobile,jdbcType=VARCHAR}
   </update>
 
