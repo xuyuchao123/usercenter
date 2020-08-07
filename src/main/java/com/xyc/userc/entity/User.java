@@ -218,7 +218,7 @@ public class User implements Serializable,UserDetails
         List<SimpleGrantedAuthority> authorities = new ArrayList<>(roles.size());
         for (Role role : roles)
         {
-            authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
+            authorities.add(new SimpleGrantedAuthority(String.valueOf(role.getId())));
         }
         return authorities;
     }

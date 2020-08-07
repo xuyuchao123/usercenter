@@ -6,6 +6,7 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 
 import java.util.Collection;
@@ -13,7 +14,9 @@ import java.util.List;
 
 /**
  * Created by 1 on 2020/7/17.
+ * 根据请求路径从数据库中查出当前资源路径需要哪些权限才能访问
  */
+@Component
 public class MyFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource
 {
     @Autowired
@@ -55,6 +58,6 @@ public class MyFilterInvocationSecurityMetadataSource implements FilterInvocatio
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return false;
+        return true;
     }
 }

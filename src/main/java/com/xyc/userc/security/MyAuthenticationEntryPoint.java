@@ -14,7 +14,7 @@ import java.io.IOException;
 
 /**
  * Created by 1 on 2020/6/28.
- * 用于处理用户未登录或无访问权限的异常
+ * 用于处理用户未登录的异常
  */
 @Component
 public class MyAuthenticationEntryPoint implements AuthenticationEntryPoint

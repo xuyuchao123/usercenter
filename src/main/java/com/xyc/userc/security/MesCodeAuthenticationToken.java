@@ -22,7 +22,7 @@ public class MesCodeAuthenticationToken extends AbstractAuthenticationToken
     private Object mesCode;
 
 
-     //构建一个没有鉴权的 SmsCodeAuthenticationToken
+     //构建一个没有鉴权的 MesCodeAuthenticationToken
     public MesCodeAuthenticationToken(Object principal,Object mesCode)
     {
         super(null);

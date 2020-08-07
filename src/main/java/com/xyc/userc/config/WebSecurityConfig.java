@@ -7,12 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -45,6 +48,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
     @Autowired
     MyLogoutSuccessHandler myLogoutSuccessHandler;
 
+    @Autowired
+    MyAccessDecisionManager myAccessDecisionManager;
+
+    @Autowired
+    MyFilterInvocationSecurityMetadataSource myFilterInvocationSecurityMetadataSource;
+
+//    @Autowired
+//    private MyAbstractSecurityInterceptor myAbstractSecurityInterceptor;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception
     {
@@ -57,11 +69,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
     protected void configure(HttpSecurity http) throws Exception
     {
         http.cors().and().csrf().disable();
-        http.authorizeRequests().antMatchers("/mes/**", "/error", "/v2/api-docs", "/swagger-resources/**", "/images/**",
-                "/configuration/security", "/configuration/ui", "/swagger-ui.html", "/webjars/**").permitAll()
+//        http.authorizeRequests().antMatchers("/mes/**", "/error", "/v2/api-docs", "/swagger-resources/**", "/images/**",
+//                "/configuration/security", "/configuration/ui", "/swagger-ui.html", "/webjars/**").permitAll()
+//                .anyRequest().authenticated()
+        http.authorizeRequests()
                 .anyRequest().authenticated()
+//            withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+//                @Override
+//                public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+//                    o.setAccessDecisionManager(myAccessDecisionManager);//决策管理器
+//                    o.setSecurityMetadataSource(myFilterInvocationSecurityMetadataSource);//安全元数据源
+//                    return o;
+//                }
+//            })
+
             .and().exceptionHandling()
-                .authenticationEntryPoint(myAuthenticationEntryPoint)   //用户未登录或无访问权限的异常处理逻辑
+                .authenticationEntryPoint(myAuthenticationEntryPoint)   //用户未登录的异常处理逻辑
             .and().formLogin()
                 .loginProcessingUrl("/login")                       //登录form表单action的地址，即处理登录认证的请求地址
                 .permitAll()                                        //允许所有用户
@@ -83,6 +106,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 
         http.authenticationProvider(mesCodeAuthenticationProvider)
                 .addFilterAfter(mesCodeAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        MyAbstractSecurityInterceptor myAbstractSecurityInterceptor = new MyAbstractSecurityInterceptor();
+        myAbstractSecurityInterceptor.setMyAccessDecisionManager(myAccessDecisionManager);
+        myAbstractSecurityInterceptor.setSecurityMetadataSource(myFilterInvocationSecurityMetadataSource);
+        http.addFilterAfter(myAbstractSecurityInterceptor, FilterSecurityInterceptor.class);
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception
+    {
+        super.configure(web);
+        web.ignoring().antMatchers("/mes/**", "/error", "/v2/api-docs", "/swagger-resources/**", "/images/**",
+                "/configuration/security", "/configuration/ui", "/swagger-ui.html", "/webjars/**");
     }
 
     @Bean
