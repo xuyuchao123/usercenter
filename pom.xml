@@ -103,6 +103,12 @@
 			<version>2.9.2</version>
 		</dependency>
 
+		<!--<dependency>-->
+			<!--<groupId>com.avei.shriety</groupId>-->
+			<!--<artifactId>wx_sdk</artifactId>-->
+			<!--<version>0.0.1-Release</version>-->
+		<!--</dependency>-->
+
 
 	</dependencies>
 
