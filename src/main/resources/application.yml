@@ -1,6 +1,6 @@
 spring:
   application:
-    name: usercenter
+    name: mobile
   mvc:
     date-format: yyyy-MM-dd
 #    static-path-pattern: /static/**
@@ -24,6 +24,9 @@ logging:
 
 swagger:
   enable: true
+
+server:
+  port: 3333
 
 
 

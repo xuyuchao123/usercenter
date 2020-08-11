@@ -4,6 +4,7 @@ import com.avei.shriety.wx_sdk.pojo.ReturnData;
 import com.avei.shriety.wx_sdk.template.Template;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +12,7 @@ import java.util.Map;
 /**
  * Created by 1 on 2020/8/11.
  */
-@Controller
+@RestController
 public class TemplateController
 {
     @GetMapping("/mes/template")
