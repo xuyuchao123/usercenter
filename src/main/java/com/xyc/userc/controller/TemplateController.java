@@ -1,13 +1,16 @@
 package com.xyc.userc.controller;
 
-import com.avei.shriety.wx_sdk.pojo.ReturnData;
-import com.avei.shriety.wx_sdk.template.Template;
-import org.springframework.stereotype.Controller;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.avei.shriety.wx_sdk.constant.WxsdkConstant;
+import com.avei.shriety.wx_sdk.pojo.ReturnData;
+import com.avei.shriety.wx_sdk.template.Template;
 
 /**
  * Created by 1 on 2020/8/11.
@@ -30,5 +33,10 @@ public class TemplateController {
 		propsMap.put("KEYWORD4", "测试数据");
 		propsMap.put("REMARK", "测试数据");
 		return Template.send(propsMap);
+	}
+
+	@GetMapping("/mes/userinfo")
+	public ReturnData userinfo(HttpSession session) {
+		return new ReturnData(ReturnData.SUCCESS_CODE, session.getAttribute(WxsdkConstant.USERINFO));
 	}
 }
