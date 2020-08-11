@@ -10,6 +10,11 @@ spring:
     username: root
     password: 1
 
+  resources:
+    static-locations:
+    - file:D:/opt/weixin/mobile
+    - file:/opt/weixin/mobile
+
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
   type-aliases-package: com.xyc.userc.entity
@@ -27,6 +32,10 @@ swagger:
 
 server:
   port: 3333
+  servlet:
+    context-path: /mobile
+
+
 
 
 
