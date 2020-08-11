@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class UsercenterApplication {
 
 	public static void main(String[] args) {
-		WxsdkConstant.ISPROXY = false;
+//		WxsdkConstant.ISPROXY = false;
 
 		SpringApplication.run(UsercenterApplication.class, args);
 	}
