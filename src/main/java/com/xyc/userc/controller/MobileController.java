@@ -49,7 +49,7 @@ public class MobileController
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：发送成功 isSuccess=false：发送失败，resMsg为错误信息")})
     public JsonResultObj sendMesCode(String mobile, String type)
     {
-        LOGGER.debug("开始生成发送短信验证码 mobile={},type={}",mobile,type);
+        LOGGER.info("开始生成发送短信验证码 mobile={},type={}",mobile,type);
         JsonResultObj resultObj = null;
         try
         {
@@ -75,7 +75,7 @@ public class MobileController
                 //将新生成的验证码存入数据库
                 mobileService.addMesCode(mobile, mesCode);
             }
-            LOGGER.debug("成功生成短信验证码 mesCode={}",mesCode);
+            LOGGER.info("成功生成短信验证码 mesCode={}",mesCode);
             //发送验证码短信功能。。。
             ISMS smsService = new SMSService().getSMSImplPort();
             smsService.smsSend(mobile,mesCode);
@@ -88,7 +88,7 @@ public class MobileController
             LOGGER.error("短信验证码生成发送失败：{}",e.getMessage());
             resultObj = new JsonResultObj(false);
         }
-        LOGGER.debug("结束生成发送短信验证码");
+        LOGGER.info("结束生成发送短信验证码");
         return resultObj;
     }
 
@@ -101,13 +101,13 @@ public class MobileController
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：重置密码成功 isSuccess=false：重置密码失败，resMsg为错误信息")})
     public JsonResultObj resetPassword(String mobile, String newPassword)
     {
-        LOGGER.debug("开始重置密码 mobile={} newPassword={}",mobile,newPassword);
+        LOGGER.info("开始重置密码 mobile={} newPassword={}",mobile,newPassword);
         JsonResultObj resultObj = null;
         try
         {
             userService.updatePassword(mobile,newPassword);
             resultObj = new JsonResultObj(true);
-            LOGGER.debug("重置密码成功 mobile={} newPassword={}",mobile,newPassword);
+            LOGGER.info("重置密码成功 mobile={} newPassword={}",mobile,newPassword);
         }
         catch(Exception e)
         {
@@ -115,7 +115,7 @@ public class MobileController
             LOGGER.error("重置密码失败：",e.getMessage());
             resultObj = new JsonResultObj(false);
         }
-        LOGGER.debug("结束重置密码 mobile={} newPassword={}",mobile,newPassword);
+        LOGGER.info("结束重置密码 mobile={} newPassword={}",mobile,newPassword);
         return resultObj;
     }
 
@@ -127,19 +127,19 @@ public class MobileController
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：用户名未被注册 isSuccess=false：操作失败或用户名已被注册，resMsg为错误信息")})
     public JsonResultObj checkUsernameExist(String username)
     {
-        LOGGER.debug("开始检查用户名是否已注册 username={}",username);
+        LOGGER.info("开始检查用户名是否已注册 username={}",username);
         JsonResultObj resultObj = null;
         try
         {
             int usernameExist = userService.checkUserRegByUsername(username);
             if(usernameExist == 0)
             {
-                LOGGER.debug("用户名未注册 username={}",username);
+                LOGGER.info("用户名未注册 username={}",username);
                 resultObj = new JsonResultObj(true);
             }
             else
             {
-                LOGGER.debug("用户名已注册 username={}",username);
+                LOGGER.info("用户名已注册 username={}",username);
                 resultObj = new JsonResultObj(false,JsonResultEnum.USER_ACCOUNT_EXIST);
             }
         }
@@ -149,7 +149,7 @@ public class MobileController
             LOGGER.error("检查用户名是否已注册失败：",e.getMessage());
             resultObj = new JsonResultObj(false);
         }
-        LOGGER.debug("结束检查用户名是否已注册 username={}",username);
+        LOGGER.info("结束检查用户名是否已注册 username={}",username);
         return resultObj;
 
     }
@@ -162,19 +162,19 @@ public class MobileController
     @ApiResponses({@ApiResponse(code = 200, message = "isSuccess=true：手机号未被注册 isSuccess=false：操作失败或手机号已被注册，resMsg为错误信息")})
     public JsonResultObj checkMobileExist(String mobile)
     {
-        LOGGER.debug("开始检查手机号是否已注册 mobile={}",mobile);
+        LOGGER.info("开始检查手机号是否已注册 mobile={}",mobile);
         JsonResultObj resultObj = null;
         try
         {
             int mobileExist = userService.checkUserRegByMobile(mobile);
             if(mobileExist == 0)
             {
-                LOGGER.debug("手机号未注册 mobile={}",mobile);
+                LOGGER.info("手机号未注册 mobile={}",mobile);
                 resultObj = new JsonResultObj(true);
             }
             else
             {
-                LOGGER.debug("手机号已注册 mobile={}",mobile);
+                LOGGER.info("手机号已注册 mobile={}",mobile);
                 resultObj = new JsonResultObj(false,JsonResultEnum.USER_MOBILE_EXIST);
             }
         }
@@ -184,7 +184,7 @@ public class MobileController
             LOGGER.error("检查手机号是否已注册失败：",e.getMessage());
             resultObj = new JsonResultObj(false);
         }
-        LOGGER.debug("结束检查用户名是否已注册 mobile={}",mobile);
+        LOGGER.info("结束检查用户名是否已注册 mobile={}",mobile);
         return resultObj;
     }
 
@@ -197,7 +197,7 @@ public class MobileController
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：验证码正确 isSuccess=false：操作失败或验证码过期/错误，resMsg为错误信息")})
     public JsonResultObj checkMesCode(String mobile, String mesCode)
     {
-        LOGGER.debug("开始校验短信验证码是否正确 mobile={} mesCode={}",mobile,mesCode);
+        LOGGER.info("开始校验短信验证码是否正确 mobile={} mesCode={}",mobile,mesCode);
         JsonResultObj resultObj = null;
         try
         {
@@ -221,7 +221,7 @@ public class MobileController
             e.printStackTrace();
             resultObj = new JsonResultObj(false);
         }
-        LOGGER.debug("结束校验短信验证码是否正确 mobile={} mesCode={}",mobile,mesCode);
+        LOGGER.info("结束校验短信验证码是否正确 mobile={} mesCode={}",mobile,mesCode);
         return resultObj;
     }
 
@@ -236,7 +236,7 @@ public class MobileController
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：注册成功 isSuccess=false：注册失败，resMsg为错误信息")})
     public JsonResultObj addUser(String username, String password, String mobile, String mesCode)
     {
-        LOGGER.debug("开始新增用户");
+        LOGGER.info("开始新增用户");
         JsonResultObj resultObj = null;
         try
         {
@@ -264,7 +264,7 @@ public class MobileController
                 resultObj = new JsonResultObj(false);
             }
         }
-        LOGGER.debug("结束新增用户");
+        LOGGER.info("结束新增用户");
         return resultObj;
     }
 

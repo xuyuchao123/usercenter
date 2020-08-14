@@ -38,7 +38,7 @@ public class ApplicationController
             {@ApiResponse(code = 200, message = "isSuccess=true：查询成功，resDat返回系统对象列表 isSuccess=false：查询失败，resMsg为错误信息，resData为空")})
     public JsonResultObj queryAllApplication()
     {
-        LOGGER.debug("开始查询已注册系统列表");
+        LOGGER.info("开始查询已注册系统列表");
         JsonResultObj resultObj = null;
         try
         {
@@ -58,7 +58,7 @@ public class ApplicationController
             LOGGER.error("查询已注册系统列表失败：{}",e.getMessage());
             resultObj = new JsonResultObj(false);
         }
-        LOGGER.debug("结束查询已注册系统列表");
+        LOGGER.info("结束查询已注册系统列表");
         return resultObj;
     }
 
@@ -76,7 +76,7 @@ public class ApplicationController
     public JsonResultObj queryApplication(String appId, String appName, String createUserNum,
                                    String createUsername, String pageNum, String pageSize)
     {
-        LOGGER.debug("开始条件查询已注册系统列表");
+        LOGGER.info("开始条件查询已注册系统列表");
         JsonResultObj resultObj = null;
         try
         {
@@ -99,7 +99,7 @@ public class ApplicationController
             LOGGER.error("条件查询已注册系统列表失败：{}",e.getMessage());
             resultObj = new JsonResultObj(false);
         }
-        LOGGER.debug("结束条件查询已注册系统列表");
+        LOGGER.info("结束条件查询已注册系统列表");
         return resultObj;
     }
 

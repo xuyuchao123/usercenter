@@ -45,11 +45,11 @@ public class UserController
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：获取成功 isSuccess=false：获取失败，resMsg为错误信息")})
     public JsonResultObj getCurrentUser()
     {
-        LOGGER.debug("开始获取当前用户信息");
+        LOGGER.info("开始获取当前用户信息");
         User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        System.out.println(user);
         JsonResultObj resultObj = new JsonResultObj(true,user);
-        LOGGER.debug("结束获取当前用户信息");
+        LOGGER.info("结束获取当前用户信息");
         return resultObj;
     }
 

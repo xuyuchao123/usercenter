@@ -28,9 +28,9 @@ public class MobileServiceImpl implements MobileService
     @Override
     public String loadMesCodeByMobile(String mobile) throws Exception
     {
-        LOGGER.debug("进入通过手机号获取有效短信验证码方法 mobile={}",mobile);
+        LOGGER.info("进入通过手机号获取有效短信验证码方法 mobile={}",mobile);
         String mesCode = mobileMapper.selectMesCodeByMobile(mobile);
-        LOGGER.debug("结束通过手机号获取有效短信验证码方法 mesCode={}",mesCode);
+        LOGGER.info("结束通过手机号获取有效短信验证码方法 mesCode={}",mesCode);
         return mesCode;
     }
 
@@ -38,12 +38,12 @@ public class MobileServiceImpl implements MobileService
     @Override
     public String addMesCode(String mobile, String mesCode) throws Exception
     {
-        LOGGER.debug("进入新增手机验证码方法 mobile={}, mesCode={}",mobile,mesCode);
+        LOGGER.info("进入新增手机验证码方法 mobile={}, mesCode={}",mobile,mesCode);
         byte status = 1;
         Date gmtCreate = new Date();
         Date gmtModified = gmtCreate;
         mobileMapper.insertMesCode(mobile,mesCode,status,gmtCreate,gmtModified);
-        LOGGER.debug("结束新增手机验证码方法");
+        LOGGER.info("结束新增手机验证码方法");
         return null;
     }
 
@@ -52,11 +52,11 @@ public class MobileServiceImpl implements MobileService
     @Override
     public void setMesCodeInvalid(String mobile) throws Exception
     {
-        LOGGER.debug("进入设置验证码失效状态方法 mobile={}", mobile);
+        LOGGER.info("进入设置验证码失效状态方法 mobile={}", mobile);
         byte status = 0;
         Date gmtModified = new Date();
         mobileMapper.updateMesCodeStatus(mobile,status,gmtModified);
-        LOGGER.debug("结束设置验证码失效状态方法 mobile={}", mobile);
+        LOGGER.info("结束设置验证码失效状态方法 mobile={}", mobile);
 
     }
 
@@ -64,9 +64,9 @@ public class MobileServiceImpl implements MobileService
 //    @Override
 //    public String getValidMesCode(String mobile) throws Exception
 //    {
-//        LOGGER.debug("开始查询有效短信验证码失方法 mobile={}", mobile);
+//        LOGGER.info("开始查询有效短信验证码失方法 mobile={}", mobile);
 //        mobileMapper.selectValidMesCode(mobile);
-//        LOGGER.debug("结束查询有效短信验证码失方法 mobile={}", mobile);
+//        LOGGER.info("结束查询有效短信验证码失方法 mobile={}", mobile);
 //        return null;
 //    }
 }

@@ -29,9 +29,9 @@ public class RoleServiceImpl implements RoleService
     @Override
     public List<Long> queryIdListByPath(String url) throws Exception
     {
-        LOGGER.debug("进入通过请求路径获取对应权限id列表方法 url={}",url);
+        LOGGER.info("进入通过请求路径获取对应权限id列表方法 url={}",url);
         List<Long> roleIdList = roleMapper.selectIdsByPath(url);
-        LOGGER.debug("结束通过请求路径获取对应权限id列表方法 url={}",url);
+        LOGGER.info("结束通过请求路径获取对应权限id列表方法 url={}",url);
         return roleIdList;
     }
 }

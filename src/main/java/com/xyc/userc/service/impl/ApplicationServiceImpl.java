@@ -28,9 +28,9 @@ public class ApplicationServiceImpl implements ApplicationService
     @Override
     public List<Application> queryAllApplications() throws Exception
     {
-        LOGGER.debug("进入查询所有已注册系统信息方法");
+        LOGGER.info("进入查询所有已注册系统信息方法");
         List<Application> applicationList = applicationMapper.selectAll();
-        LOGGER.debug("结束查询所有已注册系统信息方法");
+        LOGGER.info("结束查询所有已注册系统信息方法");
         return applicationList;
     }
 
@@ -38,11 +38,11 @@ public class ApplicationServiceImpl implements ApplicationService
     public List<Application> queryApplication(String appId, String appName, String createUserNum,
                                               String createUsername) throws Exception
     {
-        LOGGER.debug("进入按条件查询已注册系统信息方法");
+        LOGGER.info("进入按条件查询已注册系统信息方法");
         byte isDeleted = 0;
         List<Application> applicationList = applicationMapper.selectApplication(appId,appName,
                 createUsername,createUserNum,isDeleted);
-        LOGGER.debug("结束按条件查询所有已注册系统信息方法");
+        LOGGER.info("结束按条件查询所有已注册系统信息方法");
         return applicationList;
     }
 }

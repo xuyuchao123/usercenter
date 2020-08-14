@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,9 +18,13 @@ import com.avei.shriety.wx_sdk.template.Template;
  * Created by 1 on 2020/8/11.
  */
 @RestController
-public class TemplateController {
+public class TemplateController
+{
+	protected static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
 	@GetMapping("/mes/template")
-	public ReturnData templateSend() {
+	public ReturnData templateSend()
+	{
 		// oPh4us7phJe_qUG8o1TGY4Mrd2Yg 氕氘氚
 		// oPh4us_Fe88F-HgRKn9QAYQTBzOs Pluto
 		// oPh4us__A3ShBKk7fkxu2ehE_OWI 喂喂
@@ -36,7 +42,9 @@ public class TemplateController {
 	}
 
 	@GetMapping("/mes/userinfo")
-	public ReturnData userinfo(HttpSession session) {
+	public ReturnData userinfo(HttpSession session)
+	{
+		LOGGER.info("开始获取当前用户信息");
 		return new ReturnData(ReturnData.SUCCESS_CODE, session.getAttribute(WxsdkConstant.USERINFO));
 	}
 }
