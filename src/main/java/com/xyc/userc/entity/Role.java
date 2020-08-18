@@ -18,7 +18,7 @@ public class Role implements Serializable
     /**
      * id
      */
-    private Long id;
+    private int id;
 
     /**
      * 角色名称
@@ -43,13 +43,13 @@ public class Role implements Serializable
      * 创建时间
      * gmt_create
      */
-    private String gmtCreate;
+    private Date gmtCreate;
 
     /**
      * 修改时间
      * gmt_modified
      */
-    private String gmtModified;
+    private Date gmtModified;
 
     /**
      * 父角色id
@@ -57,11 +57,22 @@ public class Role implements Serializable
      */
     private int parentRoleId;
 
-    public Long getId() {
+    public Role(int id, String roleName, String roleCode, int isDeleted, Date gmtCreate, Date gmtModified, int parentRoleId)
+    {
+        this.id = id;
+        this.roleName = roleName;
+        this.roleCode = roleCode;
+        this.isDeleted = isDeleted;
+        this.gmtCreate = gmtCreate;
+        this.gmtModified = gmtModified;
+        this.parentRoleId = parentRoleId;
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -82,19 +93,19 @@ public class Role implements Serializable
         this.isDeleted = isDeleted;
     }
 
-    public String getGmtCreate() {
+    public Date getGmtCreate() {
         return gmtCreate;
     }
 
-    public void setGmtCreate(String gmtCreate) {
+    public void setGmtCreate(Date gmtCreate) {
         this.gmtCreate = gmtCreate;
     }
 
-    public String getGmtModified() {
+    public Date getGmtModified() {
         return gmtModified;
     }
 
-    public void setGmtModified(String gmtModified) {
+    public void setGmtModified(Date gmtModified) {
         this.gmtModified = gmtModified;
     }
 

@@ -134,4 +134,17 @@
     where mobile = #{mobile,jdbcType=VARCHAR}
   </update>
 
+  <select id="selectUserRoleByOpenId" resultType="java.util.Map">
+    select uu.mobileOpenIdId, r.ID as roleId, r.ROLE_CODE as roleCode, r.ROLE_NAME as roleName,
+     r.IS_DELETED as isDeleted, r.GMT_CREATE as gmtCreate, r.GMT_MODIFIED as gmtModified,
+     r.PARENT_ROLE_ID as parentRoleId from SYS_USER u
+    (select u.ID as mobileOpenIdId,CASE WHEN u.TYPE = 'SJ' THEN 'SJ0' as type,u.OPENID from SYS_USER u) uu
+    left join SYS_MOBILE_OPENID m
+    on uu.OPENID = m.OPENID
+    left join SYS_ROLE r
+    on uu.type = r.ROLE_CODE
+    where m.OPENID = #{openId}
+    and r.IS_DELETED = 0;
+  </select>
+
 </mapper>

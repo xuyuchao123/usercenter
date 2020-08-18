@@ -2,8 +2,10 @@ package com.xyc.userc.service.impl;
 
 import com.avei.shriety.wx_sdk.pojo.Userinfo;
 import com.xyc.userc.dao.MobileMapper;
+import com.xyc.userc.dao.MobileOpenIdMapper;
 import com.xyc.userc.dao.RoleMapper;
 import com.xyc.userc.dao.UserMapper;
+import com.xyc.userc.entity.MobileOpenId;
 import com.xyc.userc.entity.Role;
 import com.xyc.userc.entity.User;
 import com.xyc.userc.security.MesCodeErrorException;
@@ -20,9 +22,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 1 on 2020/6/15.
@@ -42,6 +50,9 @@ public class UserServiceImpl implements UserService
 
     @Autowired
     private RoleMapper roleMapper;
+
+    @Autowired
+    private MobileOpenIdMapper mobileOpenIdMapper;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -168,5 +179,32 @@ public class UserServiceImpl implements UserService
         List<Role> roleList = roleMapper.selectByOpenId(openId);
         user.setRoles(roleList);
         return user;
+    }
+
+    @Override
+    public Role bindMobileToOpenId(String mobile, String openId) throws Exception
+    {
+        LOGGER.info("进入绑定手机号方法 mobile:{} openid：{}",mobile,openId);
+//        HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        MobileOpenId mobileOpenId = new MobileOpenId(mobile,openId,openId,new Date());
+        int i = mobileOpenIdMapper.insertMobileOpenId(mobileOpenId);
+        Map map = userMapper.selectUserRoleByOpenId(openId);
+        Role role = null;
+        if(map != null)
+        {
+            int mobileOpenIdId = (Integer)map.get("mobileOpenIdId");
+            int roleId = (Integer)map.get("roleid");
+            Date date = new Date();
+            roleMapper.insertUserRole(mobileOpenIdId,roleId,date,date);
+            String roleName = (String)map.get("roleName");
+            String roleCode = (String)map.get("roleCode");
+            int isDeleted = (Integer)map.get("isDeleted");
+            Date gmtCreate = (Date)map.get("gmtCreate");
+            Date gmtModified = (Date)map.get("gmtModified");
+            int parentRoleId = (Integer)map.get("parentRoleId");
+            role = new Role(roleId,roleName,roleCode,isDeleted,gmtCreate,gmtModified,parentRoleId);
+        }
+        LOGGER.info("结束绑定手机号方法 role：{}",role);
+        return role;
     }
 }

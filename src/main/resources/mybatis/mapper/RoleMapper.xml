@@ -82,11 +82,16 @@
     from sys_role r
     left join sys_user_role ur
       on r.id = ur.role_id
-    left join sys_user u
-      on ur.user_id = u.id
-    where u.openid = #{openId}
-      and u.is_enabled = '1'
+    left join sys_mobile_openid mo
+      on ur.mobile_openid_id = mo.id
+    where mo.openid = #{openId}
       and r.is_deleted = '0'
   </select>
+
+  <insert id="insertUserRole">
+    insert into SYS_USER_ROLE (ID,MOBILE_OPENID_ID,ROLE_ID,GMT_CREATE,GMT_MODIFIED)
+    values (USER_ROLE_SEQ.nextval,#{mobileOpenIdId},#{roleId},#{gmtCreate},#{gmtModified})
+  </insert>
+
 
 </mapper>

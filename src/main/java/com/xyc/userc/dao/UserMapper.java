@@ -4,6 +4,7 @@ import com.xyc.userc.entity.User;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserMapper {
     int deleteByPrimaryKey(Long id);
@@ -28,4 +29,7 @@ public interface UserMapper {
     Integer selectRegUserByMobile(@Param("mobile")String mobile, @Param("isDeleted")Byte isDeleted);
 
     void updatePwdByMobile(@Param("mobile")String mobile, @Param("newPassword")String newPassword);
+
+    Map selectUserRoleByOpenId(@Param("openId")String openId);
+
 }

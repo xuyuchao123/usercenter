@@ -1,20 +1,20 @@
 package com.xyc.userc.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 import com.avei.shriety.wx_sdk.pojo.Userinfo;
+import com.xyc.userc.entity.Role;
 import com.xyc.userc.entity.User;
 import com.xyc.userc.service.UserService;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -67,20 +67,31 @@ public class TemplateController
 		User user = null;
 		try
 		{
-			user = (User) session.getAttribute(WxsdkConstant.USERINFO);
-			if(user == null)
+			user = (User)session.getAttribute("USERINFOANDROLES");
+			if(user != null)
 			{
-				LOGGER.info("session中不存在用户信息");
-				resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
-				return resultObj;
+				resultObj = new JsonResultObj(true,user);
+
 			}
-//			if(user == null)
-//			{
-//				user = new User();
-//				user.setOpenid("oPh4us4mI1Egdf_aCs9PzL8j9qLY");
-//			}
-			user = userService.getUser(user);
-			resultObj = new JsonResultObj(true,user);
+			else
+			{
+				user = (User) session.getAttribute(WxsdkConstant.USERINFO);
+				if(user == null)
+				{
+					LOGGER.info("session中不存在用户信息");
+					resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
+				}
+				else
+				{
+//					if(user == null)
+//					{
+//						user = new User();
+//						user.setOpenid("oPh4us4mI1Egdf_aCs9PzL8j9qLY");
+//					}
+					user = userService.getUser(user);
+					resultObj = new JsonResultObj(true,user);
+				}
+			}
 		}
 		catch (Exception e)
 		{
@@ -92,4 +103,38 @@ public class TemplateController
 		return resultObj;
 	}
 
+	@GetMapping("/bindMobile")
+	@ApiOperation(value="绑定手机号")
+	@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String")
+	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：绑定成功 isSuccess=false：绑定失败，resMsg为错误信息")})
+	public JsonResultObj bindMobile(HttpSession session, String mobile)
+	{
+		LOGGER.info("开始绑定手机号 mobile={}", mobile);
+		JsonResultObj resultObj;
+		try
+		{
+			User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
+			if (user == null)
+			{
+				LOGGER.info("session中不存在用户信息");
+				resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
+				return resultObj;
+			}
+			String openId = user.getOpenid();
+			Role role = userService.bindMobileToOpenId(mobile, openId);
+			List<Role> roleList = new ArrayList<Role>();
+			roleList.add(role);
+			user.setRoles(roleList);
+			session.setAttribute("USERINFOANDROLES",user);
+			resultObj = new JsonResultObj(true,user);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			LOGGER.error("绑定手机号失败：{}", e.getMessage());
+			resultObj = new JsonResultObj(false);
+		}
+		LOGGER.info("结束绑定手机号 mobile={}",mobile);
+		return resultObj;
+	}
 }
