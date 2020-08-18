@@ -1,5 +1,6 @@
 package com.xyc.userc.service;
 
+import com.avei.shriety.wx_sdk.pojo.Userinfo;
 import com.xyc.userc.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,4 +24,6 @@ public interface UserService extends UserDetailsService
      int checkUserRegByUsername(String username) throws Exception;
 
      int checkUserRegByMobile(String mobile) throws Exception;
+
+     User getUser(User user) throws Exception;
 }

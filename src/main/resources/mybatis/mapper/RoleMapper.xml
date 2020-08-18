@@ -3,18 +3,17 @@
 <mapper namespace="com.xyc.userc.dao.RoleMapper">
 
   <resultMap id="BaseResultMap" type="com.xyc.userc.entity.Role">
-    <id column="id" jdbcType="BIGINT" property="id" />
+    <id column="id" jdbcType="NUMERIC" property="id" />
     <result column="role_name" jdbcType="VARCHAR" property="roleName" />
-    <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
-    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
-    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
-    <result column="user_create" jdbcType="BIGINT" property="userCreate" />
-    <result column="user_modified" jdbcType="BIGINT" property="userModified" />
+    <result column="is_deleted" jdbcType="NUMERIC" property="isDeleted" />
+    <result column="gmt_create" jdbcType="VARCHAR" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="VARCHAR" property="gmtModified" />
+    <result column="parent_role_id" jdbcType="NUMERIC" property="parentRoleId" />
   </resultMap>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from sys_role
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=NUMERIC}
   </delete>
 
   <insert id="insert" parameterType="com.xyc.userc.entity.Role">
@@ -25,30 +24,30 @@
       application_id, is_deleted, gmt_create,
       gmt_modified, user_create, user_modified
       )
-    values (#{id,jdbcType=BIGINT}, #{roleName,jdbcType=VARCHAR}, #{permissionId,jdbcType=BIGINT}, 
-      #{applicationId,jdbcType=BIGINT}, #{isDeleted,jdbcType=TINYINT}, #{gmtCreate,jdbcType=TIMESTAMP},
-      #{gmtModified,jdbcType=TIMESTAMP}, #{userCreate,jdbcType=BIGINT}, #{userModified,jdbcType=BIGINT}
+    values (#{id,jdbcType=NUMERIC}, #{roleName,jdbcType=VARCHAR}, #{permissionId,jdbcType=NUMERIC}, 
+      #{applicationId,jdbcType=NUMERIC}, #{isDeleted,jdbcType=NUMERIC}, #{gmtCreate,jdbcType=TIMESTAMP},
+      #{gmtModified,jdbcType=TIMESTAMP}, #{userCreate,jdbcType=NUMERIC}, #{userModified,jdbcType=NUMERIC}
       )
   </insert>
 
   <update id="updateByPrimaryKey" parameterType="com.xyc.userc.entity.Role">
     update sys_role
     set role_name = #{roleName,jdbcType=VARCHAR},
-      permission_id = #{permissionId,jdbcType=BIGINT},
-      application_id = #{applicationId,jdbcType=BIGINT},
-      is_deleted = #{isDeleted,jdbcType=TINYINT},
+      permission_id = #{permissionId,jdbcType=NUMERIC},
+      application_id = #{applicationId,jdbcType=NUMERIC},
+      is_deleted = #{isDeleted,jdbcType=NUMERIC},
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
-      user_create = #{userCreate,jdbcType=BIGINT},
-      user_modified = #{userModified,jdbcType=BIGINT}
-    where id = #{id,jdbcType=BIGINT}
+      user_create = #{userCreate,jdbcType=NUMERIC},
+      user_modified = #{userModified,jdbcType=NUMERIC}
+    where id = #{id,jdbcType=NUMERIC}
   </update>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select id, role_name, permission_id, application_id, is_deleted, gmt_create, gmt_modified,
     user_create, user_modified
     from sys_role
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=NUMERIC}
   </select>
 
   <select id="selectAll" resultMap="BaseResultMap">
@@ -75,6 +74,19 @@
       sys_role sr
       left join sys_permission_requestpath spr on sr.permission_id = spr.permission_id
       left join sys_requestpath srp on spr.requestpath_id = srp.id where srp.url = #{url}
+  </select>
+
+  <select id="selectByOpenId" resultMap="BaseResultMap">
+    select r.id, r.role_code, r.role_name, r.is_deleted,
+      r.gmt_create,r.gmt_modified, r.parent_role_id
+    from sys_role r
+    left join sys_user_role ur
+      on r.id = ur.role_id
+    left join sys_user u
+      on ur.user_id = u.id
+    where u.openid = #{openId}
+      and u.is_enabled = '1'
+      and r.is_deleted = '0'
   </select>
 
 </mapper>

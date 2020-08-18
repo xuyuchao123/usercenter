@@ -24,6 +24,7 @@ public enum JsonResultEnum
     USER_ACCOUNT_LOCKED(103, "账号被冻结"),
     USER_PASSWORD_ERROR(104, "密码错误"),
     USER_PASSWORD_EXPIRED(105, "密码过期"),
+    USER_INFO_NOT_EXIST(106,"用户信息不存在"),
 
     USER_MOBILE_NOT_EXIST(106,"手机号未注册"),
     USER_MESCODE_EXPIRED(107,"手机验证码过期"),

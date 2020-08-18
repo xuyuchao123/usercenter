@@ -81,7 +81,7 @@ public class MesCodeAuthenticationProvider implements AuthenticationProvider
         }
         try
         {
-            String storedMesCode = this.getMobileService().loadMesCodeByMobile(user.getMobile());
+            String storedMesCode = this.getMobileService().loadMesCodeByMobile(user.getMobilePhone());
             if(storedMesCode == null)
             {
                 throw new MesCodeExpiredException("短信验证码过期，请点击重新发送");
@@ -92,7 +92,7 @@ public class MesCodeAuthenticationProvider implements AuthenticationProvider
             }
             else        //验证通过，将当前验证码改为无效状态
             {
-                this.getMobileService().setMesCodeInvalid(user.getMobile());
+                this.getMobileService().setMesCodeInvalid(user.getMobilePhone());
             }
 
         }

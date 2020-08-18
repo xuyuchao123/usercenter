@@ -1,6 +1,8 @@
 package com.xyc.userc.service.impl;
 
+import com.avei.shriety.wx_sdk.pojo.Userinfo;
 import com.xyc.userc.dao.MobileMapper;
+import com.xyc.userc.dao.RoleMapper;
 import com.xyc.userc.dao.UserMapper;
 import com.xyc.userc.entity.Role;
 import com.xyc.userc.entity.User;
@@ -37,6 +39,9 @@ public class UserServiceImpl implements UserService
 
     @Autowired
     private MobileMapper mobileMapper;
+
+    @Autowired
+    private RoleMapper roleMapper;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -149,21 +154,19 @@ public class UserServiceImpl implements UserService
             mobileMapper.updateMesCodeStatus(mobile,status,new Date());
         }
         User user = new User();
-        user.setUserName(userName);
-        user.setPassword(bCryptPasswordEncoder.encode(password));
-        user.setMobile(mobile);
-        user.setUserRealName(userRealName);
-        user.setIsDeleted(isDelete);
         user.setIsEnable(isEnable);
-        user.setIsLocked(isLocked);
-        user.setGmtCreate(new Date());
-        user.setGmtModified(new Date());
-        user.setUserCreate(userCreate);
-        user.setUserModified(userCreate);
         int id = userMapper.insert(user);
         System.out.println(id);
         LOGGER.info("结束新增用户方法 mobile={} mesCode={}",mobile,mesCode);
     }
 
-
+    @Override
+    public User getUser(User user) throws Exception
+    {
+        String openId = user.getOpenid();
+        LOGGER.info("进入获取用户信息方法 openid：{}",openId);
+        List<Role> roleList = roleMapper.selectByOpenId(openId);
+        user.setRoles(roleList);
+        return user;
+    }
 }

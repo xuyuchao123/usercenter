@@ -1,5 +1,6 @@
 package com.xyc.userc.entity;
 
+import com.avei.shriety.wx_sdk.pojo.Userinfo;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +18,7 @@ import java.util.List;
  *
  * @mbggenerated do_not_delete_during_merge
  */
-public class User implements Serializable,UserDetails
+public class User extends Userinfo implements Serializable,UserDetails
 {
     private static final long serialVersionUID = 1L;
 
@@ -26,81 +27,13 @@ public class User implements Serializable,UserDetails
      */
     private Long id;
 
-    /**
-     * 用户名
-     * user_num
-     */
-    private String userName;
-
-    /**
-     * 用户密码
-     * user_num
-     */
-    private String password;
-
-
-    /**
-     * 用户真实姓名
-     * user_name
-     */
-    private String userRealName;
-
-    /**
-     * 用户手机号
-     * mobile
-     */
-    private String mobile;
-
-    /**
-     * 1：已删除 0：未删除
-     * is_deleted
-     */
-    private Byte isDeleted;
+    private String mobilePhone;
 
     /**
      * 1：已启用 2：未启用
      * is_enable
      */
     private Byte isEnable;
-
-    /*
-    *  1：已锁定 2：未锁定
-    *  is_locked
-    * */
-    private Byte isLocked;
-
-
-    /**
-     * 创建时间
-     * gmt_create
-     */
-    private Date gmtCreate;
-
-    /**
-     * 修改时间
-     * gmt_modified
-     */
-    private Date gmtModified;
-
-    /**
-     * 创建人id
-     * user_create
-     */
-    private Long userCreate;
-
-    /**
-     * 修改人id
-     * user_modified
-     */
-    private Long userModified;
-
-    /**
-     * 上次登录时间
-     * last_login_time
-     */
-    private Date lastLoginTime;
-
-
 
     private List<Role> roles;
 
@@ -120,40 +53,12 @@ public class User implements Serializable,UserDetails
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getMobilePhone() {
+        return mobilePhone;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getUserRealName() {
-        return userRealName;
-    }
-
-    public void setUserRealName(String userRealName) {
-        this.userRealName = userRealName;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public Byte getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(Byte isDeleted) {
-        this.isDeleted = isDeleted;
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
     }
 
     public Byte getIsEnable() {
@@ -164,53 +69,6 @@ public class User implements Serializable,UserDetails
         this.isEnable = isEnable;
     }
 
-    public Byte getIsLocked() {
-        return isLocked;
-    }
-
-    public void setIsLocked(Byte isLocked) {
-        this.isLocked = isLocked;
-    }
-
-    public Date getGmtCreate() {
-        return gmtCreate;
-    }
-
-    public void setGmtCreate(Date gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
-
-    public Date getGmtModified() {
-        return gmtModified;
-    }
-
-    public void setGmtModified(Date gmtModified) {
-        this.gmtModified = gmtModified;
-    }
-
-    public Long getUserCreate() {
-        return userCreate;
-    }
-
-    public void setUserCreate(Long userCreate) {
-        this.userCreate = userCreate;
-    }
-
-    public Long getUserModified() {
-        return userModified;
-    }
-
-    public void setUserModified(Long userModified) {
-        this.userModified = userModified;
-    }
-
-    public Date getLastLoginTime() {
-        return lastLoginTime;
-    }
-
-    public void setLastLoginTime(Date lastLoginTime) {
-        this.lastLoginTime = lastLoginTime;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities()
@@ -225,12 +83,12 @@ public class User implements Serializable,UserDetails
 
     @Override
     public String getPassword() {
-        return this.password;
+        return this.getOpenid();
     }
 
     @Override
     public String getUsername() {
-        return this.userName;
+        return this.getNickname();
     }
 
     @Override
@@ -241,14 +99,7 @@ public class User implements Serializable,UserDetails
     @Override
     public boolean isAccountNonLocked()
     {
-        if(isLocked == 1)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return true;
     }
 
     @Override

@@ -30,7 +30,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/user")
-@Api(tags = "系统用户管理相关api")
+//@Api(tags = "系统用户管理相关api")
 public class UserController
 {
     protected static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);

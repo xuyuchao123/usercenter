@@ -17,4 +17,6 @@ public interface RoleMapper {
     List<Role> selectByUserId(Long userId);
 
     List<Long> selectIdsByPath(String url);
+
+    List<Role> selectByOpenId(String openId);
 }

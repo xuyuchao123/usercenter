@@ -31,7 +31,7 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
     {
         //更新用户表上次登录时间、更新人、更新时间等字段
         User user = (User) authentication.getPrincipal();
-        user.setLastLoginTime(new Date());
+//        user.setLastLoginTime(new Date());
         userMapper.updateByPrimaryKey(user);
         //也进行一些处理，比如登录成功之后将用户的菜单权限返回给前台
         //将用户对象转为json数据返回

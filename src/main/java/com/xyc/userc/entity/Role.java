@@ -26,51 +26,36 @@ public class Role implements Serializable
      */
     private String roleName;
 
-    private Permission permission;
+    /**
+     * 角色编码
+     * role_name
+     */
+    private String roleCode;
 
-    private Application application;
-
-//    /**
-//     * 权限id
-//     * permission_id
-//     */
-//    private Long permissionId;
-//
-//    /**
-//     * 系统id
-//     * application_id
-//     */
-//    private String applicationId;
 
     /**
      * 1：已删除 0：未删除
      * is_deleted
      */
-    private Byte isDeleted;
+    private int isDeleted;
 
     /**
      * 创建时间
      * gmt_create
      */
-    private Date gmtCreate;
+    private String gmtCreate;
 
     /**
      * 修改时间
      * gmt_modified
      */
-    private Date gmtModified;
+    private String gmtModified;
 
     /**
-     * 创建人id
-     * user_create
+     * 父角色id
+     * parent_role_id
      */
-    private Long userCreate;
-
-    /**
-     * 修改人id
-     * user_modified
-     */
-    private Long userModified;
+    private int parentRoleId;
 
     public Long getId() {
         return id;
@@ -88,59 +73,44 @@ public class Role implements Serializable
         this.roleName = roleName;
     }
 
-    public Permission getPermission() {
-        return permission;
-    }
 
-    public void setPermission(Permission permission) {
-        this.permission = permission;
-    }
-
-    public Application getApplication() {
-        return application;
-    }
-
-    public void setApplication(Application application) {
-        this.application = application;
-    }
-
-    public Byte getIsDeleted() {
+    public int getIsDeleted() {
         return isDeleted;
     }
 
-    public void setIsDeleted(Byte isDeleted) {
+    public void setIsDeleted(int isDeleted) {
         this.isDeleted = isDeleted;
     }
 
-    public Date getGmtCreate() {
+    public String getGmtCreate() {
         return gmtCreate;
     }
 
-    public void setGmtCreate(Date gmtCreate) {
+    public void setGmtCreate(String gmtCreate) {
         this.gmtCreate = gmtCreate;
     }
 
-    public Date getGmtModified() {
+    public String getGmtModified() {
         return gmtModified;
     }
 
-    public void setGmtModified(Date gmtModified) {
+    public void setGmtModified(String gmtModified) {
         this.gmtModified = gmtModified;
     }
 
-    public Long getUserCreate() {
-        return userCreate;
+    public String getRoleCode() {
+        return roleCode;
     }
 
-    public void setUserCreate(Long userCreate) {
-        this.userCreate = userCreate;
+    public void setRoleCode(String roleCode) {
+        this.roleCode = roleCode;
     }
 
-    public Long getUserModified() {
-        return userModified;
+    public int getParentRoleId() {
+        return parentRoleId;
     }
 
-    public void setUserModified(Long userModified) {
-        this.userModified = userModified;
+    public void setParentRoleId(int parentRoleId) {
+        this.parentRoleId = parentRoleId;
     }
 }

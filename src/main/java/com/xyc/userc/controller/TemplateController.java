@@ -3,12 +3,22 @@ package com.xyc.userc.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+import com.avei.shriety.wx_sdk.pojo.Userinfo;
+import com.xyc.userc.entity.User;
+import com.xyc.userc.service.UserService;
+import com.xyc.userc.util.JsonResultEnum;
+import com.xyc.userc.util.JsonResultObj;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 import com.avei.shriety.wx_sdk.constant.WxsdkConstant;
 import com.avei.shriety.wx_sdk.pojo.ReturnData;
@@ -18,11 +28,17 @@ import com.avei.shriety.wx_sdk.template.Template;
  * Created by 1 on 2020/8/11.
  */
 @RestController
+@CrossOrigin
+@RequestMapping("/mes")
+@Api(tags = "系统用户管理相关api")
 public class TemplateController
 {
 	protected static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-	@GetMapping("/mes/template")
+	@Resource
+	UserService userService;
+
+	@GetMapping("/template")
 	public ReturnData templateSend()
 	{
 		// oPh4us7phJe_qUG8o1TGY4Mrd2Yg 氕氘氚
@@ -41,10 +57,39 @@ public class TemplateController
 		return Template.send(propsMap);
 	}
 
-	@GetMapping("/mes/userinfo")
-	public ReturnData userinfo(HttpSession session)
+	@GetMapping("/userinfo")
+	@ApiOperation(value="获取当前用户信息")
+	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：获取成功 isSuccess=false：获取失败，resMsg为错误信息")})
+	public JsonResultObj userinfo(HttpSession session)
 	{
 		LOGGER.info("开始获取当前用户信息");
-		return new ReturnData(ReturnData.SUCCESS_CODE, session.getAttribute(WxsdkConstant.USERINFO));
+		JsonResultObj resultObj;
+		User user = null;
+		try
+		{
+			user = (User) session.getAttribute(WxsdkConstant.USERINFO);
+			if(user == null)
+			{
+				LOGGER.info("session中不存在用户信息");
+				resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
+				return resultObj;
+			}
+//			if(user == null)
+//			{
+//				user = new User();
+//				user.setOpenid("oPh4us4mI1Egdf_aCs9PzL8j9qLY");
+//			}
+			user = userService.getUser(user);
+			resultObj = new JsonResultObj(true,user);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			LOGGER.error("获取用户信息失败：{}",e.getMessage());
+			resultObj = new JsonResultObj(false);
+		}
+		LOGGER.info("结束获取当前用户信息userinfo: {}",user);
+		return resultObj;
 	}
+
 }
