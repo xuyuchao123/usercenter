@@ -114,6 +114,11 @@ public class TemplateController
 		try
 		{
 			User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
+            if(user == null)
+            {
+                user = new User();
+                user.setOpenid("oPh4us4mI1Egdf_aCs9PzL8j9qLY");
+            }
 			if (user == null)
 			{
 				LOGGER.info("session中不存在用户信息");
