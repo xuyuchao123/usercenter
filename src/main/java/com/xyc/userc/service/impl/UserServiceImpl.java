@@ -58,19 +58,19 @@ public class UserServiceImpl implements UserService
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 //    重写认证方法,实现自定义springsecurity用户认证（用户名密码登录）
-    @Override
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException
-    {
-        LOGGER.info("进入通过用户名获取用户信息权限信息方法");
-        User user = userMapper.selectByUsername(userName);
-        if (user == null)
-        {
-            throw new UsernameNotFoundException("用户名不存在!");
-        }
-
-        LOGGER.info("结束通过用户名获取用户信息权限信息方法");
-        return user;
-    }
+//    @Override
+//    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException
+//    {
+//        LOGGER.info("进入通过用户名获取用户信息权限信息方法");
+//        User user = userMapper.selectByUsername(userName);
+//        if (user == null)
+//        {
+//            throw new UsernameNotFoundException("用户名不存在!");
+//        }
+//
+//        LOGGER.info("结束通过用户名获取用户信息权限信息方法");
+//        return user;
+//    }
 
     @Override
     public User loadUserByMobile(String mobile) throws UsernameNotFoundException
@@ -142,34 +142,6 @@ public class UserServiceImpl implements UserService
         return mobileExist;
     }
 
-    @Override
-    public void addUser(String userName, String password, String mobile, String userRealName, Byte isDelete,
-                        Byte isEnable, Byte isLocked, Long userCreate, String mesCode) throws Exception
-    {
-        LOGGER.info("进入新增用户方法 mobile={} mesCode={}",mobile,mesCode);
-        String storedMesCode = mobileMapper.selectMesCodeByMobile(mobile);
-        if(storedMesCode == null)
-        {
-            LOGGER.info("短信验证码过期 mobile={}",mobile);
-            throw new MesCodeExpiredException("短信验证码过期，请点击重新发送");
-        }
-        if(!storedMesCode.equals(mesCode))
-        {
-            LOGGER.info("短信验证码错误 mobile={} storedMesCode={} mesCode={}",mobile,storedMesCode,mesCode);
-            throw new MesCodeErrorException("短信验证码错误");
-        }
-        else        //验证通过，将当前验证码改为无效状态
-        {
-            byte status = 0;
-            LOGGER.info("验证通过，将当前验证码改为无效状态 mobile={} storedMesCode={}",mobile,storedMesCode);
-            mobileMapper.updateMesCodeStatus(mobile,status,new Date());
-        }
-        User user = new User();
-        user.setIsEnable(isEnable);
-        int id = userMapper.insert(user);
-        System.out.println(id);
-        LOGGER.info("结束新增用户方法 mobile={} mesCode={}",mobile,mesCode);
-    }
 
     @Override
     public User getUser(User user) throws Exception
@@ -192,16 +164,16 @@ public class UserServiceImpl implements UserService
         Role role = null;
         if(map != null)
         {
-            int mobileOpenIdId = (Integer)map.get("mobileOpenIdId");
-            int roleId = (Integer)map.get("roleid");
+            int mobileOpenIdId = Integer.parseInt(map.get("MOBILEOPENIDID").toString());
+            int roleId = Integer.parseInt(map.get("ROLEID").toString());
             Date date = new Date();
             roleMapper.insertUserRole(mobileOpenIdId,roleId,date,date);
-            String roleName = (String)map.get("roleName");
-            String roleCode = (String)map.get("roleCode");
-            int isDeleted = (Integer)map.get("isDeleted");
-            Date gmtCreate = (Date)map.get("gmtCreate");
-            Date gmtModified = (Date)map.get("gmtModified");
-            int parentRoleId = (Integer)map.get("parentRoleId");
+            String roleName = (String)map.get("ROLENAME");
+            String roleCode = (String)map.get("ROLECODE");
+            int isDeleted = Integer.parseInt(map.get("ISDELETED").toString());
+            Date gmtCreate = (Date)map.get("GMTCREATE");
+            Date gmtModified = (Date)map.get("GMTMODIFIED");
+            int parentRoleId = Integer.parseInt(map.get("PARENTROLEID").toString());
             role = new Role(roleId,roleName,roleCode,isDeleted,gmtCreate,gmtModified,parentRoleId);
         }
         LOGGER.info("结束绑定手机号方法 role：{}",role);

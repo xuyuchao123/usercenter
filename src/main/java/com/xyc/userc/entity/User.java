@@ -18,22 +18,18 @@ import java.util.List;
  *
  * @mbggenerated do_not_delete_during_merge
  */
-public class User extends Userinfo implements Serializable,UserDetails
+public class User extends Userinfo implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
     /**
      * id
      */
-    private Long id;
+
 
     private String mobilePhone;
 
-    /**
-     * 1：已启用 2：未启用
-     * is_enable
-     */
-    private Byte isEnable;
+
 
     private List<Role> roles;
 
@@ -45,13 +41,6 @@ public class User extends Userinfo implements Serializable,UserDetails
         this.roles = roles;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getMobilePhone() {
         return mobilePhone;
@@ -61,59 +50,47 @@ public class User extends Userinfo implements Serializable,UserDetails
         this.mobilePhone = mobilePhone;
     }
 
-    public Byte getIsEnable() {
-        return isEnable;
-    }
-
-    public void setIsEnable(Byte isEnable) {
-        this.isEnable = isEnable;
-    }
-
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities()
-    {
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>(roles.size());
-        for (Role role : roles)
-        {
-            authorities.add(new SimpleGrantedAuthority(String.valueOf(role.getId())));
-        }
-        return authorities;
-    }
-
-    @Override
-    public String getPassword() {
-        return this.getOpenid();
-    }
-
-    @Override
-    public String getUsername() {
-        return this.getNickname();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked()
-    {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled()
-    {
-        if(isEnable == 1)
-        {
-            return true;
-        }
-        return false;
-    }
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities()
+//    {
+//        List<SimpleGrantedAuthority> authorities = new ArrayList<>(roles.size());
+//        for (Role role : roles)
+//        {
+//            authorities.add(new SimpleGrantedAuthority(String.valueOf(role.getId())));
+//        }
+//        return authorities;
+//    }
+//
+//    @Override
+//    public String getPassword() {
+//        return this.getOpenid();
+//    }
+//
+//    @Override
+//    public String getUsername() {
+//        return this.getNickname();
+//    }
+//
+//    @Override
+//    public boolean isAccountNonExpired() {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isAccountNonLocked()
+//    {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isCredentialsNonExpired() {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isEnabled()
+//    {
+//
+//        return true;
+//    }
 }

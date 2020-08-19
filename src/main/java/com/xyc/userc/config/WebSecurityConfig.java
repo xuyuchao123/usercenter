@@ -58,14 +58,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 //    private MyAbstractSecurityInterceptor myAbstractSecurityInterceptor;
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception
-    {
-//        super.configure(auth);
-        //配置认证方式
-        auth.userDetailsService(userService);
-    }
-
-    @Override
     protected void configure(HttpSecurity http) throws Exception
     {
         http.cors().and().csrf().disable();
@@ -100,12 +92,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
         mesCodeAuthenticationFilter.setAuthenticationSuccessHandler(myAuthenticationSuccessHandler);
         mesCodeAuthenticationFilter.setAuthenticationFailureHandler(myAuthenticationFailureHandler);
 
-        MesCodeAuthenticationProvider mesCodeAuthenticationProvider = new MesCodeAuthenticationProvider();
-        mesCodeAuthenticationProvider.setUserService(userService);
-        mesCodeAuthenticationProvider.setMobileService(mobileService);
 
-        http.authenticationProvider(mesCodeAuthenticationProvider)
-                .addFilterAfter(mesCodeAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         MyAbstractSecurityInterceptor myAbstractSecurityInterceptor = new MyAbstractSecurityInterceptor();
         myAbstractSecurityInterceptor.setMyAccessDecisionManager(myAccessDecisionManager);

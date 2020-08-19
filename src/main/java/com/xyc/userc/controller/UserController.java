@@ -41,8 +41,8 @@ public class UserController
 
     @RequestMapping(value = "/getCurrentUser",method = RequestMethod.GET)
     @ResponseBody
-    @ApiOperation(value="获取当前用户信息")
-    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：获取成功 isSuccess=false：获取失败，resMsg为错误信息")})
+//    @ApiOperation(value="获取当前用户信息")
+//    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：获取成功 isSuccess=false：获取失败，resMsg为错误信息")})
     public JsonResultObj getCurrentUser()
     {
         LOGGER.info("开始获取当前用户信息");

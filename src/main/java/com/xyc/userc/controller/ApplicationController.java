@@ -23,7 +23,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/application")
-@Api(tags = "已注册系统列表相关api")
+//@Api(tags = "已注册系统列表相关api")
 public class ApplicationController
 {
     protected static final Logger LOGGER = LoggerFactory.getLogger(ApplicationController.class);

@@ -40,57 +40,7 @@ public class MobileController
     @Resource
     UserService userService;
 
-    //发送验证码
-    @RequestMapping(value = "/sendMesCode",method = RequestMethod.GET)
-    @ResponseBody
-    @ApiOperation(value="发送短信验证码")
-    @ApiImplicitParams({@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType =  "String"),
-            @ApiImplicitParam(name = "type", value = "操作类型", required = true, dataType =  "String")})
-    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：发送成功 isSuccess=false：发送失败，resMsg为错误信息")})
-    public JsonResultObj sendMesCode(String mobile, String type)
-    {
-        LOGGER.info("开始生成发送短信验证码 mobile={},type={}",mobile,type);
-        JsonResultObj resultObj = null;
-        try
-        {
-            if(!"register".equals(type))
-            {
-                //检查手机号是否存在,mobileExist=1表示存在
-                int mobileExist =  userService.checkUserExistByMobile(mobile);
-                if(mobileExist != 1)
-                {
-                    LOGGER.error("短信验证码生成发送失败，手机号不存在 mobile={}",mobile);
-                    resultObj = new JsonResultObj(false, JsonResultEnum.USER_MOBILE_NOT_EXIST);
-                    return resultObj;
-                }
-            }
 
-            String mesCode = null;
-            //检查是否存在有效的短信验证码
-            mesCode = mobileService.loadMesCodeByMobile(mobile);
-            if(mesCode == null)
-            {
-                //不存在有效验证码就随机生成一个6位数短信验证码
-                mesCode = String.valueOf(new Random().nextInt(899999) + 100000);
-                //将新生成的验证码存入数据库
-                mobileService.addMesCode(mobile, mesCode);
-            }
-            LOGGER.info("成功生成短信验证码 mesCode={}",mesCode);
-            //发送验证码短信功能。。。
-            ISMS smsService = new SMSService().getSMSImplPort();
-            smsService.smsSend(mobile,mesCode);
-            resultObj = new JsonResultObj(true);
-
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            LOGGER.error("短信验证码生成发送失败：{}",e.getMessage());
-            resultObj = new JsonResultObj(false);
-        }
-        LOGGER.info("结束生成发送短信验证码");
-        return resultObj;
-    }
 
     //重置密码
     @RequestMapping(value = "/resetPassword",method = RequestMethod.POST)
@@ -225,48 +175,48 @@ public class MobileController
         return resultObj;
     }
 
-    @RequestMapping(value = "/addUser",method = RequestMethod.POST)
-    @ResponseBody
-    @ApiOperation(value="注册用户")
-    @ApiImplicitParams({@ApiImplicitParam(name="username", value="用户名", required=true, dataType="String"),
-            @ApiImplicitParam(name="password", value="密码", required=true, dataType="String"),
-            @ApiImplicitParam(name="mobile", value="手机号", required=true, dataType="String"),
-            @ApiImplicitParam(name="mesCode", value="短信验证码", required=true, dataType="String")
-    })
-    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：注册成功 isSuccess=false：注册失败，resMsg为错误信息")})
-    public JsonResultObj addUser(String username, String password, String mobile, String mesCode)
-    {
-        LOGGER.info("开始新增用户");
-        JsonResultObj resultObj = null;
-        try
-        {
-            byte isDelete = 0;
-            byte isEnable = 1;
-            byte isLocked = 0;
-            userService.addUser(username, password, mobile, "", isDelete,
-                    isEnable, isLocked, 1L,mesCode);
-            resultObj = new JsonResultObj(true);
-        }
-        catch (Exception e)
-        {
-            LOGGER.error("新增用户失败：{}",e.getMessage());
-            if(e instanceof MesCodeExpiredException)
-            {
-                resultObj = new JsonResultObj(false, JsonResultEnum.USER_MESCODE_EXPIRED);
-            }
-            else if(e instanceof MesCodeErrorException)
-            {
-                resultObj = new JsonResultObj(false, JsonResultEnum.USER_MESCODE_ERROR);
-            }
-            else
-            {
-                e.printStackTrace();
-                resultObj = new JsonResultObj(false);
-            }
-        }
-        LOGGER.info("结束新增用户");
-        return resultObj;
-    }
+//    @RequestMapping(value = "/addUser",method = RequestMethod.POST)
+//    @ResponseBody
+//    @ApiOperation(value="注册用户")
+//    @ApiImplicitParams({@ApiImplicitParam(name="username", value="用户名", required=true, dataType="String"),
+//            @ApiImplicitParam(name="password", value="密码", required=true, dataType="String"),
+//            @ApiImplicitParam(name="mobile", value="手机号", required=true, dataType="String"),
+//            @ApiImplicitParam(name="mesCode", value="短信验证码", required=true, dataType="String")
+//    })
+//    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：注册成功 isSuccess=false：注册失败，resMsg为错误信息")})
+//    public JsonResultObj addUser(String username, String password, String mobile, String mesCode)
+//    {
+//        LOGGER.info("开始新增用户");
+//        JsonResultObj resultObj = null;
+//        try
+//        {
+//            byte isDelete = 0;
+//            byte isEnable = 1;
+//            byte isLocked = 0;
+//            userService.addUser(username, password, mobile, "", isDelete,
+//                    isEnable, isLocked, 1L,mesCode);
+//            resultObj = new JsonResultObj(true);
+//        }
+//        catch (Exception e)
+//        {
+//            LOGGER.error("新增用户失败：{}",e.getMessage());
+//            if(e instanceof MesCodeExpiredException)
+//            {
+//                resultObj = new JsonResultObj(false, JsonResultEnum.USER_MESCODE_EXPIRED);
+//            }
+//            else if(e instanceof MesCodeErrorException)
+//            {
+//                resultObj = new JsonResultObj(false, JsonResultEnum.USER_MESCODE_ERROR);
+//            }
+//            else
+//            {
+//                e.printStackTrace();
+//                resultObj = new JsonResultObj(false);
+//            }
+//        }
+//        LOGGER.info("结束新增用户");
+//        return resultObj;
+//    }
 
 
 }
