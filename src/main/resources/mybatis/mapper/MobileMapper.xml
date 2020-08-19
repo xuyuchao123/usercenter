@@ -14,9 +14,9 @@
 
     <insert id="insertMesCode">
         insert into sys_mobile_msgcode(
-          msgCode, mobile,status,gmt_create,gmt_modified
+          id, msgCode, mobile,status,gmt_create,gmt_modified
         )
-        values (#{mesCode,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
+        values (MOBILE_MESCODE_SEQ.nextval, #{mesCode,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
            #{gmtCreate,jdbcType=TIMESTAMP},#{gmtModified,jdbcType=TIMESTAMP}
         )
     </insert>

@@ -11,4 +11,6 @@ public interface MobileService
 
     public void setMesCodeInvalid(String mobile) throws Exception;
 
+    public void checkAndSendMesCode(String mobile) throws Exception;
+
 }

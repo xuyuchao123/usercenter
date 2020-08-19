@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 import com.avei.shriety.wx_sdk.pojo.Userinfo;
+import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.Role;
 import com.xyc.userc.entity.User;
 import com.xyc.userc.service.MobileService;
@@ -105,7 +106,7 @@ public class TemplateController
 		return resultObj;
 	}
 
-	@GetMapping("/bindMobile")
+	@PostMapping("/bindMobile")
 	@ApiOperation(value="绑定手机号")
 	@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String")
 	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：绑定成功 isSuccess=false：绑定失败，resMsg为错误信息")})
@@ -147,46 +148,27 @@ public class TemplateController
 	}
 
 	//发送验证码
-	@RequestMapping(value = "/sendMesCode",method = RequestMethod.GET)
+	@RequestMapping(value = "/sendMesCode",method = RequestMethod.POST)
 	@ResponseBody
 	@ApiOperation(value="发送短信验证码")
-	@ApiImplicitParams({@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType =  "String"),
-			@ApiImplicitParam(name = "type", value = "操作类型", required = true, dataType =  "String")})
+	@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String")
 	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：发送成功 isSuccess=false：发送失败，resMsg为错误信息")})
-	public JsonResultObj sendMesCode(String mobile, String type)
+	public JsonResultObj sendMesCode(String mobile)
 	{
-		LOGGER.info("开始生成发送短信验证码 mobile={},type={}",mobile,type);
+		LOGGER.info("开始生成发送短信验证码 mobile={}",mobile);
 		JsonResultObj resultObj = null;
 		try
 		{
-			if(!"register".equals(type))
-			{
-				//检查手机号是否存在,mobileExist=1表示存在
-				int mobileExist =  userService.checkUserExistByMobile(mobile);
-				if(mobileExist != 1)
-				{
-					LOGGER.error("短信验证码生成发送失败，手机号不存在 mobile={}",mobile);
-					resultObj = new JsonResultObj(false, JsonResultEnum.USER_MOBILE_NOT_EXIST);
-					return resultObj;
-				}
-			}
-
-			String mesCode = null;
-			//检查是否存在有效的短信验证码
-			mesCode = mobileService.loadMesCodeByMobile(mobile);
-			if(mesCode == null)
-			{
-				//不存在有效验证码就随机生成一个6位数短信验证码
-				mesCode = String.valueOf(new Random().nextInt(899999) + 100000);
-				//将新生成的验证码存入数据库
-				mobileService.addMesCode(mobile, mesCode);
-			}
-			LOGGER.info("成功生成短信验证码 mesCode={}",mesCode);
-			//发送验证码短信功能。。。
-			ISMS smsService = new SMSService().getSMSImplPort();
-			smsService.smsSend(mobile,mesCode);
+			//检查手机号是否存在,mobileExist=1表示存在
+//			int mobileExist =  userService.checkUserExistByMobile(mobile);
+//			if(mobileExist != 1)
+//			{
+//				LOGGER.error("短信验证码生成发送失败，手机号不存在 mobile={}",mobile);
+//				resultObj = new JsonResultObj(false, JsonResultEnum.USER_MOBILE_NOT_EXIST);
+//				return resultObj;
+//			}
+			mobileService.checkAndSendMesCode(mobile);
 			resultObj = new JsonResultObj(true);
-
 		}
 		catch (Exception e)
 		{
@@ -197,4 +179,29 @@ public class TemplateController
 		LOGGER.info("结束生成发送短信验证码");
 		return resultObj;
 	}
+
+	@PostMapping("/queryCarNum")
+	@ApiOperation(value="查询车牌号")
+	@ApiImplicitParams({@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String"),
+			@ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String")})
+	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
+	public JsonResultObj queryCarNum(String mobile, String carNum)
+	{
+		LOGGER.info("开始查询车牌号mobile={},carNum={}",mobile,carNum);
+		JsonResultObj resultObj = null;
+		try
+		{
+			List<CarNumOpenId> carNumOpenIdList = userService.getCarNum(mobile,carNum);
+			resultObj = new JsonResultObj(true,carNumOpenIdList);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			LOGGER.error("查询车牌号失败：{}",e.getMessage());
+			resultObj = new JsonResultObj(false);
+		}
+		LOGGER.info("结束查询车牌号");
+		return resultObj;
+	}
+
 }

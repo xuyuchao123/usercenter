@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import smsservice.ISMS;
+import smsservice.SMSService;
 
 import java.util.Date;
+import java.util.Random;
 
 /**
  * Created by 1 on 2020/7/8.
@@ -60,13 +63,27 @@ public class MobileServiceImpl implements MobileService
 
     }
 
-    //检查给定的手机号是否已经存在有效的短信验证码
-//    @Override
-//    public String getValidMesCode(String mobile) throws Exception
-//    {
-//        LOGGER.info("开始查询有效短信验证码失方法 mobile={}", mobile);
-//        mobileMapper.selectValidMesCode(mobile);
-//        LOGGER.info("结束查询有效短信验证码失方法 mobile={}", mobile);
-//        return null;
-//    }
+    @Override
+    public void checkAndSendMesCode(String mobile) throws Exception
+    {
+        LOGGER.info("进入检查并发送短信验证码方法 mobile={}",mobile);
+        String mesCode = null;
+        //检查是否存在有效的短信验证码
+        mesCode = mobileMapper.selectMesCodeByMobile(mobile);
+        //不存在有效验证码就随机生成一个6位数短信验证码
+        if(mesCode == null)
+        {
+            mesCode = String.valueOf(new Random().nextInt(899999) + 100000);
+            //将新生成的验证码存入数据库
+            int status = 1;
+            Date gmtCreate = new Date();
+            Date gmtModified = gmtCreate;
+            mobileMapper.insertMesCode(mobile,mesCode,status,gmtCreate,gmtModified);
+        }
+        LOGGER.info("成功生成短信验证码 mesCode={}",mesCode);
+        //发送验证码短信功能。。。
+        ISMS smsService = new SMSService().getSMSImplPort();
+        smsService.smsSend(mobile,mesCode);
+        LOGGER.info("结束检查并发送短信验证码方法");
+    }
 }

@@ -1,10 +1,8 @@
 package com.xyc.userc.service.impl;
 
 import com.avei.shriety.wx_sdk.pojo.Userinfo;
-import com.xyc.userc.dao.MobileMapper;
-import com.xyc.userc.dao.MobileOpenIdMapper;
-import com.xyc.userc.dao.RoleMapper;
-import com.xyc.userc.dao.UserMapper;
+import com.xyc.userc.dao.*;
+import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.MobileOpenId;
 import com.xyc.userc.entity.Role;
 import com.xyc.userc.entity.User;
@@ -53,6 +51,9 @@ public class UserServiceImpl implements UserService
 
     @Autowired
     private MobileOpenIdMapper mobileOpenIdMapper;
+
+    @Autowired
+    private CarNumOpenIdMapper carNumOpenIdMapper;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -178,5 +179,14 @@ public class UserServiceImpl implements UserService
         }
         LOGGER.info("结束绑定手机号方法 role：{}",role);
         return role;
+    }
+
+    @Override
+    public List<CarNumOpenId> getCarNum(String mobile, String carNum) throws Exception
+    {
+        LOGGER.info("进入查询车牌号方法 mobile:{} carNum：{}",mobile,carNum);
+        List<CarNumOpenId> carNumOpenIdList = carNumOpenIdMapper.selectByMobileCarNum(mobile,carNum);
+        LOGGER.info("结束查询车牌号方法carNumOpenIdList={}",carNumOpenIdList);
+        return carNumOpenIdList;
     }
 }

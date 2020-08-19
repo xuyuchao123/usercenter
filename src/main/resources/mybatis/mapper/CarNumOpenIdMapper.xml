@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyc.userc.dao.CarNumOpenIdMapper">
+
+    <resultMap id="BaseResultMap" type="com.xyc.userc.entity.CarNumOpenId">
+        <id column="id" jdbcType="NUMERIC" property="id" />
+        <result column="openid" jdbcType="VARCHAR" property="openId" />
+        <result column="carnumber" jdbcType="VARCHAR" property="carNum" />
+        <result column="is_deleted" jdbcType="NUMERIC" property="isDeleted" />
+        <result column="user_create" jdbcType="NUMERIC" property="userCreate" />
+        <result column="user_modified" jdbcType="NUMERIC" property="userModified" />
+        <result column="gmt_create" jdbcType="VARCHAR" property="gmtCreate" />
+        <result column="gmt_modified" jdbcType="VARCHAR" property="gmtModified" />
+    </resultMap>
+
+    <select id="selectByMobileCarNum" resultMap="BaseResultMap">
+        select oc.* from
+        SYS_OPENID_CARNUMBER oc
+        left join SYS_MOBILE_OPENID mo
+        on oc.OPENID = mo.OPENID
+        <where>
+            <if test="mobile != null">
+                and mo.mobile = #{mobile}
+            </if>
+            <if test="carNum != null">
+                and oc.CARNUMBER = #{carNum}
+            </if>
+            and oc.IS_DELETED = 0
+        </where>
+    </select>
+
+    <insert id="insertMobileOpenId"  parameterType="com.xyc.userc.entity.Role">
+        insert into SYS_MOBILE_OPENID (ID,MOBILE,OPENID,USER_CREATE,GMT_CREATE)
+        VALUES (MOBILE_OPENID_SEQ.nextval,#{mobile},#{openId},#{userCreate},#{gmtCreate})
+    </insert>
+
+</mapper>
