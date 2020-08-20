@@ -11,6 +11,7 @@ import com.xyc.userc.entity.Role;
 import com.xyc.userc.entity.User;
 import com.xyc.userc.service.MobileService;
 import com.xyc.userc.service.UserService;
+import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
 import io.swagger.annotations.*;
@@ -24,6 +25,7 @@ import com.avei.shriety.wx_sdk.pojo.ReturnData;
 import com.avei.shriety.wx_sdk.template.Template;
 import smsservice.ISMS;
 import smsservice.SMSService;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * Created by 1 on 2020/8/11.
@@ -43,6 +45,7 @@ public class TemplateController
 	MobileService mobileService;
 
 	@GetMapping("/template")
+    @ApiIgnore
 	public ReturnData templateSend()
 	{
 		// oPh4us7phJe_qUG8o1TGY4Mrd2Yg 氕氘氚
@@ -108,11 +111,12 @@ public class TemplateController
 
 	@PostMapping("/bindMobile")
 	@ApiOperation(value="绑定手机号")
-	@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String")
+    @ApiImplicitParams({@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "mesCode", value = "短信验证码", required = true, dataType = "String")})
 	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：绑定成功 isSuccess=false：绑定失败，resMsg为错误信息")})
-	public JsonResultObj bindMobile(HttpSession session, String mobile)
+	public JsonResultObj bindMobile(HttpSession session, String mobile, String mesCode)
 	{
-		LOGGER.info("开始绑定手机号 mobile={}", mobile);
+		LOGGER.info("开始绑定手机号 mobile={},mesCode={}",mobile,mesCode);
 		JsonResultObj resultObj;
 		try
 		{
@@ -129,7 +133,7 @@ public class TemplateController
 				return resultObj;
 			}
 			String openId = user.getOpenid();
-			Role role = userService.bindMobileToOpenId(mobile, openId);
+			Role role = userService.bindMobileToOpenId(mobile,mesCode,openId);
 			List<Role> roleList = new ArrayList<Role>();
 			roleList.add(role);
 			user.setRoles(roleList);
@@ -139,9 +143,17 @@ public class TemplateController
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
-			LOGGER.error("绑定手机号失败：{}", e.getMessage());
-			resultObj = new JsonResultObj(false);
+		    if(e instanceof BusinessException)
+            {
+                LOGGER.error("绑定手机号失败：{}", ((BusinessException) e).getJsonResultEnum().getMessage());
+                resultObj = new JsonResultObj(false,((BusinessException) e).getJsonResultEnum());
+            }
+            else
+            {
+                e.printStackTrace();
+                LOGGER.error("绑定手机号失败：{}", e.getMessage());
+                resultObj = new JsonResultObj(false);
+            }
 		}
 		LOGGER.info("结束绑定手机号 mobile={}",mobile);
 		return resultObj;

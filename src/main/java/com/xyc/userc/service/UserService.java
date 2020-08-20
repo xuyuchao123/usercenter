@@ -27,7 +27,7 @@ public interface UserService
 
      User getUser(User user) throws Exception;
 
-     Role bindMobileToOpenId(String mobile, String openId) throws Exception;
+     Role bindMobileToOpenId(String mobile, String mesCode, String openId) throws Exception;
 
      List<CarNumOpenId> getCarNum(String mobile, String carNum) throws Exception;
 }

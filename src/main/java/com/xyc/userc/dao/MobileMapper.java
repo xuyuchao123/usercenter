@@ -16,7 +16,7 @@ public interface MobileMapper
                               @Param("status")int status, @Param("gmtCreate")Date gmtCreate,
                               @Param("gmtModified")Date gmtModified);
 
-    public void updateMesCodeStatus(@Param("mobile")String mobile, @Param("status")Byte status,
+    public void updateMesCodeStatus(@Param("mobile")String mobile, @Param("status")int status,
                                     @Param("gmtModified")Date gmtModified);
 
     public String selectValidMesCode(@Param("mobile")String mobile);

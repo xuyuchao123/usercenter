@@ -10,6 +10,9 @@ import com.xyc.userc.security.MesCodeErrorException;
 import com.xyc.userc.security.MesCodeExpiredException;
 import com.xyc.userc.security.MobileNotFoundException;
 import com.xyc.userc.service.UserService;
+import com.xyc.userc.util.BusinessException;
+import com.xyc.userc.util.JsonResultEnum;
+import com.xyc.userc.util.JsonResultObj;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,30 +158,56 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public Role bindMobileToOpenId(String mobile, String openId) throws Exception
+    public Role bindMobileToOpenId(String mobile, String mesCode, String openId) throws Exception
     {
-        LOGGER.info("进入绑定手机号方法 mobile:{} openid：{}",mobile,openId);
+        LOGGER.info("进入绑定手机号方法 mobile={} mesCode={} openid={}",mobile,mesCode,openId);
 //        HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         MobileOpenId mobileOpenId = new MobileOpenId(mobile,openId,openId,new Date());
-        int i = mobileOpenIdMapper.insertMobileOpenId(mobileOpenId);
-        Map map = userMapper.selectUserRoleByOpenId(openId);
-        Role role = null;
-        if(map != null)
+        LOGGER.info("开始校验短信验证码是否正确 mobile={} mesCode={}",mobile,mesCode);
+        String storedMesCode = mobileMapper.selectMesCodeByMobile(mobile);
+        if(storedMesCode == null)
         {
-            int mobileOpenIdId = Integer.parseInt(map.get("MOBILEOPENIDID").toString());
-            int roleId = Integer.parseInt(map.get("ROLEID").toString());
-            Date date = new Date();
-            roleMapper.insertUserRole(mobileOpenIdId,roleId,date,date);
-            String roleName = (String)map.get("ROLENAME");
-            String roleCode = (String)map.get("ROLECODE");
-            int isDeleted = Integer.parseInt(map.get("ISDELETED").toString());
-            Date gmtCreate = (Date)map.get("GMTCREATE");
-            Date gmtModified = (Date)map.get("GMTMODIFIED");
-            int parentRoleId = Integer.parseInt(map.get("PARENTROLEID").toString());
-            role = new Role(roleId,roleName,roleCode,isDeleted,gmtCreate,gmtModified,parentRoleId);
+            LOGGER.info("短信验证码已失效 mobile={}",mobile);
+            throw new BusinessException(JsonResultEnum.USER_MESCODE_EXPIRED);
+//            resultObj = new JsonResultObj(false, JsonResultEnum.USER_MESCODE_EXPIRED);
         }
-        LOGGER.info("结束绑定手机号方法 role：{}",role);
-        return role;
+        else if(!storedMesCode.equals(mesCode))
+        {
+            LOGGER.info("短信验证码不正确 mobile={} mesCode={}",mobile,mesCode);
+            throw new BusinessException(JsonResultEnum.USER_MESCODE_ERROR);
+//            resultObj = new JsonResultObj(false, JsonResultEnum.USER_MESCODE_ERROR);
+        }
+        else
+        {
+            LOGGER.info("短信验证码输入正确 mobile={} mesCode={}", mobile,mesCode);
+            LOGGER.info("开始设置验证码状态失效 mobile={} mesCode={}", mobile,mesCode);
+            int status = 0;
+            Date gmtModified = new Date();
+            mobileMapper.updateMesCodeStatus(mobile,status,gmtModified);
+            LOGGER.info("成功设置验证码失效状态 mobile={} mesCode={}", mobile,mesCode);
+
+            int i = mobileOpenIdMapper.insertMobileOpenId(mobileOpenId);
+            Map map = userMapper.selectUserRoleByOpenId(openId);
+            Role role = null;
+            if(map != null)
+            {
+                int mobileOpenIdId = Integer.parseInt(map.get("MOBILEOPENIDID").toString());
+                int roleId = Integer.parseInt(map.get("ROLEID").toString());
+                Date date = new Date();
+                roleMapper.insertUserRole(mobileOpenIdId,roleId,date,date);
+                String roleName = (String)map.get("ROLENAME");
+                String roleCode = (String)map.get("ROLECODE");
+                int isDeleted = Integer.parseInt(map.get("ISDELETED").toString());
+                Date gmtCreate = (Date)map.get("GMTCREATE");
+                Date gmtModified_role = (Date)map.get("GMTMODIFIED");
+                int parentRoleId = Integer.parseInt(map.get("PARENTROLEID").toString());
+                role = new Role(roleId,roleName,roleCode,isDeleted,gmtCreate,gmtModified_role,parentRoleId);
+            }
+            LOGGER.info("结束绑定手机号方法 role：{}",role);
+            return role;
+        }
+
+
     }
 
     @Override
