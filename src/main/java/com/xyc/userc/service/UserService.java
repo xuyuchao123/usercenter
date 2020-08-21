@@ -29,5 +29,5 @@ public interface UserService
 
      Role bindMobileToOpenId(String mobile, String mesCode, String openId) throws Exception;
 
-     List<CarNumOpenId> getCarNum(String mobile, String carNum) throws Exception;
+
 }

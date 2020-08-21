@@ -147,4 +147,10 @@
     and r.IS_DELETED = 0
   </select>
 
+  <update id="updateRoleIdByMobileOpenId">
+    update SYS_USER_ROLE ur
+    set ur.ROLE_ID = #{roleId}
+    where ur.MOBILE_OPENID_ID = #{mobileOpenIdId}
+  </update>
+
 </mapper>

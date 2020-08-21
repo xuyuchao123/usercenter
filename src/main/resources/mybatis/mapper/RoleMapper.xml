@@ -93,5 +93,10 @@
     values (USER_ROLE_SEQ.nextval,#{mobileOpenIdId},#{roleId},#{gmtCreate},#{gmtModified})
   </insert>
 
+  <select id="selectIdByRoleCode">
+    select r.ID from SYS_ROLE r
+    where r.ROLE_CODE = #{roleCode}
+    and r.IS_DELETED = 0
+  </select>
 
 </mapper>

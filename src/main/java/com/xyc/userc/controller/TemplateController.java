@@ -9,6 +9,7 @@ import com.avei.shriety.wx_sdk.pojo.Userinfo;
 import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.Role;
 import com.xyc.userc.entity.User;
+import com.xyc.userc.service.CarNumService;
 import com.xyc.userc.service.MobileService;
 import com.xyc.userc.service.UserService;
 import com.xyc.userc.util.BusinessException;
@@ -43,6 +44,9 @@ public class TemplateController
 
 	@Resource
 	MobileService mobileService;
+
+	@Resource
+	CarNumService carNumService;
 
 	@GetMapping("/template")
     @ApiIgnore
@@ -171,14 +175,6 @@ public class TemplateController
 		JsonResultObj resultObj = null;
 		try
 		{
-			//检查手机号是否存在,mobileExist=1表示存在
-//			int mobileExist =  userService.checkUserExistByMobile(mobile);
-//			if(mobileExist != 1)
-//			{
-//				LOGGER.error("短信验证码生成发送失败，手机号不存在 mobile={}",mobile);
-//				resultObj = new JsonResultObj(false, JsonResultEnum.USER_MOBILE_NOT_EXIST);
-//				return resultObj;
-//			}
 			mobileService.checkAndSendMesCode(mobile);
 			resultObj = new JsonResultObj(true);
 		}
@@ -203,7 +199,7 @@ public class TemplateController
 		JsonResultObj resultObj = null;
 		try
 		{
-			List<CarNumOpenId> carNumOpenIdList = userService.getCarNum(mobile,carNum);
+			List<CarNumOpenId> carNumOpenIdList = carNumService.getCarNum(mobile,carNum);
 			resultObj = new JsonResultObj(true,carNumOpenIdList);
 		}
 		catch (Exception e)
@@ -215,5 +211,86 @@ public class TemplateController
 		LOGGER.info("结束查询车牌号");
 		return resultObj;
 	}
+
+    @PostMapping("/deleteCarNum")
+    @ApiOperation(value="删除车牌号")
+    @ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String")
+    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：删除成功 isSuccess=false：删除失败，resMsg为错误信息")})
+    public JsonResultObj deleteCarNum(String carNum, HttpSession session)
+    {
+        LOGGER.info("开始删除车牌号 carNum={}",carNum);
+        JsonResultObj resultObj = null;
+        User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
+//            if(user == null)
+//            {
+//                user = new User();
+//                user.setOpenid("oPh4us4mI1Egdf_aCs9PzL8j9qLY");
+//            }
+        if(user == null)
+        {
+            LOGGER.info("session中不存在用户信息");
+            resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
+            return resultObj;
+        }
+        String openId = user.getOpenid();
+        try
+        {
+			carNumService.removeCarNum(carNum,openId);
+            resultObj = new JsonResultObj(true);
+        }
+        catch (Exception e)
+        {
+			if(e instanceof BusinessException)
+			{
+				LOGGER.error("删除车牌号失败：{}", ((BusinessException)e).getJsonResultEnum().getMessage());
+				resultObj = new JsonResultObj(false,((BusinessException)e).getJsonResultEnum());
+			}
+			else
+			{
+				e.printStackTrace();
+				LOGGER.error("删除车牌号失败：{}",e.getMessage());
+				resultObj = new JsonResultObj(false);
+			}
+        }
+        LOGGER.info("结束删除车牌号");
+        return resultObj;
+    }
+
+	@PostMapping("/addCarNum")
+	@ApiOperation(value="新增车牌号")
+	@ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String")
+	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：新增成功 isSuccess=false：新增失败，resMsg为错误信息")})
+	public JsonResultObj addCarNum(String carNum, HttpSession session)
+	{
+		LOGGER.info("开始新增车牌号 carNum={}", carNum);
+		JsonResultObj resultObj = null;
+		User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
+//            if(user == null)
+//            {
+//                user = new User();
+//                user.setOpenid("oPh4us4mI1Egdf_aCs9PzL8j9qLY");
+//            }
+		if(user == null)
+		{
+			LOGGER.info("session中不存在用户信息");
+			resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
+			return resultObj;
+		}
+		String openId = user.getOpenid();
+		try
+		{
+			carNumService.addCarNum(carNum,openId);
+			resultObj = new JsonResultObj(true);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			LOGGER.error("新增车牌号失败：{}",e.getMessage());
+			resultObj = new JsonResultObj(false);
+		}
+		LOGGER.info("结束新增车牌号 carNum={}", carNum);
+		return resultObj;
+	}
+
 
 }

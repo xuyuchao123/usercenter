@@ -14,10 +14,20 @@ public class CarNumOpenId implements Serializable
     private String openId;
     private String carNum;
     private int isDeleted;
-    private int userCreate;
-    private int userModified;
+    private String userCreate;
+    private String userModified;
     private Date gmtCreate;
     private Date gmtModified;
+
+    public CarNumOpenId(String openId, String carNum, int isDeleted, String userCreate, String userModified, Date gmtCreate, Date gmtModified) {
+        this.openId = openId;
+        this.carNum = carNum;
+        this.isDeleted = isDeleted;
+        this.userCreate = userCreate;
+        this.userModified = userModified;
+        this.gmtCreate = gmtCreate;
+        this.gmtModified = gmtModified;
+    }
 
     public int getId() {
         return id;
@@ -51,19 +61,19 @@ public class CarNumOpenId implements Serializable
         this.isDeleted = isDeleted;
     }
 
-    public int getUserCreate() {
+    public String getUserCreate() {
         return userCreate;
     }
 
-    public void setUserCreate(int userCreate) {
+    public void setUserCreate(String userCreate) {
         this.userCreate = userCreate;
     }
 
-    public int getUserModified() {
+    public String getUserModified() {
         return userModified;
     }
 
-    public void setUserModified(int userModified) {
+    public void setUserModified(String userModified) {
         this.userModified = userModified;
     }
 

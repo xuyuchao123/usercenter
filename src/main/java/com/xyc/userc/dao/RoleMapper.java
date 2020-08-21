@@ -25,4 +25,6 @@ public interface RoleMapper {
 
     void insertUserRole(@Param("mobileOpenIdId")Integer mobileOpenIdId, @Param("roleId")Integer roleId,
                         @Param("gmtCreate")Date gmtCreate, @Param("gmtModified")Date gmtModified);
+
+    int selectIdByRoleCode(@Param("roleCode")String roleCode);
 }

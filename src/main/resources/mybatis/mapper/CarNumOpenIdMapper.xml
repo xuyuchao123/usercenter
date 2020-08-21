@@ -29,9 +29,28 @@
         </where>
     </select>
 
-    <insert id="insertMobileOpenId"  parameterType="com.xyc.userc.entity.Role">
-        insert into SYS_MOBILE_OPENID (ID,MOBILE,OPENID,USER_CREATE,GMT_CREATE)
-        VALUES (MOBILE_OPENID_SEQ.nextval,#{mobile},#{openId},#{userCreate},#{gmtCreate})
+
+    <update id="deleteByCarNumOpenId">
+        update SYS_OPENID_CARNUMBER oc
+        set oc.IS_DELETED = 1
+        WHERE oc.CARNUMBER = #{carNum}
+        and oc.OPENID = #{openId}
+    </update>
+
+    <select id="selectByOpenId">
+        select mo.id
+        from SYS_OPENID_CARNUMBER oc
+        left join SYS_MOBILE_OPENID mo
+        on oc.openid = mo.openid
+        where oc.OPENID = #{openId}
+        and oc.IS_DELETED = 0
+    </select>
+
+    <insert id="insert" parameterType="com.xyc.userc.entity.CarNumOpenId">
+        insert into SYS_OPENID_CARNUMBER(ID,OPENID,CARNUMBER,IS_DELETED,USER_CREATE,
+          USER_MODIFIED,GMT_CREATE,GMT_MODIFIED)
+        VALUES (OPENID_CARNUM_SEQ.nextval,#{openId},#{carNum},#{isDeleted},#{userCreate},
+          #{userModified},#{gmtCreate},#{gmtModified})
     </insert>
 
 </mapper>

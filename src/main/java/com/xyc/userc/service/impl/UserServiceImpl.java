@@ -13,6 +13,7 @@ import com.xyc.userc.service.UserService;
 import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
+import com.xyc.userc.util.RoleTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,21 +61,6 @@ public class UserServiceImpl implements UserService
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-//    重写认证方法,实现自定义springsecurity用户认证（用户名密码登录）
-//    @Override
-//    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException
-//    {
-//        LOGGER.info("进入通过用户名获取用户信息权限信息方法");
-//        User user = userMapper.selectByUsername(userName);
-//        if (user == null)
-//        {
-//            throw new UsernameNotFoundException("用户名不存在!");
-//        }
-//
-//        LOGGER.info("结束通过用户名获取用户信息权限信息方法");
-//        return user;
-//    }
 
     @Override
     public User loadUserByMobile(String mobile) throws UsernameNotFoundException
@@ -207,15 +193,7 @@ public class UserServiceImpl implements UserService
             return role;
         }
 
-
     }
 
-    @Override
-    public List<CarNumOpenId> getCarNum(String mobile, String carNum) throws Exception
-    {
-        LOGGER.info("进入查询车牌号方法 mobile:{} carNum：{}",mobile,carNum);
-        List<CarNumOpenId> carNumOpenIdList = carNumOpenIdMapper.selectByMobileCarNum(mobile,carNum);
-        LOGGER.info("结束查询车牌号方法carNumOpenIdList={}",carNumOpenIdList);
-        return carNumOpenIdList;
-    }
+
 }

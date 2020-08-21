@@ -33,12 +33,13 @@ public enum JsonResultEnum
     USER_MOBILE_EXIST(110,"手机号已被注册"),
     USER_MESCODE_NOT_EXIST(111,"手机验证码为空"),
 
-    /* 业务错误 */
-    NO_PERMISSION(200, "没有权限");
-
 //    USER_ACCOUNT_ALREADY_EXIST(007, "账号已存在"),
 //    USER_ACCOUNT_USE_BY_OTHERS(008, "账号下线"),
 
+    /* 业务错误 */
+
+    NO_PERMISSION(200, "没有权限"),
+    DELETE_CARNUM_NOT_BINDED(201,"用户未绑定该车牌号，删除失败！");
 
     private Integer code;
     private String message;

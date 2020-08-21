@@ -32,4 +32,7 @@ public interface UserMapper {
 
     Map selectUserRoleByOpenId(@Param("openId")String openId);
 
+    void updateRoleIdByMobileOpenId(@Param("roleId")int roleId, @Param("mobileOpenIdId")int mobileOpenIdId);
+
+
 }
