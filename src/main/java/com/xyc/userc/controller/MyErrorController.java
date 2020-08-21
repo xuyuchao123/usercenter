@@ -54,15 +54,16 @@ public class MyErrorController extends AbstractErrorController
         Map<String, Object> body = this.getErrorAttributes(request, this.isIncludeStackTrace(request, MediaType.ALL));
         HttpStatus status = this.getStatus(request);
         LOGGER.error("系统出错！status={} errorMsg:{}",status,body.get("message"));
-        if(status == HttpStatus.FORBIDDEN)
-        {
-            LOGGER.error("权限不足! 访问路径：{}",body.get("path"));
-            jsonResultObj = new JsonResultObj(false, JsonResultEnum.NO_PERMISSION);
-        }
-        else
-        {
-            jsonResultObj = new JsonResultObj(false);
-        }
+//        if(status == HttpStatus.FORBIDDEN)
+//        {
+//            LOGGER.error("权限不足! 访问路径：{}",body.get("path"));
+//            jsonResultObj = new JsonResultObj(false, JsonResultEnum.NO_PERMISSION);
+//        }
+//        else
+//        {
+//            jsonResultObj = new JsonResultObj(false);
+//        }
+        jsonResultObj = new JsonResultObj(false);
         return jsonResultObj;
     }
 
