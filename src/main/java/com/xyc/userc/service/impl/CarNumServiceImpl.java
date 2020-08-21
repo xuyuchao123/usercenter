@@ -23,20 +23,14 @@ import java.util.List;
 @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class CarNumServiceImpl implements CarNumService
 {
-    protected static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(CarNumServiceImpl.class);
 
 
     @Autowired
     private UserMapper userMapper;
 
     @Autowired
-    private MobileMapper mobileMapper;
-
-    @Autowired
     private RoleMapper roleMapper;
-
-    @Autowired
-    private MobileOpenIdMapper mobileOpenIdMapper;
 
     @Autowired
     private CarNumOpenIdMapper carNumOpenIdMapper;

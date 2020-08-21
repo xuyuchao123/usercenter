@@ -39,8 +39,6 @@ public class UserServiceImpl implements UserService
     @Autowired
     private MobileOpenIdMapper mobileOpenIdMapper;
 
-    @Autowired
-    private CarNumOpenIdMapper carNumOpenIdMapper;
 
     @Override
     public User getUser(User user) throws Exception
