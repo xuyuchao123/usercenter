@@ -46,7 +46,7 @@
         and oc.IS_DELETED = 0
     </select>
 
-    <insert id="insert" parameterType="com.xyc.userc.entity.CarNumOpenId">
+    <insert id="insert">
         insert into SYS_OPENID_CARNUMBER(ID,OPENID,CARNUMBER,IS_DELETED,USER_CREATE,USER_MODIFIED,GMT_CREATE,GMT_MODIFIED)
         VALUES (OPENID_CARNUM_SEQ.nextval,#{openId},#{carNum},#{isDeleted},#{userCreate},#{userModified},#{gmtCreate},#{gmtModified})
     </insert>
