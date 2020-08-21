@@ -6,33 +6,10 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 import java.util.Map;
 
-public interface UserMapper {
-    int deleteByPrimaryKey(Long id);
-
-    int insert(User record);
-
-    User selectByPrimaryKey(Long id);
-
-    List<User> selectAll();
-
-    int updateByPrimaryKey(User record);
-
-    User selectByUsername(@Param("userName")String userName);
-
-    User selectByMobile(@Param("mobile")String mobile);
-
-    Integer checkUserByMobile(@Param("mobile")String mobile,@Param("isDeleted")Byte isDeleted
-                            ,@Param("isEnable")Byte isEnable,@Param("isLocked")Byte isLocked );
-
-    Integer selectRegUserByUsername(@Param("username")String username, @Param("isDeleted")Byte isDeleted);
-
-    Integer selectRegUserByMobile(@Param("mobile")String mobile, @Param("isDeleted")Byte isDeleted);
-
-    void updatePwdByMobile(@Param("mobile")String mobile, @Param("newPassword")String newPassword);
-
+public interface UserMapper
+{
     Map selectUserRoleByOpenId(@Param("openId")String openId);
 
     void updateRoleIdByMobileOpenId(@Param("roleId")int roleId, @Param("mobileOpenIdId")int mobileOpenIdId);
-
 
 }

@@ -37,7 +37,7 @@
         and oc.OPENID = #{openId}
     </update>
 
-    <select id="selectByOpenId">
+    <select id="selectByOpenId" resultType="java.lang.Integer">
         select mo.id
         from SYS_OPENID_CARNUMBER oc
         left join SYS_MOBILE_OPENID mo
@@ -61,7 +61,7 @@
         and oc.IS_DELETED = 0
     </update>
 
-    <select id="selectCntByCarNumOpenId">
+    <select id="selectCntByCarNumOpenId" resultType="java.lang.Integer">
         select count(*) from SYS_OPENID_CARNUMBER oc
         where oc.CARNUMBER = #{oldCarNum}
         and oc.OPENID = #{openId}
