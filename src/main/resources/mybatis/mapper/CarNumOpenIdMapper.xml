@@ -55,7 +55,7 @@
 
     <update id="updateCarNum">
         update SYS_OPENID_CARNUMBER oc
-        set oc.CARNUMBER = #{newCarNum}
+        set oc.CARNUMBER = #{newCarNum},
           oc.GMT_MODIFIED = #{gmtModified}
         where oc.OPENID = #{openId}
         and oc.CARNUMBER = #{oldCarNum}
