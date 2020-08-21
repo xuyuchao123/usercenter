@@ -37,7 +37,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(tags = "系统用户管理相关api")
 public class TemplateController
 {
-	protected static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+	protected static final Logger LOGGER = LoggerFactory.getLogger(TemplateController.class);
 
 	@Resource
 	UserService userService;

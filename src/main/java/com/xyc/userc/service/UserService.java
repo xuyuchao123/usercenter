@@ -15,19 +15,8 @@ import java.util.List;
  */
 public interface UserService
 {
-     User loadUserByMobile(String var1) throws UsernameNotFoundException;
-
-     int checkUserExistByMobile(String mobile) throws Exception;
-
-     void updatePassword(String mobile, String newPassword) throws Exception;
-
-     int checkUserRegByUsername(String username) throws Exception;
-
-     int checkUserRegByMobile(String mobile) throws Exception;
-
      User getUser(User user) throws Exception;
 
      Role bindMobileToOpenId(String mobile, String mesCode, String openId) throws Exception;
-
 
 }
