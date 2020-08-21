@@ -95,11 +95,11 @@ public class CarNumServiceImpl implements CarNumService
     @Override
     public void modifyCarNumByOpenId(String oldCarNum, String newCarNum, String openId) throws Exception
     {
-        LOGGER.info("结束修改车牌号方法 oldCarNum={} newCarNum={} openId={}",oldCarNum,newCarNum,openId);
+        LOGGER.info("进入修改车牌号方法 oldCarNum={} newCarNum={} openId={}",oldCarNum,newCarNum,openId);
         int selectCnt = carNumOpenIdMapper.selectCntByCarNumOpenId(oldCarNum,openId);
         if(selectCnt == 1)
         {
-            carNumOpenIdMapper.updateCarNum(oldCarNum,newCarNum,openId);
+            carNumOpenIdMapper.updateCarNum(oldCarNum,newCarNum,openId,new Date());
             LOGGER.info("成功修改车牌号 oldCarNum={} newCarNum={} openId={}",oldCarNum,newCarNum,openId);
         }
         else

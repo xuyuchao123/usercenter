@@ -4,6 +4,7 @@ import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.MobileOpenId;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,7 +20,8 @@ public interface CarNumOpenIdMapper
 
     int insert(CarNumOpenId carNumOpenId);
 
-    void updateCarNum(@Param("oldCarNum")String oldCarNum, @Param("newCarNum")String newCarNum, @Param("openId")String openId);
+    void updateCarNum(@Param("oldCarNum")String oldCarNum, @Param("newCarNum")String newCarNum,
+                      @Param("openId")String openId, @Param("gmtModified")Date gmtModified);
 
     int selectCntByCarNumOpenId(@Param("oldCarNum")String oldCarNum, @Param("openId")String openId);
 
