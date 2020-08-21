@@ -38,8 +38,9 @@ public enum JsonResultEnum
 
     /* 业务错误 */
 
-    NO_PERMISSION(200, "没有权限"),
-    DELETE_CARNUM_NOT_BINDED(201,"用户未绑定该车牌号，删除失败！");
+    DELETE_CARNUM_NOT_BINDED(200,"用户未绑定该车牌号，删除失败！"),
+
+    UPDATE_CARNUM_NOT_BINDED(300,"用户未绑定该车牌号,修改失败！");
 
     private Integer code;
     private String message;

@@ -190,8 +190,8 @@ public class TemplateController
 
 	@PostMapping("/queryCarNum")
 	@ApiOperation(value="查询车牌号")
-	@ApiImplicitParams({@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String"),
-			@ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String")})
+	@ApiImplicitParams({@ApiImplicitParam(name = "mobile", value = "手机号", required = false, dataType = "String"),
+			@ApiImplicitParam(name = "carNum", value = "车牌号", required = false, dataType = "String")})
 	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
 	public JsonResultObj queryCarNum(String mobile, String carNum)
 	{
@@ -292,5 +292,40 @@ public class TemplateController
 		return resultObj;
 	}
 
+	@PostMapping("/updateCarNum")
+	@ApiOperation(value="修改车牌号")
+	@ApiImplicitParams({@ApiImplicitParam(name="oldCarNum", value="原来的车牌号", required=true, dataType="String"),
+			@ApiImplicitParam(name="newCarNum", value="新的车牌号", required=true, dataType="String")})
+	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：修改成功 isSuccess=false：修改失败，resMsg为错误信息")})
+	public JsonResultObj updateCarNum(String oldCarNum, String newCarNum, HttpSession session) {
+		LOGGER.info("开始修改车牌号 oldCarNum={} newCarNum={}", oldCarNum, newCarNum);
+		JsonResultObj resultObj = null;
+		User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
+//            if(user == null)
+//            {
+//                user = new User();
+//                user.setOpenid("oPh4us4mI1Egdf_aCs9PzL8j9qLY");
+//            }
+		if (user == null) {
+			LOGGER.info("session中不存在用户信息");
+			resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
+			return resultObj;
+		}
+		String openId = user.getOpenid();
 
+		try {
+			carNumService.modifyCarNumByOpenId(oldCarNum, newCarNum, openId);
+		} catch (Exception e) {
+			if (e instanceof BusinessException) {
+				LOGGER.error("修改车牌号失败：{}", ((BusinessException) e).getJsonResultEnum().getMessage());
+				resultObj = new JsonResultObj(false, ((BusinessException) e).getJsonResultEnum());
+			} else {
+				e.printStackTrace();
+				LOGGER.error("修改车牌号失败：{}", e.getMessage());
+				resultObj = new JsonResultObj(false);
+			}
+		}
+		LOGGER.info("结束修改车牌号 oldCarNum={} newCarNum={}", oldCarNum, newCarNum);
+		return resultObj;
+	}
 }

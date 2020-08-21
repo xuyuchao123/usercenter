@@ -53,4 +53,19 @@
           #{userModified},#{gmtCreate},#{gmtModified})
     </insert>
 
+    <update id="updateCarNum">
+        update SYS_OPENID_CARNUMBER oc
+        set oc.CARNUMBER = #{newCarNum}
+        where oc.OPENID = #{openId}
+        and oc.CARNUMBER = #{oldCarNum}
+        and oc.IS_DELETED = 0
+    </update>
+
+    <select id="selectCntByCarNumOpenId">
+        select count(*) from SYS_OPENID_CARNUMBER oc
+        where oc.CARNUMBER = #{oldCarNum}
+        and oc.OPENID = #{openId}
+        and oc.IS_DELETED = 0
+    </select>
+
 </mapper>

@@ -19,4 +19,8 @@ public interface CarNumOpenIdMapper
 
     int insert(CarNumOpenId carNumOpenId);
 
+    void updateCarNum(@Param("oldCarNum")String oldCarNum, @Param("newCarNum")String newCarNum, @Param("openId")String openId);
+
+    int selectCntByCarNumOpenId(@Param("oldCarNum")String oldCarNum, @Param("openId")String openId);
+
 }

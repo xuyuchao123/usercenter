@@ -91,4 +91,22 @@ public class CarNumServiceImpl implements CarNumService
         }
         LOGGER.info("结束新增车牌号方法 carNum={} openId={}",carNum,openId);
     }
+
+    @Override
+    public void modifyCarNumByOpenId(String oldCarNum, String newCarNum, String openId) throws Exception
+    {
+        LOGGER.info("结束修改车牌号方法 oldCarNum={} newCarNum={} openId={}",oldCarNum,newCarNum,openId);
+        int selectCnt = carNumOpenIdMapper.selectCntByCarNumOpenId(oldCarNum,openId);
+        if(selectCnt == 1)
+        {
+            carNumOpenIdMapper.updateCarNum(oldCarNum,newCarNum,openId);
+            LOGGER.info("成功修改车牌号 oldCarNum={} newCarNum={} openId={}",oldCarNum,newCarNum,openId);
+        }
+        else
+        {
+            LOGGER.info("该用户未绑定该车牌，修改失败 oldCarNum={} newCarNum={} openId={}",oldCarNum,newCarNum,openId);
+            throw new BusinessException(JsonResultEnum.UPDATE_CARNUM_NOT_BINDED);
+        }
+        LOGGER.info("结束修改车牌号方法  oldCarNum={} newCarNum={} openId={}",oldCarNum,newCarNum,openId);
+    }
 }
