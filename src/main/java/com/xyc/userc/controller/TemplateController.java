@@ -88,12 +88,7 @@ public class TemplateController
 				user = (User) session.getAttribute(WxsdkConstant.USERINFO);
 				if(user == null)
 				{
-					user = new User();
-					user.setOpenid("oPh4us5ix_xOIVMqeU6VE9WekoO4");
-					user.setNickname("千里驹");
-					user.setSex("0");
-					user.setHeadimgurl("http://thirdwx.qlogo.cn/mmopen/vi_32/icJCIVzDOTmywcVKc5KF" +
-							"fw3S0YQ3v4ibhYYZAlZAJDYskcC3WqvrPUEDFL0ZVkqgVsNdiaJ5yWaDkHKtG5lic0ehuA/132");
+					user = getTestUser();
 				}
 				if(user == null)
 				{
@@ -102,11 +97,6 @@ public class TemplateController
 				}
 				else
 				{
-//					if(user == null)
-//					{
-//						user = new User();
-//						user.setOpenid("oPh4us4mI1Egdf_aCs9PzL8j9qLY");
-//					}
 					user = userService.getUser(user);
 					resultObj = new JsonResultObj(true,user);
 				}
@@ -136,12 +126,7 @@ public class TemplateController
 			User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
           	if(user == null)
 			{
-				user = new User();
-				user.setOpenid("oPh4us5ix_xOIVMqeU6VE9WekoO4");
-				user.setNickname("千里驹");
-				user.setSex("0");
-				user.setHeadimgurl("http://thirdwx.qlogo.cn/mmopen/vi_32/icJCIVzDOTmywcVKc5KF" +
-						"fw3S0YQ3v4ibhYYZAlZAJDYskcC3WqvrPUEDFL0ZVkqgVsNdiaJ5yWaDkHKtG5lic0ehuA/132");
+				user = getTestUser();
 			}
 			if (user == null)
 			{
@@ -236,12 +221,7 @@ public class TemplateController
         User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
       	if(user == null)
 		{
-			user = new User();
-			user.setOpenid("oPh4us5ix_xOIVMqeU6VE9WekoO4");
-			user.setNickname("千里驹");
-			user.setSex("0");
-			user.setHeadimgurl("http://thirdwx.qlogo.cn/mmopen/vi_32/icJCIVzDOTmywcVKc5KF" +
-					"fw3S0YQ3v4ibhYYZAlZAJDYskcC3WqvrPUEDFL0ZVkqgVsNdiaJ5yWaDkHKtG5lic0ehuA/132");
+			user = getTestUser();
 		}
         if(user == null)
         {
@@ -284,12 +264,7 @@ public class TemplateController
 		User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
 		if(user == null)
 		{
-			user = new User();
-			user.setOpenid("oPh4us5ix_xOIVMqeU6VE9WekoO4");
-			user.setNickname("千里驹");
-			user.setSex("0");
-			user.setHeadimgurl("http://thirdwx.qlogo.cn/mmopen/vi_32/icJCIVzDOTmywcVKc5KF" +
-					"fw3S0YQ3v4ibhYYZAlZAJDYskcC3WqvrPUEDFL0ZVkqgVsNdiaJ5yWaDkHKtG5lic0ehuA/132");
+			user = getTestUser();
 		}
 		if(user == null)
 		{
@@ -324,12 +299,7 @@ public class TemplateController
 		User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
       	if(user == null)
 		{
-			user = new User();
-			user.setOpenid("oPh4us5ix_xOIVMqeU6VE9WekoO4");
-			user.setNickname("千里驹");
-			user.setSex("0");
-			user.setHeadimgurl("http://thirdwx.qlogo.cn/mmopen/vi_32/icJCIVzDOTmywcVKc5KF" +
-					"fw3S0YQ3v4ibhYYZAlZAJDYskcC3WqvrPUEDFL0ZVkqgVsNdiaJ5yWaDkHKtG5lic0ehuA/132");
+			user = getTestUser();
 		}
 		if (user == null) {
 			LOGGER.info("session中不存在用户信息");
@@ -352,5 +322,18 @@ public class TemplateController
 		}
 		LOGGER.info("结束修改车牌号 oldCarNum={} newCarNum={}", oldCarNum, newCarNum);
 		return resultObj;
+	}
+
+
+	//测试用户
+	User getTestUser()
+	{
+		User user = new User();
+		user.setOpenid("oPh4us5ix_xOIVMqeU6VE9WekoO4");
+		user.setNickname("千里驹");
+		user.setSex("0");
+		user.setHeadimgurl("http://thirdwx.qlogo.cn/mmopen/vi_32/icJCIVzDOTmywcVKc5KF" +
+				"fw3S0YQ3v4ibhYYZAlZAJDYskcC3WqvrPUEDFL0ZVkqgVsNdiaJ5yWaDkHKtG5lic0ehuA/132");
+		return user;
 	}
 }
