@@ -357,11 +357,15 @@ public class TemplateController
 	User getTestUser()
 	{
 		User user = new User();
-		user.setOpenid("oPh4us5ix_xOIVMqeU6VE9WekoO4");
-		user.setNickname("千里驹");
-		user.setSex("0");
-		user.setHeadimgurl("http://thirdwx.qlogo.cn/mmopen/vi_32/icJCIVzDOTmywcVKc5KF" +
-				"fw3S0YQ3v4ibhYYZAlZAJDYskcC3WqvrPUEDFL0ZVkqgVsNdiaJ5yWaDkHKtG5lic0ehuA/132");
+		user.setOpenid("oPh4uszJ0L7a9zNRU-tw4smPtbfU");
+		user.setNickname("一人！一车！一世界！");
+		user.setSex("1");
+		user.setProvince("山东");
+		user.setCity("临沂");
+		user.setCountry("中国");
+		user.setHeadimgurl("http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
+				"2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132");
+		user.setMobilePhone("13167068999");
 		return user;
 	}
 }
