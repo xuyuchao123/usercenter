@@ -88,10 +88,11 @@ public class UserServiceImpl implements UserService
                 roleMapper.insertUserRole(mobileOpenIdId,roleId,date,date);
                 String roleName = (String)map.get("ROLENAME");
                 String roleCode = (String)map.get("ROLECODE");
-                int isDeleted = Integer.parseInt(map.get("ISDELETED").toString());
+                Integer isDeleted = Integer.parseInt(map.get("ISDELETED").toString());
                 Date gmtCreate = (Date)map.get("GMTCREATE");
                 Date gmtModified_role = (Date)map.get("GMTMODIFIED");
-                int parentRoleId = Integer.parseInt(map.get("PARENTROLEID").toString());
+                Integer parentRoleId = map.get("PARENTROLEID") != null ?
+                        Integer.parseInt(map.get("PARENTROLEID").toString()) : null;
                 role = new Role(roleId,roleName,roleCode,isDeleted,gmtCreate,gmtModified_role,parentRoleId);
             }
             LOGGER.info("结束绑定手机号方法 role：{}",role);

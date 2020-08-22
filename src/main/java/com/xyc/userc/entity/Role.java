@@ -18,7 +18,7 @@ public class Role implements Serializable
     /**
      * id
      */
-    private int id;
+    private Integer id;
 
     /**
      * 角色名称
@@ -37,7 +37,7 @@ public class Role implements Serializable
      * 1：已删除 0：未删除
      * is_deleted
      */
-    private int isDeleted;
+    private Integer isDeleted;
 
     /**
      * 创建时间
@@ -55,9 +55,9 @@ public class Role implements Serializable
      * 父角色id
      * parent_role_id
      */
-    private int parentRoleId;
+    private Integer parentRoleId;
 
-    public Role(int id, String roleName, String roleCode, int isDeleted, Date gmtCreate, Date gmtModified, int parentRoleId)
+    public Role(Integer id, String roleName, String roleCode, Integer isDeleted, Date gmtCreate, Date gmtModified, Integer parentRoleId)
     {
         this.id = id;
         this.roleName = roleName;
@@ -68,11 +68,11 @@ public class Role implements Serializable
         this.parentRoleId = parentRoleId;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -85,11 +85,11 @@ public class Role implements Serializable
     }
 
 
-    public int getIsDeleted() {
+    public Integer getIsDeleted() {
         return isDeleted;
     }
 
-    public void setIsDeleted(int isDeleted) {
+    public void setIsDeleted(Integer isDeleted) {
         this.isDeleted = isDeleted;
     }
 
@@ -117,11 +117,11 @@ public class Role implements Serializable
         this.roleCode = roleCode;
     }
 
-    public int getParentRoleId() {
+    public Integer getParentRoleId() {
         return parentRoleId;
     }
 
-    public void setParentRoleId(int parentRoleId) {
+    public void setParentRoleId(Integer parentRoleId) {
         this.parentRoleId = parentRoleId;
     }
 }
