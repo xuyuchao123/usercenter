@@ -308,13 +308,20 @@ public class TemplateController
 		}
 		String openId = user.getOpenid();
 
-		try {
+		try
+        {
 			carNumService.modifyCarNumByOpenId(oldCarNum, newCarNum, openId);
-		} catch (Exception e) {
-			if (e instanceof BusinessException) {
+			resultObj = new JsonResultObj(true);
+		}
+		catch (Exception e)
+        {
+			if (e instanceof BusinessException)
+			{
 				LOGGER.error("修改车牌号失败：{}", ((BusinessException) e).getJsonResultEnum().getMessage());
 				resultObj = new JsonResultObj(false, ((BusinessException) e).getJsonResultEnum());
-			} else {
+			}
+			else
+            {
 				e.printStackTrace();
 				LOGGER.error("修改车牌号失败：{}", e.getMessage());
 				resultObj = new JsonResultObj(false);
@@ -323,6 +330,27 @@ public class TemplateController
 		LOGGER.info("结束修改车牌号 oldCarNum={} newCarNum={}", oldCarNum, newCarNum);
 		return resultObj;
 	}
+
+//    @PostMapping("/queryBlacklist")
+//    @ApiOperation(value="查询黑名单")
+//    @ApiImplicitParams({@ApiImplicitParam(name="oldCarNum", value="原来的车牌号", required=true, dataType="String"),
+//            @ApiImplicitParam(name="newCarNum", value="新的车牌号", required=true, dataType="String")})
+//    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：修改成功 isSuccess=false：修改失败，resMsg为错误信息")})
+//    public JsonResultObj updateCarNum(String oldCarNum, String newCarNum, HttpSession session) {
+//        LOGGER.info("开始修改车牌号 oldCarNum={} newCarNum={}", oldCarNum, newCarNum);
+//        JsonResultObj resultObj = null;
+//        User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
+//        if(user == null)
+//        {
+//            user = getTestUser();
+//        }
+//        if (user == null) {
+//            LOGGER.info("session中不存在用户信息");
+//            resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
+//            return resultObj;
+//        }
+//        String openId = user.getOpenid();
+
 
 
 	//测试用户
