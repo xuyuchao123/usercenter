@@ -14,7 +14,8 @@
     </resultMap>
 
     <select id="selectByMobileCarNum" resultMap="BaseResultMap">
-        select oc.* from
+        select oc.ID, oc.OPENID, oc.CARNUMBER, oc.IS_DELETED, oc.USER_CREATE,
+        oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED from
         SYS_OPENID_CARNUMBER oc
         left join SYS_MOBILE_OPENID mo
         on oc.OPENID = mo.OPENID
