@@ -77,10 +77,11 @@ public class CarNumServiceImpl implements CarNumService
     {
         LOGGER.info("进入新增车牌号方法carNum={} openId={}",carNum,openId);
         Date date = new Date();
-        List<Integer> mobileOpenIdIdList = carNumOpenIdMapper.selectByOpenId(openId);
+
         CarNumOpenId carNumOpenId = new CarNumOpenId(openId,carNum,0,openId,openId,date,date);
         int insertCnt = carNumOpenIdMapper.insert(carNumOpenId);
-        if(insertCnt > 0 && (mobileOpenIdIdList == null || mobileOpenIdIdList.size() == 0))
+        List<Integer> mobileOpenIdIdList = carNumOpenIdMapper.selectByOpenId(openId);
+        if(insertCnt > 0 && (mobileOpenIdIdList != null && mobileOpenIdIdList.size() == 1))
         {
             LOGGER.info("新增车牌成功，当前用户仅绑定一个车牌号，准备修改其角色carNum={} openId={}",carNum,openId);
             //获取角色"司机1"的id
