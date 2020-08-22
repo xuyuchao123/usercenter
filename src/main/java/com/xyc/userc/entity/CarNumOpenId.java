@@ -10,16 +10,19 @@ public class CarNumOpenId implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    private int id;
+    private Integer id;
     private String openId;
     private String carNum;
-    private int isDeleted;
+    private Integer isDeleted;
     private String userCreate;
     private String userModified;
     private Date gmtCreate;
     private Date gmtModified;
 
-    public CarNumOpenId(String openId, String carNum, int isDeleted, String userCreate, String userModified, Date gmtCreate, Date gmtModified) {
+    public CarNumOpenId(Integer id, String openId, String carNum, int isDeleted, String userCreate,
+                        String userModified, Date gmtCreate, Date gmtModified)
+    {
+        this.id = id;
         this.openId = openId;
         this.carNum = carNum;
         this.isDeleted = isDeleted;
@@ -29,11 +32,11 @@ public class CarNumOpenId implements Serializable
         this.gmtModified = gmtModified;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

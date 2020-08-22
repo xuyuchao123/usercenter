@@ -78,7 +78,7 @@ public class CarNumServiceImpl implements CarNumService
         LOGGER.info("进入新增车牌号方法carNum={} openId={}",carNum,openId);
         Date date = new Date();
 
-        CarNumOpenId carNumOpenId = new CarNumOpenId(openId,carNum,0,openId,openId,date,date);
+        CarNumOpenId carNumOpenId = new CarNumOpenId(null,openId,carNum,0,openId,openId,date,date);
         int insertCnt = carNumOpenIdMapper.insert(carNumOpenId);
         List<Integer> mobileOpenIdIdList = carNumOpenIdMapper.selectByOpenId(openId);
         if(insertCnt > 0 && (mobileOpenIdIdList != null && mobileOpenIdIdList.size() == 1))
