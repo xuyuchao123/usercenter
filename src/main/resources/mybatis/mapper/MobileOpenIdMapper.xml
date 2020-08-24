@@ -6,7 +6,7 @@
         <id column="id" jdbcType="NUMERIC" property="id" />
         <result column="mobile" jdbcType="VARCHAR" property="mobile" />
         <result column="openid" jdbcType="VARCHAR" property="openId" />
-        <result column="user_create" jdbcType="NUMERIC" property="userCreate" />
+        <result column="user_create" jdbcType="VARCHAR" property="userCreate" />
         <result column="gmt_create" jdbcType="VARCHAR" property="gmtCreate" />
     </resultMap>
 
