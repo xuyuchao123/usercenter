@@ -20,8 +20,9 @@ public class MobileOpenId implements Serializable
 
     private Date gmtCreate;
 
-    public MobileOpenId(String mobile, String openId, String userCreate, Date gmtCreate)
+    public MobileOpenId(Integer id, String mobile, String openId, String userCreate, Date gmtCreate)
     {
+        this.id = id;
         this.mobile = mobile;
         this.openId = openId;
         this.userCreate = userCreate;

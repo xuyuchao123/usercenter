@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService
     {
         LOGGER.info("进入绑定手机号方法 mobile={} mesCode={} openid={}",mobile,mesCode,openId);
 //        HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        MobileOpenId mobileOpenId = new MobileOpenId(mobile,openId,openId,new Date());
+        MobileOpenId mobileOpenId = new MobileOpenId(null,mobile,openId,openId,new Date());
         LOGGER.info("开始校验短信验证码是否正确 mobile={} mesCode={}",mobile,mesCode);
         String storedMesCode = mobileMapper.selectMesCodeByMobile(mobile);
         if(storedMesCode == null)
