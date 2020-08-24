@@ -39,8 +39,11 @@ public enum JsonResultEnum
     /* 业务错误 */
 
     DELETE_CARNUM_NOT_BINDED(200,"用户未绑定该车牌号，删除失败！"),
+    UPDATE_CARNUM_NOT_BINDED(201,"用户未绑定该车牌号,修改失败！"),
 
-    UPDATE_CARNUM_NOT_BINDED(300,"用户未绑定该车牌号,修改失败！");
+    INSERT_BLACKLIST_MOBILE_NOT_BINDED(300,"该手机号未绑定用户，新增黑名单失败！"),
+    INSERT_BLACKLIST_MOBILE_EXIST(301,"该手机号已被拉黑,新增黑名单失败!"),
+    DELETE_BLACKLIST_MOBILE_NOT_BINDED(302,"该手机号未绑定用户,删除黑名单失败");
 
     private Integer code;
     private String message;

@@ -10,4 +10,5 @@ public interface MobileOpenIdMapper
 {
     int insertMobileOpenId(MobileOpenId mobileOpenId);
 
+    MobileOpenId selectByMobile(String mobile);
 }

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyc.userc.dao.BlacklistMapper">
+
+    <resultMap id="BaseVoResultMap" type="com.xyc.userc.vo.BlacklistVo">
+        <id column="NICKNAME" jdbcType="VARCHAR" property="name" />
+        <result column="MOBILEPHONE" jdbcType="VARCHAR" property="mobile" />
+        <result column="REASON" jdbcType="VARCHAR" property="reason" />
+        <result column="CREATENICKNAME" jdbcType="VARCHAR" property="createName" />
+        <result column="CREATEMOBILEPHONE" jdbcType="VARCHAR" property="createMobile" />
+    </resultMap>
+
+    <resultMap id="BaseResultMap" type="com.xyc.userc.entity.Blacklist">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="MOBILE_OPENID_ID" jdbcType="NUMERIC" property="mobileOpenIdId" />
+        <result column="REASON" jdbcType="VARCHAR" property="reason" />
+        <result column="USER_CREATE" jdbcType="VARCHAR" property="userCreate" />
+        <result column="GMT_CREATE" jdbcType="DATE" property="gmtCreate" />
+        <result column="USER_MODIFIED" jdbcType="VARCHAR" property="userModified" />
+        <result column="GMT_MODIFIED" jdbcType="DATE" property="gmtModified" />
+        <result column="IS_ENABLE" jdbcType="NUMERIC" property="isEnable" />
+    </resultMap>
+
+
+    <select id="selectBlacklist" resultMap="BaseVoResultMap">
+        select u.NICKNAME, u.MOBILEPHONE, b.REASON,
+        uu.NICKNAME as CREATENICKNAME, uu.MOBILEPHONE as CREATEMOBILEPHONE
+        from SYS_BLACKLIST b
+        left join SYS_MOBILE_OPENID mo
+        on b.MOBILE_OPENID_ID = mo.ID
+        left join SYS_USER u
+        on mo.OPENID = u.OPENID
+        left join SYS_USER uu
+        on b.USER_CREATE = uu.OPENID
+        <where>
+            <if test="name != null">
+                and u.NICKNAME = #{name}
+            </if>
+            <if test="mobile != null">
+                and u.MOBILEPHONE = #{mobile}
+            </if>
+            <if test="createName != null">
+                and uu.NICKNAME = #{createName}
+            </if>
+            <if test="createMobile != null">
+                and uu.MOBILEPHONE = #{createMobile}
+            </if>
+            and b.IS_ENABLE = 1
+        </where>
+    </select>
+
+    <select id="selectByMobileOpenIdId" resultMap="BaseResultMap">
+        select *
+        from SYS_BLACKLIST b
+        where b.MOBILE_OPENID_ID = #{mobileOpenIdId}
+    </select>
+
+    <update id="deleteBlacklist">
+        update SYS_BLACKLIST b
+        set b.IS_ENABLE = 0
+        where b.MOBILE_OPENID_ID = #{mobileOpenIdId}
+    </update>
+
+    <insert id="insertBlacklist">
+        insert into SYS_BLACKLIST b(ID,MOBILE_OPENID_ID,REASON,USER_CREATE,GMT_CREATE,USER_MODIFIED,GMT_MODIFIED,IS_ENABLE)
+        values(BLACKLIST_SEQ,#{mobileOpenIdId},#{reason},#{userCreate},#{gmtCreate},#{userModified},#{gmtModified},#{isEnable})
+    </insert>
+
+</mapper>
