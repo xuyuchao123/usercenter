@@ -22,9 +22,6 @@ public class User extends Userinfo implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * id
-     */
 
 
     private String mobilePhone;
@@ -32,6 +29,22 @@ public class User extends Userinfo implements Serializable
 
 
     private List<Role> roles;
+
+    public User(String openId, String nickName, String sex, String province, String city, String country,
+                String headImgUrl, String privilege, String unionId,String mobilePhone, List<Role> roles)
+    {
+        this.setOpenid(openId);
+        this.setNickname(nickName);
+        this.setSex(sex);
+        this.setProvince(province);
+        this.setCity(city);
+        this.setCountry(country);
+        this.setHeadimgurl(headImgUrl);
+        this.setPrivilege(privilege);
+        this.setUnionid(unionId);
+        this.mobilePhone = mobilePhone;
+        this.roles = roles;
+    }
 
     public List<Role> getRoles() {
         return roles;

@@ -47,12 +47,6 @@ public class TemplateController
 	@Resource
 	MobileService mobileService;
 
-	@Resource
-	CarNumService carNumService;
-
-	@Resource
-	BlacklistService blacklistService;
-
 	@GetMapping("/template")
     @ApiIgnore
 	public ReturnData templateSend()
@@ -93,7 +87,9 @@ public class TemplateController
 				user = (User) session.getAttribute(WxsdkConstant.USERINFO);
 				if(user == null)
 				{
-					user = getTestUser();
+                    user = new User("oPh4uszJ0L7a9zNRU-tw4smPtbfU","一人！一车！一世界！","1","山东","临沂","中国",
+                            "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
+                                    "2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132",null,null,"13167068999",null);
 				}
 				if(user == null)
 				{
@@ -131,7 +127,9 @@ public class TemplateController
 			User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
           	if(user == null)
 			{
-				user = getTestUser();
+				user = new User("oPh4uszJ0L7a9zNRU-tw4smPtbfU","一人！一车！一世界！","1","山东","临沂","中国",
+                    "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
+                            "2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132",null,null,"13167068999",null);
 			}
 			if (user == null)
 			{
@@ -191,259 +189,17 @@ public class TemplateController
 		return resultObj;
 	}
 
-	@PostMapping("/queryCarNum")
-	@ApiOperation(value="查询车牌号")
-	@ApiImplicitParams({@ApiImplicitParam(name = "mobile", value = "手机号", required = false, dataType = "String"),
-			@ApiImplicitParam(name = "carNum", value = "车牌号", required = false, dataType = "String")})
-	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
-	public JsonResultObj queryCarNum(String mobile, String carNum)
-	{
-		LOGGER.info("开始查询车牌号mobile={},carNum={}",mobile,carNum);
-		JsonResultObj resultObj = null;
-		try
-		{
-			List<CarNumOpenId> carNumOpenIdList = carNumService.getCarNum(mobile,carNum);
-			resultObj = new JsonResultObj(true,carNumOpenIdList);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			LOGGER.error("查询车牌号失败：{}",e.getMessage());
-			resultObj = new JsonResultObj(false);
-		}
-		LOGGER.info("结束查询车牌号");
-		return resultObj;
-	}
 
-    @PostMapping("/deleteCarNum")
-    @ApiOperation(value="删除车牌号")
-    @ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String")
-    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：删除成功 isSuccess=false：删除失败，resMsg为错误信息")})
-    public JsonResultObj deleteCarNum(String carNum, HttpSession session)
-    {
-        LOGGER.info("开始删除车牌号 carNum={}",carNum);
-        JsonResultObj resultObj = null;
-        User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
-      	if(user == null)
-		{
-			user = getTestUser();
-		}
-        if(user == null)
-        {
-            LOGGER.info("session中不存在用户信息");
-            resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
-            return resultObj;
-        }
-        String openId = user.getOpenid();
-        try
-        {
-			carNumService.removeCarNum(carNum,openId);
-            resultObj = new JsonResultObj(true);
-        }
-        catch (Exception e)
-        {
-			if(e instanceof BusinessException)
-			{
-				LOGGER.error("删除车牌号失败：{}", ((BusinessException)e).getJsonResultEnum().getMessage());
-				resultObj = new JsonResultObj(false,((BusinessException)e).getJsonResultEnum());
-			}
-			else
-			{
-				e.printStackTrace();
-				LOGGER.error("删除车牌号失败：{}",e.getMessage());
-				resultObj = new JsonResultObj(false);
-			}
-        }
-        LOGGER.info("结束删除车牌号");
-        return resultObj;
-    }
 
-	@PostMapping("/addCarNum")
-	@ApiOperation(value="新增车牌号")
-	@ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String")
-	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：新增成功 isSuccess=false：新增失败，resMsg为错误信息")})
-	public JsonResultObj addCarNum(String carNum, HttpSession session)
-	{
-		LOGGER.info("开始新增车牌号 carNum={}", carNum);
-		JsonResultObj resultObj = null;
-		User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
-		if(user == null)
-		{
-			user = getTestUser();
-		}
-		if(user == null)
-		{
-			LOGGER.info("session中不存在用户信息");
-			resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
-			return resultObj;
-		}
-		String openId = user.getOpenid();
-		try
-		{
-			carNumService.addCarNum(carNum,openId);
-			resultObj = new JsonResultObj(true);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			LOGGER.error("新增车牌号失败：{}",e.getMessage());
-			resultObj = new JsonResultObj(false);
-		}
-		LOGGER.info("结束新增车牌号 carNum={}", carNum);
-		return resultObj;
-	}
 
-	@PostMapping("/updateCarNum")
-	@ApiOperation(value="修改车牌号")
-	@ApiImplicitParams({@ApiImplicitParam(name="oldCarNum", value="原来的车牌号", required=true, dataType="String"),
-			@ApiImplicitParam(name="newCarNum", value="新的车牌号", required=true, dataType="String")})
-	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：修改成功 isSuccess=false：修改失败，resMsg为错误信息")})
-	public JsonResultObj updateCarNum(String oldCarNum, String newCarNum, HttpSession session) {
-		LOGGER.info("开始修改车牌号 oldCarNum={} newCarNum={}", oldCarNum, newCarNum);
-		JsonResultObj resultObj = null;
-		User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
-      	if(user == null)
-		{
-			user = getTestUser();
-		}
-		if (user == null) {
-			LOGGER.info("session中不存在用户信息");
-			resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
-			return resultObj;
-		}
-		String openId = user.getOpenid();
-
-		try
-        {
-			carNumService.modifyCarNumByOpenId(oldCarNum, newCarNum, openId);
-			resultObj = new JsonResultObj(true);
-		}
-		catch (Exception e)
-        {
-			if (e instanceof BusinessException)
-			{
-				LOGGER.error("修改车牌号失败：{}", ((BusinessException) e).getJsonResultEnum().getMessage());
-				resultObj = new JsonResultObj(false, ((BusinessException) e).getJsonResultEnum());
-			}
-			else
-            {
-				e.printStackTrace();
-				LOGGER.error("修改车牌号失败：{}", e.getMessage());
-				resultObj = new JsonResultObj(false);
-			}
-		}
-		LOGGER.info("结束修改车牌号 oldCarNum={} newCarNum={}", oldCarNum, newCarNum);
-		return resultObj;
-	}
-
-    @PostMapping("/queryBlacklist")
-    @ApiOperation(value="查询黑名单")
-    @ApiImplicitParams({@ApiImplicitParam(name="name", value="被拉入黑名单的人的昵称", required=true, dataType="String"),
-            @ApiImplicitParam(name="mobile", value="被拉入黑名单的人的手机号", required=true, dataType="String"),
-			@ApiImplicitParam(name="createName", value="黑名创建人的昵称", required=true, dataType="String"),
-			@ApiImplicitParam(name="createMobile", value="黑名创建人的手机号", required=true, dataType="String")})
-    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
-    public JsonResultObj queryBlacklist(String name, String mobile, String createName,
-									  String createMobile, HttpSession session)
-	{
-		LOGGER.info("开始查询黑名单 name={} mobile={} createName={} createMobile={}",name,mobile,createName,createMobile);
-		JsonResultObj resultObj = null;
-		try
-		{
-			List<BlacklistVo> blacklistVoList = blacklistService.getBlacklist(name,mobile,createName,createMobile);
-			resultObj = new JsonResultObj(true,blacklistVoList);
-			LOGGER.info("查询黑名单成功，查询结果：{}",blacklistVoList.toString());
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			LOGGER.error("查询黑名单失败：{}",e.getMessage());
-			resultObj = new JsonResultObj(false);
-		}
-		LOGGER.info("结束查询黑名单 name={} mobile={} createName={} createMobile={}",name,mobile,createName,createMobile);
-		return resultObj;
-	}
-
-	@PostMapping("/addBlacklist")
-	@ApiOperation(value="新增黑名单")
-	@ApiImplicitParams({@ApiImplicitParam(name="mobile", value="被拉入黑名单的人的手机号", required=true, dataType="String"),
-			@ApiImplicitParam(name="reason", value="拉黑原因", required=true, dataType="String")})
-	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：新增成功 isSuccess=false：新增失败，resMsg为错误信息")})
-	public JsonResultObj addBlacklist(String mobile, String reason, HttpSession session)
-	{
-		LOGGER.info("开始新增黑名单 mobile={} reason={}", mobile,reason);
-		JsonResultObj resultObj = null;
-		User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
-		if(user == null)
-		{
-			user = getTestUser();
-		}
-		if (user == null) {
-			LOGGER.info("session中不存在用户信息");
-			resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
-			return resultObj;
-		}
-		String openId = user.getOpenid();
-		try
-		{
-			blacklistService.addBlacklist(mobile,reason,openId);
-			resultObj = new JsonResultObj(true);
-		}
-		catch (Exception e)
-		{
-			if (e instanceof BusinessException)
-			{
-				LOGGER.error("新增黑名单失败：{}", ((BusinessException) e).getJsonResultEnum().getMessage());
-				resultObj = new JsonResultObj(false, ((BusinessException) e).getJsonResultEnum());
-			}
-			else
-			{
-				e.printStackTrace();
-				LOGGER.error("新增黑名单失败：{}", e.getMessage());
-				resultObj = new JsonResultObj(false);
-			}
-		}
-		LOGGER.info("结束新增黑名单 mobile={} reason={}", mobile,reason);
-		return  resultObj;
-	}
-
-	@PostMapping("/deleteBlacklist")
-	@ApiOperation(value="删除黑名单")
-	@ApiImplicitParam(name="mobile", value="被拉入黑名单的人的手机号", required=true, dataType="String")
-	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：删除成功 isSuccess=false：删除失败，resMsg为错误信息")})
-	public JsonResultObj deleteBlacklist(String mobile)
-	{
-		LOGGER.info("开始删除黑名单 mobile={}", mobile);
-		JsonResultObj resultObj = null;
-		try
-		{
-			blacklistService.removeBlacklist(mobile);
-			resultObj = new JsonResultObj(true);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			LOGGER.error("删除黑名单失败：{}", e.getMessage());
-			resultObj = new JsonResultObj(false);
-		}
-		LOGGER.info("结束删除黑名单 mobile={}", mobile);
-		return resultObj;
-	}
 
 
 	//测试用户
-	User getTestUser()
-	{
-		User user = new User();
-		user.setOpenid("oPh4uszJ0L7a9zNRU-tw4smPtbfU");
-		user.setNickname("一人！一车！一世界！");
-		user.setSex("1");
-		user.setProvince("山东");
-		user.setCity("临沂");
-		user.setCountry("中国");
-		user.setHeadimgurl("http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
-				"2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132");
-		user.setMobilePhone("13167068999");
-		return user;
-	}
+//	User getTestUser()
+//	{
+//		User user = new User("oPh4uszJ0L7a9zNRU-tw4smPtbfU","一人！一车！一世界！","1","山东","临沂","中国",
+//                "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
+//                        "2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132",null,null,"13167068999",null);
+//		return user;
+//	}
 }
