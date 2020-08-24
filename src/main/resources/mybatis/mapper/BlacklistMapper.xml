@@ -63,7 +63,7 @@
 
     <insert id="insertBlacklist">
         insert into SYS_BLACKLIST(ID,MOBILE_OPENID_ID,REASON,USER_CREATE,GMT_CREATE,USER_MODIFIED,GMT_MODIFIED,IS_ENABLE)
-        values(BLACKLIST_SEQ,#{mobileOpenIdId},#{reason},#{userCreate},#{gmtCreate},#{userModified},#{gmtModified},#{isEnable})
+        values(BLACKLIST_SEQ.nextval,#{mobileOpenIdId},#{reason},#{userCreate},#{gmtCreate},#{userModified},#{gmtModified},#{isEnable})
     </insert>
 
 </mapper>
