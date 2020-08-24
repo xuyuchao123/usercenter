@@ -38,10 +38,10 @@ public class BlacklistServiceImpl implements BlacklistService
     public List<BlacklistVo> getBlacklist(String name, String mobile,
                                           String createName, String createMobile) throws Exception
     {
-        LOGGER.info("进入获取用户信息方法 name={} mobile={} createName={} createMobile={}",name,mobile,createName,createMobile);
+        LOGGER.info("进入查询黑名单方法 name={} mobile={} createName={} createMobile={}",name,mobile,createName,createMobile);
         List<BlacklistVo> blacklistVoList = blacklistMapper.selectBlacklist(name,mobile,createName,createMobile);
-        LOGGER.info("黑名单查询成功，查询结果：",blacklistVoList.toString());
-        LOGGER.info("结束获取用户信息方法 name={} mobile={} createName={} createMobile={}",name,mobile,createName,createMobile);
+        LOGGER.info("黑名单查询成功，查询结果：", blacklistVoList != null ? blacklistVoList.toString() : null);
+        LOGGER.info("结束查询黑名单方法 name={} mobile={} createName={} createMobile={}",name,mobile,createName,createMobile);
         return blacklistVoList;
     }
 

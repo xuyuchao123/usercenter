@@ -8,6 +8,7 @@
         <result column="REASON" jdbcType="VARCHAR" property="reason" />
         <result column="CREATENICKNAME" jdbcType="VARCHAR" property="createName" />
         <result column="CREATEMOBILEPHONE" jdbcType="VARCHAR" property="createMobile" />
+        <result column="GMT_CREATE" jdbcType="DATE" property="gmtCreate" />
     </resultMap>
 
     <resultMap id="BaseResultMap" type="com.xyc.userc.entity.Blacklist">
@@ -24,7 +25,8 @@
 
     <select id="selectBlacklist" resultMap="BaseVoResultMap">
         select u.NICKNAME, u.MOBILEPHONE, b.REASON,
-        uu.NICKNAME as CREATENICKNAME, uu.MOBILEPHONE as CREATEMOBILEPHONE
+        uu.NICKNAME as CREATENICKNAME,
+        uu.MOBILEPHONE as CREATEMOBILEPHONE, b.GMT_CREATE
         from SYS_BLACKLIST b
         left join SYS_MOBILE_OPENID mo
         on b.MOBILE_OPENID_ID = mo.ID
