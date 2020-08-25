@@ -4,6 +4,7 @@ import com.avei.shriety.wx_sdk.constant.WxsdkConstant;
 import com.xyc.userc.entity.User;
 import com.xyc.userc.service.BlacklistService;
 import com.xyc.userc.util.BusinessException;
+import com.xyc.userc.util.CommonExceptionHandler;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
 import com.xyc.userc.vo.BlacklistVo;
@@ -53,9 +54,7 @@ public class BlacklistController
         }
         catch (Exception e)
         {
-            e.printStackTrace();
-            LOGGER.error("查询黑名单失败：{}",e.getMessage());
-            resultObj = new JsonResultObj(false);
+            resultObj = CommonExceptionHandler.handException(e, "查询黑名单失败", LOGGER, resultObj);
         }
         LOGGER.info("结束查询黑名单 name={} mobile={} createName={} createMobile={}",name,mobile,createName,createMobile);
         return resultObj;
@@ -90,17 +89,7 @@ public class BlacklistController
         }
         catch (Exception e)
         {
-            if (e instanceof BusinessException)
-            {
-                LOGGER.error("新增黑名单失败：{}", ((BusinessException) e).getJsonResultEnum().getMessage());
-                resultObj = new JsonResultObj(false, ((BusinessException) e).getJsonResultEnum());
-            }
-            else
-            {
-                e.printStackTrace();
-                LOGGER.error("新增黑名单失败：{}", e.getMessage());
-                resultObj = new JsonResultObj(false);
-            }
+            resultObj = CommonExceptionHandler.handException(e, "新增黑名单失败", LOGGER, resultObj);
         }
         LOGGER.info("结束新增黑名单 mobile={} reason={}", mobile,reason);
         return  resultObj;
@@ -121,9 +110,7 @@ public class BlacklistController
         }
         catch (Exception e)
         {
-            e.printStackTrace();
-            LOGGER.error("删除黑名单失败：{}", e.getMessage());
-            resultObj = new JsonResultObj(false);
+            resultObj = CommonExceptionHandler.handException(e, "删除黑名单失败", LOGGER, resultObj);
         }
         LOGGER.info("结束删除黑名单 mobile={}", mobile);
         return resultObj;

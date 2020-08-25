@@ -25,4 +25,5 @@ public interface CarNumOpenIdMapper
 
     int selectCntByCarNumOpenId(@Param("oldCarNum")String oldCarNum, @Param("openId")String openId);
 
+
 }

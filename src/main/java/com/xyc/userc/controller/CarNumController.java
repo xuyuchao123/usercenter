@@ -5,6 +5,7 @@ import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.User;
 import com.xyc.userc.service.CarNumService;
 import com.xyc.userc.util.BusinessException;
+import com.xyc.userc.util.CommonExceptionHandler;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
 import io.swagger.annotations.*;
@@ -50,9 +51,7 @@ public class CarNumController
         }
         catch (Exception e)
         {
-            e.printStackTrace();
-            LOGGER.error("查询车牌号失败：{}",e.getMessage());
-            resultObj = new JsonResultObj(false);
+            resultObj = CommonExceptionHandler.handException(e, "查询车牌号失败", LOGGER, resultObj);
         }
         LOGGER.info("结束查询车牌号");
         return resultObj;
@@ -87,17 +86,7 @@ public class CarNumController
         }
         catch (Exception e)
         {
-            if(e instanceof BusinessException)
-            {
-                LOGGER.error("删除车牌号失败：{}", ((BusinessException)e).getJsonResultEnum().getMessage());
-                resultObj = new JsonResultObj(false,((BusinessException)e).getJsonResultEnum());
-            }
-            else
-            {
-                e.printStackTrace();
-                LOGGER.error("删除车牌号失败：{}",e.getMessage());
-                resultObj = new JsonResultObj(false);
-            }
+            resultObj = CommonExceptionHandler.handException(e, "删除车牌号失败", LOGGER, resultObj);
         }
         LOGGER.info("结束删除车牌号");
         return resultObj;
@@ -132,9 +121,7 @@ public class CarNumController
         }
         catch (Exception e)
         {
-            e.printStackTrace();
-            LOGGER.error("新增车牌号失败：{}",e.getMessage());
-            resultObj = new JsonResultObj(false);
+            resultObj = CommonExceptionHandler.handException(e, "新增车牌号失败", LOGGER, resultObj);
         }
         LOGGER.info("结束新增车牌号 carNum={}", carNum);
         return resultObj;
@@ -169,17 +156,7 @@ public class CarNumController
         }
         catch (Exception e)
         {
-            if (e instanceof BusinessException)
-            {
-                LOGGER.error("修改车牌号失败：{}", ((BusinessException) e).getJsonResultEnum().getMessage());
-                resultObj = new JsonResultObj(false, ((BusinessException) e).getJsonResultEnum());
-            }
-            else
-            {
-                e.printStackTrace();
-                LOGGER.error("修改车牌号失败：{}", e.getMessage());
-                resultObj = new JsonResultObj(false);
-            }
+            resultObj = CommonExceptionHandler.handException(e, "修改车牌号失败", LOGGER, resultObj);
         }
         LOGGER.info("结束修改车牌号 oldCarNum={} newCarNum={}", oldCarNum, newCarNum);
         return resultObj;

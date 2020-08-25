@@ -40,6 +40,7 @@ public enum JsonResultEnum
 
     DELETE_CARNUM_NOT_BINDED(200,"用户未绑定该车牌号，删除失败！"),
     UPDATE_CARNUM_NOT_BINDED(201,"用户未绑定该车牌号,修改失败！"),
+    INSERT_CARNUM_BINDED(202,"该车牌号已被绑定，不能重复绑定！"),
 
     INSERT_BLACKLIST_MOBILE_NOT_BINDED(300,"该手机号未绑定用户，新增黑名单失败！"),
     INSERT_BLACKLIST_MOBILE_EXIST(301,"该手机号已被拉黑,新增黑名单失败!"),

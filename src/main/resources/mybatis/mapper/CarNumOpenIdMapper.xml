@@ -63,9 +63,15 @@
 
     <select id="selectCntByCarNumOpenId" resultType="java.lang.Integer">
         select count(*) from SYS_OPENID_CARNUMBER oc
-        where oc.CARNUMBER = #{oldCarNum}
-        and oc.OPENID = #{openId}
-        and oc.IS_DELETED = 0
+        <where>
+            <if test="oldCarNum != null">
+                and oc.CARNUMBER = #{oldCarNum}
+            </if>
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
+            </if>
+            and oc.IS_DELETED = 0
+        </where>
     </select>
 
 </mapper>

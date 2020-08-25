@@ -14,6 +14,7 @@ import com.xyc.userc.service.CarNumService;
 import com.xyc.userc.service.MobileService;
 import com.xyc.userc.service.UserService;
 import com.xyc.userc.util.BusinessException;
+import com.xyc.userc.util.CommonExceptionHandler;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
 import com.xyc.userc.vo.BlacklistVo;
@@ -73,7 +74,7 @@ public class TemplateController
 	public JsonResultObj userinfo(HttpSession session)
 	{
 		LOGGER.info("开始获取当前用户信息");
-		JsonResultObj resultObj;
+		JsonResultObj resultObj = null;
 		User user = null;
 		try
 		{
@@ -105,9 +106,7 @@ public class TemplateController
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
-			LOGGER.error("获取用户信息失败：{}",e.getMessage());
-			resultObj = new JsonResultObj(false);
+			resultObj = CommonExceptionHandler.handException(e, "获取用户信息失败", LOGGER, resultObj);
 		}
 		LOGGER.info("结束获取当前用户信息userinfo: {}",user);
 		return resultObj;
@@ -121,7 +120,7 @@ public class TemplateController
 	public JsonResultObj bindMobile(HttpSession session, String mobile, String mesCode)
 	{
 		LOGGER.info("开始绑定手机号 mobile={},mesCode={}",mobile,mesCode);
-		JsonResultObj resultObj;
+		JsonResultObj resultObj = null;
 		try
 		{
 			User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
@@ -148,17 +147,7 @@ public class TemplateController
 		}
 		catch (Exception e)
 		{
-		    if(e instanceof BusinessException)
-            {
-                LOGGER.error("绑定手机号失败：{}", ((BusinessException) e).getJsonResultEnum().getMessage());
-                resultObj = new JsonResultObj(false,((BusinessException) e).getJsonResultEnum());
-            }
-            else
-            {
-                e.printStackTrace();
-                LOGGER.error("绑定手机号失败：{}", e.getMessage());
-                resultObj = new JsonResultObj(false);
-            }
+			resultObj = CommonExceptionHandler.handException(e, "绑定手机号失败", LOGGER, resultObj);
 		}
 		LOGGER.info("结束绑定手机号 mobile={}",mobile);
 		return resultObj;
@@ -181,25 +170,9 @@ public class TemplateController
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
-			LOGGER.error("短信验证码生成发送失败：{}",e.getMessage());
-			resultObj = new JsonResultObj(false);
+			resultObj = CommonExceptionHandler.handException(e, "短信验证码生成发送失败", LOGGER, resultObj);
 		}
 		LOGGER.info("结束生成发送短信验证码");
 		return resultObj;
 	}
-
-
-
-
-
-
-	//测试用户
-//	User getTestUser()
-//	{
-//		User user = new User("oPh4uszJ0L7a9zNRU-tw4smPtbfU","一人！一车！一世界！","1","山东","临沂","中国",
-//                "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
-//                        "2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132",null,null,"13167068999",null);
-//		return user;
-//	}
 }
