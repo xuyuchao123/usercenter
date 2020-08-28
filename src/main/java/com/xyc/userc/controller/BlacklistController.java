@@ -3,7 +3,6 @@ package com.xyc.userc.controller;
 import com.avei.shriety.wx_sdk.constant.WxsdkConstant;
 import com.xyc.userc.entity.User;
 import com.xyc.userc.service.BlacklistService;
-import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.CommonExceptionHandler;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -42,7 +42,7 @@ public class BlacklistController
             @ApiImplicitParam(name="createMobile", value="黑名创建人的手机号", required=true, dataType="String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
     public JsonResultObj queryBlacklist(String name, String mobile, String createName,
-                                        String createMobile, HttpSession session)
+                                        String createMobile, @ApiIgnore HttpSession session)
     {
         LOGGER.info("开始查询黑名单 name={} mobile={} createName={} createMobile={}",name,mobile,createName,createMobile);
         JsonResultObj resultObj = null;
@@ -65,7 +65,7 @@ public class BlacklistController
     @ApiImplicitParams({@ApiImplicitParam(name="mobile", value="被拉入黑名单的人的手机号", required=true, dataType="String"),
             @ApiImplicitParam(name="reason", value="拉黑原因", required=true, dataType="String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：新增成功 isSuccess=false：新增失败，resMsg为错误信息")})
-    public JsonResultObj addBlacklist(String mobile, String reason, HttpSession session)
+    public JsonResultObj addBlacklist(String mobile, String reason, @ApiIgnore HttpSession session)
     {
         LOGGER.info("开始新增黑名单 mobile={} reason={}", mobile,reason);
         JsonResultObj resultObj = null;

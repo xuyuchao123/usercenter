@@ -1,9 +1,7 @@
 package com.xyc.userc.entity;
 
 import com.avei.shriety.wx_sdk.pojo.Userinfo;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+
 
 import java.io.Serializable;
 import java.util.ArrayList;

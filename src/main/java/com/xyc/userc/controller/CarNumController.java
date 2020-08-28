@@ -4,7 +4,6 @@ import com.avei.shriety.wx_sdk.constant.WxsdkConstant;
 import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.User;
 import com.xyc.userc.service.CarNumService;
-import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.CommonExceptionHandler;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -61,7 +61,7 @@ public class CarNumController
     @ApiOperation(value="删除车牌号")
     @ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：删除成功 isSuccess=false：删除失败，resMsg为错误信息")})
-    public JsonResultObj deleteCarNum(String carNum, HttpSession session)
+    public JsonResultObj deleteCarNum(String carNum, @ApiIgnore HttpSession session)
     {
         LOGGER.info("开始删除车牌号 carNum={}",carNum);
         JsonResultObj resultObj = null;
@@ -96,7 +96,7 @@ public class CarNumController
     @ApiOperation(value="新增车牌号")
     @ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：新增成功 isSuccess=false：新增失败，resMsg为错误信息")})
-    public JsonResultObj addCarNum(String carNum, HttpSession session)
+    public JsonResultObj addCarNum(String carNum, @ApiIgnore HttpSession session)
     {
         LOGGER.info("开始新增车牌号 carNum={}", carNum);
         JsonResultObj resultObj = null;
@@ -132,7 +132,7 @@ public class CarNumController
     @ApiImplicitParams({@ApiImplicitParam(name="oldCarNum", value="原来的车牌号", required=true, dataType="String"),
             @ApiImplicitParam(name="newCarNum", value="新的车牌号", required=true, dataType="String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：修改成功 isSuccess=false：修改失败，resMsg为错误信息")})
-    public JsonResultObj updateCarNum(String oldCarNum, String newCarNum, HttpSession session) {
+    public JsonResultObj updateCarNum(String oldCarNum, String newCarNum, @ApiIgnore HttpSession session) {
         LOGGER.info("开始修改车牌号 oldCarNum={} newCarNum={}", oldCarNum, newCarNum);
         JsonResultObj resultObj = null;
         User user = (User) session.getAttribute(WxsdkConstant.USERINFO);

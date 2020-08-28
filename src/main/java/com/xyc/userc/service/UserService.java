@@ -4,9 +4,7 @@ import com.avei.shriety.wx_sdk.pojo.Userinfo;
 import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.Role;
 import com.xyc.userc.entity.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 
 import java.util.List;
 

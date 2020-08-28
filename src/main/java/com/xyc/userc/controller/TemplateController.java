@@ -5,30 +5,21 @@ import java.util.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
-import com.avei.shriety.wx_sdk.pojo.Userinfo;
-import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.Role;
 import com.xyc.userc.entity.User;
-import com.xyc.userc.service.BlacklistService;
-import com.xyc.userc.service.CarNumService;
 import com.xyc.userc.service.MobileService;
 import com.xyc.userc.service.UserService;
-import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.CommonExceptionHandler;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
-import com.xyc.userc.vo.BlacklistVo;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.avei.shriety.wx_sdk.constant.WxsdkConstant;
 import com.avei.shriety.wx_sdk.pojo.ReturnData;
 import com.avei.shriety.wx_sdk.template.Template;
-import smsservice.ISMS;
-import smsservice.SMSService;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
@@ -71,7 +62,7 @@ public class TemplateController
 	@GetMapping("/userinfo")
 	@ApiOperation(value="获取当前用户信息")
 	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：获取成功 isSuccess=false：获取失败，resMsg为错误信息")})
-	public JsonResultObj userinfo(HttpSession session)
+	public JsonResultObj getUserinfo(@ApiIgnore HttpSession session)
 	{
 		LOGGER.info("开始获取当前用户信息");
 		JsonResultObj resultObj = null;
@@ -117,7 +108,7 @@ public class TemplateController
     @ApiImplicitParams({@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String"),
             @ApiImplicitParam(name = "mesCode", value = "短信验证码", required = true, dataType = "String")})
 	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：绑定成功 isSuccess=false：绑定失败，resMsg为错误信息")})
-	public JsonResultObj bindMobile(HttpSession session, String mobile, String mesCode)
+	public JsonResultObj bindMobile(@ApiIgnore HttpSession session, String mobile, String mesCode)
 	{
 		LOGGER.info("开始绑定手机号 mobile={},mesCode={}",mobile,mesCode);
 		JsonResultObj resultObj = null;
@@ -155,7 +146,6 @@ public class TemplateController
 
 	//发送验证码
 	@RequestMapping(value = "/sendMesCode",method = RequestMethod.POST)
-	@ResponseBody
 	@ApiOperation(value="发送短信验证码")
 	@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String")
 	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：发送成功 isSuccess=false：发送失败，resMsg为错误信息")})
