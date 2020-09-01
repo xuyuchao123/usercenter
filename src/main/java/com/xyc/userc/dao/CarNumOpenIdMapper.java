@@ -23,7 +23,12 @@ public interface CarNumOpenIdMapper
     void updateCarNum(@Param("oldCarNum")String oldCarNum, @Param("newCarNum")String newCarNum,
                       @Param("openId")String openId, @Param("gmtModified")Date gmtModified);
 
+    void updateCarNumEnable(@Param("isEnable")Integer isEnable, @Param("gmtModified")Date gmtModified,
+                                @Param("carNum")String carNum);
+
     int selectCntByCarNumOpenId(@Param("oldCarNum")String oldCarNum, @Param("openId")String openId);
+
+    List<CarNumOpenId> selectByCarNum(@Param("carNum")String carNum);
 
 
 }

@@ -161,4 +161,25 @@ public class CarNumController
         LOGGER.info("结束修改车牌号 oldCarNum={} newCarNum={}", oldCarNum, newCarNum);
         return resultObj;
     }
+
+    @PostMapping("/enableCarNum")
+    @ApiOperation(value="启用车牌号")
+    @ApiImplicitParam(name = "carNum", value = "车牌号", required = false, dataType = "String")
+    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：启用成功 isSuccess=false：启用失败，resMsg为错误信息")})
+    public JsonResultObj enableCarNum(String carNum)
+    {
+        LOGGER.info("开始启用车牌号 carNum={}",carNum);
+        JsonResultObj resultObj = null;
+        try
+        {
+            carNumService.enableCarNum(carNum);
+            resultObj = new JsonResultObj(true);
+        }
+        catch (Exception e)
+        {
+            resultObj = CommonExceptionHandler.handException(e, "启用车牌号失败", LOGGER, resultObj);
+        }
+        LOGGER.info("结束启用车牌号");
+        return resultObj;
+    }
 }

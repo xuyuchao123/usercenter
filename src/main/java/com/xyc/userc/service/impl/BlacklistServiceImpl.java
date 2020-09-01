@@ -55,14 +55,14 @@ public class BlacklistServiceImpl implements BlacklistService
         if(mobileOpenId == null)
         {
             LOGGER.info("未查到该手机号绑定关系,新增黑名单失败 mobile={}",mobile);
-            throw new BusinessException(JsonResultEnum.INSERT_BLACKLIST_MOBILE_NOT_BINDED);
+            throw new BusinessException(JsonResultEnum.MOBILE_NOT_BINDED);
         }
         //检查该手机号是否已被拉黑
         List<Blacklist> blacklistList = blacklistMapper.selectByMobileOpenIdId(mobileOpenId.getId());
         if(blacklistList != null && blacklistList.size() > 0)
         {
             LOGGER.info("该手机号已被拉黑,新增黑名单失败 mobile={}",mobile);
-            throw new BusinessException(JsonResultEnum.INSERT_BLACKLIST_MOBILE_EXIST);
+            throw new BusinessException(JsonResultEnum.MOBILE_BLACKLIST_EXIST);
         }
         Date date = new Date();
         Blacklist blacklist = new Blacklist(null,mobileOpenId.getId(),reason,openId,date,openId,date,1);
@@ -80,7 +80,7 @@ public class BlacklistServiceImpl implements BlacklistService
         if(mobileOpenId == null)
         {
             LOGGER.info("未查到该手机号绑定关系,删除黑名单失败 mobile={}",mobile);
-            throw new BusinessException(JsonResultEnum.DELETE_BLACKLIST_MOBILE_NOT_BINDED);
+            throw new BusinessException(JsonResultEnum.MOBILE_NOT_BINDED);
         }
         blacklistMapper.deleteBlacklist(mobileOpenId.getId());
         LOGGER.info("结束删除黑名单方法 mobile={}",mobile);

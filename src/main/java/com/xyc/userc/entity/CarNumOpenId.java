@@ -13,18 +13,20 @@ public class CarNumOpenId implements Serializable
     private Integer id;
     private String openId;
     private String carNum;
+    private Integer isEnabled;
     private Integer isDeleted;
     private String userCreate;
     private String userModified;
     private Date gmtCreate;
     private Date gmtModified;
 
-    public CarNumOpenId(Integer id, String openId, String carNum, int isDeleted, String userCreate,
+    public CarNumOpenId(Integer id, String openId, String carNum, int isEnabled, int isDeleted, String userCreate,
                         String userModified, Date gmtCreate, Date gmtModified)
     {
         this.id = id;
         this.openId = openId;
         this.carNum = carNum;
+        this.isEnabled = isEnabled;
         this.isDeleted = isDeleted;
         this.userCreate = userCreate;
         this.userModified = userModified;
@@ -94,5 +96,13 @@ public class CarNumOpenId implements Serializable
 
     public void setGmtModified(Date gmtModified) {
         this.gmtModified = gmtModified;
+    }
+
+    public Integer getIsEnabled() {
+        return isEnabled;
+    }
+
+    public void setIsEnabled(Integer isEnabled) {
+        this.isEnabled = isEnabled;
     }
 }
