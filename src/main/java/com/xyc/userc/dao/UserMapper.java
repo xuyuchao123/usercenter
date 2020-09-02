@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface UserMapper
 {
-    Map selectUserRoleByOpenId(String openId);
+    List<Map> selectUserRoleByOpenId(String openId);
 
     void updateRoleIdByMobileOpenId(@Param("roleId")int roleId, @Param("mobileOpenIdId")int mobileOpenIdId);
 

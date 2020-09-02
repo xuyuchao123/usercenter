@@ -78,10 +78,11 @@ public class UserServiceImpl implements UserService
             LOGGER.info("成功设置验证码失效状态 mobile={} mesCode={}", mobile,mesCode);
 
             int i = mobileOpenIdMapper.insertMobileOpenId(mobileOpenId);
-            Map map = userMapper.selectUserRoleByOpenId(openId);
+            List<Map> maps = userMapper.selectUserRoleByOpenId(openId);
             Role role = null;
-            if(map != null)
+            if(maps != null && maps.size() > 0)
             {
+                Map map = maps.get(0);
                 int mobileOpenIdId = Integer.parseInt(map.get("MOBILEOPENIDID").toString());
                 int roleId = Integer.parseInt(map.get("ROLEID").toString());
                 Date date = new Date();
