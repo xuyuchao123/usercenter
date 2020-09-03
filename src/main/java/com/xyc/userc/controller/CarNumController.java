@@ -11,10 +11,7 @@ import com.xyc.userc.vo.CarNumInOutTimeVo;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
@@ -200,7 +197,7 @@ public class CarNumController
     }
 
 
-    @PostMapping("/queryInOutTime")
+    @GetMapping("/queryInOutTime")
     @ApiOperation(value="查询车辆本月及上月进出厂时间")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
     public JsonResultObj enableCarNum(@ApiIgnore HttpSession session)
