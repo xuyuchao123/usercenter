@@ -156,6 +156,7 @@ public class CarNumServiceImpl implements CarNumService
         String startTime = LocalDate.now().minusMonths(1) + " 00:00:00";
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String endTime = dateTimeFormatter.format(LocalDateTime.now());
+        LOGGER.info("车辆进出开始时间：startTime={} 结束时间：endTime={}",startTime,endTime);
         List<CarNumInOutTimeVo> carNumInOutTimeVos = carNumOpenIdMapper.selectCarNumInOutTime(carNum,startTime,endTime);
         LOGGER.info("结束查询车辆进出厂时间方法 CarNum={}",carNum);
         return carNumInOutTimeVos;
