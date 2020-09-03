@@ -119,7 +119,7 @@
 
     <select id="selectCarNumInOutTime" resultType="com.xyc.userc.vo.CarNumInOutTimeVo">
         select distinct a.PLATENO as carNum, a.CROSSTIME as inOutTime,
-        decode(a.CARINOUTSTRING, '0', '入场', '1', '出场', u.type) as inOutType
+        decode(a.CARINOUTSTRING, '0', '入场', '1', '出场', a.CARINOUTSTRING) as inOutType
         from T_ZZYY_RC_CAR_HIK@rcdb a
         inner join SYS_OPENID_CARNUMBER b
         on b.OPENID = #{openId}
