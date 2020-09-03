@@ -201,7 +201,7 @@ public class CarNumController
 
 
     @PostMapping("/queryInOutTime")
-    @ApiOperation(value="查询车辆进出厂时间")
+    @ApiOperation(value="查询车辆本月及上月进出厂时间")
     @ApiImplicitParam(name = "carNum", value = "车牌号", required = false, dataType = "String")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
     public JsonResultObj enableCarNum(String carNum)
