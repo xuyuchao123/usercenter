@@ -150,15 +150,21 @@ public class CarNumServiceImpl implements CarNumService
     }
 
     @Override
-    public List<CarNumInOutTimeVo> queryInOutTime(String carNum) throws Exception
+    public List<CarNumInOutTimeVo> queryInOutTime(String openId) throws Exception
     {
-        LOGGER.info("进入查询车辆进出厂时间方法 CarNum={}",carNum);
+        LOGGER.info("进入查询车辆进出厂时间方法 openId={}",openId);
+//        List<CarNumOpenId> carNumOpenIdList = carNumOpenIdMapper.selectByOpenIdCarNum(openId,null);
+//        if(carNumOpenIdList == null || carNumOpenIdList.size() == 0)
+//        {
+//            LOGGER.info("当前用户未绑定车牌 openId={}",openId);
+//            return null;
+//        }
         String startTime = LocalDate.now().minusMonths(1) + " 00:00:00";
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String endTime = dateTimeFormatter.format(LocalDateTime.now());
         LOGGER.info("车辆进出开始时间：startTime={} 结束时间：endTime={}",startTime,endTime);
-        List<CarNumInOutTimeVo> carNumInOutTimeVos = carNumOpenIdMapper.selectCarNumInOutTime(carNum,startTime,endTime);
-        LOGGER.info("结束查询车辆进出厂时间方法 CarNum={}",carNum);
+        List<CarNumInOutTimeVo> carNumInOutTimeVos = carNumOpenIdMapper.selectCarNumInOutTime(openId,startTime,endTime);
+        LOGGER.info("结束查询车辆进出厂时间方法 openId={}",openId);
         return carNumInOutTimeVos;
     }
 }

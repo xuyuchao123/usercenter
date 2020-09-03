@@ -20,5 +20,5 @@ public interface CarNumService
 
     void enableCarNum(String carNum, String openId) throws Exception;
 
-    List<CarNumInOutTimeVo> queryInOutTime(String carNum) throws Exception;
+    List<CarNumInOutTimeVo> queryInOutTime(String openId) throws Exception;
 }

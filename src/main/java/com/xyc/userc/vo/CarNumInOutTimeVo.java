@@ -11,8 +11,8 @@ public class CarNumInOutTimeVo implements Serializable
     private static final long serialVersionUID = 1L;
 
     private String carNum;
-    private String time;
-    private String inOut;
+    private String inOutTime;
+    private String inOutType;
 
     public String getCarNum() {
         return carNum;
@@ -22,19 +22,19 @@ public class CarNumInOutTimeVo implements Serializable
         this.carNum = carNum;
     }
 
-    public String getTime() {
-        return time;
+    public String getInOutTime() {
+        return inOutTime;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setInOutTime(String inOutTime) {
+        this.inOutTime = inOutTime;
     }
 
-    public String getInOut() {
-        return inOut;
+    public String getInOutType() {
+        return inOutType;
     }
 
-    public void setInOut(String inOut) {
-        this.inOut = inOut;
+    public void setInOutType(String inOutType) {
+        this.inOutType = inOutType;
     }
 }

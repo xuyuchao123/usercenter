@@ -118,12 +118,14 @@
     </select>
 
     <select id="selectCarNumInOutTime" resultType="com.xyc.userc.vo.CarNumInOutTimeVo">
-        select PLATENO as carNum, CROSSTIME as time, CARINOUTSTRING as inOut
-        from T_ZZYY_RC_CAR_HIK@rcdb
-        where PLATENO = #{carNum}
-        and CROSSTIME <![CDATA[ >= ]]> #{startTime}
-        and CROSSTIME <![CDATA[ <= ]]> #{endTime}
-        order by CROSSTIME
+        select a.PLATENO as carNum, a.CROSSTIME as inOutTime, a.CARINOUTSTRING as inOutType
+        from T_ZZYY_RC_CAR_HIK@rcdb a
+        inner join SYS_OPENID_CARNUMBER b
+        on b.OPENID = #{openId}
+        and a.PLATENO = b.CARNUMBER
+        where a.CROSSTIME <![CDATA[ >= ]]> #{startTime}
+        and a.CROSSTIME <![CDATA[ <= ]]> #{endTime}
+        order by a.PLATENO, a.CROSSTIME
     </select>
 
 </mapper>
