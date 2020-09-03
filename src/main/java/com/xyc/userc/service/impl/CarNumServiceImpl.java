@@ -53,7 +53,7 @@ public class CarNumServiceImpl implements CarNumService
         int deleteCnt = carNumOpenIdMapper.deleteByCarNumOpenId(carNum,openId);
         if(deleteCnt > 0)
         {
-            if(mobileOpenIdIdList == null || mobileOpenIdIdList.size() == 1)
+            if(mobileOpenIdIdList == null || mobileOpenIdIdList.size() == 0)
             {
                 LOGGER.info("删除成功，当前用户没有已绑定的车牌号，准备修改其角色carNum={} openId={}",carNum,openId);
                 //获取角色"司机0"的id

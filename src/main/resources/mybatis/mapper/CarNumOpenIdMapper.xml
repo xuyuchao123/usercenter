@@ -15,7 +15,7 @@
     </resultMap>
 
     <select id="selectByMobileCarNum" resultMap="BaseResultMap">
-        select oc.ID, oc.OPENID, oc.CARNUMBER, oc.IS_ENABLED, oc.IS_DELETED, oc.USER_CREATE,
+        select DISTINCT oc.ID, oc.OPENID, oc.CARNUMBER, oc.IS_ENABLED, oc.IS_DELETED, oc.USER_CREATE,
         oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED, oc.IS_ENABLED from
         SYS_OPENID_CARNUMBER oc
         left join SYS_MOBILE_OPENID mo
@@ -70,7 +70,7 @@
     </update>
 
     <select id="selectMobileOpenIdIdByOpenId" resultType="java.lang.Integer">
-        select mo.id
+        select DISTINCT mo.id
         from SYS_OPENID_CARNUMBER oc
         left join SYS_MOBILE_OPENID mo
         on oc.openid = mo.openid

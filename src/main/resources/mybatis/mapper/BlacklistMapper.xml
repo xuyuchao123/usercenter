@@ -24,7 +24,7 @@
 
 
     <select id="selectBlacklist" resultMap="BaseVoResultMap">
-        select u.NICKNAME, m.MOBILE, b.REASON,
+        select DISTINCT u.NICKNAME, m.MOBILE, b.REASON,
         uu.NICKNAME as CREATENICKNAME,
         mm.MOBILE as CREATEMOBILEPHONE, b.GMT_CREATE
         from SYS_BLACKLIST b
@@ -33,7 +33,7 @@
         left join SYS_MOBILE_OPENID mm
         on b.USER_CREATE = mm.OPENID
         left join SYS_USER u
-        on mo.OPENID = u.OPENID
+        on m.OPENID = u.OPENID
         left join SYS_USER uu
         on b.USER_CREATE = uu.OPENID
         <where>

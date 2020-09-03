@@ -16,7 +16,7 @@
     </insert>
 
     <select id="selectByMobile" resultMap="BaseResultMap">
-        select mo.ID, mo.MOBILE, mo.OPENID, mo.USER_CREATE, mo.GMT_CREATE
+        select DISTINCT mo.ID, mo.MOBILE, mo.OPENID, mo.USER_CREATE, mo.GMT_CREATE
          from SYS_MOBILE_OPENID mo
         where mo.MOBILE = #{mobile}
     </select>

@@ -13,7 +13,7 @@
 
 
   <select id="selectByOpenId" resultMap="BaseResultMap">
-    select r.id, r.role_code, r.role_name, r.is_deleted,
+    select DISTINCT r.id, r.role_code, r.role_name, r.is_deleted,
       r.gmt_create,r.gmt_modified, r.parent_role_id
     from sys_role r
     left join sys_user_role ur
