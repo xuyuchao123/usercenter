@@ -11,11 +11,12 @@
         <result column="user_modified" jdbcType="NUMERIC" property="userModified" />
         <result column="gmt_create" jdbcType="VARCHAR" property="gmtCreate" />
         <result column="gmt_modified" jdbcType="VARCHAR" property="gmtModified" />
+        <result column="is_enabled" jdbcType="VARCHAR" property="isEnabled" />
     </resultMap>
 
     <select id="selectByMobileCarNum" resultMap="BaseResultMap">
         select oc.ID, oc.OPENID, oc.CARNUMBER, oc.IS_ENABLED, oc.IS_DELETED, oc.USER_CREATE,
-        oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED from
+        oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED, oc.IS_ENABLED from
         SYS_OPENID_CARNUMBER oc
         left join SYS_MOBILE_OPENID mo
         on oc.OPENID = mo.OPENID
@@ -32,7 +33,7 @@
 
     <select id="selectByOpenIdCarNum" resultMap="BaseResultMap">
         select oc.ID, oc.OPENID, oc.CARNUMBER, oc.IS_ENABLED, oc.IS_DELETED, oc.USER_CREATE,
-        oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED from
+        oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED, oc.IS_ENABLED from
         SYS_OPENID_CARNUMBER oc
         <where>
             <if test="openId != null">
@@ -78,8 +79,8 @@
     </select>
 
     <insert id="insert">
-        insert into SYS_OPENID_CARNUMBER(ID,OPENID,CARNUMBER,IS_DELETED,USER_CREATE,USER_MODIFIED,GMT_CREATE,GMT_MODIFIED)
-        VALUES (OPENID_CARNUM_SEQ.nextval,#{openId},#{carNum},#{isDeleted},#{userCreate},#{userModified},#{gmtCreate},#{gmtModified})
+        insert into SYS_OPENID_CARNUMBER(ID,OPENID,CARNUMBER,IS_DELETED,USER_CREATE,USER_MODIFIED,GMT_CREATE,GMT_MODIFIED,IS_ENABLED)
+        VALUES (OPENID_CARNUM_SEQ.nextval,#{openId},#{carNum},#{isDeleted},#{userCreate},#{userModified},#{gmtCreate},#{gmtModified},#{isEnabled})
     </insert>
 
     <update id="updateCarNum">
