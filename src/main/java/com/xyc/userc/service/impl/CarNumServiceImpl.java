@@ -49,7 +49,7 @@ public class CarNumServiceImpl implements CarNumService
     public void removeCarNum(String carNum, String openId) throws Exception
     {
         LOGGER.info("进入删除车牌号方法carNum={} openId={}",carNum,openId);
-        List<Integer> mobileOpenIdIdList = carNumOpenIdMapper.selectByOpenId(openId);
+        List<Integer> mobileOpenIdIdList = carNumOpenIdMapper.selectMobileOpenIdIdByOpenId(openId);
         int deleteCnt = carNumOpenIdMapper.deleteByCarNumOpenId(carNum,openId);
         if(deleteCnt > 0)
         {
@@ -86,7 +86,7 @@ public class CarNumServiceImpl implements CarNumService
             throw new BusinessException(JsonResultEnum.CARNUM_BINDED);
         }
         int insertCnt = carNumOpenIdMapper.insert(carNumOpenId);
-        List<Integer> mobileOpenIdIdList = carNumOpenIdMapper.selectByOpenId(openId);
+        List<Integer> mobileOpenIdIdList = carNumOpenIdMapper.selectMobileOpenIdIdByOpenId(openId);
         if(insertCnt > 0 && (mobileOpenIdIdList != null && mobileOpenIdIdList.size() == 1))
         {
             LOGGER.info("新增车牌成功，当前用户仅绑定一个车牌号，准备修改其角色carNum={} openId={}",carNum,openId);
@@ -118,23 +118,30 @@ public class CarNumServiceImpl implements CarNumService
     }
 
     @Override
-    public void enableCarNum(String carNum) throws Exception
+    public void enableCarNum(String carNum, String openId) throws Exception
     {
-        LOGGER.info("进入启用车牌号方法 CarNum={}",carNum);
-        List<CarNumOpenId> carNumOpenIdList = carNumOpenIdMapper.selectByCarNum(carNum);
+        LOGGER.info("进入启用车牌号方法 CarNum={} openId={}",carNum,openId);
+        List<CarNumOpenId> carNumOpenIdList = carNumOpenIdMapper.selectByOpenIdCarNum(null,carNum);
         if(carNumOpenIdList == null || carNumOpenIdList.size() == 0)
         {
-            LOGGER.info("该车牌号已删除或不存在 CarNum={}",carNum);
+            LOGGER.info("该车牌号已删除或不存在 CarNum={} openId={}",carNum,openId);
             throw new BusinessException(JsonResultEnum.CARNUM_NOT_EXIST);
         }
         CarNumOpenId carNumOpenId = carNumOpenIdList.get(0);
+        if(!carNumOpenId.getOpenId().equals(openId))
+        {
+            LOGGER.info("当前用户未绑定该车牌 CarNum={} openId={}",carNum,openId);
+            throw new BusinessException(JsonResultEnum.CARNUM_NOT_BINDED);
+        }
         if(carNumOpenId.getIsEnabled() == 1)
         {
-            LOGGER.info("该车牌号已在启用状态不能重复启用 CarNum={}",carNum);
+            LOGGER.info("该车牌号已在启用状态不能重复启用 CarNum={} openId={}",carNum,openId);
             throw new BusinessException(JsonResultEnum.CARNUM_ENABLED);
         }
-        carNumOpenIdMapper.updateCarNumEnable(1,new Date(),carNumOpenId.getCarNum());
-        LOGGER.info("成功启用车牌号 carNum={}", carNum);
-        LOGGER.info("结束启用车牌号方法 CarNum={}",carNum);
+//        List<CarNumOpenId> carNumOpenIdList2 = carNumOpenIdMapper.selectByOpenIdCarNum(openId,null,1);
+        carNumOpenIdMapper.updateCarNumEnable(0,new Date(),null,openId);
+        carNumOpenIdMapper.updateCarNumEnable(1,new Date(),carNumOpenId.getCarNum(),openId);
+        LOGGER.info("成功启用车牌号 carNum={} openId={}", carNum,openId);
+        LOGGER.info("结束启用车牌号方法 CarNum={} openId={}",carNum,openId);
     }
 }

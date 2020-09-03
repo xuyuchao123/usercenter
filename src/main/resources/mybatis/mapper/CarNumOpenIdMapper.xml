@@ -30,11 +30,14 @@
         </where>
     </select>
 
-    <select id="selectByCarNum" resultMap="BaseResultMap">
+    <select id="selectByOpenIdCarNum" resultMap="BaseResultMap">
         select oc.ID, oc.OPENID, oc.CARNUMBER, oc.IS_ENABLED, oc.IS_DELETED, oc.USER_CREATE,
         oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED from
         SYS_OPENID_CARNUMBER oc
         <where>
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
+            </if>
             <if test="carNum != null">
                 and oc.CARNUMBER = #{carNum}
             </if>
@@ -54,10 +57,18 @@
         update SYS_OPENID_CARNUMBER oc
         set oc.IS_ENABLED = #{isEnable},
             oc.GMT_MODIFIED = #{gmtModified}
-        where oc.CARNUMBER = #{carNum}
+        <where>
+            <if test="carNum != null">
+                and oc.CARNUMBER = #{carNum}
+            </if>
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
+            </if>
+            and oc.IS_DELETED = 0
+        </where>
     </update>
 
-    <select id="selectByOpenId" resultType="java.lang.Integer">
+    <select id="selectMobileOpenIdIdByOpenId" resultType="java.lang.Integer">
         select mo.id
         from SYS_OPENID_CARNUMBER oc
         left join SYS_MOBILE_OPENID mo

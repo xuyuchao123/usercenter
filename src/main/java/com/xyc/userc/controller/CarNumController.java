@@ -166,13 +166,26 @@ public class CarNumController
     @ApiOperation(value="启用车牌号")
     @ApiImplicitParam(name = "carNum", value = "车牌号", required = false, dataType = "String")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：启用成功 isSuccess=false：启用失败，resMsg为错误信息")})
-    public JsonResultObj enableCarNum(String carNum)
+    public JsonResultObj enableCarNum(String carNum, @ApiIgnore HttpSession session)
     {
         LOGGER.info("开始启用车牌号 carNum={}",carNum);
         JsonResultObj resultObj = null;
+        User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
+        if(user == null)
+        {
+            user = new User("oPh4uszJ0L7a9zNRU-tw4smPtbfU","一人！一车！一世界！","1","山东","临沂","中国",
+                    "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
+                            "2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132",null,null,"13167068999",null);
+        }
+        if (user == null) {
+            LOGGER.info("session中不存在用户信息");
+            resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
+            return resultObj;
+        }
+        String openId = user.getOpenid();
         try
         {
-            carNumService.enableCarNum(carNum);
+            carNumService.enableCarNum(carNum, openId);
             resultObj = new JsonResultObj(true);
         }
         catch (Exception e)

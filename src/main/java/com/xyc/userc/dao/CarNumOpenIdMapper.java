@@ -16,7 +16,7 @@ public interface CarNumOpenIdMapper
 
     int deleteByCarNumOpenId(@Param("carNum")String carNum, @Param("openId")String openId);
 
-    List<Integer> selectByOpenId(@Param("openId")String openId);
+    List<Integer> selectMobileOpenIdIdByOpenId(@Param("openId")String openId);
 
     int insert(CarNumOpenId carNumOpenId);
 
@@ -24,11 +24,10 @@ public interface CarNumOpenIdMapper
                       @Param("openId")String openId, @Param("gmtModified")Date gmtModified);
 
     void updateCarNumEnable(@Param("isEnable")Integer isEnable, @Param("gmtModified")Date gmtModified,
-                                @Param("carNum")String carNum);
+                                @Param("carNum")String carNum, @Param("openId")String openId);
 
     int selectCntByCarNumOpenId(@Param("oldCarNum")String oldCarNum, @Param("openId")String openId);
 
-    List<CarNumOpenId> selectByCarNum(@Param("carNum")String carNum);
-
+    List<CarNumOpenId> selectByOpenIdCarNum(@Param("openId")String openId, @Param("carNum")String carNum);
 
 }
