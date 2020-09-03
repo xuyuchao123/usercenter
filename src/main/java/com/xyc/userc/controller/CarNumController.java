@@ -7,6 +7,7 @@ import com.xyc.userc.service.CarNumService;
 import com.xyc.userc.util.CommonExceptionHandler;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
+import com.xyc.userc.vo.CarNumInOutTimeVo;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,8 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -193,6 +196,28 @@ public class CarNumController
             resultObj = CommonExceptionHandler.handException(e, "启用车牌号失败", LOGGER, resultObj);
         }
         LOGGER.info("结束启用车牌号");
+        return resultObj;
+    }
+
+
+    @PostMapping("/queryInOutTime")
+    @ApiOperation(value="查询车辆进出厂时间")
+    @ApiImplicitParam(name = "carNum", value = "车牌号", required = false, dataType = "String")
+    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
+    public JsonResultObj enableCarNum(String carNum)
+    {
+        LOGGER.info("开始查询车辆进出厂时间 carNum={}", carNum);
+        JsonResultObj resultObj = null;
+        try
+        {
+            List<CarNumInOutTimeVo> carNumInOutTimeVos = carNumService.queryInOutTime(carNum);
+            resultObj = new JsonResultObj(true,carNumInOutTimeVos);
+        }
+        catch (Exception e)
+        {
+            resultObj = CommonExceptionHandler.handException(e, "查询车辆进出厂时间失败", LOGGER, resultObj);
+        }
+        LOGGER.info("结束查询车辆进出厂时间");
         return resultObj;
     }
 }

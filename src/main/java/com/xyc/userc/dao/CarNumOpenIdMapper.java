@@ -2,6 +2,7 @@ package com.xyc.userc.dao;
 
 import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.MobileOpenId;
+import com.xyc.userc.vo.CarNumInOutTimeVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -29,5 +30,8 @@ public interface CarNumOpenIdMapper
     int selectCntByCarNumOpenId(@Param("oldCarNum")String oldCarNum, @Param("openId")String openId);
 
     List<CarNumOpenId> selectByOpenIdCarNum(@Param("openId")String openId, @Param("carNum")String carNum);
+
+    List<CarNumInOutTimeVo> selectCarNumInOutTime(@Param("carNum")String carNum, @Param("startTime")String startTime,
+                                                    @Param("endTime")String endTime);
 
 }

@@ -6,6 +6,7 @@ import com.xyc.userc.service.CarNumService;
 import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.RoleTypeEnum;
+import com.xyc.userc.vo.CarNumInOutTimeVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -143,5 +147,17 @@ public class CarNumServiceImpl implements CarNumService
         carNumOpenIdMapper.updateCarNumEnable(1,new Date(),carNumOpenId.getCarNum(),openId);
         LOGGER.info("成功启用车牌号 carNum={} openId={}", carNum,openId);
         LOGGER.info("结束启用车牌号方法 CarNum={} openId={}",carNum,openId);
+    }
+
+    @Override
+    public List<CarNumInOutTimeVo> queryInOutTime(String carNum) throws Exception
+    {
+        LOGGER.info("进入查询车辆进出厂时间方法 CarNum={}",carNum);
+        String startTime = LocalDate.now().minusMonths(1) + " 00:00:00";
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String endTime = dateTimeFormatter.format(LocalDateTime.now());
+        List<CarNumInOutTimeVo> carNumInOutTimeVos = carNumOpenIdMapper.selectCarNumInOutTime(carNum,startTime,endTime);
+        LOGGER.info("结束查询车辆进出厂时间方法 CarNum={}",carNum);
+        return carNumInOutTimeVos;
     }
 }

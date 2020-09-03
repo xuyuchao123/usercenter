@@ -14,6 +14,18 @@
         <result column="is_enabled" jdbcType="VARCHAR" property="isEnabled" />
     </resultMap>
 
+    <resultMap id="BaseVoResultMap" type="com.xyc.userc.entity.CarNumOpenId">
+        <id column="id" jdbcType="NUMERIC" property="id" />
+        <result column="openid" jdbcType="VARCHAR" property="openId" />
+        <result column="carnumber" jdbcType="VARCHAR" property="carNum" />
+        <result column="is_deleted" jdbcType="NUMERIC" property="isDeleted" />
+        <result column="user_create" jdbcType="NUMERIC" property="userCreate" />
+        <result column="user_modified" jdbcType="NUMERIC" property="userModified" />
+        <result column="gmt_create" jdbcType="VARCHAR" property="gmtCreate" />
+        <result column="gmt_modified" jdbcType="VARCHAR" property="gmtModified" />
+        <result column="is_enabled" jdbcType="VARCHAR" property="isEnabled" />
+    </resultMap>
+
     <select id="selectByMobileCarNum" resultMap="BaseResultMap">
         select DISTINCT oc.ID, oc.OPENID, oc.CARNUMBER, oc.IS_ENABLED, oc.IS_DELETED, oc.USER_CREATE,
         oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED, oc.IS_ENABLED from
@@ -103,6 +115,15 @@
             </if>
             and oc.IS_DELETED = 0
         </where>
+    </select>
+
+    <select id="selectCarNumInOutTime" resultType="com.xyc.userc.vo.CarNumInOutTimeVo">
+        select PLATENO as carNum, CROSSTIME as time, CARINOUTSTRING as inOut
+        from T_ZZYY_RC_CAR_HIK@rcdb
+        where PLATENO = #{carNum}
+        and CROSSTIME <![CDATA[ >= ]]> #{startTime}
+        and CROSSTIME <![CDATA[ <= ]]> #{endTime}
+        order by CROSSTIME
     </select>
 
 </mapper>

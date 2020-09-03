@@ -1,6 +1,7 @@
 package com.xyc.userc.service;
 
 import com.xyc.userc.entity.CarNumOpenId;
+import com.xyc.userc.vo.CarNumInOutTimeVo;
 
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface CarNumService
     void modifyCarNumByOpenId(String oldCarNum, String newCarNum, String openId) throws Exception;
 
     void enableCarNum(String carNum, String openId) throws Exception;
+
+    List<CarNumInOutTimeVo> queryInOutTime(String carNum) throws Exception;
 }
