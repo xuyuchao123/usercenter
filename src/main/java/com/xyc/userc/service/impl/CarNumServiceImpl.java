@@ -159,7 +159,10 @@ public class CarNumServiceImpl implements CarNumService
 //            LOGGER.info("当前用户未绑定车牌 openId={}",openId);
 //            return null;
 //        }
-        String startTime = LocalDate.now().minusMonths(1) + " 00:00:00";
+        LocalDate localDate = LocalDate.now();
+        System.out.println(localDate.getDayOfMonth());
+        localDate.minusDays(localDate.getDayOfMonth());
+        String startTime = localDate.minusMonths(1) + " 00:00:00";
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String endTime = dateTimeFormatter.format(LocalDateTime.now());
         LOGGER.info("车辆进出开始时间：startTime={} 结束时间：endTime={}",startTime,endTime);
