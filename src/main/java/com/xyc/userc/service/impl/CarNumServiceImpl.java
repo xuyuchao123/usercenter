@@ -161,7 +161,7 @@ public class CarNumServiceImpl implements CarNumService
 //        }
         LocalDate localDate = LocalDate.now();
 //        System.out.println(localDate.getDayOfMonth());
-        localDate = localDate.minusDays(localDate.getDayOfMonth());
+        localDate = localDate.minusDays(localDate.getDayOfMonth()-1);
         String startTime = localDate.minusMonths(1) + " 00:00:00";
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String endTime = dateTimeFormatter.format(LocalDateTime.now());
