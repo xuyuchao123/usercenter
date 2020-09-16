@@ -24,7 +24,7 @@ public class User extends Userinfo implements Serializable
 
     private String mobilePhone;
 
-
+    private String carNum;
 
     private List<Role> roles;
 
@@ -41,6 +41,7 @@ public class User extends Userinfo implements Serializable
         this.setPrivilege(privilege);
         this.setUnionid(unionId);
         this.mobilePhone = mobilePhone;
+//        this.carNum = carNum;
         this.roles = roles;
     }
 
@@ -61,7 +62,15 @@ public class User extends Userinfo implements Serializable
         this.mobilePhone = mobilePhone;
     }
 
-//    @Override
+    public String getCarNum() {
+        return carNum;
+    }
+
+    public void setCarNum(String carNum) {
+        this.carNum = carNum;
+    }
+
+    //    @Override
 //    public Collection<? extends GrantedAuthority> getAuthorities()
 //    {
 //        List<SimpleGrantedAuthority> authorities = new ArrayList<>(roles.size());
