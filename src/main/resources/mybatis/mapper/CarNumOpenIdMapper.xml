@@ -130,4 +130,10 @@
         order by a.PLATENO, a.CROSSTIME
     </select>
 
+    <select id="selectGsCarInfoByCarNum" resultType="com.xyc.userc.vo.GsCarInfoVo">
+        select g.CLSBDH as clsbdh, g.FDJH as fdjh
+        from SYS_GSCAR_INFO g
+        where g.HPHM = #{carNum}
+    </select>
+
 </mapper>

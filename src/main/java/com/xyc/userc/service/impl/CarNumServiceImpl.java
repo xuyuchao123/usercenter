@@ -7,6 +7,7 @@ import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.RoleTypeEnum;
 import com.xyc.userc.vo.CarNumInOutTimeVo;
+import com.xyc.userc.vo.GsCarInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -172,5 +173,14 @@ public class CarNumServiceImpl implements CarNumService
         List<CarNumInOutTimeVo> carNumInOutTimeVos = carNumOpenIdMapper.selectCarNumInOutTime(openId,startTime,endTime);
         LOGGER.info("结束查询车辆进出厂时间方法 openId={}",openId);
         return carNumInOutTimeVos;
+    }
+
+    @Override
+    public List<GsCarInfoVo> queryGsCarInfo(String carNum) throws Exception
+    {
+        LOGGER.info("进入查询国三车辆识别号及发动机号方法 carNum={}",carNum);
+        List<GsCarInfoVo> gsCarInfoVos = carNumOpenIdMapper.selectGsCarInfoByCarNum(carNum);
+        LOGGER.info("结束查询国三车辆识别号及发动机号方法 carNum={}",carNum);
+        return gsCarInfoVos;
     }
 }

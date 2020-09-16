@@ -8,6 +8,7 @@ import com.xyc.userc.util.CommonExceptionHandler;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
 import com.xyc.userc.vo.CarNumInOutTimeVo;
+import com.xyc.userc.vo.GsCarInfoVo;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -228,6 +229,27 @@ public class CarNumController
             resultObj = CommonExceptionHandler.handException(e, "查询车辆进出厂时间失败", LOGGER, resultObj);
         }
         LOGGER.info("结束查询车辆进出厂时间");
+        return resultObj;
+    }
+
+    @GetMapping("/queryGsCarInfo")
+    @ApiOperation(value="查询国三车辆识别号及发动机号")
+    @ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String")
+    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
+    public JsonResultObj queryGsCarInfo(String carNum)
+    {
+        LOGGER.info("开始查询国三车辆识别号及发动机号 carNum={}", carNum);
+        JsonResultObj resultObj = null;
+        try
+        {
+            List<GsCarInfoVo> gsCarInfoVos = carNumService.queryGsCarInfo(carNum);
+            resultObj = new JsonResultObj(true,gsCarInfoVos);
+        }
+        catch (Exception e)
+        {
+            resultObj = CommonExceptionHandler.handException(e, "查询车辆进出厂时间失败", LOGGER, resultObj);
+        }
+        LOGGER.info("结束查询国三车辆识别号及发动机号 carNum={}", carNum);
         return resultObj;
     }
 }
