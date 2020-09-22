@@ -19,7 +19,7 @@
 
     <insert id="insertShipReport">
         insert into SYS_REPORT_INFO(ID,SHIP_NUM,REALNAME,REPORT_DEP,TRALEL_TIME_START,TRALEL_TIME_END,IS_PASS,USER_CREATE,USER_MODIFIED,GMT_CREATE,GMT_MODIFIED,IS_DELETED)
-        values(SHIP_REPORT_SEQ.nextval,#{shipNum},#{name},#{reportDepartment},#{travelTimeStart},#{travelTimeEnd},#{isPass},#{userCreate},#{userModified}#{gmtCreate},#{gmtModified},#{isDeleted})
+        values(SHIP_REPORT_SEQ.nextval,#{shipNum},#{name},#{reportDepartment},#{travelTimeStart},#{travelTimeEnd},#{isPass},#{userCreate},#{userModified},#{gmtCreate},#{gmtModified},#{isDeleted})
     </insert>
 
 </mapper>
