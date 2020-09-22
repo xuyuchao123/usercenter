@@ -47,6 +47,7 @@ public class UserServiceImpl implements UserService
         LOGGER.info("进入获取用户信息方法 openid：{}",openId);
         List<Role> roleList = roleMapper.selectByOpenId(openId);
         user.setRoles(roleList);
+        LOGGER.info("结束获取用户信息方法 openid：{}",openId);
         return user;
     }
 
