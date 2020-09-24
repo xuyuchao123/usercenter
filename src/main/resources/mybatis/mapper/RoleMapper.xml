@@ -40,7 +40,7 @@
     values (USER_ROLE_SEQ.nextval,#{mobileOpenIdId},#{roleId},#{gmtCreate},#{gmtModified})
   </insert>
 
-  <select id="selectByRoleCode" resultType="java.lang.Integer">
+  <select id="selectByRoleCode" resultType="com.xyc.userc.entity.Role">
     select r.id, r.role_code, r.role_name, r.is_deleted,
       r.gmt_create,r.gmt_modified, r.parent_role_id
     from SYS_ROLE r
