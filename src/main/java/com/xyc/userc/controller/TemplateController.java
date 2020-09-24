@@ -92,6 +92,7 @@ public class TemplateController
 				else
 				{
 					user = userService.getUser(user);
+					session.setAttribute("USERINFOANDROLES",user);
 					resultObj = new JsonResultObj(true,user);
 				}
 			}

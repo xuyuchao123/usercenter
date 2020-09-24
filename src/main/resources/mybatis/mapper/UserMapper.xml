@@ -40,7 +40,7 @@
 
   <update id="updateRoleIdByMobileOpenId">
     update SYS_USER_ROLE ur
-    set ur.ROLE_ID = #{roleId}
+    set ur.ROLE_ID = #{roleId},ur.GMT_MODIFIED = #{gmtModified}
     where ur.MOBILE_OPENID_ID = #{mobileOpenIdId}
   </update>
 

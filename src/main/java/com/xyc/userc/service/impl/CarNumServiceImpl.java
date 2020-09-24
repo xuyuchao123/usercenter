@@ -2,22 +2,29 @@ package com.xyc.userc.service.impl;
 
 import com.xyc.userc.dao.*;
 import com.xyc.userc.entity.CarNumOpenId;
+import com.xyc.userc.entity.Role;
+import com.xyc.userc.entity.User;
 import com.xyc.userc.service.CarNumService;
 import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.RoleTypeEnum;
 import com.xyc.userc.vo.CarNumInOutTimeVo;
 import com.xyc.userc.vo.GsCarInfoVo;
+import com.xyc.userc.vo.MobileOpenIdRoleVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -54,18 +61,28 @@ public class CarNumServiceImpl implements CarNumService
     public void removeCarNum(String carNum, String openId) throws Exception
     {
         LOGGER.info("进入删除车牌号方法carNum={} openId={}",carNum,openId);
-        List<Integer> mobileOpenIdIdList = carNumOpenIdMapper.selectMobileOpenIdIdByOpenId(openId);
         int deleteCnt = carNumOpenIdMapper.deleteByCarNumOpenId(carNum,openId);
         if(deleteCnt > 0)
         {
+            List<Integer> mobileOpenIdIdList = carNumOpenIdMapper.selectMobileOpenIdIdByOpenId(openId);
             if(mobileOpenIdIdList == null || mobileOpenIdIdList.size() == 0)
             {
-                LOGGER.info("删除成功，当前用户没有已绑定的车牌号，准备修改其角色carNum={} openId={}",carNum,openId);
-                //获取角色"司机0"的id
-                int roleId = roleMapper.selectIdByRoleCode(RoleTypeEnum.ROLE_SJ_0.getRoleCode());
-                //更新当前用户的角色为司机0
-                userMapper.updateRoleIdByMobileOpenId(roleId,mobileOpenIdIdList.get(0));
-                LOGGER.info("角色修改成功carNum={} openId={}",carNum,openId);
+                LOGGER.info("删除成功，当前用户没有已绑定的车牌号，准备修改其角色 carNum={} openId={}",carNum,openId);
+                //获取角色"司机0"
+                Role role = roleMapper.selectByRoleCode(RoleTypeEnum.ROLE_SJ_0.getRoleCode());
+                if(role != null)
+                {
+                    //更新当前用户的角色为司机0
+                    userMapper.updateRoleIdByMobileOpenId(role.getId(),mobileOpenIdIdList.get(0),new Date());
+                    LOGGER.info("角色修改成功carNum={} openId={}",carNum,openId);
+                    //角色修改完成同步session中的用户信息
+                    HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+                    User user = (User)session.getAttribute("USERINFOANDROLES");
+                    List<Role> roleList = new ArrayList<>();
+                    roleList.add(role);
+                    user.setRoles(roleList);
+                    session.setAttribute("USERINFOANDROLES",user);
+                }
             }
         }
         else
@@ -91,15 +108,24 @@ public class CarNumServiceImpl implements CarNumService
             throw new BusinessException(JsonResultEnum.CARNUM_BINDED);
         }
         int insertCnt = carNumOpenIdMapper.insert(carNumOpenId);
-        List<Integer> mobileOpenIdIdList = carNumOpenIdMapper.selectMobileOpenIdIdByOpenId(openId);
-        if(insertCnt > 0 && (mobileOpenIdIdList != null && mobileOpenIdIdList.size() == 1))
+//        List<Integer> mobileOpenIdIdList = carNumOpenIdMapper.selectMobileOpenIdIdByOpenId(openId);
+//        if(insertCnt > 0 && (mobileOpenIdIdList != null && mobileOpenIdIdList.size() == 1))
+//        {
+//            LOGGER.info("新增车牌成功，当前用户仅绑定一个车牌号，准备修改其角色carNum={} openId={}",carNum,openId);
+//            //获取角色"司机1"的id
+//            int roleId = roleMapper.selectIdByRoleCode(RoleTypeEnum.ROLE_SJ_1.getRoleCode());
+//            //更新当前用户的角色为司机1
+//            userMapper.updateRoleIdByMobileOpenId(roleId,mobileOpenIdIdList.get(0));
+//            LOGGER.info("角色修改成功carNum={} openId={}",carNum,openId);
+//        }
+        if(insertCnt > 0)
         {
-            LOGGER.info("新增车牌成功，当前用户仅绑定一个车牌号，准备修改其角色carNum={} openId={}",carNum,openId);
-            //获取角色"司机1"的id
-            int roleId = roleMapper.selectIdByRoleCode(RoleTypeEnum.ROLE_SJ_1.getRoleCode());
-            //更新当前用户的角色为司机1
-            userMapper.updateRoleIdByMobileOpenId(roleId,mobileOpenIdIdList.get(0));
-            LOGGER.info("角色修改成功carNum={} openId={}",carNum,openId);
+            LOGGER.info("新增车牌成功 carNum={} openId={}",carNum,openId);
+        }
+        else
+        {
+            LOGGER.info("该车牌号已被绑定，不能重复绑定 carNum={} openId={}",carNum,openId);
+            throw new BusinessException(JsonResultEnum.CARNUM_BINDED);
         }
         LOGGER.info("结束新增车牌号方法 carNum={} openId={}",carNum,openId);
     }
@@ -147,6 +173,29 @@ public class CarNumServiceImpl implements CarNumService
         carNumOpenIdMapper.updateCarNumEnable(0,new Date(),null,openId);
         carNumOpenIdMapper.updateCarNumEnable(1,new Date(),carNumOpenId.getCarNum(),openId);
         LOGGER.info("成功启用车牌号 carNum={} openId={}", carNum,openId);
+
+        //查找当前用户的角色
+        List<MobileOpenIdRoleVo> mobileOpenIdRoleVoList = roleMapper.selectMobileOpenIdRoleVo(openId);
+        if(mobileOpenIdRoleVoList != null && mobileOpenIdRoleVoList.size() > 0
+                && RoleTypeEnum.ROLE_SJ_0.getRoleCode().equals(mobileOpenIdRoleVoList.get(0).getRoleCode()))
+        {
+            LOGGER.info("当前用户角色为SJ0，准备修改其角色为SJ1 carNum={} openId={}",carNum,openId);
+            //获取角色"司机1"
+            Role role = roleMapper.selectByRoleCode(RoleTypeEnum.ROLE_SJ_1.getRoleCode());
+            if(role != null)
+            {
+                //更新当前用户的角色为司机1
+                userMapper.updateRoleIdByMobileOpenId(role.getId(),mobileOpenIdRoleVoList.get(0).getMobileOpenIdId(),new Date());
+                LOGGER.info("角色修改成功 carNum={} openId={}",carNum,openId);
+                //角色修改完成同步session中的用户信息
+                HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+                User user = (User)session.getAttribute("USERINFOANDROLES");
+                List<Role> roleList = new ArrayList<>();
+                roleList.add(role);
+                user.setRoles(roleList);
+                session.setAttribute("USERINFOANDROLES",user);
+            }
+        }
         LOGGER.info("结束启用车牌号方法 CarNum={} openId={}",carNum,openId);
     }
 
