@@ -3,6 +3,7 @@ package com.xyc.userc.dao;
 import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.MobileOpenId;
 import com.xyc.userc.vo.CarNumInOutTimeVo;
+import com.xyc.userc.vo.EnabledCarInfoVo;
 import com.xyc.userc.vo.GsCarInfoVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -36,5 +37,7 @@ public interface CarNumOpenIdMapper
                                                     @Param("endTime")String endTime);
 
     List<GsCarInfoVo> selectGsCarInfoByCarNum(@Param("carNum")String carNum);
+
+    EnabledCarInfoVo selectEnabledCarInfo(@Param("openId")String openId);
 
 }

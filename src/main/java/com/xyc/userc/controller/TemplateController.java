@@ -82,7 +82,7 @@ public class TemplateController
                     user = new User("oPh4uszJ0L7a9zNRU-tw4smPtbfU","一人！一车！一世界！","1","山东","临沂","中国",
                             "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
                                     "2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132",null,null,"13167068999",null);
-                    user.setCarNum("豫R97829");
+//                    user.setCarNum("豫R97829");
 				}
 				if(user == null)
 				{

@@ -95,11 +95,14 @@ public class CarNumController
 
     @PostMapping("/addCarNum")
     @ApiOperation(value="新增车牌号")
-    @ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String")
+    @ApiImplicitParams({@ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "engineNum", value = "发动机号", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "identNum", value = "车辆识别号", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "emissionStd", value = "排放标准", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：新增成功 isSuccess=false：新增失败，resMsg为错误信息")})
-    public JsonResultObj addCarNum(String carNum, @ApiIgnore HttpSession session)
+    public JsonResultObj addCarNum(String carNum, String engineNum, String identNum,String emissionStd, @ApiIgnore HttpSession session)
     {
-        LOGGER.info("开始新增车牌号 carNum={}", carNum);
+        LOGGER.info("开始新增车牌号 carNum={} engineNum={} identNum={} emissionStd={}",carNum,engineNum,identNum,emissionStd);
         JsonResultObj resultObj = null;
         User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
         if(user == null)
@@ -117,14 +120,14 @@ public class CarNumController
         String openId = user.getOpenid();
         try
         {
-            carNumService.addCarNum(carNum,openId);
+            carNumService.addCarNum(carNum,openId,engineNum,identNum,emissionStd);
             resultObj = new JsonResultObj(true);
         }
         catch (Exception e)
         {
             resultObj = CommonExceptionHandler.handException(e, "新增车牌号失败", LOGGER, resultObj);
         }
-        LOGGER.info("结束新增车牌号 carNum={}", carNum);
+        LOGGER.info("结束新增车牌号 carNum={} engineNum={} identNum={} emissionStd={}",carNum,engineNum,identNum,emissionStd);
         return resultObj;
     }
 

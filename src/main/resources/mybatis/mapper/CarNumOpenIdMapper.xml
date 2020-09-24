@@ -6,6 +6,9 @@
         <id column="id" jdbcType="NUMERIC" property="id" />
         <result column="openid" jdbcType="VARCHAR" property="openId" />
         <result column="carnumber" jdbcType="VARCHAR" property="carNum" />
+        <result column="ENGINENUM" jdbcType="VARCHAR" property="engineNum" />
+        <result column="IDENTNUM" jdbcType="VARCHAR" property="identNum" />
+        <result column="EMISSIONSTD" jdbcType="VARCHAR" property="emissionStd" />
         <result column="is_deleted" jdbcType="NUMERIC" property="isDeleted" />
         <result column="user_create" jdbcType="NUMERIC" property="userCreate" />
         <result column="user_modified" jdbcType="NUMERIC" property="userModified" />
@@ -27,7 +30,8 @@
     </resultMap>
 
     <select id="selectByMobileCarNum" resultMap="BaseResultMap">
-        select DISTINCT oc.ID, oc.OPENID, oc.CARNUMBER, oc.IS_ENABLED, oc.IS_DELETED, oc.USER_CREATE,
+        select DISTINCT oc.ID, oc.OPENID, oc.CARNUMBER, oc.ENGINENUM, oc.IDENTNUM, oc.EMISSIONSTD,
+        oc.IS_ENABLED, oc.IS_DELETED, oc.USER_CREATE,
         oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED, oc.IS_ENABLED from
         SYS_OPENID_CARNUMBER oc
         left join SYS_MOBILE_OPENID mo
@@ -44,7 +48,8 @@
     </select>
 
     <select id="selectByOpenIdCarNum" resultMap="BaseResultMap">
-        select oc.ID, oc.OPENID, oc.CARNUMBER, oc.IS_ENABLED, oc.IS_DELETED, oc.USER_CREATE,
+        select oc.ID, oc.OPENID, oc.CARNUMBER,oc.ENGINENUM, oc.IDENTNUM, oc.EMISSIONSTD,
+        oc.IS_ENABLED, oc.IS_DELETED, oc.USER_CREATE,
         oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED, oc.IS_ENABLED from
         SYS_OPENID_CARNUMBER oc
         <where>
@@ -55,6 +60,20 @@
                 and oc.CARNUMBER = #{carNum}
             </if>
             and oc.IS_DELETED = 0
+        </where>
+    </select>
+
+    <select id="selectEnabledCarInfo" resultType="com.xyc.userc.vo.EnabledCarInfoVo">
+        select
+          oc.CARNUMBER as carNum
+        from
+          SYS_OPENID_CARNUMBER oc
+        <where>
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
+            </if>
+            and oc.IS_DELETED = 0
+            and oc.IS_ENABLED = 1
         </where>
     </select>
 
@@ -91,8 +110,8 @@
     </select>
 
     <insert id="insert">
-        insert into SYS_OPENID_CARNUMBER(ID,OPENID,CARNUMBER,IS_DELETED,USER_CREATE,USER_MODIFIED,GMT_CREATE,GMT_MODIFIED,IS_ENABLED)
-        VALUES (OPENID_CARNUM_SEQ.nextval,#{openId},#{carNum},#{isDeleted},#{userCreate},#{userModified},#{gmtCreate},#{gmtModified},#{isEnabled})
+        insert into SYS_OPENID_CARNUMBER(ID,OPENID,CARNUMBER,IS_DELETED,USER_CREATE,USER_MODIFIED,GMT_CREATE,GMT_MODIFIED,IS_ENABLED,ENGINENUM,IDENTNUM,EMISSIONSTD)
+        VALUES (OPENID_CARNUM_SEQ.nextval,#{openId},#{carNum},#{isDeleted},#{userCreate},#{userModified},#{gmtCreate},#{gmtModified},#{isEnabled},#{engineNum},#{identNum},#{emissionStd})
     </insert>
 
     <update id="updateCarNum">

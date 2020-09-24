@@ -78,13 +78,13 @@ public class CarNumServiceImpl implements CarNumService
     }
 
     @Override
-    public void addCarNum(String carNum, String openId) throws Exception
+    public void addCarNum(String carNum, String openId, String engineNum, String identNum,String emissionStd) throws Exception
     {
         LOGGER.info("进入新增车牌号方法carNum={} openId={}",carNum,openId);
         LOGGER.info("开始检查车牌号是否已被绑定carNum={} openId={}",carNum,openId);
         int cnt = carNumOpenIdMapper.selectCntByCarNumOpenId(carNum,null);
         Date date = new Date();
-        CarNumOpenId carNumOpenId = new CarNumOpenId(null,openId,carNum,0,0,openId,openId,date,date);
+        CarNumOpenId carNumOpenId = new CarNumOpenId(null,openId,carNum,engineNum,identNum,emissionStd,0,0,openId,openId,date,date);
         if(cnt > 0)
         {
             LOGGER.info("该车牌号已被绑定，不能重复绑定 carNum={} openId={}",carNum,openId);

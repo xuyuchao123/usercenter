@@ -64,8 +64,8 @@ public class ReportController
             return resultObj;
         }
         String openId = user.getOpenid();
-        try
-        {
+            try
+            {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(Long.valueOf(travelTimeStart));
             Date travelTimeStartDate = calendar.getTime();

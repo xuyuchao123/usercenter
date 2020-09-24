@@ -7,6 +7,7 @@ import com.xyc.userc.entity.User;
 import com.xyc.userc.service.UserService;
 import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.JsonResultEnum;
+import com.xyc.userc.vo.EnabledCarInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,8 @@ public class UserServiceImpl implements UserService
     @Autowired
     private MobileOpenIdMapper mobileOpenIdMapper;
 
+    @Autowired
+    private CarNumOpenIdMapper carNumOpenIdMapper;
 
     @Override
     public User getUser(User user) throws Exception
@@ -47,6 +50,10 @@ public class UserServiceImpl implements UserService
         LOGGER.info("进入获取用户信息方法 openid：{}",openId);
         List<Role> roleList = roleMapper.selectByOpenId(openId);
         user.setRoles(roleList);
+        EnabledCarInfoVo enabledCarInfoVo = carNumOpenIdMapper.selectEnabledCarInfo(openId);
+        String carNum = enabledCarInfoVo.getCarNum();
+        LOGGER.info("获取到用户已启用的车牌号 carNum={}",carNum);
+        user.setCarNum(carNum);
         LOGGER.info("结束获取用户信息方法 openid：{}",openId);
         return user;
     }

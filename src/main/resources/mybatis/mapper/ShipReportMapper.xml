@@ -7,8 +7,8 @@
         <result column="SHIP_NUM" jdbcType="VARCHAR" property="shipNum" />
         <result column="REALNAME" jdbcType="VARCHAR" property="name" />
         <result column="REPORT_DEP" jdbcType="VARCHAR" property="reportDepartment" />
-        <result column="TRALEL_TIME_START" jdbcType="DATE" property="travelTimeStart" />
-        <result column="TRALEL_TIME_END" jdbcType="DATE" property="travelTimeEnd" />
+        <result column="TRAVEL_TIME_START" jdbcType="DATE" property="travelTimeStart" />
+        <result column="TRAVEL_TIME_END" jdbcType="DATE" property="travelTimeEnd" />
         <result column="IS_PASS" jdbcType="VARCHAR" property="isPass" />
         <result column="USER_CREATE" jdbcType="VARCHAR" property="userCreate" />
         <result column="GMT_CREATE" jdbcType="DATE" property="gmtCreate" />
@@ -18,7 +18,7 @@
     </resultMap>
 
     <insert id="insertShipReport">
-        insert into SYS_REPORT_INFO(ID,SHIP_NUM,REALNAME,REPORT_DEP,TRALEL_TIME_START,TRALEL_TIME_END,IS_PASS,USER_CREATE,USER_MODIFIED,GMT_CREATE,GMT_MODIFIED,IS_DELETED)
+        insert into SYS_REPORT_INFO(ID,SHIP_NUM,REALNAME,REPORT_DEP,TRAVEL_TIME_START,TRAVEL_TIME_END,IS_PASS,USER_CREATE,USER_MODIFIED,GMT_CREATE,GMT_MODIFIED,IS_DELETED)
         values(SHIP_REPORT_SEQ.nextval,#{shipNum},#{name},#{reportDepartment},#{travelTimeStart},#{travelTimeEnd},#{isPass},#{userCreate},#{userModified},#{gmtCreate},#{gmtModified},#{isDeleted})
     </insert>
 

@@ -13,6 +13,9 @@ public class CarNumOpenId implements Serializable
     private Integer id;
     private String openId;
     private String carNum;
+    private String engineNum;
+    private String identNum;
+    private String emissionStd;
     private Integer isEnabled;
     private Integer isDeleted;
     private String userCreate;
@@ -20,12 +23,16 @@ public class CarNumOpenId implements Serializable
     private Date gmtCreate;
     private Date gmtModified;
 
-    public CarNumOpenId(Integer id, String openId, String carNum, Integer isEnabled, Integer isDeleted, String userCreate,
+    public CarNumOpenId(Integer id, String openId, String carNum, String engineNum, String identNum,
+                        String emissionStd, Integer isEnabled, Integer isDeleted, String userCreate,
                         String userModified, Date gmtCreate, Date gmtModified)
     {
         this.id = id;
         this.openId = openId;
         this.carNum = carNum;
+        this.engineNum = engineNum;
+        this.identNum = identNum;
+        this.emissionStd = emissionStd;
         this.isEnabled = isEnabled;
         this.isDeleted = isDeleted;
         this.userCreate = userCreate;
@@ -58,11 +65,35 @@ public class CarNumOpenId implements Serializable
         this.carNum = carNum;
     }
 
-    public int getIsDeleted() {
+    public String getEngineNum() {
+        return engineNum;
+    }
+
+    public void setEngineNum(String engineNum) {
+        this.engineNum = engineNum;
+    }
+
+    public String getIdentNum() {
+        return identNum;
+    }
+
+    public void setIdentNum(String identNum) {
+        this.identNum = identNum;
+    }
+
+    public String getEmissionStd() {
+        return emissionStd;
+    }
+
+    public void setEmissionStd(String emissionStd) {
+        this.emissionStd = emissionStd;
+    }
+
+    public Integer getIsDeleted() {
         return isDeleted;
     }
 
-    public void setIsDeleted(int isDeleted) {
+    public void setIsDeleted(Integer isDeleted) {
         this.isDeleted = isDeleted;
     }
 
