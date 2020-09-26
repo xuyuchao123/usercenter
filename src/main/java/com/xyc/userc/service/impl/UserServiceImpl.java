@@ -51,9 +51,11 @@ public class UserServiceImpl implements UserService
         List<Role> roleList = roleMapper.selectByOpenId(openId);
         user.setRoles(roleList);
         EnabledCarInfoVo enabledCarInfoVo = carNumOpenIdMapper.selectEnabledCarInfo(openId);
-        String carNum = enabledCarInfoVo.getCarNum();
-        LOGGER.info("获取到用户已启用的车牌号 carNum={}",carNum);
-        user.setCarNum(carNum);
+        if(enabledCarInfoVo != null) {
+            String carNum = enabledCarInfoVo.getCarNum();
+            LOGGER.info("获取到用户已启用的车牌号 carNum={}", carNum);
+            user.setCarNum(carNum);
+        }
         LOGGER.info("结束获取用户信息方法 openid：{}",openId);
         return user;
     }
