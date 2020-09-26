@@ -17,7 +17,8 @@ public interface CarNumService
 
     void addCarNum(String carNum, String openId, String engineNum, String identNum,String emissionStd) throws Exception;
 
-    void modifyCarNumByOpenId(String oldCarNum, String newCarNum, String openId) throws Exception;
+    void modifyCarNumByOpenId(String oldCarNum, String newCarNum, String engineNum,
+                              String identNum, String emissionStd, String openId) throws Exception;
 
     void enableCarNum(String carNum, String openId) throws Exception;
 

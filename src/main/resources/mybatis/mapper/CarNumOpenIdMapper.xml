@@ -117,6 +117,9 @@
     <update id="updateCarNum">
         update SYS_OPENID_CARNUMBER oc
         set oc.CARNUMBER = #{newCarNum},
+            oc.ENGINENUM = #{engineNum},
+            oc.IDENTNUM = #{identNum},
+            oc.EMISSIONSTD = #{emissionStd},
           oc.GMT_MODIFIED = #{gmtModified}
         where oc.OPENID = #{openId}
         and oc.CARNUMBER = #{oldCarNum}

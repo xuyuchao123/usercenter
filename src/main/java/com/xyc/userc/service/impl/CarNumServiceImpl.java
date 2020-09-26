@@ -78,10 +78,13 @@ public class CarNumServiceImpl implements CarNumService
                     //角色修改完成同步session中的用户信息
                     HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
                     User user = (User)session.getAttribute("USERINFOANDROLES");
-                    List<Role> roleList = new ArrayList<>();
-                    roleList.add(role);
-                    user.setRoles(roleList);
-                    session.setAttribute("USERINFOANDROLES",user);
+                    if(user != null)
+                    {
+                        List<Role> roleList = new ArrayList<>();
+                        roleList.add(role);
+                        user.setRoles(roleList);
+                        session.setAttribute("USERINFOANDROLES",user);
+                    }
                 }
             }
         }
@@ -131,21 +134,24 @@ public class CarNumServiceImpl implements CarNumService
     }
 
     @Override
-    public void modifyCarNumByOpenId(String oldCarNum, String newCarNum, String openId) throws Exception
+    public void modifyCarNumByOpenId(String oldCarNum, String newCarNum, String engineNum,
+                                     String identNum, String emissionStd, String openId) throws Exception
     {
-        LOGGER.info("进入修改车牌号方法 oldCarNum={} newCarNum={} openId={}",oldCarNum,newCarNum,openId);
+        LOGGER.info("进入修改车牌号方法 oldCarNum={} newCarNum={} engineNum={} identNum={} emissionStd={} openId={}",
+                oldCarNum,newCarNum,engineNum,identNum,emissionStd,openId);
         int selectCnt = carNumOpenIdMapper.selectCntByCarNumOpenId(oldCarNum,openId);
         if(selectCnt == 1)
         {
-            carNumOpenIdMapper.updateCarNum(oldCarNum,newCarNum,openId,new Date());
-            LOGGER.info("成功修改车牌号 oldCarNum={} newCarNum={} openId={}",oldCarNum,newCarNum,openId);
+            carNumOpenIdMapper.updateCarNum(oldCarNum,newCarNum,engineNum,identNum,emissionStd,openId,new Date());
+            LOGGER.info("成功修改车牌号 openId={}",openId);
         }
         else
         {
-            LOGGER.info("该用户未绑定该车牌，修改失败 oldCarNum={} newCarNum={} openId={}",oldCarNum,newCarNum,openId);
+            LOGGER.info("该用户未绑定该车牌，修改失败 openId={}",openId);
             throw new BusinessException(JsonResultEnum.CARNUM_NOT_BINDED);
         }
-        LOGGER.info("结束修改车牌号方法  oldCarNum={} newCarNum={} openId={}",oldCarNum,newCarNum,openId);
+        LOGGER.info("结束修改车牌号方法 oldCarNum={} newCarNum={} engineNum={} identNum={} emissionStd={} openId={}",
+                oldCarNum,newCarNum,engineNum,identNum,emissionStd,openId);
     }
 
     @Override
@@ -190,10 +196,13 @@ public class CarNumServiceImpl implements CarNumService
                 //角色修改完成同步session中的用户信息
                 HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
                 User user = (User)session.getAttribute("USERINFOANDROLES");
-                List<Role> roleList = new ArrayList<>();
-                roleList.add(role);
-                user.setRoles(roleList);
-                session.setAttribute("USERINFOANDROLES",user);
+                if(user != null)
+                {
+                    List<Role> roleList = new ArrayList<>();
+                    roleList.add(role);
+                    user.setRoles(roleList);
+                    session.setAttribute("USERINFOANDROLES",user);
+                }
             }
         }
         LOGGER.info("结束启用车牌号方法 CarNum={} openId={}",carNum,openId);

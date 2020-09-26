@@ -134,10 +134,15 @@ public class CarNumController
     @PostMapping("/updateCarNum")
     @ApiOperation(value="修改车牌号")
     @ApiImplicitParams({@ApiImplicitParam(name="oldCarNum", value="原来的车牌号", required=true, dataType="String"),
-            @ApiImplicitParam(name="newCarNum", value="新的车牌号", required=true, dataType="String")})
+            @ApiImplicitParam(name="newCarNum", value="新的车牌号", required=true, dataType="String"),
+            @ApiImplicitParam(name = "engineNum", value = "发动机号", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "identNum", value = "车辆识别号", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "emissionStd", value = "排放标准", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：修改成功 isSuccess=false：修改失败，resMsg为错误信息")})
-    public JsonResultObj updateCarNum(String oldCarNum, String newCarNum, @ApiIgnore HttpSession session) {
-        LOGGER.info("开始修改车牌号 oldCarNum={} newCarNum={}", oldCarNum, newCarNum);
+    public JsonResultObj updateCarNum(String oldCarNum, String newCarNum, String engineNum, String identNum,
+                                      String emissionStd, @ApiIgnore HttpSession session) {
+        LOGGER.info("开始修改车牌号 oldCarNum={} newCarNum={} engineNum={} identNum={} emissionStd={}",
+                oldCarNum, newCarNum,engineNum,identNum,emissionStd);
         JsonResultObj resultObj = null;
         User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
         if(user == null)
@@ -155,14 +160,15 @@ public class CarNumController
 
         try
         {
-            carNumService.modifyCarNumByOpenId(oldCarNum, newCarNum, openId);
+            carNumService.modifyCarNumByOpenId(oldCarNum, newCarNum, engineNum,identNum,emissionStd, openId);
             resultObj = new JsonResultObj(true);
         }
         catch (Exception e)
         {
             resultObj = CommonExceptionHandler.handException(e, "修改车牌号失败", LOGGER, resultObj);
         }
-        LOGGER.info("结束修改车牌号 oldCarNum={} newCarNum={}", oldCarNum, newCarNum);
+        LOGGER.info("结束修改车牌号 oldCarNum={} newCarNum={} engineNum={} identNum={} emissionStd={}",
+                oldCarNum, newCarNum,engineNum,identNum,emissionStd);
         return resultObj;
     }
 
