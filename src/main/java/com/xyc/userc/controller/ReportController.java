@@ -32,7 +32,7 @@ import java.util.List;
 @Api(tags = "船户同行相关api")
 public class ReportController
 {
-    protected static final Logger LOGGER = LoggerFactory.getLogger(TemplateController.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(ReportController.class);
 
     @Resource
     ShipReportService shipReportService;

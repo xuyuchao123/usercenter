@@ -8,6 +8,7 @@ import com.xyc.userc.service.UserService;
 import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.vo.EnabledCarInfoVo;
+import com.xyc.userc.vo.UserInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,5 +113,12 @@ public class UserServiceImpl implements UserService
 
     }
 
-
+    @Override
+    public UserInfoVo getUserInfoVo() throws Exception
+    {
+        LOGGER.info("进入获取用户信息存至redis方法");
+        userMapper.selectUserInfoVo();
+        LOGGER.info("结束获取用户信息存至redis方法");
+        return null;
+    }
 }
