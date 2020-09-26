@@ -114,10 +114,10 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public UserInfoVo getUserInfoVo() throws Exception
+    public List<UserInfoVo> getUserInfoVo() throws Exception
     {
         LOGGER.info("进入获取用户信息存至redis方法");
-        userMapper.selectUserInfoVo();
+        List<UserInfoVo> userInfoVoList = userMapper.selectUserInfoVo();
         LOGGER.info("结束获取用户信息存至redis方法");
         return null;
     }

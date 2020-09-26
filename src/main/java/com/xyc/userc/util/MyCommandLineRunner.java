@@ -2,6 +2,7 @@ package com.xyc.userc.util;
 
 import com.xyc.userc.controller.TemplateController;
 import com.xyc.userc.service.UserService;
+import com.xyc.userc.vo.UserInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -9,6 +10,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by 1 on 2020/9/26.
@@ -29,7 +31,7 @@ public class MyCommandLineRunner implements CommandLineRunner
     public void run(String... args) throws Exception
     {
         LOGGER.info("开始存入用户信息至redis");
-        userService.getUserInfoVo();
+        List<UserInfoVo> userInfoVoList = userService.getUserInfoVo();
         LOGGER.info("结束存入用户信息至redis");
     }
 
