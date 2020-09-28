@@ -138,6 +138,7 @@ public class UserServiceImpl implements UserService
         }
         String curOpenId = null;
         int listIdx = 0;
+        int listSize = list.size();
         Map curMap  = list.get(listIdx);
         for(UserInfoVo userInfoVo : userInfoVoList)
         {
@@ -147,13 +148,21 @@ public class UserServiceImpl implements UserService
             while(((String)curMap.get("OPENID")).equals(curOpenId))
             {
                 CarNumInfoVo carNumInfoVo = new CarNumInfoVo();
-                carNumInfoVo.setCarNum((String)curMap.get("CARNUM"));
-                carNumInfoVo.setIsEnable((Integer)curMap.get("ISENABLE"));
+                carNumInfoVo.setCarNum(curMap.get("CARNUM").toString());
+                carNumInfoVo.setIsEnable(Integer.valueOf(curMap.get("ISENABLE").toString()));
                 carNumInfoVoList.add(carNumInfoVo);
                 listIdx++;
+                if(listIdx == listSize)
+                {
+                    break;
+                }
                 curMap = (Map<String,Object>)list.get(listIdx);
             }
             userInfoVo.setCarNumList(carNumInfoVoList);
+            if(listIdx == listSize)
+            {
+                break;
+            }
         }
 //        redisTemplate.opsForValue().set("tst","测试value");
 
