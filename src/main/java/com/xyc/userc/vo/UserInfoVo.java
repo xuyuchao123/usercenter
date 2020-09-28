@@ -1,6 +1,7 @@
 package com.xyc.userc.vo;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,6 +18,10 @@ public class UserInfoVo implements Serializable
     private List<CarNumInfoVo> carNumList;
 
     private String roleCode;
+
+    private String lastStockCode;
+
+    private Date operatorTime;
 
     public String getOpenId() {
         return openId;
@@ -48,5 +53,21 @@ public class UserInfoVo implements Serializable
 
     public void setRoleCode(String roleCode) {
         this.roleCode = roleCode;
+    }
+
+    public String getLastStockCode() {
+        return lastStockCode;
+    }
+
+    public void setLastStockCode(String lastStockCode) {
+        this.lastStockCode = lastStockCode;
+    }
+
+    public Date getOperatorTime() {
+        return operatorTime;
+    }
+
+    public void setOperatorTime(Date operatorTime) {
+        this.operatorTime = operatorTime;
     }
 }

@@ -46,12 +46,16 @@
 
   <select id="selectUserInfoVo" resultType="com.xyc.userc.vo.UserInfoVo">
     select DISTINCT mo.OPENID as openId,
-    mo.MOBILE as mobilePhone, r.ROLE_CODE as roleCode
+    mo.MOBILE as mobilePhone, r.ROLE_CODE as roleCode,
+    js.LASTSTOCKCODE as lastStockCode,
+    js.JLYOPERATORTIME as operatorTime
     from SYS_MOBILE_OPENID mo
     left join SYS_USER_ROLE ur
     on mo.ID = ur.MOBILE_OPENID_ID
     left join SYS_ROLE r
     on ur.ROLE_ID = r.ID
+    left join SYS_STOCKCODE js
+    on mo.OPENID = js.OPENID
     where r.IS_DELETED = 0
     order by mo.OPENID
   </select>

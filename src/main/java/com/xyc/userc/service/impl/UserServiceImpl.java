@@ -127,7 +127,7 @@ public class UserServiceImpl implements UserService
     @Override
     public void storeUserInfoVo() throws Exception
     {
-        LOGGER.info("进入存储用户信息存至redis方法");
+        LOGGER.info("进入存储用户信息至redis方法");
         List<UserInfoVo> userInfoVoList = userMapper.selectUserInfoVo();
         if(userInfoVoList == null || userInfoVoList.size() == 0)
         {
@@ -172,6 +172,6 @@ public class UserServiceImpl implements UserService
             String openId = userInfoVo.getOpenId();
             redisTemplate.opsForValue().set(openId,json);
         }
-        LOGGER.info("结束存储用户信息存至redis方法");
+        LOGGER.info("结束存储用户信息至redis方法");
     }
 }
