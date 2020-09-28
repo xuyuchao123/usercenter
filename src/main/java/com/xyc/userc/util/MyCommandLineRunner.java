@@ -42,7 +42,7 @@ public class MyCommandLineRunner implements CommandLineRunner
 //        redisTemplate.setKeySerializer(RedisSerializer.string());
 //        redisTemplate.setValueSerializer(RedisSerializer.json());
 //        Object obj = (String)redisTemplate.opsForValue().get("tst");
-        List<UserInfoVo> userInfoVoList = userService.storeUserInfoVo();
+        userService.storeUserInfoVo();
 
 //        List<UserInfoVo> userInfoVoList = new ArrayList<>();
 //
