@@ -1,5 +1,6 @@
 package com.xyc.userc.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.xyc.userc.dao.*;
 import com.xyc.userc.entity.MobileOpenId;
 import com.xyc.userc.entity.Role;
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,8 +51,8 @@ public class UserServiceImpl implements UserService
     @Autowired
     private CarNumOpenIdMapper carNumOpenIdMapper;
 
-//    @Resource
-//    private RedisTemplate<String, Object> redisTemplate;
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
 
     @Override
@@ -123,51 +125,53 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public List<UserInfoVo> getUserInfoVo() throws Exception
+    public void storeUserInfoVo() throws Exception
     {
-        LOGGER.info("进入获取用户信息存至redis方法");
+        LOGGER.info("进入存储用户信息存至redis方法");
         List<UserInfoVo> userInfoVoList = userMapper.selectUserInfoVo();
         if(userInfoVoList == null || userInfoVoList.size() == 0)
         {
-            return null;
+            return;
         }
         List<Map> list = carNumOpenIdMapper.selectCarNumInfo();
-        if(list == null || list.size() == 0)
+        if(list != null || list.size() > 0)
         {
-            return userInfoVoList;
-        }
-        String curOpenId = null;
-        int listIdx = 0;
-        int listSize = list.size();
-        Map curMap  = list.get(listIdx);
-        for(UserInfoVo userInfoVo : userInfoVoList)
-        {
-            curOpenId = userInfoVo.getOpenId();
-            List<CarNumInfoVo> carNumInfoVoList = new ArrayList<>();
-//            curMap = (Map<String,Object>)list.get(listIdx);
-            while(((String)curMap.get("OPENID")).equals(curOpenId))
+            String curOpenId = null;
+            int listIdx = 0;
+            int listSize = list.size();
+            Map curMap = list.get(listIdx);
+            for (UserInfoVo userInfoVo : userInfoVoList)
             {
-                CarNumInfoVo carNumInfoVo = new CarNumInfoVo();
-                carNumInfoVo.setCarNum(curMap.get("CARNUMBER").toString());
-                carNumInfoVo.setIsEnable(Integer.valueOf(curMap.get("IS_ENABLED").toString()));
-                carNumInfoVoList.add(carNumInfoVo);
-                listIdx++;
-                if(listIdx == listSize)
+                curOpenId = userInfoVo.getOpenId();
+                List<CarNumInfoVo> carNumInfoVoList = new ArrayList<>();
+                while (((String) curMap.get("OPENID")).equals(curOpenId))
+                {
+                    CarNumInfoVo carNumInfoVo = new CarNumInfoVo();
+                    carNumInfoVo.setCarNum(curMap.get("CARNUMBER").toString());
+                    carNumInfoVo.setIsEnable(Integer.valueOf(curMap.get("IS_ENABLED").toString()));
+                    carNumInfoVoList.add(carNumInfoVo);
+                    listIdx++;
+                    if (listIdx == listSize)
+                    {
+                        break;
+                    }
+                    curMap = (Map<String, Object>) list.get(listIdx);
+                }
+                userInfoVo.setCarNumList(carNumInfoVoList);
+                if (listIdx == listSize)
                 {
                     break;
                 }
-                curMap = (Map<String,Object>)list.get(listIdx);
-            }
-            userInfoVo.setCarNumList(carNumInfoVoList);
-            if(listIdx == listSize)
-            {
-                break;
             }
         }
-//        redisTemplate.opsForValue().set("tst","测试value");
-
-
-        LOGGER.info("结束获取用户信息存至redis方法");
-        return null;
+        redisTemplate.setKeySerializer(RedisSerializer.string());
+        redisTemplate.setValueSerializer(RedisSerializer.string());
+        for(UserInfoVo userInfoVo : userInfoVoList)
+        {
+            String json = JSON.toJSONString(userInfoVo);
+            String openId = userInfoVo.getOpenId();
+            redisTemplate.opsForValue().set(openId,json);
+        }
+        LOGGER.info("结束存储用户信息存至redis方法");
     }
 }

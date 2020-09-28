@@ -18,6 +18,6 @@ public interface UserService
 
      Role bindMobileToOpenId(String mobile, String mesCode, String openId) throws Exception;
 
-     List<UserInfoVo> getUserInfoVo() throws Exception;
+     void storeUserInfoVo() throws Exception;
 
 }
