@@ -54,7 +54,7 @@
     on mo.ID = ur.MOBILE_OPENID_ID
     left join SYS_ROLE r
     on ur.ROLE_ID = r.ID
-    left join SYS_STOCKCODE js
+    left join SYS_JLY_STOCKCODE js
     on mo.OPENID = js.OPENID
     where r.IS_DELETED = 0
     order by mo.OPENID
