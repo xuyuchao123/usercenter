@@ -131,14 +131,14 @@ public class UserServiceImpl implements UserService
         {
             return null;
         }
-        List list = carNumOpenIdMapper.selectCarNumInfo();
+        List<Map> list = carNumOpenIdMapper.selectCarNumInfo();
         if(list == null || list.size() == 0)
         {
             return userInfoVoList;
         }
         String curOpenId = null;
         int listIdx = 0;
-        Map<String,Object> curMap  = (Map<String,Object>)list.get(listIdx);
+        Map curMap  = list.get(listIdx);
         for(UserInfoVo userInfoVo : userInfoVoList)
         {
             curOpenId = userInfoVo.getOpenId();

@@ -43,6 +43,6 @@ public interface CarNumOpenIdMapper
 
     EnabledCarInfoVo selectEnabledCarInfo(@Param("openId")String openId);
 
-    List selectCarNumInfo();
+    List<Map> selectCarNumInfo();
 
 }

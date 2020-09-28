@@ -158,7 +158,7 @@
         where g.HPHM = #{carNum}
     </select>
 
-    <select id="selectCarNumInfo" resultType="java.util.List">
+    <select id="selectCarNumInfo" resultType="java.util.Map">
         select oc.OPENID as openId, oc.CARNUMBER as carNum,
           oc.IS_ENABLED as isEnable
         from SYS_OPENID_CARNUMBER oc
