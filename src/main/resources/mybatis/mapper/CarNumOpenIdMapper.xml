@@ -159,8 +159,7 @@
     </select>
 
     <select id="selectCarNumInfo" resultType="java.util.Map">
-        select oc.OPENID as openId, oc.CARNUMBER as carNum,
-          oc.IS_ENABLED as isEnable
+        select oc.OPENID, oc.CARNUMBER,oc.IS_ENABLED
         from SYS_OPENID_CARNUMBER oc
         where oc.IS_DELETED = 0
         order by oc.OPENID

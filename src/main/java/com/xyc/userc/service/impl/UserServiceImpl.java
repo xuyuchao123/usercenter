@@ -144,11 +144,11 @@ public class UserServiceImpl implements UserService
             curOpenId = userInfoVo.getOpenId();
             List<CarNumInfoVo> carNumInfoVoList = new ArrayList<>();
 //            curMap = (Map<String,Object>)list.get(listIdx);
-            while(((String)curMap.get("openId")).equals(curOpenId))
+            while(((String)curMap.get("OPENID")).equals(curOpenId))
             {
                 CarNumInfoVo carNumInfoVo = new CarNumInfoVo();
-                carNumInfoVo.setCarNum((String)curMap.get("carNum"));
-                carNumInfoVo.setIsEnable((Integer)curMap.get("isEnable"));
+                carNumInfoVo.setCarNum((String)curMap.get("CARNUM"));
+                carNumInfoVo.setIsEnable((Integer)curMap.get("ISENABLE"));
                 carNumInfoVoList.add(carNumInfoVo);
                 listIdx++;
                 curMap = (Map<String,Object>)list.get(listIdx);
