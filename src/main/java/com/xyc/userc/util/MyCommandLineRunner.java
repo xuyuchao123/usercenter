@@ -38,7 +38,7 @@ public class MyCommandLineRunner implements CommandLineRunner
         LOGGER.info("开始存入用户信息至redis");
 //        redisTemplate.setKeySerializer(RedisSerializer.string());
 //        Object obj = (String)redisTemplate.opsForValue().get("tst");
-//        List<UserInfoVo> userInfoVoList = userService.getUserInfoVo();
+        List<UserInfoVo> userInfoVoList = userService.getUserInfoVo();
 //        redisTemplate.opsForValue().set("tst","val");
 //        Object obj = (String)redisTemplate.opsForValue().get("tst");
 //        System.out.println(obj);
