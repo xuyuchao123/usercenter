@@ -3,12 +3,14 @@ package com.xyc.userc.dao;
 import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.MobileOpenId;
 import com.xyc.userc.vo.CarNumInOutTimeVo;
+import com.xyc.userc.vo.CarNumInfoVo;
 import com.xyc.userc.vo.EnabledCarInfoVo;
 import com.xyc.userc.vo.GsCarInfoVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 1 on 2020/8/18.
@@ -40,5 +42,7 @@ public interface CarNumOpenIdMapper
     List<GsCarInfoVo> selectGsCarInfoByCarNum(@Param("carNum")String carNum);
 
     EnabledCarInfoVo selectEnabledCarInfo(@Param("openId")String openId);
+
+    List selectCarNumInfo();
 
 }

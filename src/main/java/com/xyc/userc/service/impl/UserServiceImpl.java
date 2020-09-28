@@ -7,14 +7,19 @@ import com.xyc.userc.entity.User;
 import com.xyc.userc.service.UserService;
 import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.JsonResultEnum;
+import com.xyc.userc.vo.CarNumInfoVo;
 import com.xyc.userc.vo.EnabledCarInfoVo;
 import com.xyc.userc.vo.UserInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +48,10 @@ public class UserServiceImpl implements UserService
 
     @Autowired
     private CarNumOpenIdMapper carNumOpenIdMapper;
+
+//    @Resource
+//    private RedisTemplate<String, Object> redisTemplate;
+
 
     @Override
     public User getUser(User user) throws Exception
@@ -118,6 +127,37 @@ public class UserServiceImpl implements UserService
     {
         LOGGER.info("进入获取用户信息存至redis方法");
         List<UserInfoVo> userInfoVoList = userMapper.selectUserInfoVo();
+        if(userInfoVoList == null || userInfoVoList.size() == 0)
+        {
+            return null;
+        }
+        List list = carNumOpenIdMapper.selectCarNumInfo();
+        if(list == null || list.size() == 0)
+        {
+            return userInfoVoList;
+        }
+        String curOpenId = null;
+        int listIdx = 0;
+        Map<String,Object> curMap  = (Map<String,Object>)list.get(listIdx);
+        for(UserInfoVo userInfoVo : userInfoVoList)
+        {
+            curOpenId = userInfoVo.getOpenId();
+            List<CarNumInfoVo> carNumInfoVoList = new ArrayList<>();
+//            curMap = (Map<String,Object>)list.get(listIdx);
+            while(((String)curMap.get("openId")).equals(curOpenId))
+            {
+                CarNumInfoVo carNumInfoVo = new CarNumInfoVo();
+                carNumInfoVo.setCarNum((String)curMap.get("carNum"));
+                carNumInfoVo.setIsEnable((Integer)curMap.get("isEnable"));
+                carNumInfoVoList.add(carNumInfoVo);
+                listIdx++;
+                curMap = (Map<String,Object>)list.get(listIdx);
+            }
+            userInfoVo.setCarNumList(carNumInfoVoList);
+        }
+//        redisTemplate.opsForValue().set("tst","测试value");
+
+
         LOGGER.info("结束获取用户信息存至redis方法");
         return null;
     }

@@ -158,4 +158,12 @@
         where g.HPHM = #{carNum}
     </select>
 
+    <select id="selectCarNumInfo" resultType="java.util.List">
+        select oc.OPENID as openId, oc.CARNUMBER as carNum,
+          oc.IS_ENABLED as isEnable
+        from SYS_OPENID_CARNUMBER oc
+        where oc.IS_DELETED = 0
+        order by oc.OPENID
+    </select>
+
 </mapper>
