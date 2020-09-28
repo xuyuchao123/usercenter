@@ -148,8 +148,8 @@ public class UserServiceImpl implements UserService
             while(((String)curMap.get("OPENID")).equals(curOpenId))
             {
                 CarNumInfoVo carNumInfoVo = new CarNumInfoVo();
-                carNumInfoVo.setCarNum(curMap.get("CARNUM").toString());
-                carNumInfoVo.setIsEnable(Integer.valueOf(curMap.get("ISENABLE").toString()));
+                carNumInfoVo.setCarNum(curMap.get("CARNUMBER").toString());
+                carNumInfoVo.setIsEnable(Integer.valueOf(curMap.get("IS_ENABLED").toString()));
                 carNumInfoVoList.add(carNumInfoVo);
                 listIdx++;
                 if(listIdx == listSize)
