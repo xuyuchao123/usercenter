@@ -3,6 +3,7 @@ package com.xyc.userc.controller;
 import java.util.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.xyc.userc.entity.Role;
@@ -10,6 +11,7 @@ import com.xyc.userc.entity.User;
 import com.xyc.userc.service.MobileService;
 import com.xyc.userc.service.UserService;
 import com.xyc.userc.util.CommonExceptionHandler;
+import com.xyc.userc.util.UsercConstant;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
 import io.swagger.annotations.*;
@@ -97,32 +99,32 @@ public class TemplateController {
 	@ApiImplicitParams({@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String"),
 			@ApiImplicitParam(name = "mesCode", value = "短信验证码", required = true, dataType = "String")})
 	@ApiResponses({@ApiResponse(code = 200, message = "isSuccess=true：绑定成功 isSuccess=false：绑定失败，resMsg为错误信息")})
-	public JsonResultObj bindMobile(@ApiIgnore HttpSession session, String mobile, String mesCode) {
+	public JsonResultObj bindMobile(@ApiIgnore HttpServletRequest request, String mobile, String mesCode)
+    {
 		LOGGER.info("开始绑定手机号 mobile={},mesCode={}", mobile, mesCode);
-		JsonResultObj resultObj = null;
-		try {
-			User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
-			if (user == null) {
-				user = new User("oPh4uszJ0L7a9zNRU-tw4smPtbfU", "一人！一车！一世界！", "1", "山东", "临沂", "中国",
-						"http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
-								"2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132", null, null, "13167068999", null);
-			}
-			if (user == null) {
-				LOGGER.info("session中不存在用户信息");
-				resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
-				return resultObj;
-			}
-			String openId = user.getOpenid();
-			Role role = userService.bindMobileToOpenId(mobile, mesCode, openId);
-			List<Role> roleList = new ArrayList<Role>();
-			roleList.add(role);
-			user.setRoles(roleList);
-			user.setMobilePhone(mobile);
-			session.setAttribute("USERINFOANDROLES", user);
-			resultObj = new JsonResultObj(true, user);
-		} catch (Exception e) {
-			resultObj = CommonExceptionHandler.handException(e, "绑定手机号失败", LOGGER, resultObj);
-		}
+        JsonResultObj resultObj = null;
+		String openId = request.getHeader(UsercConstant.OPENID);
+        if(openId == null)
+        {
+            LOGGER.info("未获取到用户的openId");
+            resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
+        }
+        else
+        {
+            try
+            {
+                userService.bindMobileToOpenId(mobile, mesCode, openId);
+//                List<Role> roleList = new ArrayList<>();
+//                roleList.add(role);
+//                user.setRoles(roleList);
+//                user.setMobilePhone(mobile);
+//                resultObj = new JsonResultObj(true, user);
+            }
+            catch (Exception e)
+            {
+                resultObj = CommonExceptionHandler.handException(e, "绑定手机号失败", LOGGER, resultObj);
+            }
+        }
 		LOGGER.info("结束绑定手机号 mobile={}", mobile);
 		return resultObj;
 	}

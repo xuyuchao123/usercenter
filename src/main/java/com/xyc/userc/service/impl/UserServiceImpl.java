@@ -139,29 +139,28 @@ public class UserServiceImpl implements UserService
             String curOpenId = null;
             int listIdx = 0;
             int listSize = list.size();
-            Map curMap = list.get(listIdx);
+            Map curMap = null;
             for (UserInfoVo userInfoVo : userInfoVoList)
             {
                 curOpenId = userInfoVo.getOpenId();
                 List<CarNumInfoVo> carNumInfoVoList = new ArrayList<>();
-                while (((String) curMap.get("OPENID")).equals(curOpenId))
+                while (listIdx < listSize)
                 {
-                    CarNumInfoVo carNumInfoVo = new CarNumInfoVo();
-                    carNumInfoVo.setCarNum(curMap.get("CARNUMBER").toString());
-                    carNumInfoVo.setIsEnable(Integer.valueOf(curMap.get("IS_ENABLED").toString()));
-                    carNumInfoVoList.add(carNumInfoVo);
-                    listIdx++;
-                    if (listIdx == listSize)
+                    curMap = list.get(listIdx);
+                    if(((String)curMap.get("OPENID")).equals(curOpenId))
+                    {
+                        CarNumInfoVo carNumInfoVo = new CarNumInfoVo();
+                        carNumInfoVo.setCarNum(curMap.get("CARNUMBER").toString());
+                        carNumInfoVo.setIsEnable(Integer.valueOf(curMap.get("IS_ENABLED").toString()));
+                        carNumInfoVoList.add(carNumInfoVo);
+                        listIdx++;
+                    }
+                    else
                     {
                         break;
                     }
-                    curMap = (Map<String, Object>) list.get(listIdx);
                 }
                 userInfoVo.setCarNumList(carNumInfoVoList);
-                if (listIdx == listSize)
-                {
-                    break;
-                }
             }
         }
         redisTemplate.setKeySerializer(RedisSerializer.string());
