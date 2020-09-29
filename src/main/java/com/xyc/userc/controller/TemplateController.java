@@ -29,8 +29,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @CrossOrigin
 @RequestMapping("/mes")
 @Api(tags = "系统用户管理相关api")
-public class TemplateController
-{
+public class TemplateController {
 	protected static final Logger LOGGER = LoggerFactory.getLogger(TemplateController.class);
 
 	@Resource
@@ -40,9 +39,8 @@ public class TemplateController
 	MobileService mobileService;
 
 	@GetMapping("/template")
-    @ApiIgnore
-	public ReturnData templateSend()
-	{
+	@ApiIgnore
+	public ReturnData templateSend() {
 		// oPh4us7phJe_qUG8o1TGY4Mrd2Yg 氕氘氚
 		// oPh4us_Fe88F-HgRKn9QAYQTBzOs Pluto
 		// oPh4us__A3ShBKk7fkxu2ehE_OWI 喂喂
@@ -60,111 +58,110 @@ public class TemplateController
 	}
 
 	@GetMapping("/userinfo")
-	@ApiOperation(value="获取当前用户信息")
-	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：获取成功 isSuccess=false：获取失败，resMsg为错误信息")})
-	public JsonResultObj getUserinfo(@ApiIgnore HttpSession session)
-	{
+	@ApiOperation(value = "获取当前用户信息")
+	@ApiResponses({@ApiResponse(code = 200, message = "isSuccess=true：获取成功 isSuccess=false：获取失败，resMsg为错误信息")})
+	public JsonResultObj getUserinfo(@ApiIgnore HttpSession session) {
 		LOGGER.info("开始获取当前用户信息");
 		JsonResultObj resultObj = null;
 		User user = null;
-		try
-		{
-			user = (User)session.getAttribute("USERINFOANDROLES");
-			if(user != null)
-			{
-				resultObj = new JsonResultObj(true,user);
-			}
-			else
-			{
+		try {
+			user = (User) session.getAttribute("USERINFOANDROLES");
+			if (user != null) {
+				resultObj = new JsonResultObj(true, user);
+			} else {
 				user = (User) session.getAttribute(WxsdkConstant.USERINFO);
-				if(user == null)
-				{
-                    user = new User("oPh4uszJ0L7a9zNRU-tw4smPtbfU","一人！一车！一世界！","1","山东","临沂","中国",
-                            "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
-                                    "2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132",null,null,"13167068999",null);
+				if (user == null) {
+					user = new User("oPh4uszJ0L7a9zNRU-tw4smPtbfU", "一人！一车！一世界！", "1", "山东", "临沂", "中国",
+							"http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
+									"2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132", null, null, "13167068999", null);
 //                    user.setCarNum("豫R97829");
 				}
-				if(user == null)
-				{
+				if (user == null) {
 					LOGGER.info("session中不存在用户信息");
 					resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
-				}
-				else
-				{
+				} else {
 					user = userService.getUser(user);
-					session.setAttribute("USERINFOANDROLES",user);
-					resultObj = new JsonResultObj(true,user);
+					session.setAttribute("USERINFOANDROLES", user);
+					resultObj = new JsonResultObj(true, user);
 				}
 			}
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			resultObj = CommonExceptionHandler.handException(e, "获取用户信息失败", LOGGER, resultObj);
 		}
-		LOGGER.info("结束获取当前用户信息userinfo: {}",user);
+		LOGGER.info("结束获取当前用户信息userinfo: {}", user);
 		return resultObj;
 	}
 
 	@PostMapping("/bindMobile")
-	@ApiOperation(value="绑定手机号")
-    @ApiImplicitParams({@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "mesCode", value = "短信验证码", required = true, dataType = "String")})
-	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：绑定成功 isSuccess=false：绑定失败，resMsg为错误信息")})
-	public JsonResultObj bindMobile(@ApiIgnore HttpSession session, String mobile, String mesCode)
-	{
-		LOGGER.info("开始绑定手机号 mobile={},mesCode={}",mobile,mesCode);
+	@ApiOperation(value = "绑定手机号")
+	@ApiImplicitParams({@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String"),
+			@ApiImplicitParam(name = "mesCode", value = "短信验证码", required = true, dataType = "String")})
+	@ApiResponses({@ApiResponse(code = 200, message = "isSuccess=true：绑定成功 isSuccess=false：绑定失败，resMsg为错误信息")})
+	public JsonResultObj bindMobile(@ApiIgnore HttpSession session, String mobile, String mesCode) {
+		LOGGER.info("开始绑定手机号 mobile={},mesCode={}", mobile, mesCode);
 		JsonResultObj resultObj = null;
-		try
-		{
+		try {
 			User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
-          	if(user == null)
-			{
-				user = new User("oPh4uszJ0L7a9zNRU-tw4smPtbfU","一人！一车！一世界！","1","山东","临沂","中国",
-                    "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
-                            "2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132",null,null,"13167068999",null);
+			if (user == null) {
+				user = new User("oPh4uszJ0L7a9zNRU-tw4smPtbfU", "一人！一车！一世界！", "1", "山东", "临沂", "中国",
+						"http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
+								"2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132", null, null, "13167068999", null);
 			}
-			if (user == null)
-			{
+			if (user == null) {
 				LOGGER.info("session中不存在用户信息");
 				resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
 				return resultObj;
 			}
 			String openId = user.getOpenid();
-			Role role = userService.bindMobileToOpenId(mobile,mesCode,openId);
+			Role role = userService.bindMobileToOpenId(mobile, mesCode, openId);
 			List<Role> roleList = new ArrayList<Role>();
 			roleList.add(role);
 			user.setRoles(roleList);
 			user.setMobilePhone(mobile);
-			session.setAttribute("USERINFOANDROLES",user);
-			resultObj = new JsonResultObj(true,user);
-		}
-		catch (Exception e)
-		{
+			session.setAttribute("USERINFOANDROLES", user);
+			resultObj = new JsonResultObj(true, user);
+		} catch (Exception e) {
 			resultObj = CommonExceptionHandler.handException(e, "绑定手机号失败", LOGGER, resultObj);
 		}
-		LOGGER.info("结束绑定手机号 mobile={}",mobile);
+		LOGGER.info("结束绑定手机号 mobile={}", mobile);
 		return resultObj;
 	}
 
 	//发送验证码
-	@RequestMapping(value = "/sendMesCode",method = RequestMethod.POST)
-	@ApiOperation(value="发送短信验证码")
+	@RequestMapping(value = "/sendMesCode", method = RequestMethod.POST)
+	@ApiOperation(value = "发送短信验证码")
 	@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String")
-	@ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：发送成功 isSuccess=false：发送失败，resMsg为错误信息")})
-	public JsonResultObj sendMesCode(String mobile)
+	@ApiResponses({@ApiResponse(code = 200, message = "isSuccess=true：发送成功 isSuccess=false：发送失败，resMsg为错误信息")})
+	public JsonResultObj sendMesCode(String mobile) {
+		LOGGER.info("开始生成发送短信验证码 mobile={}", mobile);
+		JsonResultObj resultObj = null;
+		try {
+			mobileService.checkAndSendMesCode(mobile);
+			resultObj = new JsonResultObj(true);
+		} catch (Exception e) {
+			resultObj = CommonExceptionHandler.handException(e, "短信验证码生成发送失败", LOGGER, resultObj);
+		}
+		LOGGER.info("结束生成发送短信验证码");
+		return resultObj;
+	}
+
+	@GetMapping("/resetUserInfo")
+	@ApiOperation(value = "重置redis中的用户信息")
+	@ApiResponses({@ApiResponse(code = 200, message = "isSuccess=true：重置成功 isSuccess=false：重置失败，resMsg为错误信息")})
+	public JsonResultObj resetUserInfo()
 	{
-		LOGGER.info("开始生成发送短信验证码 mobile={}",mobile);
+		LOGGER.info("开始重置redis中的用户信息");
 		JsonResultObj resultObj = null;
 		try
 		{
-			mobileService.checkAndSendMesCode(mobile);
+			userService.storeUserInfoVo();
 			resultObj = new JsonResultObj(true);
 		}
 		catch (Exception e)
 		{
-			resultObj = CommonExceptionHandler.handException(e, "短信验证码生成发送失败", LOGGER, resultObj);
+			resultObj = CommonExceptionHandler.handException(e, "重置redis中的用户信息失败", LOGGER, resultObj);
 		}
-		LOGGER.info("结束生成发送短信验证码");
+		LOGGER.info("结束重置redis中的用户信息");
 		return resultObj;
 	}
 }
