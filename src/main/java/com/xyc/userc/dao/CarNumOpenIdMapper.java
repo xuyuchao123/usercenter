@@ -45,4 +45,6 @@ public interface CarNumOpenIdMapper
 
     List<Map> selectCarNumInfo();
 
+    List<Map> confirmCarNumExist(@Param("openId")String openId, @Param("carNum")String carNum);
+
 }

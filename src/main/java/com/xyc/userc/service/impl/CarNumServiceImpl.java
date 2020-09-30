@@ -32,6 +32,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 1 on 2020/8/21.
@@ -69,22 +70,32 @@ public class CarNumServiceImpl implements CarNumService
     public void removeCarNum(String carNum, String openId) throws Exception
     {
         LOGGER.info("进入删除车牌号方法carNum={} openId={}",carNum,openId);
+        List<Map> maps = carNumOpenIdMapper.confirmCarNumExist(openId,carNum);
+        if(maps == null || maps.size() == 0)
+        {
+            LOGGER.info("当前用户未绑定该车牌 carNum={} openId={}",carNum,openId);
+            throw new BusinessException(JsonResultEnum.CARNUM_NOT_BINDED);
+        }
+        Map map = maps.get(0);
+        String roleCode = map.get("ROLE_CODE").toString();
+        int mobileOpenIdId = (Integer) map.get("ID");
         int deleteCnt = carNumOpenIdMapper.deleteByCarNumOpenId(carNum,openId);
         boolean needChgRole = false;
         if(deleteCnt > 0)
         {
             String jsonString = (String)redisTemplate.opsForValue().get(openId);
-            List<Integer> mobileOpenIdIdList = carNumOpenIdMapper.selectMobileOpenIdIdByOpenId(openId);
-            if(mobileOpenIdIdList == null || mobileOpenIdIdList.size() == 0)
+            List<CarNumOpenId> CarNumOpenIdList = carNumOpenIdMapper.selectByOpenIdCarNum(openId,null);
+            if((CarNumOpenIdList == null || CarNumOpenIdList.size() == 0)
+                    && RoleTypeEnum.ROLE_SJ_1.getRoleCode().equals(roleCode))
             {
-                LOGGER.info("删除成功，当前用户没有已绑定的车牌号，准备修改其角色 carNum={} openId={}",carNum,openId);
-                needChgRole = true;
+                LOGGER.info("删除成功，当前用户角色为SJ1且没有已绑定的车牌号，准备修改其角色 carNum={} openId={}",carNum,openId);
                 //获取角色"司机0"
                 Role role = roleMapper.selectByRoleCode(RoleTypeEnum.ROLE_SJ_0.getRoleCode());
                 if(role != null)
                 {
                     //更新当前用户的角色为司机0
-                    userMapper.updateRoleIdByMobileOpenId(role.getId(),mobileOpenIdIdList.get(0),new Date());
+                    userMapper.updateRoleIdByMobileOpenId(role.getId(),mobileOpenIdId,new Date());
+                    needChgRole = true;
                     LOGGER.info("角色修改成功carNum={} openId={}",carNum,openId);
                 }
             }

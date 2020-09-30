@@ -165,4 +165,25 @@
         order by oc.OPENID
     </select>
 
+    <select id="confirmCarNumExist" resultType="java.util.Map">
+        select mo.ID, r.ROLE_CODE
+        from SYS_OPENID_CARNUMBER oc
+        left join SYS_MOBILE_OPENID mo
+        on oc.OPENID = mo.OPENID
+        left join SYS_USER_ROLE ur
+        on mo.ID = ur.MOBILE_OPENID_ID
+        left join SYS_ROLE r
+        on ur.ROLE_ID = r.id
+        <where>
+            <if test="carNum != null">
+                and oc.CARNUMBER = #{carNum}
+            </if>
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
+            </if>
+            and oc.IS_DELETED = 0
+            and r.IS_DELETED = 0
+        </where>
+    </select>
+
 </mapper>
