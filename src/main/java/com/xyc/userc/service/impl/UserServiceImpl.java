@@ -8,6 +8,7 @@ import com.xyc.userc.entity.User;
 import com.xyc.userc.service.UserService;
 import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.JsonResultEnum;
+import com.xyc.userc.util.RoleTypeEnum;
 import com.xyc.userc.vo.CarNumInfoVo;
 import com.xyc.userc.vo.EnabledCarInfoVo;
 import com.xyc.userc.vo.UserInfoVo;
@@ -73,7 +74,7 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public Role bindMobileToOpenId(String mobile, String mesCode, String openId) throws Exception
+    public User bindMobileToOpenId(String mobile, String mesCode, String openId) throws Exception
     {
         LOGGER.info("进入绑定手机号方法 mobile={} mesCode={} openid={}",mobile,mesCode,openId);
 //        HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
@@ -99,27 +100,63 @@ public class UserServiceImpl implements UserService
             mobileMapper.updateMesCodeStatus(mobile,status,gmtModified);
             LOGGER.info("成功设置验证码失效状态 mobile={} mesCode={}", mobile,mesCode);
 
-            int i = mobileOpenIdMapper.insertMobileOpenId(mobileOpenId);
-            List<Map> maps = userMapper.selectUserRoleByOpenId(openId);
-            Role role = null;
-            if(maps != null && maps.size() > 0)
+            int id = mobileOpenIdMapper.insertMobileOpenId(mobileOpenId);
+
+            List<Map> maps = userMapper.selectUserRoleByOpenId(mobile);
+            String roleCode = null;
+            if(maps == null || maps.size() == 0)
             {
-                Map map = maps.get(0);
-                int mobileOpenIdId = Integer.parseInt(map.get("MOBILEOPENIDID").toString());
-                int roleId = Integer.parseInt(map.get("ROLEID").toString());
-                Date date = new Date();
-                roleMapper.insertUserRole(mobileOpenIdId,roleId,date,date);
-                String roleName = (String)map.get("ROLENAME");
-                String roleCode = (String)map.get("ROLECODE");
-                Integer isDeleted = Integer.parseInt(map.get("ISDELETED").toString());
-                Date gmtCreate = (Date)map.get("GMTCREATE");
-                Date gmtModified_role = (Date)map.get("GMTMODIFIED");
-                Integer parentRoleId = map.get("PARENTROLEID") != null ?
-                        Integer.parseInt(map.get("PARENTROLEID").toString()) : null;
-                role = new Role(roleId,roleName,roleCode,isDeleted,gmtCreate,gmtModified_role,parentRoleId);
+                roleCode = RoleTypeEnum.ROLE_SJ_0.getRoleCode();
             }
-            LOGGER.info("结束绑定手机号方法 role：{}",role);
-            return role;
+            else if(maps.size() == 1)
+            {
+                String item = maps.get(0).get("ITEM").toString();
+                switch(item)
+                {
+                    case "XC":
+                        roleCode = RoleTypeEnum.ROLE_JLY_XC.getRoleCode();
+                        break;
+                    case "BC":
+                        roleCode = RoleTypeEnum.ROLE_JLY_BC.getRoleCode();
+                        break;
+                    case "HP":
+                        roleCode = RoleTypeEnum.ROLE_JLY_XC.getRoleCode();
+                        break;
+                    default:
+                        roleCode = RoleTypeEnum.ROLE_JLY_XC.getRoleCode();
+                }
+            }
+            else
+            {
+                roleCode = RoleTypeEnum.ROLE_ADMIN.getRoleCode();
+            }
+            Role role = roleMapper.selectByRoleCode(roleCode);
+            Date date = new Date();
+            //插入用户与角色关联表
+            roleMapper.insertUserRole(id,role.getId(),date,date);
+
+            LOGGER.info("开始将用户绑定信息存入redis openId={} mobile={}",openId,mobile);
+            UserInfoVo userInfoVo = new UserInfoVo();
+            userInfoVo.setOpenId(openId);
+            userInfoVo.setMobilePhone(mobile);
+            userInfoVo.setRoleCode(roleCode);
+            userInfoVo.setCarNumList(new ArrayList<CarNumInfoVo>());
+            Map stockCodeMap = userMapper.selectStockCodeInfo(openId);
+            if(stockCodeMap != null)
+            {
+                userInfoVo.setLastStockCode(stockCodeMap.get("LASTSTOCKCODE").toString());
+                userInfoVo.setOperatorTime((Date)stockCodeMap.get("JLYOPERATORTIME"));
+            }
+            redisTemplate.opsForValue().set(openId,JSON.toJSONString(userInfoVo));
+            //构建user对象返回
+            User user = new User();
+            user.setOpenid(openId);
+            user.setMobilePhone(mobile);
+            List<Role> roles = new ArrayList<>();
+            roles.add(role);
+            user.setRoles(roles);
+            LOGGER.info("结束绑定手机号方法 mobile={} mesCode={} openid={}",mobile,mesCode,openId);
+            return user;
         }
 
     }

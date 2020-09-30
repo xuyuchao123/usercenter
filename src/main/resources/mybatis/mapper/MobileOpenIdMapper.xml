@@ -10,7 +10,7 @@
         <result column="gmt_create" jdbcType="VARCHAR" property="gmtCreate" />
     </resultMap>
 
-    <insert id="insertMobileOpenId"  parameterType="com.xyc.userc.entity.MobileOpenId">
+    <insert id="insertMobileOpenId"  parameterType="com.xyc.userc.entity.MobileOpenId"  useGeneratedKeys="true" keyProperty="id">
         insert into SYS_MOBILE_OPENID (ID,MOBILE,OPENID,USER_CREATE,GMT_CREATE)
         VALUES (MOBILE_OPENID_SEQ.nextval,#{mobile},#{openId},#{userCreate},#{gmtCreate})
     </insert>

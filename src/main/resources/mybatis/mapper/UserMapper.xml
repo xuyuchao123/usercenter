@@ -25,17 +25,21 @@
   </resultMap>
 
 
+  <!--<select id="selectUserRoleByOpenId" resultType="java.util.Map">-->
+    <!--select m.id as mobileOpenIdId, r.ID as roleId, r.ROLE_CODE as roleCode, r.ROLE_NAME as roleName,-->
+     <!--r.IS_DELETED as isDeleted, r.GMT_CREATE as gmtCreate, r.GMT_MODIFIED as gmtModified,-->
+     <!--r.PARENT_ROLE_ID as parentRoleId from-->
+    <!--(select decode(u.type, 'SJ', 'SJ0',u.type) as type,u.OPENID from SYS_USER u) uu-->
+    <!--left join SYS_MOBILE_OPENID m-->
+    <!--on uu.OPENID = m.OPENID-->
+    <!--left join SYS_ROLE r-->
+    <!--on uu.type = r.ROLE_CODE-->
+    <!--where m.OPENID = #{openId}-->
+    <!--and r.IS_DELETED = 0-->
+  <!--</select>-->
+
   <select id="selectUserRoleByOpenId" resultType="java.util.Map">
-    select m.id as mobileOpenIdId, r.ID as roleId, r.ROLE_CODE as roleCode, r.ROLE_NAME as roleName,
-     r.IS_DELETED as isDeleted, r.GMT_CREATE as gmtCreate, r.GMT_MODIFIED as gmtModified,
-     r.PARENT_ROLE_ID as parentRoleId from
-    (select decode(u.type, 'SJ', 'SJ0',u.type) as type,u.OPENID from SYS_USER u) uu
-    left join SYS_MOBILE_OPENID m
-    on uu.OPENID = m.OPENID
-    left join SYS_ROLE r
-    on uu.type = r.ROLE_CODE
-    where m.OPENID = #{openId}
-    and r.IS_DELETED = 0
+    select ITEM FROM HLJLYXX where PHONE_NO = #{mobile}
   </select>
 
   <update id="updateRoleIdByMobileOpenId">
@@ -58,6 +62,13 @@
     on mo.OPENID = js.OPENID
     where r.IS_DELETED = 0
     order by mo.OPENID
+  </select>
+
+  <select id="selectStockCodeInfo" resultType="java.util.Map">
+    select js.LASTSTOCKCODE,
+    js.JLYOPERATORTIME
+    from SYS_JLY_STOCKCODE js
+    where js.OPENID = #{openId}
   </select>
 
 </mapper>

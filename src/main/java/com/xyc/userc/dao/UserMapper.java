@@ -11,9 +11,11 @@ import java.util.Map;
 
 public interface UserMapper
 {
-    List<Map> selectUserRoleByOpenId(String openId);
+    List<Map> selectUserRoleByOpenId(String mobile);
 
     void updateRoleIdByMobileOpenId(@Param("roleId")int roleId, @Param("mobileOpenIdId")int mobileOpenIdId, @Param("gmtModified")Date gmtModified);
 
     List<UserInfoVo> selectUserInfoVo();
+
+    Map selectStockCodeInfo(String openId);
 }

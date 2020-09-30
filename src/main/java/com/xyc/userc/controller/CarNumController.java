@@ -7,6 +7,7 @@ import com.xyc.userc.service.CarNumService;
 import com.xyc.userc.util.CommonExceptionHandler;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
+import com.xyc.userc.util.UsercConstant;
 import com.xyc.userc.vo.CarNumInOutTimeVo;
 import com.xyc.userc.vo.GsCarInfoVo;
 import io.swagger.annotations.*;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
 import java.util.Date;
@@ -62,32 +65,27 @@ public class CarNumController
     @ApiOperation(value="删除车牌号")
     @ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：删除成功 isSuccess=false：删除失败，resMsg为错误信息")})
-    public JsonResultObj deleteCarNum(String carNum, @ApiIgnore HttpSession session)
+    public JsonResultObj deleteCarNum(String carNum, @ApiIgnore HttpServletRequest request)
     {
         LOGGER.info("开始删除车牌号 carNum={}",carNum);
         JsonResultObj resultObj = null;
-        User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
-        if(user == null)
+        String openId = request.getHeader(UsercConstant.OPENID);
+        if(openId == null)
         {
-            user = new User("oPh4uszJ0L7a9zNRU-tw4smPtbfU","一人！一车！一世界！","1","山东","临沂","中国",
-                    "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
-                            "2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132",null,null,"13167068999",null);
-        }
-        if(user == null)
-        {
-            LOGGER.info("session中不存在用户信息");
+            LOGGER.info("未获取到用户的openId");
             resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
-            return resultObj;
         }
-        String openId = user.getOpenid();
-        try
+        else
         {
-            carNumService.removeCarNum(carNum,openId);
-            resultObj = new JsonResultObj(true);
-        }
-        catch (Exception e)
-        {
-            resultObj = CommonExceptionHandler.handException(e, "删除车牌号失败", LOGGER, resultObj);
+            try
+            {
+                carNumService.removeCarNum(carNum, openId);
+                resultObj = new JsonResultObj(true);
+            }
+            catch (Exception e)
+            {
+                resultObj = CommonExceptionHandler.handException(e, "删除车牌号失败", LOGGER, resultObj);
+            }
         }
         LOGGER.info("结束删除车牌号");
         return resultObj;
@@ -100,32 +98,27 @@ public class CarNumController
             @ApiImplicitParam(name = "identNum", value = "车辆识别号", required = true, dataType = "String"),
             @ApiImplicitParam(name = "emissionStd", value = "排放标准", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：新增成功 isSuccess=false：新增失败，resMsg为错误信息")})
-    public JsonResultObj addCarNum(String carNum, String engineNum, String identNum,String emissionStd, @ApiIgnore HttpSession session)
+    public JsonResultObj addCarNum(String carNum, String engineNum, String identNum,String emissionStd, @ApiIgnore HttpServletRequest request)
     {
         LOGGER.info("开始新增车牌号 carNum={} engineNum={} identNum={} emissionStd={}",carNum,engineNum,identNum,emissionStd);
         JsonResultObj resultObj = null;
-        User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
-        if(user == null)
+        String openId = request.getHeader(UsercConstant.OPENID);
+        if(openId == null)
         {
-            user = new User("oPh4uszJ0L7a9zNRU-tw4smPtbfU","一人！一车！一世界！","1","山东","临沂","中国",
-                    "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
-                            "2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132",null,null,"13167068999",null);
-        }
-        if(user == null)
-        {
-            LOGGER.info("session中不存在用户信息");
+            LOGGER.info("未获取到用户的openId");
             resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
-            return resultObj;
         }
-        String openId = user.getOpenid();
-        try
+        else
         {
-            carNumService.addCarNum(carNum,openId,engineNum,identNum,emissionStd);
-            resultObj = new JsonResultObj(true);
-        }
-        catch (Exception e)
-        {
-            resultObj = CommonExceptionHandler.handException(e, "新增车牌号失败", LOGGER, resultObj);
+            try
+            {
+                carNumService.addCarNum(carNum, openId, engineNum, identNum, emissionStd);
+                resultObj = new JsonResultObj(true);
+            }
+            catch (Exception e)
+            {
+                resultObj = CommonExceptionHandler.handException(e, "新增车牌号失败", LOGGER, resultObj);
+            }
         }
         LOGGER.info("结束新增车牌号 carNum={} engineNum={} identNum={} emissionStd={}",carNum,engineNum,identNum,emissionStd);
         return resultObj;
@@ -140,32 +133,27 @@ public class CarNumController
             @ApiImplicitParam(name = "emissionStd", value = "排放标准", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：修改成功 isSuccess=false：修改失败，resMsg为错误信息")})
     public JsonResultObj updateCarNum(String oldCarNum, String newCarNum, String engineNum, String identNum,
-                                      String emissionStd, @ApiIgnore HttpSession session) {
+                                      String emissionStd, @ApiIgnore HttpServletRequest request) {
         LOGGER.info("开始修改车牌号 oldCarNum={} newCarNum={} engineNum={} identNum={} emissionStd={}",
                 oldCarNum, newCarNum,engineNum,identNum,emissionStd);
         JsonResultObj resultObj = null;
-        User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
-        if(user == null)
+        String openId = request.getHeader(UsercConstant.OPENID);
+        if(openId == null)
         {
-            user = new User("oPh4uszJ0L7a9zNRU-tw4smPtbfU","一人！一车！一世界！","1","山东","临沂","中国",
-                    "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
-                            "2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132",null,null,"13167068999",null);
-        }
-        if (user == null) {
-            LOGGER.info("session中不存在用户信息");
+            LOGGER.info("未获取到用户的openId");
             resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
-            return resultObj;
         }
-        String openId = user.getOpenid();
-
-        try
+        else
         {
-            carNumService.modifyCarNumByOpenId(oldCarNum, newCarNum, engineNum,identNum,emissionStd, openId);
-            resultObj = new JsonResultObj(true);
-        }
-        catch (Exception e)
-        {
-            resultObj = CommonExceptionHandler.handException(e, "修改车牌号失败", LOGGER, resultObj);
+            try
+            {
+                carNumService.modifyCarNumByOpenId(oldCarNum, newCarNum, engineNum, identNum, emissionStd, openId);
+                resultObj = new JsonResultObj(true);
+            }
+            catch (Exception e)
+            {
+                resultObj = CommonExceptionHandler.handException(e, "修改车牌号失败", LOGGER, resultObj);
+            }
         }
         LOGGER.info("结束修改车牌号 oldCarNum={} newCarNum={} engineNum={} identNum={} emissionStd={}",
                 oldCarNum, newCarNum,engineNum,identNum,emissionStd);
@@ -176,31 +164,27 @@ public class CarNumController
     @ApiOperation(value="启用车牌号")
     @ApiImplicitParam(name = "carNum", value = "车牌号", required = false, dataType = "String")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：启用成功 isSuccess=false：启用失败，resMsg为错误信息")})
-    public JsonResultObj enableCarNum(String carNum, @ApiIgnore HttpSession session)
+    public JsonResultObj enableCarNum(String carNum, @ApiIgnore HttpServletRequest request)
     {
         LOGGER.info("开始启用车牌号 carNum={}",carNum);
         JsonResultObj resultObj = null;
-        User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
-        if(user == null)
+        String openId = request.getHeader(UsercConstant.OPENID);
+        if(openId == null)
         {
-            user = new User("oPh4uszJ0L7a9zNRU-tw4smPtbfU","一人！一车！一世界！","1","山东","临沂","中国",
-                    "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
-                            "2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132",null,null,"13167068999",null);
-        }
-        if (user == null) {
-            LOGGER.info("session中不存在用户信息");
+            LOGGER.info("未获取到用户的openId");
             resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
-            return resultObj;
         }
-        String openId = user.getOpenid();
-        try
+        else
         {
-            carNumService.enableCarNum(carNum, openId);
-            resultObj = new JsonResultObj(true);
-        }
-        catch (Exception e)
-        {
-            resultObj = CommonExceptionHandler.handException(e, "启用车牌号失败", LOGGER, resultObj);
+            try
+            {
+                carNumService.enableCarNum(carNum, openId);
+                resultObj = new JsonResultObj(true);
+            }
+            catch (Exception e)
+            {
+                resultObj = CommonExceptionHandler.handException(e, "启用车牌号失败", LOGGER, resultObj);
+            }
         }
         LOGGER.info("结束启用车牌号");
         return resultObj;
@@ -210,32 +194,27 @@ public class CarNumController
     @GetMapping("/queryInOutTime")
     @ApiOperation(value="查询车辆本月及上月进出厂时间")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
-    public JsonResultObj enableCarNum(@ApiIgnore HttpSession session)
+    public JsonResultObj enableCarNum(@ApiIgnore HttpServletRequest request)
     {
         LOGGER.info("开始查询车辆进出厂时间");
         JsonResultObj resultObj = null;
-        User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
-        if(user == null)
+        String openId = request.getHeader(UsercConstant.OPENID);
+        if(openId == null)
         {
-            user = new User("oPh4uszJ0L7a9zNRU-tw4smPtbfU","一人！一车！一世界！","1","山东","临沂","中国",
-                    "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
-                            "2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132",null,null,"13167068999",null);
-        }
-        if (user == null)
-        {
-            LOGGER.info("session中不存在用户信息");
+            LOGGER.info("未获取到用户的openId");
             resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
-            return resultObj;
         }
-        String openId = user.getOpenid();
-        try
+        else
         {
-            List<CarNumInOutTimeVo> carNumInOutTimeVos = carNumService.queryInOutTime(openId);
-            resultObj = new JsonResultObj(true,carNumInOutTimeVos);
-        }
-        catch (Exception e)
-        {
-            resultObj = CommonExceptionHandler.handException(e, "查询车辆进出厂时间失败", LOGGER, resultObj);
+            try
+            {
+                List<CarNumInOutTimeVo> carNumInOutTimeVos = carNumService.queryInOutTime(openId);
+                resultObj = new JsonResultObj(true,carNumInOutTimeVos);
+            }
+            catch (Exception e)
+            {
+                resultObj = CommonExceptionHandler.handException(e, "查询车辆进出厂时间失败", LOGGER, resultObj);
+            }
         }
         LOGGER.info("结束查询车辆进出厂时间");
         return resultObj;

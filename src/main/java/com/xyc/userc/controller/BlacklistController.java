@@ -6,6 +6,7 @@ import com.xyc.userc.service.BlacklistService;
 import com.xyc.userc.util.CommonExceptionHandler;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
+import com.xyc.userc.util.UsercConstant;
 import com.xyc.userc.vo.BlacklistVo;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -42,7 +44,7 @@ public class BlacklistController
             @ApiImplicitParam(name="createMobile", value="黑名创建人的手机号", required=true, dataType="String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
     public JsonResultObj queryBlacklist(String name, String mobile, String createName,
-                                        String createMobile, @ApiIgnore HttpSession session)
+                                        String createMobile)
     {
         LOGGER.info("开始查询黑名单 name={} mobile={} createName={} createMobile={}",name,mobile,createName,createMobile);
         JsonResultObj resultObj = null;
@@ -65,31 +67,27 @@ public class BlacklistController
     @ApiImplicitParams({@ApiImplicitParam(name="mobile", value="被拉入黑名单的人的手机号", required=true, dataType="String"),
             @ApiImplicitParam(name="reason", value="拉黑原因", required=true, dataType="String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：新增成功 isSuccess=false：新增失败，resMsg为错误信息")})
-    public JsonResultObj addBlacklist(String mobile, String reason, @ApiIgnore HttpSession session)
+    public JsonResultObj addBlacklist(String mobile, String reason, @ApiIgnore HttpServletRequest request)
     {
         LOGGER.info("开始新增黑名单 mobile={} reason={}", mobile,reason);
         JsonResultObj resultObj = null;
-        User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
-        if(user == null)
+        String openId = request.getHeader(UsercConstant.OPENID);
+        if(openId == null)
         {
-            user = new User("oPh4uszJ0L7a9zNRU-tw4smPtbfU","一人！一车！一世界！","1","山东","临沂","中国",
-                    "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
-                            "2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132",null,null,"13167068999",null);
-        }
-        if (user == null) {
-            LOGGER.info("session中不存在用户信息");
+            LOGGER.info("未获取到用户的openId");
             resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
-            return resultObj;
         }
-        String openId = user.getOpenid();
-        try
+        else
         {
-            blacklistService.addBlacklist(mobile,reason,openId);
-            resultObj = new JsonResultObj(true);
-        }
-        catch (Exception e)
-        {
-            resultObj = CommonExceptionHandler.handException(e, "新增黑名单失败", LOGGER, resultObj);
+            try
+            {
+                blacklistService.addBlacklist(mobile,reason,openId);
+                resultObj = new JsonResultObj(true);
+            }
+            catch (Exception e)
+            {
+                resultObj = CommonExceptionHandler.handException(e, "新增黑名单失败", LOGGER, resultObj);
+            }
         }
         LOGGER.info("结束新增黑名单 mobile={} reason={}", mobile,reason);
         return  resultObj;

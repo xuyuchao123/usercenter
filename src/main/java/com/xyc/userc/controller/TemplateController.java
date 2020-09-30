@@ -60,8 +60,8 @@ public class TemplateController {
 	}
 
 	@GetMapping("/userinfo")
-	@ApiOperation(value = "获取当前用户信息")
-	@ApiResponses({@ApiResponse(code = 200, message = "isSuccess=true：获取成功 isSuccess=false：获取失败，resMsg为错误信息")})
+//	@ApiOperation(value = "获取当前用户信息")
+//	@ApiResponses({@ApiResponse(code = 200, message = "isSuccess=true：获取成功 isSuccess=false：获取失败，resMsg为错误信息")})
 	public JsonResultObj getUserinfo(@ApiIgnore HttpSession session) {
 		LOGGER.info("开始获取当前用户信息");
 		JsonResultObj resultObj = null;
@@ -113,12 +113,8 @@ public class TemplateController {
         {
             try
             {
-                userService.bindMobileToOpenId(mobile, mesCode, openId);
-//                List<Role> roleList = new ArrayList<>();
-//                roleList.add(role);
-//                user.setRoles(roleList);
-//                user.setMobilePhone(mobile);
-//                resultObj = new JsonResultObj(true, user);
+                User user = userService.bindMobileToOpenId(mobile, mesCode, openId);
+                resultObj = new JsonResultObj(true, user);
             }
             catch (Exception e)
             {

@@ -1,5 +1,7 @@
 package com.xyc.userc.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.xyc.userc.dao.*;
 import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.Role;
@@ -9,17 +11,20 @@ import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.RoleTypeEnum;
 import com.xyc.userc.vo.CarNumInOutTimeVo;
+import com.xyc.userc.vo.CarNumInfoVo;
 import com.xyc.userc.vo.GsCarInfoVo;
 import com.xyc.userc.vo.MobileOpenIdRoleVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -47,6 +52,9 @@ public class CarNumServiceImpl implements CarNumService
     @Autowired
     private CarNumOpenIdMapper carNumOpenIdMapper;
 
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+
 
     @Override
     public List<CarNumOpenId> getCarNum(String mobile, String carNum) throws Exception
@@ -62,12 +70,15 @@ public class CarNumServiceImpl implements CarNumService
     {
         LOGGER.info("进入删除车牌号方法carNum={} openId={}",carNum,openId);
         int deleteCnt = carNumOpenIdMapper.deleteByCarNumOpenId(carNum,openId);
+        boolean needChgRole = false;
         if(deleteCnt > 0)
         {
+            String jsonString = (String)redisTemplate.opsForValue().get("openId");
             List<Integer> mobileOpenIdIdList = carNumOpenIdMapper.selectMobileOpenIdIdByOpenId(openId);
             if(mobileOpenIdIdList == null || mobileOpenIdIdList.size() == 0)
             {
                 LOGGER.info("删除成功，当前用户没有已绑定的车牌号，准备修改其角色 carNum={} openId={}",carNum,openId);
+                needChgRole = true;
                 //获取角色"司机0"
                 Role role = roleMapper.selectByRoleCode(RoleTypeEnum.ROLE_SJ_0.getRoleCode());
                 if(role != null)
@@ -75,17 +86,33 @@ public class CarNumServiceImpl implements CarNumService
                     //更新当前用户的角色为司机0
                     userMapper.updateRoleIdByMobileOpenId(role.getId(),mobileOpenIdIdList.get(0),new Date());
                     LOGGER.info("角色修改成功carNum={} openId={}",carNum,openId);
-                    //角色修改完成同步session中的用户信息
-                    HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
-                    User user = (User)session.getAttribute("USERINFOANDROLES");
-                    if(user != null)
+                }
+            }
+            if(jsonString != null)
+            {
+                LOGGER.info("开始删除redis中用户的车牌号列表信息 openId={}",openId);
+                JSONObject jsonObject = JSONObject.parseObject(jsonString);
+                //删除redis中用户的车牌号列表
+                List carNumList = (List)jsonObject.get("carNumList");
+                if(carNumList != null && carNumList.size() > 0)
+                {
+                    for (Object obj : carNumList)
                     {
-                        List<Role> roleList = new ArrayList<>();
-                        roleList.add(role);
-                        user.setRoles(roleList);
-                        session.setAttribute("USERINFOANDROLES",user);
+                        if(carNum.equals(((CarNumInfoVo)obj).getCarNum()))
+                        {
+                            carNumList.remove(obj);
+                            break;
+                        }
                     }
                 }
+                if(needChgRole)
+                {
+                    //更新redis中用户的角色
+                    LOGGER.info("开始更新redis中用户的角色信息 openId={}",openId);
+                    jsonObject.replace("roleCode",RoleTypeEnum.ROLE_SJ_0.getRoleCode());
+                }
+                redisTemplate.opsForValue().set(openId,JSON.toJSONString(jsonObject));
+                LOGGER.info("结束更新redis中用户的车牌号列表及角色信息 openId={}",openId);
             }
         }
         else
@@ -124,6 +151,23 @@ public class CarNumServiceImpl implements CarNumService
         if(insertCnt > 0)
         {
             LOGGER.info("新增车牌成功 carNum={} openId={}",carNum,openId);
+            String jsonString = (String)redisTemplate.opsForValue().get("openId");
+            if(jsonString != null)
+            {
+                LOGGER.info("开始添加redis中用户的车牌号列表信息 carNum={} openId={}",carNum,openId);
+                JSONObject jsonObject = JSONObject.parseObject(jsonString);
+                //新增redis中用户的车牌号列表
+                List carNumList = (List)jsonObject.get("carNumList");
+                if(carNumList != null)
+                {
+                    CarNumInfoVo carNumInfoVo = new CarNumInfoVo();
+                    carNumInfoVo.setCarNum(carNum);
+                    carNumInfoVo.setIsEnable(0);
+                    carNumList.add(carNumInfoVo);
+                }
+                redisTemplate.opsForValue().set(openId,JSON.toJSONString(jsonObject));
+                LOGGER.info("结束添加redis中用户的车牌号列表信息 carNum={} openId={}",carNum,openId);
+            }
         }
         else
         {
@@ -144,6 +188,27 @@ public class CarNumServiceImpl implements CarNumService
         {
             carNumOpenIdMapper.updateCarNum(oldCarNum,newCarNum,engineNum,identNum,emissionStd,openId,new Date());
             LOGGER.info("成功修改车牌号 openId={}",openId);
+            String jsonString = (String)redisTemplate.opsForValue().get("openId");
+            if(jsonString != null)
+            {
+                LOGGER.info("开始修改redis中用户的车牌号列表信息 oldCarNum={} newCarNum={} openId={}", oldCarNum,newCarNum,openId);
+                JSONObject jsonObject = JSONObject.parseObject(jsonString);
+                //修改redis中用户的车牌号列表
+                List carNumList = (List)jsonObject.get("carNumList");
+                if(carNumList != null && carNumList.size() > 0)
+                {
+                    for(Object obj : carNumList)
+                    {
+                        if(oldCarNum.equals(((CarNumInfoVo)obj).getCarNum()))
+                        {
+                            ((CarNumInfoVo)obj).setCarNum(newCarNum);
+                            redisTemplate.opsForValue().set(openId,JSON.toJSONString(jsonObject));
+                            break;
+                        }
+                    }
+                }
+                LOGGER.info("结束修改redis中用户的车牌号列表信息 oldCarNum={} newCarNum={} openId={}", oldCarNum,newCarNum,openId);
+            }
         }
         else
         {
@@ -175,35 +240,55 @@ public class CarNumServiceImpl implements CarNumService
             LOGGER.info("该车牌号已在启用状态不能重复启用 CarNum={} openId={}",carNum,openId);
             throw new BusinessException(JsonResultEnum.CARNUM_ENABLED);
         }
-//        List<CarNumOpenId> carNumOpenIdList2 = carNumOpenIdMapper.selectByOpenIdCarNum(openId,null,1);
         carNumOpenIdMapper.updateCarNumEnable(0,new Date(),null,openId);
         carNumOpenIdMapper.updateCarNumEnable(1,new Date(),carNumOpenId.getCarNum(),openId);
         LOGGER.info("成功启用车牌号 carNum={} openId={}", carNum,openId);
-
+        boolean needChgRole = false;
         //查找当前用户的角色
         List<MobileOpenIdRoleVo> mobileOpenIdRoleVoList = roleMapper.selectMobileOpenIdRoleVo(openId);
         if(mobileOpenIdRoleVoList != null && mobileOpenIdRoleVoList.size() > 0
                 && RoleTypeEnum.ROLE_SJ_0.getRoleCode().equals(mobileOpenIdRoleVoList.get(0).getRoleCode()))
         {
             LOGGER.info("当前用户角色为SJ0，准备修改其角色为SJ1 carNum={} openId={}",carNum,openId);
+
             //获取角色"司机1"
             Role role = roleMapper.selectByRoleCode(RoleTypeEnum.ROLE_SJ_1.getRoleCode());
             if(role != null)
             {
                 //更新当前用户的角色为司机1
                 userMapper.updateRoleIdByMobileOpenId(role.getId(),mobileOpenIdRoleVoList.get(0).getMobileOpenIdId(),new Date());
+                needChgRole = true;
                 LOGGER.info("角色修改成功 carNum={} openId={}",carNum,openId);
-                //角色修改完成同步session中的用户信息
-                HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
-                User user = (User)session.getAttribute("USERINFOANDROLES");
-                if(user != null)
+            }
+        }
+        String jsonString = (String)redisTemplate.opsForValue().get("openId");
+        if(jsonString != null)
+        {
+            LOGGER.info("开始修改redis中用户车牌号启用信息 carNum={} openId={}",carNum,openId);
+            JSONObject jsonObject = JSONObject.parseObject(jsonString);
+            List carNumList = (List)jsonObject.get("carNumList");
+            if(carNumList != null && carNumList.size() > 0)
+            {
+                for(Object obj : carNumList)
                 {
-                    List<Role> roleList = new ArrayList<>();
-                    roleList.add(role);
-                    user.setRoles(roleList);
-                    session.setAttribute("USERINFOANDROLES",user);
+                    if(carNum.equals(((CarNumInfoVo)obj).getCarNum()))
+                    {
+                        ((CarNumInfoVo)obj).setIsEnable(1);
+                    }
+                    else
+                    {
+                        ((CarNumInfoVo)obj).setIsEnable(0);
+                    }
                 }
             }
+            if(needChgRole)
+            {
+                //更新redis中用户的角色
+                LOGGER.info("开始更新redis中用户的角色信息 carNum={} openId={}",carNum,openId);
+                jsonObject.replace("roleCode",RoleTypeEnum.ROLE_SJ_1.getRoleCode());
+            }
+            redisTemplate.opsForValue().set(openId,JSON.toJSONString(jsonObject));
+            LOGGER.info("结束修改redis中用户车牌号启用及角色信息 carNum={} openId={}",carNum,openId);
         }
         LOGGER.info("结束启用车牌号方法 CarNum={} openId={}",carNum,openId);
     }

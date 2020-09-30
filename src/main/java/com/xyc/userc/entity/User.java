@@ -45,6 +45,11 @@ public class User extends Userinfo implements Serializable
         this.roles = roles;
     }
 
+    public User()
+    {
+
+    }
+
     public List<Role> getRoles() {
         return roles;
     }

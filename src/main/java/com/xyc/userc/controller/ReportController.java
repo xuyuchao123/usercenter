@@ -8,6 +8,7 @@ import com.xyc.userc.service.ShipReportService;
 import com.xyc.userc.util.CommonExceptionHandler;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
+import com.xyc.userc.util.UsercConstant;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,7 +31,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("/mes")
-@Api(tags = "船户同行相关api")
+@Api(tags = "船户通行相关api")
 public class ReportController
 {
     protected static final Logger LOGGER = LoggerFactory.getLogger(ReportController.class);
@@ -46,37 +48,33 @@ public class ReportController
             @ApiImplicitParam(name = "travelTimeEnd", value = "出行结束时间", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：新增成功 isSuccess=false：新增失败，resMsg为错误信息")})
     public JsonResultObj addShipReport(String shipNum, String name, String reportDepartment,
-                                       String travelTimeStart, String travelTimeEnd, @ApiIgnore HttpSession session)
+                                       String travelTimeStart, String travelTimeEnd, @ApiIgnore HttpServletRequest request)
     {
         LOGGER.info("开始新增船户报港数据 shipNum={},name={},reportDepartment={},travelTimeStart={},travelTimeEnd={}",
                 shipNum,name,reportDepartment,travelTimeStart,travelTimeEnd);
         JsonResultObj resultObj = null;
-        User user = (User) session.getAttribute(WxsdkConstant.USERINFO);
-        if(user == null)
+        String openId = request.getHeader(UsercConstant.OPENID);
+        if(openId == null)
         {
-            user = new User("oPh4uszJ0L7a9zNRU-tw4smPtbfU","一人！一车！一世界！","1","山东","临沂","中国",
-                    "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJPHH4qzibNINxpqxUnZEeibiagxgibibiaB" +
-                            "2EM9DXt7CLNpgmjewP5lsIoR0HQ1Cqzq46K1Dz93jdAQj4g/132",null,null,"13167068999",null);
-        }
-        if (user == null) {
-            LOGGER.info("session中不存在用户信息");
+            LOGGER.info("未获取到用户的openId");
             resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
-            return resultObj;
         }
-        String openId = user.getOpenid();
+        else
+        {
             try
             {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(Long.valueOf(travelTimeStart));
-            Date travelTimeStartDate = calendar.getTime();
-            calendar.setTimeInMillis(Long.valueOf(travelTimeEnd));
-            Date travelTimeEndDate = calendar.getTime();
-            shipReportService.addShipReport(shipNum,name,reportDepartment,travelTimeStartDate,travelTimeEndDate,openId);
-            resultObj = new JsonResultObj(true);
-        }
-        catch (Exception e)
-        {
-            resultObj = CommonExceptionHandler.handException(e, "新增船户报港数据失败", LOGGER, resultObj);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(Long.valueOf(travelTimeStart));
+                Date travelTimeStartDate = calendar.getTime();
+                calendar.setTimeInMillis(Long.valueOf(travelTimeEnd));
+                Date travelTimeEndDate = calendar.getTime();
+                shipReportService.addShipReport(shipNum, name, reportDepartment, travelTimeStartDate, travelTimeEndDate, openId);
+                resultObj = new JsonResultObj(true);
+            }
+            catch (Exception e)
+            {
+                resultObj = CommonExceptionHandler.handException(e, "新增船户报港数据失败", LOGGER, resultObj);
+            }
         }
         LOGGER.info("结束新增船户报港数据");
         return resultObj;

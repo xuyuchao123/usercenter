@@ -16,7 +16,7 @@ public interface UserService
 {
      User getUser(User user) throws Exception;
 
-     Role bindMobileToOpenId(String mobile, String mesCode, String openId) throws Exception;
+     User bindMobileToOpenId(String mobile, String mesCode, String openId) throws Exception;
 
      void storeUserInfoVo() throws Exception;
 
