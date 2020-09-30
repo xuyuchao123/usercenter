@@ -10,7 +10,7 @@
         <result column="gmt_create" jdbcType="VARCHAR" property="gmtCreate" />
     </resultMap>
 
-    <insert id="insertMobileOpenId"  parameterType="com.xyc.userc.entity.MobileOpenId"  useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertMobileOpenId"  parameterType="com.xyc.userc.entity.MobileOpenId">
         <selectKey resultType="int" order="BEFORE" keyProperty="id">
             SELECT MOBILE_OPENID_SEQ.NEXTVAL FROM DUAL
         </selectKey>
