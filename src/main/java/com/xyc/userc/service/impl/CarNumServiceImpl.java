@@ -73,7 +73,7 @@ public class CarNumServiceImpl implements CarNumService
         boolean needChgRole = false;
         if(deleteCnt > 0)
         {
-            String jsonString = (String)redisTemplate.opsForValue().get("openId");
+            String jsonString = (String)redisTemplate.opsForValue().get(openId);
             List<Integer> mobileOpenIdIdList = carNumOpenIdMapper.selectMobileOpenIdIdByOpenId(openId);
             if(mobileOpenIdIdList == null || mobileOpenIdIdList.size() == 0)
             {
@@ -151,7 +151,7 @@ public class CarNumServiceImpl implements CarNumService
         if(insertCnt > 0)
         {
             LOGGER.info("新增车牌成功 carNum={} openId={}",carNum,openId);
-            String jsonString = (String)redisTemplate.opsForValue().get("openId");
+            String jsonString = (String)redisTemplate.opsForValue().get(openId);
             if(jsonString != null)
             {
                 LOGGER.info("开始添加redis中用户的车牌号列表信息 carNum={} openId={}",carNum,openId);
@@ -188,7 +188,7 @@ public class CarNumServiceImpl implements CarNumService
         {
             carNumOpenIdMapper.updateCarNum(oldCarNum,newCarNum,engineNum,identNum,emissionStd,openId,new Date());
             LOGGER.info("成功修改车牌号 openId={}",openId);
-            String jsonString = (String)redisTemplate.opsForValue().get("openId");
+            String jsonString = (String)redisTemplate.opsForValue().get(openId);
             if(jsonString != null)
             {
                 LOGGER.info("开始修改redis中用户的车牌号列表信息 oldCarNum={} newCarNum={} openId={}", oldCarNum,newCarNum,openId);
@@ -261,7 +261,7 @@ public class CarNumServiceImpl implements CarNumService
                 LOGGER.info("角色修改成功 carNum={} openId={}",carNum,openId);
             }
         }
-        String jsonString = (String)redisTemplate.opsForValue().get("openId");
+        String jsonString = (String)redisTemplate.opsForValue().get(openId);
         if(jsonString != null)
         {
             LOGGER.info("开始修改redis中用户车牌号启用信息 carNum={} openId={}",carNum,openId);
