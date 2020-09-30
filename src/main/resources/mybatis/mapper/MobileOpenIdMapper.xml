@@ -12,7 +12,7 @@
 
     <insert id="insertMobileOpenId"  parameterType="com.xyc.userc.entity.MobileOpenId">
         <selectKey resultType="int" order="BEFORE" keyProperty="id">
-            SELECT SEQ_TEST.NEXTVAL FROM DUAL
+            SELECT MOBILE_OPENID_SEQ.NEXTVAL FROM DUAL
         </selectKey>
         insert into SYS_MOBILE_OPENID (ID,MOBILE,OPENID,USER_CREATE,GMT_CREATE)
         VALUES (#{id},#{mobile},#{openId},#{userCreate},#{gmtCreate})
