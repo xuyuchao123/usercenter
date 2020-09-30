@@ -100,8 +100,8 @@ public class UserServiceImpl implements UserService
             mobileMapper.updateMesCodeStatus(mobile,status,gmtModified);
             LOGGER.info("成功设置验证码失效状态 mobile={} mesCode={}", mobile,mesCode);
 
-            int id = mobileOpenIdMapper.insertMobileOpenId(mobileOpenId);
-
+            int insertCnt = mobileOpenIdMapper.insertMobileOpenId(mobileOpenId);
+            int id = mobileOpenId.getId();
             List<Map> maps = userMapper.selectUserRoleByOpenId(mobile);
             String roleCode = null;
             if(maps == null || maps.size() == 0)
