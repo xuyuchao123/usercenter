@@ -11,8 +11,11 @@
     </resultMap>
 
     <insert id="insertMobileOpenId"  parameterType="com.xyc.userc.entity.MobileOpenId"  useGeneratedKeys="true" keyProperty="id">
-        insert into SYS_MOBILE_OPENID (ID,MOBILE,OPENID,USER_CREATE,GMT_CREATE)
-        VALUES (MOBILE_OPENID_SEQ.nextval,#{mobile},#{openId},#{userCreate},#{gmtCreate})
+        <selectKey resultType="int" order="BEFORE" keyProperty="id">
+            SELECT MOBILE_OPENID_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        insert into SYS_MOBILE_OPENID (MOBILE,OPENID,USER_CREATE,GMT_CREATE)
+        VALUES (#{mobile},#{openId},#{userCreate},#{gmtCreate})
     </insert>
 
     <select id="selectByMobile" resultMap="BaseResultMap">
