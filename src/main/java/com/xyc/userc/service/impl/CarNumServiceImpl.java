@@ -210,9 +210,9 @@ public class CarNumServiceImpl implements CarNumService
                 {
                     for(Object obj : carNumList)
                     {
-                        if(oldCarNum.equals(((CarNumInfoVo)obj).getCarNum()))
+                        if(oldCarNum.equals(((JSONObject)obj).get("carNum").toString()))
                         {
-                            ((CarNumInfoVo)obj).setCarNum(newCarNum);
+                            ((JSONObject)obj).replace("carNum",newCarNum);
                             redisTemplate.opsForValue().set(openId,JSON.toJSONString(jsonObject));
                             break;
                         }
