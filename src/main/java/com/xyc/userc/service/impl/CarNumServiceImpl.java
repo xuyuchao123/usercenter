@@ -78,7 +78,7 @@ public class CarNumServiceImpl implements CarNumService
         }
         Map map = maps.get(0);
         String roleCode = map.get("ROLE_CODE").toString();
-        int mobileOpenIdId = (Integer) map.get("ID");
+        int mobileOpenIdId = Integer.valueOf(map.get("ID").toString());
         int deleteCnt = carNumOpenIdMapper.deleteByCarNumOpenId(carNum,openId);
         boolean needChgRole = false;
         if(deleteCnt > 0)
