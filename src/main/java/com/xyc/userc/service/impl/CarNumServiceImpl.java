@@ -282,13 +282,13 @@ public class CarNumServiceImpl implements CarNumService
             {
                 for(Object obj : carNumList)
                 {
-                    if(carNum.equals(((CarNumInfoVo)obj).getCarNum()))
+                    if(carNum.equals(((JSONObject)obj).get("carNum")))
                     {
-                        ((CarNumInfoVo)obj).setIsEnable(1);
+                        ((JSONObject)obj).replace("isEnable",1);
                     }
                     else
                     {
-                        ((CarNumInfoVo)obj).setIsEnable(0);
+                        ((JSONObject)obj).replace("isEnable",0);
                     }
                 }
             }
