@@ -36,6 +36,8 @@ public interface CarNumOpenIdMapper
 
     List<CarNumOpenId> selectByOpenIdCarNum(@Param("openId")String openId, @Param("carNum")String carNum);
 
+    int confirmEnabledCarNumExist(@Param("openId")String openId, @Param("carNum")String carNum);
+
     List<CarNumInOutTimeVo> selectCarNumInOutTime(@Param("openId")String openId, @Param("startTime")String startTime,
                                                     @Param("endTime")String endTime);
 

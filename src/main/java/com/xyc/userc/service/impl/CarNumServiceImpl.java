@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -84,9 +85,9 @@ public class CarNumServiceImpl implements CarNumService
         if(deleteCnt > 0)
         {
             String jsonString = (String)redisTemplate.opsForValue().get(openId);
-            List<CarNumOpenId> CarNumOpenIdList = carNumOpenIdMapper.selectByOpenIdCarNum(openId,null);
-            if((CarNumOpenIdList == null || CarNumOpenIdList.size() == 0)
-                    && RoleTypeEnum.ROLE_SJ_1.getRoleCode().equals(roleCode))
+            //查找该openid下已启用的车牌号数量
+            int  enabledCarNumCnt = carNumOpenIdMapper.confirmEnabledCarNumExist(openId,null);
+            if((enabledCarNumCnt == 0) && RoleTypeEnum.ROLE_SJ_1.getRoleCode().equals(roleCode))
             {
                 LOGGER.info("删除成功，当前用户角色为SJ1且没有已绑定的车牌号，准备修改其角色 carNum={} openId={}",carNum,openId);
                 //获取角色"司机0"
@@ -109,7 +110,7 @@ public class CarNumServiceImpl implements CarNumService
                 {
                     for (Object obj : carNumList)
                     {
-                        if(carNum.equals(((CarNumInfoVo)obj).getCarNum()))
+                        if(carNum.equals(((JSONObject)obj).get("carNum").toString()))
                         {
                             carNumList.remove(obj);
                             break;

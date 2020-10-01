@@ -63,6 +63,20 @@
         </where>
     </select>
 
+    <select id="confirmEnabledCarNumExist" resultType="int">
+        select count(*) from SYS_OPENID_CARNUMBER oc
+        <where>
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
+            </if>
+            <if test="carNum != null">
+                and oc.CARNUMBER = #{carNum}
+            </if>
+            and oc.IS_DELETED = 0
+            and oc.IS_ENABLED = 1
+        </where>
+    </select>
+
     <select id="selectEnabledCarInfo" resultType="com.xyc.userc.vo.EnabledCarInfoVo">
         select
           oc.CARNUMBER as carNum
