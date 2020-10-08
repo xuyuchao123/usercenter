@@ -222,7 +222,7 @@ public class CarNumController
 
     @PostMapping("/queryGsCarInfo")
     @ApiOperation(value="查询国三车辆识别号及发动机号")
-    @ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String")
+    @ApiImplicitParam(name = "carNum", value = "车牌号", required = false, dataType = "String")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
     public JsonResultObj queryGsCarInfo(String carNum)
     {

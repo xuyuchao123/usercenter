@@ -170,6 +170,11 @@
         select g.CLSBDH as clsbdh, g.FDJH as fdjh
         from SYS_GSCAR_INFO g
         where g.HPHM = #{carNum}
+        <where>
+            <if test="carNum != null">
+                and g.HPHM = #{carNum}
+            </if>
+        </where>
     </select>
 
     <select id="selectCarNumInfo" resultType="java.util.Map">
