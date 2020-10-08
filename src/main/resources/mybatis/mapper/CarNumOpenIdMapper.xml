@@ -169,7 +169,6 @@
     <select id="selectGsCarInfoByCarNum" resultType="com.xyc.userc.vo.GsCarInfoVo">
         select g.CLSBDH as clsbdh, g.FDJH as fdjh
         from SYS_GSCAR_INFO g
-        where g.HPHM = #{carNum}
         <where>
             <if test="carNum != null">
                 and g.HPHM = #{carNum}
