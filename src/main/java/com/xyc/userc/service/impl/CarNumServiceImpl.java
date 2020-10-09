@@ -59,11 +59,11 @@ public class CarNumServiceImpl implements CarNumService
 
 
     @Override
-    public List<CarNumOpenId> getCarNum(String mobile, String carNum) throws Exception
+    public List<CarNumOpenId> getCarNum(String openId) throws Exception
     {
-        LOGGER.info("进入查询车牌号方法 mobile:{} carNum：{}",mobile,carNum);
-        List<CarNumOpenId> carNumOpenIdList = carNumOpenIdMapper.selectByMobileCarNum(mobile,carNum);
-        LOGGER.info("结束查询车牌号方法mobile:{} carNum：{}",mobile,carNum);
+        LOGGER.info("进入查询车牌号方法 openId:{}",openId);
+        List<CarNumOpenId> carNumOpenIdList = carNumOpenIdMapper.selectByOpenId(openId);
+        LOGGER.info("结束查询车牌号方法 openId:{}",openId);
         return carNumOpenIdList;
     }
 
@@ -321,8 +321,10 @@ public class CarNumServiceImpl implements CarNumService
         {
             localDate = localDate.minusDays(day-1);
         }
+        //开始时间为上个月1号0点
         String startTime = localDate.minusMonths(1) + " 00:00:00";
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        //结束时间为当前时间
         String endTime = dateTimeFormatter.format(LocalDateTime.now());
         LOGGER.info("车辆进出开始时间：startTime={} 结束时间：endTime={}",startTime,endTime);
         List<CarNumInOutTimeVo> carNumInOutTimeVos = carNumOpenIdMapper.selectCarNumInOutTime(openId,startTime,endTime);

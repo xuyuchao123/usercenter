@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public interface CarNumOpenIdMapper
 {
-    List<CarNumOpenId> selectByMobileCarNum(@Param("mobile")String mobile, @Param("carNum")String carNum);
+    List<CarNumOpenId> selectByOpenId(@Param("openId")String openId);
 
     int deleteByCarNumOpenId(@Param("carNum")String carNum, @Param("openId")String openId);
 

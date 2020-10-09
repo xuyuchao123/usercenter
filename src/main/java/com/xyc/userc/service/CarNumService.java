@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface CarNumService
 {
-    List<CarNumOpenId> getCarNum(String mobile, String carNum) throws Exception;
+    List<CarNumOpenId> getCarNum(String openId) throws Exception;
 
     void removeCarNum(String carNum, String openId) throws Exception;
 

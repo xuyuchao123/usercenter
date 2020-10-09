@@ -29,19 +29,14 @@
         <result column="is_enabled" jdbcType="VARCHAR" property="isEnabled" />
     </resultMap>
 
-    <select id="selectByMobileCarNum" resultMap="BaseResultMap">
+    <select id="selectByOpenId" resultMap="BaseResultMap">
         select DISTINCT oc.ID, oc.OPENID, oc.CARNUMBER, oc.ENGINENUM, oc.IDENTNUM, oc.EMISSIONSTD,
         oc.IS_ENABLED, oc.IS_DELETED, oc.USER_CREATE,
         oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED, oc.IS_ENABLED from
         SYS_OPENID_CARNUMBER oc
-        left join SYS_MOBILE_OPENID mo
-        on oc.OPENID = mo.OPENID
         <where>
-            <if test="mobile != null">
-                and mo.mobile = #{mobile}
-            </if>
-            <if test="carNum != null">
-                and oc.CARNUMBER = #{carNum}
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
             </if>
             and oc.IS_DELETED = 0
         </where>

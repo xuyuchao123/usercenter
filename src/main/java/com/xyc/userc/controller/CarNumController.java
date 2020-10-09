@@ -41,16 +41,21 @@ public class CarNumController
 
     @PostMapping("/queryCarNum")
     @ApiOperation(value="查询车牌号")
-    @ApiImplicitParams({@ApiImplicitParam(name = "mobile", value = "手机号", required = false, dataType = "String"),
-            @ApiImplicitParam(name = "carNum", value = "车牌号", required = false, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
-    public JsonResultObj queryCarNum(String mobile, String carNum)
+    public JsonResultObj queryCarNum(@ApiIgnore HttpServletRequest request)
     {
-        LOGGER.info("开始查询车牌号mobile={},carNum={}",mobile,carNum);
+        LOGGER.info("开始查询车牌号");
         JsonResultObj resultObj = null;
+        String openId = request.getHeader(UsercConstant.OPENID);
+        if(openId == null)
+        {
+            LOGGER.info("未获取到用户的openId");
+            resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
+        }
         try
         {
-            List<CarNumOpenId> carNumOpenIdList = carNumService.getCarNum(mobile,carNum);
+            LOGGER.info("获取到用户openId={}",openId);
+            List<CarNumOpenId> carNumOpenIdList = carNumService.getCarNum(openId);
             resultObj = new JsonResultObj(true,carNumOpenIdList);
         }
         catch (Exception e)
