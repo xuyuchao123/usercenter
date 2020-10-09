@@ -10,10 +10,7 @@ import com.xyc.userc.service.CarNumService;
 import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.RoleTypeEnum;
-import com.xyc.userc.vo.CarNumInOutTimeVo;
-import com.xyc.userc.vo.CarNumInfoVo;
-import com.xyc.userc.vo.GsCarInfoVo;
-import com.xyc.userc.vo.MobileOpenIdRoleVo;
+import com.xyc.userc.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,36 +147,44 @@ public class CarNumServiceImpl implements CarNumService
             throw new BusinessException(JsonResultEnum.CARNUM_BINDED);
         }
         int insertCnt = carNumOpenIdMapper.insert(carNumOpenId);
-//        List<Integer> mobileOpenIdIdList = carNumOpenIdMapper.selectMobileOpenIdIdByOpenId(openId);
-//        if(insertCnt > 0 && (mobileOpenIdIdList != null && mobileOpenIdIdList.size() == 1))
-//        {
-//            LOGGER.info("新增车牌成功，当前用户仅绑定一个车牌号，准备修改其角色carNum={} openId={}",carNum,openId);
-//            //获取角色"司机1"的id
-//            int roleId = roleMapper.selectIdByRoleCode(RoleTypeEnum.ROLE_SJ_1.getRoleCode());
-//            //更新当前用户的角色为司机1
-//            userMapper.updateRoleIdByMobileOpenId(roleId,mobileOpenIdIdList.get(0));
-//            LOGGER.info("角色修改成功carNum={} openId={}",carNum,openId);
-//        }
         if(insertCnt > 0)
         {
             LOGGER.info("新增车牌成功 carNum={} openId={}",carNum,openId);
-            String jsonString = (String)redisTemplate.opsForValue().get(openId);
-            if(jsonString != null)
+            LOGGER.info("开始更新redis中用户信息 carNum={} openId={}",carNum,openId);
+            List<UserInfoVo> userInfoVoList = userMapper.selectUserInfoVo(openId);
+            if(userInfoVoList != null && userInfoVoList.size() == 1)
             {
-                LOGGER.info("开始添加redis中用户的车牌号列表信息 carNum={} openId={}",carNum,openId);
-                JSONObject jsonObject = JSONObject.parseObject(jsonString);
-                //新增redis中用户的车牌号列表
-                List carNumList = (List)jsonObject.get("carNumList");
-                if(carNumList != null)
+                UserInfoVo userInfoVo = userInfoVoList.get(0);
+                List<CarNumInfoVo> carNumInfoVoList = carNumOpenIdMapper.selectCarNumInfoVo(openId);
+                if(carNumInfoVoList != null && carNumInfoVoList.size() > 0)
                 {
-                    CarNumInfoVo carNumInfoVo = new CarNumInfoVo();
-                    carNumInfoVo.setCarNum(carNum);
-                    carNumInfoVo.setIsEnable(0);
-                    carNumList.add(carNumInfoVo);
+                    userInfoVo.setCarNumList(carNumInfoVoList);
                 }
-                redisTemplate.opsForValue().set(openId,JSON.toJSONString(jsonObject));
-                LOGGER.info("结束添加redis中用户的车牌号列表信息 carNum={} openId={}",carNum,openId);
+                else
+                {
+                    userInfoVo.setCarNumList(new ArrayList<>());
+                }
+                String json = JSON.toJSONString(userInfoVo);
+                redisTemplate.opsForValue().set(openId,json);
             }
+
+//            String jsonString = (String)redisTemplate.opsForValue().get(openId);
+//            if(jsonString != null)
+//            {
+//                LOGGER.info("开始添加redis中用户的车牌号列表信息 carNum={} openId={}",carNum,openId);
+//                JSONObject jsonObject = JSONObject.parseObject(jsonString);
+//                //新增redis中用户的车牌号列表
+//                List carNumList = (List)jsonObject.get("carNumList");
+//                if(carNumList != null)
+//                {
+//                    CarNumInfoVo carNumInfoVo = new CarNumInfoVo();
+//                    carNumInfoVo.setCarNum(carNum);
+//                    carNumInfoVo.setIsEnable(0);
+//                    carNumList.add(carNumInfoVo);
+//                }
+//                redisTemplate.opsForValue().set(openId,JSON.toJSONString(jsonObject));
+//                LOGGER.info("结束添加redis中用户的车牌号列表信息 carNum={} openId={}",carNum,openId);
+//            }
         }
         else
         {

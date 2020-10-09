@@ -174,8 +174,24 @@
     <select id="selectCarNumInfo" resultType="java.util.Map">
         select oc.OPENID, oc.CARNUMBER,oc.IS_ENABLED
         from SYS_OPENID_CARNUMBER oc
-        where oc.IS_DELETED = 0
+        <where>
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
+            </if>
+            and oc.IS_DELETED = 0
+        </where>
         order by oc.OPENID
+    </select>
+
+    <select id="selectCarNumInfoVo" resultType="com.xyc.userc.vo.CarNumInfoVo">
+        select oc.CARNUMBER as carNum, oc.IS_ENABLED as isEnable
+        from SYS_OPENID_CARNUMBER oc
+        <where>
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
+            </if>
+            and oc.IS_DELETED = 0
+        </where>
     </select>
 
     <select id="confirmCarNumExist" resultType="java.util.Map">

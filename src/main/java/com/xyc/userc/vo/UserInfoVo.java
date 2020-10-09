@@ -21,7 +21,10 @@ public class UserInfoVo implements Serializable
 
     private String lastStockCode;
 
+    private String gh;
+
     private Date operatorTime;
+
 
     public String getOpenId() {
         return openId;
@@ -61,6 +64,14 @@ public class UserInfoVo implements Serializable
 
     public void setLastStockCode(String lastStockCode) {
         this.lastStockCode = lastStockCode;
+    }
+
+    public String getGh() {
+        return gh;
+    }
+
+    public void setGh(String gh) {
+        this.gh = gh;
     }
 
     public Date getOperatorTime() {

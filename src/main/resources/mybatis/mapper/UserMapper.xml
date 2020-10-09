@@ -60,8 +60,17 @@
     on ur.ROLE_ID = r.ID
     left join SYS_JLY_STOCKCODE js
     on mo.OPENID = js.OPENID
-    where r.IS_DELETED = 0
+    <where>
+      <if test="openId != null">
+        and mo.OPENID = #{openId}
+      </if>
+      and r.IS_DELETED = 0
+    </where>
     order by mo.OPENID
+  </select>
+
+  <select id="selectUserInfoVoByOpenId" resultType="com.xyc.userc.vo.UserInfoVo">
+
   </select>
 
   <select id="selectStockCodeInfo" resultType="java.util.Map">

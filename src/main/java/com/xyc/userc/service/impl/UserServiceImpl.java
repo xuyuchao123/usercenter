@@ -140,12 +140,19 @@ public class UserServiceImpl implements UserService
             userInfoVo.setOpenId(openId);
             userInfoVo.setMobilePhone(mobile);
             userInfoVo.setRoleCode(roleCode);
-            userInfoVo.setCarNumList(new ArrayList<CarNumInfoVo>());
-            Map stockCodeMap = userMapper.selectStockCodeInfo(openId);
-            if(stockCodeMap != null)
+            if(roleCode.equals(RoleTypeEnum.ROLE_SJ_0.getRoleCode()))
             {
-                userInfoVo.setLastStockCode(stockCodeMap.get("LASTSTOCKCODE").toString());
-                userInfoVo.setOperatorTime((Date)stockCodeMap.get("JLYOPERATORTIME"));
+                userInfoVo.setCarNumList(new ArrayList<CarNumInfoVo>());
+            }
+            if(roleCode.equals(RoleTypeEnum.ROLE_JLY_BC.getRoleCode()) || roleCode.equals(RoleTypeEnum.ROLE_JLY_XC.getRoleCode()) ||
+                    roleCode.equals(RoleTypeEnum.ROLE_JLY_KHB.getRoleCode()) || roleCode.equals(RoleTypeEnum.ROLE_JLY_OTHER.getRoleCode()))
+            {
+                Map stockCodeMap = userMapper.selectStockCodeInfo(openId);
+                if (stockCodeMap != null)
+                {
+                    userInfoVo.setLastStockCode(stockCodeMap.get("LASTSTOCKCODE").toString());
+                    userInfoVo.setOperatorTime((Date) stockCodeMap.get("JLYOPERATORTIME"));
+                }
             }
             redisTemplate.opsForValue().set(openId,JSON.toJSONString(userInfoVo));
             //构建user对象返回
@@ -165,12 +172,12 @@ public class UserServiceImpl implements UserService
     public void storeUserInfoVo() throws Exception
     {
         LOGGER.info("进入存储用户信息至redis方法");
-        List<UserInfoVo> userInfoVoList = userMapper.selectUserInfoVo();
+        List<UserInfoVo> userInfoVoList = userMapper.selectUserInfoVo(null);
         if(userInfoVoList == null || userInfoVoList.size() == 0)
         {
             return;
         }
-        List<Map> list = carNumOpenIdMapper.selectCarNumInfo();
+        List<Map> list = carNumOpenIdMapper.selectCarNumInfo(null);
         if(list != null && list.size() > 0)
         {
             String curOpenId = null;
@@ -202,8 +209,38 @@ public class UserServiceImpl implements UserService
         }
         redisTemplate.setKeySerializer(RedisSerializer.string());
         redisTemplate.setValueSerializer(RedisSerializer.string());
+        String roleCode = null;
         for(UserInfoVo userInfoVo : userInfoVoList)
         {
+            roleCode = userInfoVo.getRoleCode();
+            if(RoleTypeEnum.ROLE_SJ_0.getRoleCode().equals(roleCode) ||
+                    RoleTypeEnum.ROLE_SJ_1.getRoleCode().equals(roleCode))
+            {
+                userInfoVo.setOperatorTime(null);
+                userInfoVo.setLastStockCode(null);
+                userInfoVo.setGh(null);
+            }
+            else if(RoleTypeEnum.ROLE_JLY_KHB.getRoleCode().equals(roleCode) ||
+                    RoleTypeEnum.ROLE_JLY_BC.getRoleCode().equals(roleCode) ||
+                    RoleTypeEnum.ROLE_JLY_XC.getRoleCode().equals(roleCode) ||
+                    RoleTypeEnum.ROLE_JLY_OTHER.getRoleCode().equals(roleCode))
+            {
+                userInfoVo.setCarNumList(null);
+                userInfoVo.setGh(null);
+            }
+            else if(RoleTypeEnum.ROLE_KDY.getRoleCode().equals(roleCode))
+            {
+                userInfoVo.setCarNumList(null);
+                userInfoVo.setOperatorTime(null);
+                userInfoVo.setLastStockCode(null);
+            }
+            else
+            {
+                userInfoVo.setCarNumList(null);
+                userInfoVo.setOperatorTime(null);
+                userInfoVo.setLastStockCode(null);
+                userInfoVo.setGh(null);
+            }
             String json = JSON.toJSONString(userInfoVo);
             String openId = userInfoVo.getOpenId();
             redisTemplate.opsForValue().set(openId,json);
