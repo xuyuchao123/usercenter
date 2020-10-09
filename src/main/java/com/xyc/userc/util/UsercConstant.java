@@ -5,5 +5,5 @@ package com.xyc.userc.util;
  */
 public class UsercConstant
 {
-    public static final String OPENID = "wechat-oauth2-key";
+    public static final String OPENID = "Wechat-Oauth2-Key";
 }
