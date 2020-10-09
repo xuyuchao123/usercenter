@@ -44,28 +44,6 @@ public class MyCommandLineRunner implements CommandLineRunner
 //        Object obj = (String)redisTemplate.opsForValue().get("tst");
         userService.storeUserInfoVo();
 
-//        List<UserInfoVo> userInfoVoList = new ArrayList<>();
-//
-//        UserInfoVo userInfoVo = new UserInfoVo();
-//        userInfoVo.setOpenId("asdfjkl");
-//        userInfoVo.setMobilePhone("13988888");
-//        userInfoVo.setRoleCode("SJ0");
-//
-//        List<CarNumInfoVo> carNumInfoVoList = new ArrayList<>();
-//        CarNumInfoVo carNumInfoVo = new CarNumInfoVo();
-//        carNumInfoVo.setCarNum("苏E88888");
-//        carNumInfoVo.setIsEnable(1);
-//        CarNumInfoVo carNumInfoVo2 = new CarNumInfoVo();
-//        carNumInfoVo2.setCarNum("苏E99999");
-//        carNumInfoVo2.setIsEnable(0);
-//        carNumInfoVoList.add(carNumInfoVo);
-//        carNumInfoVoList.add(carNumInfoVo2);
-//
-//        userInfoVo.setCarNumList(carNumInfoVoList);
-//        String json = JSON.toJSONString(userInfoVo);
-//        System.out.println(json);
-//        redisTemplate.opsForValue().set("asdfjkl",json);
-//        System.out.println(redisTemplate.opsForValue().get("asdfjkl"));
         LOGGER.info("结束存入用户信息至redis");
     }
 

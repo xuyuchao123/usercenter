@@ -171,7 +171,7 @@ public class UserServiceImpl implements UserService
             return;
         }
         List<Map> list = carNumOpenIdMapper.selectCarNumInfo();
-        if(list != null || list.size() > 0)
+        if(list != null && list.size() > 0)
         {
             String curOpenId = null;
             int listIdx = 0;
