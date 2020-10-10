@@ -272,19 +272,31 @@ public class CarNumServiceImpl implements CarNumService
     }
 
     @Override
-    public List<EnvInfoVo> queryEnvInfo(String carNum, String startDate) throws Exception
+    public List<EnvInfoVo> queryEnvInfo(String carNum, String startDate, String page, String size) throws Exception
     {
-        LOGGER.info("进入查询车辆环保信息方法carNum={},startDate={}",carNum,startDate);
-
+        LOGGER.info("进入查询车辆环保信息方法carNum={},startDate={},page={},size={}",carNum,startDate,page,size);
+        if(page == null)
+        {
+            throw new BusinessException(JsonResultEnum.PAGE_NOT_EXIST);
+        }
+        if(size == null)
+        {
+            throw new BusinessException(JsonResultEnum.SIZE_NOT_EXIST);
+        }
         if(startDate == null)
         {
             //查询时间为当前日期
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             startDate = dateTimeFormatter.format(LocalDate.now());
         }
-        LOGGER.info("查询车辆环保信息开始时间：{}",startDate);
-        List<EnvInfoVo> envInfoVoList = carNumOpenIdMapper.selectEnvInfo(carNum,startDate);
-        LOGGER.info("结束查询车辆环保信息方法carNum={},startDate={}",carNum,startDate);
+
+        int pageInt = Integer.valueOf(page);
+        int sizeInt = Integer.valueOf(size);
+        int start = (pageInt - 1) * sizeInt + 1;
+        int end = start + sizeInt - 1;
+        LOGGER.info("查询车辆环保信息开始时间：{} start={},end={}",startDate,start,end);
+        List<EnvInfoVo> envInfoVoList = carNumOpenIdMapper.selectEnvInfo(carNum,startDate,start,end);
+        LOGGER.info("结束查询车辆环保信息方法carNum={},startDate={},page={},size={}",carNum,startDate,page,size);
         return envInfoVoList;
     }
 

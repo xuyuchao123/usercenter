@@ -250,22 +250,24 @@ public class CarNumController
     @PostMapping("/queryEnvInfo")
     @ApiOperation(value="查询环保管控信息")
     @ApiImplicitParams({@ApiImplicitParam(name = "carNum", value = "车牌号", required = false, dataType = "String"),
-            @ApiImplicitParam(name = "startDate", value = "查询日期", required = false, dataType = "String")})
+            @ApiImplicitParam(name = "startDate", value = "查询日期", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "page", value = "第几页", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "size", value = "每页显示页数", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
-    public JsonResultObj queryEnvInfo(String carNum, String startDate)
+    public JsonResultObj queryEnvInfo(String carNum, String startDate, String page, String size)
     {
-        LOGGER.info("开始查询环保管控信息 carNum={}, startDate={}",carNum,startDate);
+        LOGGER.info("开始查询环保管控信息 carNum={},startDate={},page={},size={}",carNum,startDate,page,size);
         JsonResultObj resultObj = null;
         try
         {
-            List<EnvInfoVo> envInfoVos = carNumService.queryEnvInfo(carNum,startDate);
+            List<EnvInfoVo> envInfoVos = carNumService.queryEnvInfo(carNum,startDate,page,size);
             resultObj = new JsonResultObj(true,envInfoVos);
         }
         catch (Exception e)
         {
             resultObj = CommonExceptionHandler.handException(e, "查询环保管控信息失败", LOGGER, resultObj);
         }
-        LOGGER.info("结束查询环保管控信息 carNum={}, startDate={}",carNum,startDate);
+        LOGGER.info("结束查询环保管控信息 carNum={},startDate={},page={},size={}",carNum,startDate,page,size);
         return resultObj;
     }
 }

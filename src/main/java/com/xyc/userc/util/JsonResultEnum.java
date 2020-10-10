@@ -45,7 +45,10 @@ public enum JsonResultEnum
 
     MOBILE_NOT_BINDED(300, "手机号未绑定用户！"),
     MOBILE_BLACKLIST_EXIST(301,"手机号已被拉黑!"),
-    MOBILE_BINDED(302, "手机号已被绑定！");
+    MOBILE_BINDED(302, "手机号已被绑定！"),
+
+    PAGE_NOT_EXIST(400,"查询页数不能为空！"),
+    SIZE_NOT_EXIST(401,"每页显示数目不能为空！");
 
     private Integer code;
     private String message;

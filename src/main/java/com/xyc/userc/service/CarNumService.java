@@ -27,5 +27,5 @@ public interface CarNumService
 
     List<GsCarInfoVo> queryGsCarInfo(String carNum) throws Exception;
 
-    List<EnvInfoVo> queryEnvInfo(String carNum, String startDate) throws Exception;
+    List<EnvInfoVo> queryEnvInfo(String carNum, String startDate, String page, String size) throws Exception;
 }

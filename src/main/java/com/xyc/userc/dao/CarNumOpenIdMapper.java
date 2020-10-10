@@ -38,7 +38,8 @@ public interface CarNumOpenIdMapper
     List<CarNumInOutTimeVo> selectCarNumInOutTime(@Param("openId")String openId, @Param("startTime")String startTime,
                                                     @Param("endTime")String endTime);
 
-    List<EnvInfoVo> selectEnvInfo(@Param("carNum")String carNum,@Param("startDate")String startDate);
+    List<EnvInfoVo> selectEnvInfo(@Param("carNum")String carNum,@Param("startDate")String startDate,
+                        @Param("start")Integer start,@Param("end")Integer end);
 
     List<GsCarInfoVo> selectGsCarInfoByCarNum(@Param("carNum")String carNum);
 
