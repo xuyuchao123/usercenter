@@ -83,7 +83,7 @@ public class MobileServiceImpl implements MobileService
         LOGGER.info("成功生成短信验证码 mesCode={}",mesCode);
         //发送验证码短信功能。。。
         ISMS smsService = new SMSService().getSMSImplPort();
-        smsService.smsSend(mobile,"验证码" + mesCode);
+        smsService.smsSend(mobile,"验证码:" + mesCode);
         LOGGER.info("结束检查并发送短信验证码方法");
     }
 }
