@@ -9,6 +9,7 @@ import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
 import com.xyc.userc.util.UsercConstant;
 import com.xyc.userc.vo.CarNumInOutTimeVo;
+import com.xyc.userc.vo.EnvInfoVo;
 import com.xyc.userc.vo.GsCarInfoVo;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -243,6 +244,28 @@ public class CarNumController
             resultObj = CommonExceptionHandler.handException(e, "查询车辆进出厂时间失败", LOGGER, resultObj);
         }
         LOGGER.info("结束查询国三车辆识别号及发动机号 carNum={}", carNum);
+        return resultObj;
+    }
+
+    @PostMapping("/queryEnvInfo")
+    @ApiOperation(value="查询环保管控信息")
+    @ApiImplicitParams({@ApiImplicitParam(name = "carNum", value = "车牌号", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "startDate", value = "查询日期", required = false, dataType = "String")})
+    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
+    public JsonResultObj queryEnvInfo(String carNum, String startDate)
+    {
+        LOGGER.info("开始查询环保管控信息 carNum={}, startDate={}",carNum,startDate);
+        JsonResultObj resultObj = null;
+        try
+        {
+            List<EnvInfoVo> envInfoVos = carNumService.queryEnvInfo(carNum,startDate);
+            resultObj = new JsonResultObj(true,envInfoVos);
+        }
+        catch (Exception e)
+        {
+            resultObj = CommonExceptionHandler.handException(e, "查询环保管控信息失败", LOGGER, resultObj);
+        }
+        LOGGER.info("结束查询环保管控信息 carNum={}, startDate={}",carNum,startDate);
         return resultObj;
     }
 }

@@ -2,6 +2,7 @@ package com.xyc.userc.service;
 
 import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.vo.CarNumInOutTimeVo;
+import com.xyc.userc.vo.EnvInfoVo;
 import com.xyc.userc.vo.GsCarInfoVo;
 
 import java.util.List;
@@ -25,4 +26,6 @@ public interface CarNumService
     List<CarNumInOutTimeVo> queryInOutTime(String openId) throws Exception;
 
     List<GsCarInfoVo> queryGsCarInfo(String carNum) throws Exception;
+
+    List<EnvInfoVo> queryEnvInfo(String carNum, String startDate) throws Exception;
 }

@@ -215,4 +215,22 @@
         </where>
     </select>
 
+    <select id="selectEnvInfo" resultType="com.xyc.userc.vo.EnvInfoVo">
+        select aa.bumen as bumen, aa.car_number as carNumber,aa.car_vin_number as carVinNumber,
+          aa.engine_number as engineNumber, aa.paif as paif,bb.crosstime as crossTime
+        from (select DISTINCT a.bumen,a.car_number,a.car_vin_number,a.engine_number,a.paif
+          from sell.cdp a) aa
+        left join (select b.PLATENO,b.crosstime
+                    from T_ZZYY_RC_CAR_HIK@rcdb b
+                    where b.crosstime like concat(#{startDate},'%')
+                    and (b.carinoutstring = '入场' or b.carinoutstring = '0')) bb
+        on aa.car_number = bb.PLATENO
+        <where>
+            <if test="carNum != null">
+                and aa.car_number = #{carNum}
+            </if>
+        </where>
+    </select>
+
+
 </mapper>

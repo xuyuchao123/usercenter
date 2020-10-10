@@ -255,6 +255,7 @@ public class UserServiceImpl implements UserService
         LOGGER.info("结束存储用户信息至redis方法");
     }
 
+    //通过手机号查询角色编码
     public String queryRoleCodeByMobile(String mobile) throws Exception
     {
         List<Map> maps = userMapper.selectUserRoleByOpenId(mobile);

@@ -11,6 +11,7 @@ import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.RoleTypeEnum;
 import com.xyc.userc.vo.*;
+import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -268,6 +269,23 @@ public class CarNumServiceImpl implements CarNumService
         List<GsCarInfoVo> gsCarInfoVos = carNumOpenIdMapper.selectGsCarInfoByCarNum(carNum);
         LOGGER.info("结束查询国三车辆识别号及发动机号方法 carNum={}",carNum);
         return gsCarInfoVos;
+    }
+
+    @Override
+    public List<EnvInfoVo> queryEnvInfo(String carNum, String startDate) throws Exception
+    {
+        LOGGER.info("进入查询车辆环保信息方法carNum={},startDate={}",carNum,startDate);
+
+        if(startDate == null)
+        {
+            //查询时间为当前日期
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            startDate = dateTimeFormatter.format(LocalDate.now());
+        }
+        LOGGER.info("查询车辆环保信息开始时间：{}",startDate);
+        List<EnvInfoVo> envInfoVoList = carNumOpenIdMapper.selectEnvInfo(carNum,startDate);
+        LOGGER.info("结束查询车辆环保信息方法carNum={},startDate={}",carNum,startDate);
+        return envInfoVoList;
     }
 
     //更新redis中用户车牌号信息
