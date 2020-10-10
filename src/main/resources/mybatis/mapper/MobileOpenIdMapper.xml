@@ -32,7 +32,7 @@
     </select>
 
     <select id="selectByMobileOpenIdRole" resultType="java.util.Map">
-        select  mo.ID, mo.MOBILE, mo.OPENID, mo.USER_CREATE, mo.GMT_CREATE
+        select  mo.ID, mo.MOBILE, mo.OPENID, mo.USER_CREATE, mo.GMT_CREATE,
         ur.ROLE_ID
         from SYS_MOBILE_OPENID mo
         left join SYS_USER_ROLE ur

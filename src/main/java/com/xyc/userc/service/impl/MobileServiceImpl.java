@@ -73,7 +73,7 @@ public class MobileServiceImpl implements MobileService
         //不存在有效验证码就随机生成一个6位数短信验证码
         if(mesCode == null)
         {
-            mesCode = String.valueOf(new Random().nextInt(899999) + 100000);
+            mesCode =  String.valueOf(new Random().nextInt(899999) + 100000);
             //将新生成的验证码存入数据库
             int status = 1;
             Date gmtCreate = new Date();
@@ -83,7 +83,7 @@ public class MobileServiceImpl implements MobileService
         LOGGER.info("成功生成短信验证码 mesCode={}",mesCode);
         //发送验证码短信功能。。。
         ISMS smsService = new SMSService().getSMSImplPort();
-        smsService.smsSend(mobile,mesCode);
+        smsService.smsSend(mobile,"验证码" + mesCode);
         LOGGER.info("结束检查并发送短信验证码方法");
     }
 }
