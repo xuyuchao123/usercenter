@@ -51,7 +51,7 @@ public class BlacklistServiceImpl implements BlacklistService
         LOGGER.info("开始新增黑名单方法 mobile={} reason={} openId={}",mobile,reason,openId);
         //查询手机号绑定关系
         MobileOpenId mobileOpenId = null;
-        mobileOpenId = mobileOpenIdMapper.selectByMobile(mobile);
+        mobileOpenId = mobileOpenIdMapper.selectByMobileOpenId(mobile,null);
         if(mobileOpenId == null)
         {
             LOGGER.info("未查到该手机号绑定关系,新增黑名单失败 mobile={}",mobile);
@@ -76,7 +76,7 @@ public class BlacklistServiceImpl implements BlacklistService
         LOGGER.info("开始删除黑名单方法 mobile={}",mobile);
         //查询手机号绑定关系
         MobileOpenId mobileOpenId = null;
-        mobileOpenId = mobileOpenIdMapper.selectByMobile(mobile);
+        mobileOpenId = mobileOpenIdMapper.selectByMobileOpenId(mobile,null);
         if(mobileOpenId == null)
         {
             LOGGER.info("未查到该手机号绑定关系,删除黑名单失败 mobile={}",mobile);

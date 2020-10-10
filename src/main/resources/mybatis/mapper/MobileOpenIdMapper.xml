@@ -18,10 +18,41 @@
         VALUES (#{id},#{mobile},#{openId},#{userCreate},#{gmtCreate})
     </insert>
 
-    <select id="selectByMobile" resultMap="BaseResultMap">
+    <select id="selectByMobileOpenId" resultMap="BaseResultMap">
         select DISTINCT mo.ID, mo.MOBILE, mo.OPENID, mo.USER_CREATE, mo.GMT_CREATE
          from SYS_MOBILE_OPENID mo
-        where mo.MOBILE = #{mobile}
+        <where>
+            <if test="mobile != null">
+                and mo.MOBILE = #{mobile}
+            </if>
+            <if test="openId != null">
+                and mo.OPENID = #{openId}
+            </if>
+        </where>
     </select>
+
+    <select id="selectByMobileOpenIdRole" resultType="java.util.Map">
+        select  mo.ID, mo.MOBILE, mo.OPENID, mo.USER_CREATE, mo.GMT_CREATE
+        ur.ROLE_ID
+        from SYS_MOBILE_OPENID mo
+        left join SYS_USER_ROLE ur
+        on mo.ID = ur.MOBILE_OPENID_ID
+        <where>
+            <if test="mobile != null">
+                and mo.MOBILE = #{mobile}
+            </if>
+            <if test="openId != null">
+                and mo.OPENID = #{openId}
+            </if>
+        </where>
+    </select>
+
+
+
+    <update id="updateMobile">
+        update SYS_MOBILE_OPENID mo
+        set mo.MOBILE = #{mobile}
+        where mo.OPENID = #{openId}
+    </update>
 
 </mapper>

@@ -150,41 +150,9 @@ public class CarNumServiceImpl implements CarNumService
         if(insertCnt > 0)
         {
             LOGGER.info("新增车牌成功 carNum={} openId={}",carNum,openId);
-            LOGGER.info("开始更新redis中用户信息 carNum={} openId={}",carNum,openId);
-            List<UserInfoVo> userInfoVoList = userMapper.selectUserInfoVo(openId);
-            if(userInfoVoList != null && userInfoVoList.size() == 1)
-            {
-                UserInfoVo userInfoVo = userInfoVoList.get(0);
-                List<CarNumInfoVo> carNumInfoVoList = carNumOpenIdMapper.selectCarNumInfoVo(openId);
-                if(carNumInfoVoList != null && carNumInfoVoList.size() > 0)
-                {
-                    userInfoVo.setCarNumList(carNumInfoVoList);
-                }
-                else
-                {
-                    userInfoVo.setCarNumList(new ArrayList<>());
-                }
-                String json = JSON.toJSONString(userInfoVo);
-                redisTemplate.opsForValue().set(openId,json);
-            }
-
-//            String jsonString = (String)redisTemplate.opsForValue().get(openId);
-//            if(jsonString != null)
-//            {
-//                LOGGER.info("开始添加redis中用户的车牌号列表信息 carNum={} openId={}",carNum,openId);
-//                JSONObject jsonObject = JSONObject.parseObject(jsonString);
-//                //新增redis中用户的车牌号列表
-//                List carNumList = (List)jsonObject.get("carNumList");
-//                if(carNumList != null)
-//                {
-//                    CarNumInfoVo carNumInfoVo = new CarNumInfoVo();
-//                    carNumInfoVo.setCarNum(carNum);
-//                    carNumInfoVo.setIsEnable(0);
-//                    carNumList.add(carNumInfoVo);
-//                }
-//                redisTemplate.opsForValue().set(openId,JSON.toJSONString(jsonObject));
-//                LOGGER.info("结束添加redis中用户的车牌号列表信息 carNum={} openId={}",carNum,openId);
-//            }
+            LOGGER.info("开始更新redis中用户车牌号信息 openId={}",openId);
+            updateRedis(openId);
+            LOGGER.info("结束更新redis中用户车牌号信息 openId={}",openId);
         }
         else
         {
@@ -205,27 +173,10 @@ public class CarNumServiceImpl implements CarNumService
         {
             carNumOpenIdMapper.updateCarNum(oldCarNum,newCarNum,engineNum,identNum,emissionStd,openId,new Date());
             LOGGER.info("成功修改车牌号 openId={}",openId);
-            String jsonString = (String)redisTemplate.opsForValue().get(openId);
-            if(jsonString != null)
-            {
-                LOGGER.info("开始修改redis中用户的车牌号列表信息 oldCarNum={} newCarNum={} openId={}", oldCarNum,newCarNum,openId);
-                JSONObject jsonObject = JSONObject.parseObject(jsonString);
-                //修改redis中用户的车牌号列表
-                List carNumList = (List)jsonObject.get("carNumList");
-                if(carNumList != null && carNumList.size() > 0)
-                {
-                    for(Object obj : carNumList)
-                    {
-                        if(oldCarNum.equals(((JSONObject)obj).get("carNum").toString()))
-                        {
-                            ((JSONObject)obj).replace("carNum",newCarNum);
-                            redisTemplate.opsForValue().set(openId,JSON.toJSONString(jsonObject));
-                            break;
-                        }
-                    }
-                }
-                LOGGER.info("结束修改redis中用户的车牌号列表信息 oldCarNum={} newCarNum={} openId={}", oldCarNum,newCarNum,openId);
-            }
+
+            LOGGER.info("开始更新redis中用户车牌号信息openId={}",openId);
+            updateRedis(openId);
+            LOGGER.info("结束更新redis中用户车牌号信息 openId={}",openId);
         }
         else
         {
@@ -260,53 +211,26 @@ public class CarNumServiceImpl implements CarNumService
         carNumOpenIdMapper.updateCarNumEnable(0,new Date(),null,openId);
         carNumOpenIdMapper.updateCarNumEnable(1,new Date(),carNumOpenId.getCarNum(),openId);
         LOGGER.info("成功启用车牌号 carNum={} openId={}", carNum,openId);
-        boolean needChgRole = false;
         //查找当前用户的角色
         List<MobileOpenIdRoleVo> mobileOpenIdRoleVoList = roleMapper.selectMobileOpenIdRoleVo(openId);
         if(mobileOpenIdRoleVoList != null && mobileOpenIdRoleVoList.size() > 0
                 && RoleTypeEnum.ROLE_SJ_0.getRoleCode().equals(mobileOpenIdRoleVoList.get(0).getRoleCode()))
         {
             LOGGER.info("当前用户角色为SJ0，准备修改其角色为SJ1 carNum={} openId={}",carNum,openId);
-
             //获取角色"司机1"
             Role role = roleMapper.selectByRoleCode(RoleTypeEnum.ROLE_SJ_1.getRoleCode());
             if(role != null)
             {
                 //更新当前用户的角色为司机1
                 userMapper.updateRoleIdByMobileOpenId(role.getId(),mobileOpenIdRoleVoList.get(0).getMobileOpenIdId(),new Date());
-                needChgRole = true;
                 LOGGER.info("角色修改成功 carNum={} openId={}",carNum,openId);
             }
         }
-        String jsonString = (String)redisTemplate.opsForValue().get(openId);
-        if(jsonString != null)
-        {
-            LOGGER.info("开始修改redis中用户车牌号启用信息 carNum={} openId={}",carNum,openId);
-            JSONObject jsonObject = JSONObject.parseObject(jsonString);
-            List carNumList = (List)jsonObject.get("carNumList");
-            if(carNumList != null && carNumList.size() > 0)
-            {
-                for(Object obj : carNumList)
-                {
-                    if(carNum.equals(((JSONObject)obj).get("carNum")))
-                    {
-                        ((JSONObject)obj).replace("isEnable",1);
-                    }
-                    else
-                    {
-                        ((JSONObject)obj).replace("isEnable",0);
-                    }
-                }
-            }
-            if(needChgRole)
-            {
-                //更新redis中用户的角色
-                LOGGER.info("开始更新redis中用户的角色信息 carNum={} openId={}",carNum,openId);
-                jsonObject.replace("roleCode",RoleTypeEnum.ROLE_SJ_1.getRoleCode());
-            }
-            redisTemplate.opsForValue().set(openId,JSON.toJSONString(jsonObject));
-            LOGGER.info("结束修改redis中用户车牌号启用及角色信息 carNum={} openId={}",carNum,openId);
-        }
+
+        LOGGER.info("开始更新redis中用户车牌号信息openId={}",openId);
+        updateRedis(openId);
+        LOGGER.info("结束更新redis中用户车牌号信息 openId={}",openId);
+
         LOGGER.info("结束启用车牌号方法 CarNum={} openId={}",carNum,openId);
     }
 
@@ -345,4 +269,27 @@ public class CarNumServiceImpl implements CarNumService
         LOGGER.info("结束查询国三车辆识别号及发动机号方法 carNum={}",carNum);
         return gsCarInfoVos;
     }
+
+    //更新redis中用户车牌号信息
+    public void updateRedis(String openId) throws Exception
+    {
+        List<UserInfoVo> userInfoVoList = userMapper.selectUserInfoVo(openId);
+        if(userInfoVoList != null && userInfoVoList.size() == 1)
+        {
+            UserInfoVo userInfoVo = userInfoVoList.get(0);
+            List<CarNumInfoVo> carNumInfoVoList = carNumOpenIdMapper.selectCarNumInfoVo(openId);
+            if(carNumInfoVoList != null && carNumInfoVoList.size() > 0)
+            {
+                userInfoVo.setCarNumList(carNumInfoVoList);
+            }
+            else
+            {
+                userInfoVo.setCarNumList(new ArrayList<>());
+            }
+            String json = JSON.toJSONString(userInfoVo);
+            redisTemplate.opsForValue().set(openId,json);
+        }
+    }
+
+
 }

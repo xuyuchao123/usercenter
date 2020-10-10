@@ -40,6 +40,12 @@
     values (USER_ROLE_SEQ.nextval,#{mobileOpenIdId},#{roleId},#{gmtCreate},#{gmtModified})
   </insert>
 
+  <update id="updateUserRole">
+    update SYS_USER_ROLE ur
+    set ur.ROLE_ID = #{roleId}, ur.GMT_MODIFIED = #{gmtModified}
+    where ur.MOBILE_OPENID_ID = #{mobileOpenIdId}
+  </update>
+
   <select id="selectByRoleCode" resultType="com.xyc.userc.entity.Role">
     select r.id, r.role_code, r.role_name, r.is_deleted,
       r.gmt_create,r.gmt_modified, r.parent_role_id

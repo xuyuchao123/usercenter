@@ -44,7 +44,8 @@ public enum JsonResultEnum
     CARNUM_ENABLED(203, "车牌号已在启用状态!"),
 
     MOBILE_NOT_BINDED(300, "手机号未绑定用户！"),
-    MOBILE_BLACKLIST_EXIST(301,"手机号已被拉黑!");
+    MOBILE_BLACKLIST_EXIST(301,"手机号已被拉黑!"),
+    MOBILE_BINDED(302, "手机号已被绑定！");
 
     private Integer code;
     private String message;

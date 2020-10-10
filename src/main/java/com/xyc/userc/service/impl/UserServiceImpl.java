@@ -100,51 +100,56 @@ public class UserServiceImpl implements UserService
             mobileMapper.updateMesCodeStatus(mobile,status,gmtModified);
             LOGGER.info("成功设置验证码失效状态 mobile={} mesCode={}", mobile,mesCode);
 
-            int insertCnt = mobileOpenIdMapper.insertMobileOpenId(mobileOpenId);
-            int id = mobileOpenId.getId();
-            List<Map> maps = userMapper.selectUserRoleByOpenId(mobile);
+            LOGGER.info("开始查询当前openId是否已绑定其它手机号 mobile={} openId={}", mobile,openId);
+            Map map = mobileOpenIdMapper.selectByMobileOpenIdRole(null,openId);
             String roleCode = null;
-            if(maps == null || maps.size() == 0)
+            Role role = null;
+            if(map != null)
             {
-                roleCode = RoleTypeEnum.ROLE_SJ_0.getRoleCode();
-            }
-            else if(maps.size() == 1)
-            {
-                String item = maps.get(0).get("ITEM").toString();
-                switch(item)
+                String mobile_ori = map.get("MOBILE").toString();
+                LOGGER.info("当前openId已绑定手机号 mobile_ori={} openId={}", mobile_ori,openId);
+                if(mobile_ori.equals(mobile))
                 {
-                    case "XC":
-                        roleCode = RoleTypeEnum.ROLE_JLY_XC.getRoleCode();
-                        break;
-                    case "BC":
-                        roleCode = RoleTypeEnum.ROLE_JLY_BC.getRoleCode();
-                        break;
-                    case "HP":
-                        roleCode = RoleTypeEnum.ROLE_JLY_XC.getRoleCode();
-                        break;
-                    default:
-                        roleCode = RoleTypeEnum.ROLE_JLY_XC.getRoleCode();
+                    LOGGER.error("当前openId已绑定该手机号，不能重复绑定 mobile={} openId={}", mobile,openId);
+                    throw new BusinessException(JsonResultEnum.MOBILE_BINDED);
+                }
+                else
+                {
+                    LOGGER.info("开始更新当前openId绑定的手机号 mobile={} openId={}", mobile,openId);
+                    mobileOpenIdMapper.updateMobile(mobile,openId);
+                    roleCode = queryRoleCodeByMobile(mobile);
+                    role = roleMapper.selectByRoleCode(roleCode);
+                    //更新后的手机号对应的角色与原手机号对应的角色不同则需要修改角色
+                    if(!role.getId().equals(map.get("ROLE_ID").toString()))
+                    {
+                        Date date = new Date();
+                        //更新用户与角色关联表
+                        roleMapper.updateUserRole(Integer.valueOf(map.get("ID").toString()),role.getId(),date);
+                    }
                 }
             }
             else
             {
-                roleCode = RoleTypeEnum.ROLE_ADMIN.getRoleCode();
+                LOGGER.info("当前openId未绑定手机号openId={}", openId);
+                int insertCnt = mobileOpenIdMapper.insertMobileOpenId(mobileOpenId);
+                int id = mobileOpenId.getId();
+                roleCode = queryRoleCodeByMobile(mobile);
+                role = roleMapper.selectByRoleCode(roleCode);
+                Date date = new Date();
+                //插入用户与角色关联表
+                roleMapper.insertUserRole(id, role.getId(), date, date);
             }
-            Role role = roleMapper.selectByRoleCode(roleCode);
-            Date date = new Date();
-            //插入用户与角色关联表
-            roleMapper.insertUserRole(id,role.getId(),date,date);
 
-            LOGGER.info("开始将用户绑定信息存入redis openId={} mobile={}",openId,mobile);
+            LOGGER.info("开始将用户绑定信息存入redis openId={} mobile={}", openId, mobile);
             UserInfoVo userInfoVo = new UserInfoVo();
             userInfoVo.setOpenId(openId);
             userInfoVo.setMobilePhone(mobile);
             userInfoVo.setRoleCode(roleCode);
-            if(roleCode.equals(RoleTypeEnum.ROLE_SJ_0.getRoleCode()))
+            if (roleCode.equals(RoleTypeEnum.ROLE_SJ_0.getRoleCode()))
             {
                 userInfoVo.setCarNumList(new ArrayList<CarNumInfoVo>());
             }
-            if(roleCode.equals(RoleTypeEnum.ROLE_JLY_BC.getRoleCode()) || roleCode.equals(RoleTypeEnum.ROLE_JLY_XC.getRoleCode()) ||
+            if (roleCode.equals(RoleTypeEnum.ROLE_JLY_BC.getRoleCode()) || roleCode.equals(RoleTypeEnum.ROLE_JLY_XC.getRoleCode()) ||
                     roleCode.equals(RoleTypeEnum.ROLE_JLY_KHB.getRoleCode()) || roleCode.equals(RoleTypeEnum.ROLE_JLY_OTHER.getRoleCode()))
             {
                 Map stockCodeMap = userMapper.selectStockCodeInfo(openId);
@@ -154,7 +159,9 @@ public class UserServiceImpl implements UserService
                     userInfoVo.setOperatorTime((Date) stockCodeMap.get("JLYOPERATORTIME"));
                 }
             }
-            redisTemplate.opsForValue().set(openId,JSON.toJSONString(userInfoVo));
+//            获取开单员工号待完善。。。
+            redisTemplate.opsForValue().set(openId, JSON.toJSONString(userInfoVo));
+
             //构建user对象返回
             User user = new User();
             user.setOpenid(openId);
@@ -246,5 +253,38 @@ public class UserServiceImpl implements UserService
             redisTemplate.opsForValue().set(openId,json);
         }
         LOGGER.info("结束存储用户信息至redis方法");
+    }
+
+    public String queryRoleCodeByMobile(String mobile) throws Exception
+    {
+        List<Map> maps = userMapper.selectUserRoleByOpenId(mobile);
+        String roleCode = null;
+        if (maps == null || maps.size() == 0)
+        {
+            roleCode = RoleTypeEnum.ROLE_SJ_0.getRoleCode();
+        }
+        else if (maps.size() == 1)
+        {
+            String item = maps.get(0).get("ITEM").toString();
+            switch (item)
+            {
+                case "XC":
+                    roleCode = RoleTypeEnum.ROLE_JLY_XC.getRoleCode();
+                    break;
+                case "BC":
+                    roleCode = RoleTypeEnum.ROLE_JLY_BC.getRoleCode();
+                    break;
+                case "HP":
+                    roleCode = RoleTypeEnum.ROLE_JLY_XC.getRoleCode();
+                    break;
+                default:
+                    roleCode = RoleTypeEnum.ROLE_JLY_XC.getRoleCode();
+            }
+        }
+        else
+        {
+            roleCode = RoleTypeEnum.ROLE_ADMIN.getRoleCode();
+        }
+        return roleCode;
     }
 }

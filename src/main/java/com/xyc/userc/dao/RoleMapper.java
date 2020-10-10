@@ -18,4 +18,7 @@ public interface RoleMapper {
 
     List<MobileOpenIdRoleVo> selectMobileOpenIdRoleVo(String openId);
 
+    void updateUserRole(@Param("mobileOpenIdId")Integer mobileOpenIdId, @Param("roleId")Integer roleId,
+                        @Param("gmtModified")Date gmtModified);
+
 }
