@@ -121,6 +121,7 @@ public class UserServiceImpl implements UserService
                     String[] resArray = queryRoleCodeByMobile(mobile);
                     roleCode = resArray[0];
                     gh = resArray[1];
+                    LOGGER.info("当前手机号：{},对应的角色编码：{}, 工号：{}",mobile,roleCode,gh);
                     role = roleMapper.selectByRoleCode(roleCode);
                     //更新后的手机号对应的角色与原手机号对应的角色不同则需要修改角色
                     if(!role.getId().equals(map.get("ROLE_ID").toString()))
