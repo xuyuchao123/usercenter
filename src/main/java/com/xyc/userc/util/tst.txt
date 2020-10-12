@@ -1,0 +1,10 @@
+create or replace view sell.cdp as
+select '玖隆物流' bumen,
+ replace(substr(sj,0,10),'-'，'') FORECAST_TIME,
+CARNUM car_Number,
+code1  CAR_VIN_NUMBER,
+code2 engine_Number,
+'国V'  paif
+ from sell.SJFORECASTTIME a, sell.carinfo b where A.CARNUM=B.CAR and to_date(a.sj,'yyyy-mm-dd hh24:mi') >  to_date('2020-08-31 23:59','yyyy-mm-dd hh24:mi')
+ union all
+ select bumen,FORECAST_TIME,car_Number,CAR_VIN_NUMBER,engine_Number,paif from CHAODIPAI@crm;
