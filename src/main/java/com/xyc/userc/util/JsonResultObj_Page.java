@@ -5,7 +5,7 @@ package com.xyc.userc.util;
  */
 public class JsonResultObj_Page<T> extends JsonResultObj<T>
 {
-    private String total;
+//    private String total;
     private String page;
     private String size;
 
@@ -22,30 +22,30 @@ public class JsonResultObj_Page<T> extends JsonResultObj<T>
     }
 
     //请求成功/失败并返回数据对象,resMsg为默认值
-    public JsonResultObj_Page(boolean isSuccess, T resData, String total, String page, String size)
+    public JsonResultObj_Page(boolean isSuccess, T resData, String page, String size)
     {
         super(isSuccess,resData);
-        this.total = total;
+//        this.total = total;
         this.page = page;
         this.size = size;
     }
 
     //请求成功/失败并返回数据对象
-    public JsonResultObj_Page(boolean isSuccess, JsonResultEnum jsonResultEnum, T resData, String total, String page, String size)
+    public JsonResultObj_Page(boolean isSuccess, JsonResultEnum jsonResultEnum, T resData, String page, String size)
     {
         super(isSuccess,jsonResultEnum,resData);
-        this.total = total;
+//        this.total = total;
         this.page = page;
         this.size = size;
     }
 
-    public String getTotal() {
-        return total;
-    }
-
-    public void setTotal(String total) {
-        this.total = total;
-    }
+//    public String getTotal() {
+//        return total;
+//    }
+//
+//    public void setTotal(String total) {
+//        this.total = total;
+//    }
 
     public String getPage() {
         return page;

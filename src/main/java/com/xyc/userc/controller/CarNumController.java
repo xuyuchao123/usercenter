@@ -257,10 +257,10 @@ public class CarNumController
         JsonResultObj_Page resultObj_Page = null;
         try
         {
-            List resList = carNumService.queryEnvInfo(carNum,startDate,page,size);
-            String total = resList.get(0).toString();
-            List<EnvInfoVo> envInfoVos = (List<EnvInfoVo>)resList.get(1);
-            resultObj_Page = new JsonResultObj_Page(true,envInfoVos,total,page,size);
+            List<EnvInfoVo> envInfoVos = carNumService.queryEnvInfo(carNum,startDate,page,size);
+//            String total = resList.get(0).toString();
+//            List<EnvInfoVo> envInfoVos = (List<EnvInfoVo>)resList.get(1);
+            resultObj_Page = new JsonResultObj_Page(true,envInfoVos,page,size);
         }
         catch (Exception e)
         {
