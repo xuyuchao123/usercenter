@@ -4,10 +4,7 @@ import com.avei.shriety.wx_sdk.constant.WxsdkConstant;
 import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.User;
 import com.xyc.userc.service.CarNumService;
-import com.xyc.userc.util.CommonExceptionHandler;
-import com.xyc.userc.util.JsonResultEnum;
-import com.xyc.userc.util.JsonResultObj;
-import com.xyc.userc.util.UsercConstant;
+import com.xyc.userc.util.*;
 import com.xyc.userc.vo.CarNumInOutTimeVo;
 import com.xyc.userc.vo.EnvInfoVo;
 import com.xyc.userc.vo.GsCarInfoVo;
@@ -254,20 +251,22 @@ public class CarNumController
             @ApiImplicitParam(name = "page", value = "第几页", required = true, dataType = "String"),
             @ApiImplicitParam(name = "size", value = "每页显示页数", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
-    public JsonResultObj queryEnvInfo(String carNum, String startDate, String page, String size)
+    public JsonResultObj_Page queryEnvInfo(String carNum, String startDate, String page, String size)
     {
         LOGGER.info("开始查询环保管控信息 carNum={},startDate={},page={},size={}",carNum,startDate,page,size);
-        JsonResultObj resultObj = null;
+        JsonResultObj_Page resultObj_Page = null;
         try
         {
-            List<EnvInfoVo> envInfoVos = carNumService.queryEnvInfo(carNum,startDate,page,size);
-            resultObj = new JsonResultObj(true,envInfoVos);
+            List resList = carNumService.queryEnvInfo(carNum,startDate,page,size);
+            String total = resList.get(0).toString();
+            List<EnvInfoVo> envInfoVos = (List<EnvInfoVo>)resList.get(1);
+            resultObj_Page = new JsonResultObj_Page(true,envInfoVos,total,page,size);
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "查询环保管控信息失败", LOGGER, resultObj);
+            resultObj_Page = CommonExceptionHandler.handException_page(e, "查询环保管控信息失败", LOGGER, resultObj_Page);
         }
         LOGGER.info("结束查询环保管控信息 carNum={},startDate={},page={},size={}",carNum,startDate,page,size);
-        return resultObj;
+        return resultObj_Page;
     }
 }

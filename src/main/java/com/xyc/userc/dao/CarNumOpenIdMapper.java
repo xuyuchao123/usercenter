@@ -41,6 +41,8 @@ public interface CarNumOpenIdMapper
     List<EnvInfoVo> selectEnvInfo(@Param("carNum")String carNum,@Param("startDate")String startDate,
                         @Param("start")Integer start,@Param("end")Integer end);
 
+    int selectEnvInfoCnt(@Param("carNum")String carNum,@Param("startDate")String startDate);
+
     List<GsCarInfoVo> selectGsCarInfoByCarNum(@Param("carNum")String carNum);
 
     EnabledCarInfoVo selectEnabledCarInfo(@Param("openId")String openId);

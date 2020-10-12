@@ -6,6 +6,7 @@ import com.xyc.userc.vo.EnvInfoVo;
 import com.xyc.userc.vo.GsCarInfoVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 1 on 2020/8/21.
@@ -27,5 +28,5 @@ public interface CarNumService
 
     List<GsCarInfoVo> queryGsCarInfo(String carNum) throws Exception;
 
-    List<EnvInfoVo> queryEnvInfo(String carNum, String startDate, String page, String size) throws Exception;
+    List queryEnvInfo(String carNum, String startDate, String page, String size) throws Exception;
 }

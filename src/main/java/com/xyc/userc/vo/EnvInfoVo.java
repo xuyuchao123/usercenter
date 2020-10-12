@@ -10,12 +10,21 @@ public class EnvInfoVo implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
+    private Integer id;
     private String bumen;
     private String carNumber;
     private String carVinNumber;
     private String engineNumber;
     private String paif;
     private Date crossTime;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getBumen() {
         return bumen;

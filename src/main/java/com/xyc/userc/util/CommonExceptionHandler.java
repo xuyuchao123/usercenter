@@ -24,4 +24,20 @@ public class CommonExceptionHandler
         }
         return resultObj;
     }
+
+    public static JsonResultObj_Page handException_page(Exception e, String msg, Logger LOGGER, JsonResultObj_Page resultObj_Page)
+    {
+        if(e instanceof BusinessException)
+        {
+            LOGGER.error(msg + "：{}", ((BusinessException)e).getJsonResultEnum().getMessage());
+            resultObj_Page = new JsonResultObj_Page(false,((BusinessException)e).getJsonResultEnum());
+        }
+        else
+        {
+            e.printStackTrace();
+            LOGGER.error(msg + "：{}",e.getMessage());
+            resultObj_Page = new JsonResultObj_Page(false);
+        }
+        return resultObj_Page;
+    }
 }

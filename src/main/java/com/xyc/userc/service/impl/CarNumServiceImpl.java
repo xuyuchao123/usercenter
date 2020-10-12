@@ -28,10 +28,7 @@ import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by 1 on 2020/8/21.
@@ -272,7 +269,7 @@ public class CarNumServiceImpl implements CarNumService
     }
 
     @Override
-    public List<EnvInfoVo> queryEnvInfo(String carNum, String startDate, String page, String size) throws Exception
+    public List queryEnvInfo(String carNum, String startDate, String page, String size) throws Exception
     {
         LOGGER.info("进入查询车辆环保信息方法carNum={},startDate={},page={},size={}",carNum,startDate,page,size);
         if(page == null)
@@ -289,15 +286,25 @@ public class CarNumServiceImpl implements CarNumService
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             startDate = dateTimeFormatter.format(LocalDate.now());
         }
+        //若carNum为空字符串，则按照carNum为空处理
+        if(carNum != null && carNum.equals(""))
+        {
+            carNum = null;
+        }
 
         int pageInt = Integer.valueOf(page);
         int sizeInt = Integer.valueOf(size);
         int start = (pageInt - 1) * sizeInt + 1;
         int end = start + sizeInt - 1;
         LOGGER.info("查询车辆环保信息开始时间：{} start={},end={}",startDate,start,end);
+        //查询总记录数
+        int cnt = carNumOpenIdMapper.selectEnvInfoCnt(carNum,startDate);
         List<EnvInfoVo> envInfoVoList = carNumOpenIdMapper.selectEnvInfo(carNum,startDate,start,end);
+        List resList = new ArrayList();
+        resList.add(cnt);
+        resList.add(envInfoVoList);
         LOGGER.info("结束查询车辆环保信息方法carNum={},startDate={},page={},size={}",carNum,startDate,page,size);
-        return envInfoVoList;
+        return resList;
     }
 
     //更新redis中用户车牌号信息
