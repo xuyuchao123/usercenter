@@ -293,7 +293,7 @@ public class UserServiceImpl implements UserService
                     roleCode = RoleTypeEnum.ROLE_KDY.getRoleCode();
                     break;
                 default:
-                    roleCode = RoleTypeEnum.ROLE_JLY_XC.getRoleCode();
+                    roleCode = RoleTypeEnum.ROLE_JLY_OTHER.getRoleCode();
             }
             gh = maps.get(0).get("USER_ID").toString();
         }
