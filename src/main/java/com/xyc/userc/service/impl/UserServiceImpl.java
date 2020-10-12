@@ -139,6 +139,7 @@ public class UserServiceImpl implements UserService
                 String[] resArray = queryRoleCodeByMobile(mobile);
                 roleCode = resArray[0];
                 gh = resArray[1];
+                LOGGER.info("当前手机号：{},对应的角色编码：{}, 工号：{}",mobile,roleCode,gh);
                 role = roleMapper.selectByRoleCode(roleCode);
                 Date date = new Date();
                 //插入用户与角色关联表
