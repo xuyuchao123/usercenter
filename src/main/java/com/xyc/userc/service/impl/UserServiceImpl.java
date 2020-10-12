@@ -103,6 +103,7 @@ public class UserServiceImpl implements UserService
             LOGGER.info("开始查询当前openId是否已绑定其它手机号 mobile={} openId={}", mobile,openId);
             Map map = mobileOpenIdMapper.selectByMobileOpenIdRole(null,openId);
             String roleCode = null;
+            String gh = null;
             Role role = null;
             if(map != null)
             {
@@ -117,7 +118,9 @@ public class UserServiceImpl implements UserService
                 {
                     LOGGER.info("开始更新当前openId绑定的手机号 mobile={} openId={}", mobile,openId);
                     mobileOpenIdMapper.updateMobile(mobile,openId);
-                    roleCode = queryRoleCodeByMobile(mobile);
+                    String[] resArray = queryRoleCodeByMobile(mobile);
+                    roleCode = resArray[0];
+                    gh = resArray[1];
                     role = roleMapper.selectByRoleCode(roleCode);
                     //更新后的手机号对应的角色与原手机号对应的角色不同则需要修改角色
                     if(!role.getId().equals(map.get("ROLE_ID").toString()))
@@ -133,7 +136,9 @@ public class UserServiceImpl implements UserService
                 LOGGER.info("当前openId未绑定手机号openId={}", openId);
                 int insertCnt = mobileOpenIdMapper.insertMobileOpenId(mobileOpenId);
                 int id = mobileOpenId.getId();
-                roleCode = queryRoleCodeByMobile(mobile);
+                String[] resArray = queryRoleCodeByMobile(mobile);
+                roleCode = resArray[0];
+                gh = resArray[1];
                 role = roleMapper.selectByRoleCode(roleCode);
                 Date date = new Date();
                 //插入用户与角色关联表
@@ -160,6 +165,10 @@ public class UserServiceImpl implements UserService
                 }
             }
 //            获取开单员工号待完善。。。
+            if(roleCode.equals(RoleTypeEnum.ROLE_KDY.getRoleCode()))
+            {
+                userInfoVo.setGh(gh);
+            }
             redisTemplate.opsForValue().set(openId, JSON.toJSONString(userInfoVo));
 
             //构建user对象返回
@@ -255,18 +264,19 @@ public class UserServiceImpl implements UserService
         LOGGER.info("结束存储用户信息至redis方法");
     }
 
-    //通过手机号查询角色编码
-    public String queryRoleCodeByMobile(String mobile) throws Exception
+    //通过手机号查询角色编码及工号
+    public String[] queryRoleCodeByMobile(String mobile) throws Exception
     {
         List<Map> maps = userMapper.selectUserRoleByOpenId(mobile);
         String roleCode = null;
+        String gh = null;
         if (maps == null || maps.size() == 0)
         {
             roleCode = RoleTypeEnum.ROLE_SJ_0.getRoleCode();
         }
         else if (maps.size() == 1)
         {
-            String item = maps.get(0).get("ITEM").toString();
+            String item = maps.get(0).get("ITEM").toString().toUpperCase();
             switch (item)
             {
                 case "XC":
@@ -278,14 +288,21 @@ public class UserServiceImpl implements UserService
                 case "HP":
                     roleCode = RoleTypeEnum.ROLE_JLY_XC.getRoleCode();
                     break;
+                case "KDY":
+                    roleCode = RoleTypeEnum.ROLE_KDY.getRoleCode();
+                    break;
                 default:
                     roleCode = RoleTypeEnum.ROLE_JLY_XC.getRoleCode();
             }
+            gh = maps.get(0).get("USER_ID").toString();
         }
         else
         {
             roleCode = RoleTypeEnum.ROLE_ADMIN.getRoleCode();
         }
-        return roleCode;
+        String[] resArray = new String[2];
+        resArray[0] = roleCode;
+        resArray[1] = gh;
+        return resArray;
     }
 }
