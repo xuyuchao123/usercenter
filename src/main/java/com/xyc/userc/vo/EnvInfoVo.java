@@ -16,7 +16,7 @@ public class EnvInfoVo implements Serializable
     private String carVinNumber;
     private String engineNumber;
     private String paif;
-    private Date crossTime;
+    private String crossTime;
 
     public Integer getId() {
         return id;
@@ -66,11 +66,11 @@ public class EnvInfoVo implements Serializable
         this.paif = paif;
     }
 
-    public Date getCrossTime() {
+    public String getCrossTime() {
         return crossTime;
     }
 
-    public void setCrossTime(Date crossTime) {
+    public void setCrossTime(String crossTime) {
         this.crossTime = crossTime;
     }
 }
