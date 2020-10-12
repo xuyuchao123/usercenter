@@ -218,7 +218,7 @@
     <select id="selectEnvInfo" resultType="com.xyc.userc.vo.EnvInfoVo">
         select * from
         (select aa.bumen as bumen, aa.car_number as carNumber,aa.car_vin_number as carVinNumber,
-          aa.engine_number as engineNumber, aa.paif as paif,bb.crosstime as crossTime,rownum as id
+          aa.engine_number as engineNumber, aa.paif as paif,substr(bb.crosstime,0,10) as crossTime,rownum as id
         from (select DISTINCT a.bumen,a.car_number,a.car_vin_number,a.engine_number,a.paif
           from sell.cdp a) aa
         left join (select b.PLATENO,b.crosstime
