@@ -13,6 +13,8 @@ public interface UserMapper
 {
     List<Map> selectUserRoleByOpenId(String mobile);
 
+    String selectUserId(String mobile);
+
     void updateRoleIdByMobileOpenId(@Param("roleId")int roleId, @Param("mobileOpenIdId")int mobileOpenIdId, @Param("gmtModified")Date gmtModified);
 
     List<UserInfoVo> selectUserInfoVo(@Param("openId")String openId);

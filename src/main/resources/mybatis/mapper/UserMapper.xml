@@ -42,6 +42,10 @@
     select ITEM FROM HLJLYXX where PHONE_NO = #{mobile}
   </select>
 
+  <select id="selectUserId" resultType="java.lang.String">
+    select DISTINCT User_ID FROM HLJLYXX where PHONE_NO = #{mobile}
+  </select>
+
   <update id="updateRoleIdByMobileOpenId">
     update SYS_USER_ROLE ur
     set ur.ROLE_ID = #{roleId},ur.GMT_MODIFIED = #{gmtModified}

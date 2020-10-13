@@ -76,12 +76,11 @@ public class CarNumServiceImpl implements CarNumService
         String roleCode = map.get("ROLE_CODE").toString();
         int mobileOpenIdId = Integer.valueOf(map.get("ID").toString());
         int deleteCnt = carNumOpenIdMapper.deleteByCarNumOpenId(carNum,openId);
-        boolean needChgRole = false;
         if(deleteCnt > 0)
         {
-            String jsonString = (String)redisTemplate.opsForValue().get(openId);
             //查找该openid下已启用的车牌号数量
             int  enabledCarNumCnt = carNumOpenIdMapper.confirmEnabledCarNumExist(openId,null);
+            //若删除车牌后该openid下没有已启用的车牌并且角色为SJ1,则修改其角色
             if((enabledCarNumCnt == 0) && RoleTypeEnum.ROLE_SJ_1.getRoleCode().equals(roleCode))
             {
                 LOGGER.info("删除成功，当前用户角色为SJ1且没有已绑定的车牌号，准备修改其角色 carNum={} openId={}",carNum,openId);
@@ -91,36 +90,12 @@ public class CarNumServiceImpl implements CarNumService
                 {
                     //更新当前用户的角色为司机0
                     userMapper.updateRoleIdByMobileOpenId(role.getId(),mobileOpenIdId,new Date());
-                    needChgRole = true;
                     LOGGER.info("角色修改成功carNum={} openId={}",carNum,openId);
                 }
             }
-            if(jsonString != null)
-            {
-                LOGGER.info("开始删除redis中用户的车牌号列表信息 openId={}",openId);
-                JSONObject jsonObject = JSONObject.parseObject(jsonString);
-                //删除redis中用户的车牌号列表
-                List carNumList = (List)jsonObject.get("carNumList");
-                if(carNumList != null && carNumList.size() > 0)
-                {
-                    for (Object obj : carNumList)
-                    {
-                        if(carNum.equals(((JSONObject)obj).get("carNum").toString()))
-                        {
-                            carNumList.remove(obj);
-                            break;
-                        }
-                    }
-                }
-                if(needChgRole)
-                {
-                    //更新redis中用户的角色
-                    LOGGER.info("开始更新redis中用户的角色信息 openId={}",openId);
-                    jsonObject.replace("roleCode",RoleTypeEnum.ROLE_SJ_0.getRoleCode());
-                }
-                redisTemplate.opsForValue().set(openId,JSON.toJSONString(jsonObject));
-                LOGGER.info("结束更新redis中用户的车牌号列表及角色信息 openId={}",openId);
-            }
+            LOGGER.info("开始更新redis中用户车牌号信息 openId={}",openId);
+            updateRedis(openId);
+            LOGGER.info("结束更新redis中用户车牌号信息 openId={}",openId);
         }
         else
         {
@@ -307,7 +282,7 @@ public class CarNumServiceImpl implements CarNumService
         return envInfoVoList;
     }
 
-    //更新redis中用户车牌号信息
+    //更新redis中用户信息及车牌号信息
     public void updateRedis(String openId) throws Exception
     {
         List<UserInfoVo> userInfoVoList = userMapper.selectUserInfoVo(openId);
@@ -322,6 +297,12 @@ public class CarNumServiceImpl implements CarNumService
             else
             {
                 userInfoVo.setCarNumList(new ArrayList<>());
+            }
+            //若角色为开单员则需获取其工号
+            if(userInfoVo.getRoleCode().equals(RoleTypeEnum.ROLE_KDY.getRoleCode()))
+            {
+                String gh = userMapper.selectUserId(userInfoVo.getMobilePhone());
+                userInfoVo.setGh(gh);
             }
             String json = JSON.toJSONString(userInfoVo);
             redisTemplate.opsForValue().set(openId,json);
