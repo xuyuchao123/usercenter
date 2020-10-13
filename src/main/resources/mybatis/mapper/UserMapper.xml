@@ -73,8 +73,12 @@
     order by mo.OPENID
   </select>
 
-  <select id="selectUserInfoVoByOpenId" resultType="com.xyc.userc.vo.UserInfoVo">
-
+  <select id="selectUserIdByMobile" resultType="java.util.Map">
+    select PHONE_NO, User_ID FROM HLJLYXX
+    where PHONE_NO IN
+    <foreach collection="list" open="(" close=")" separator="," item="mobile" index="i">
+      #{mobile}
+    </foreach>
   </select>
 
   <select id="selectStockCodeInfo" resultType="java.util.Map">

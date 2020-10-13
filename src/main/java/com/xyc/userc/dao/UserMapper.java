@@ -1,7 +1,6 @@
 package com.xyc.userc.dao;
 
-import com.xyc.userc.entity.Role;
-import com.xyc.userc.entity.User;
+
 import com.xyc.userc.vo.UserInfoVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -12,6 +11,8 @@ import java.util.Map;
 public interface UserMapper
 {
     List<Map> selectUserRoleByOpenId(String mobile);
+
+    List<Map> selectUserIdByMobile(List<String> mobiles);
 
     String selectUserId(String mobile);
 
