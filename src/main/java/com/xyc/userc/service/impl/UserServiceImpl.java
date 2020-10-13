@@ -278,8 +278,11 @@ public class UserServiceImpl implements UserService
                 userInfoVo.setCarNumList(null);
                 userInfoVo.setOperatorTime(null);
                 userInfoVo.setLastStockCode(null);
-                String gh = mobileUserIdMap.get(userInfoVo.getMobilePhone()).toString();
-                userInfoVo.setGh(gh);
+                if(mobileUserIdMap.size() > 0)
+                {
+                    String gh = mobileUserIdMap.get(userInfoVo.getMobilePhone()).toString();
+                    userInfoVo.setGh(gh);
+                }
             }
             else
             {
