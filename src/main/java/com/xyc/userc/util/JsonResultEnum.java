@@ -32,6 +32,9 @@ public enum JsonResultEnum
     USER_ACCOUNT_EXIST(109,"账号已存在"),
     USER_MOBILE_EXIST(110,"手机号已被注册"),
     USER_MESCODE_NOT_EXIST(111,"手机验证码为空"),
+    USER_VERIFYCODE_ERROR(112,"验证码错误"),
+
+
 
 //    USER_ACCOUNT_ALREADY_EXIST(007, "账号已存在"),
 //    USER_ACCOUNT_USE_BY_OTHERS(008, "账号下线"),
@@ -48,7 +51,9 @@ public enum JsonResultEnum
     MOBILE_BINDED(302, "手机号已被绑定！"),
 
     PAGE_NOT_EXIST(400,"查询页数不能为空！"),
-    SIZE_NOT_EXIST(401,"每页显示数目不能为空！");
+    SIZE_NOT_EXIST(401,"每页显示数目不能为空！"),
+
+    NO_PERMISSION(500, "没有权限");
 
     private Integer code;
     private String message;

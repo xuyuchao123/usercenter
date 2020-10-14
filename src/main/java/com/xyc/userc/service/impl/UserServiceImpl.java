@@ -3,8 +3,12 @@ package com.xyc.userc.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.xyc.userc.dao.*;
 import com.xyc.userc.entity.MobileOpenId;
+import com.xyc.userc.entity.PcUser;
 import com.xyc.userc.entity.Role;
 import com.xyc.userc.entity.User;
+import com.xyc.userc.security.MesCodeErrorException;
+import com.xyc.userc.security.MesCodeExpiredException;
+import com.xyc.userc.security.MobileNotFoundException;
 import com.xyc.userc.service.UserService;
 import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.JsonResultEnum;
@@ -17,6 +21,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +45,9 @@ public class UserServiceImpl implements UserService
     private UserMapper userMapper;
 
     @Autowired
+    private PcUserMapper pcUserMapper;
+
+    @Autowired
     private MobileMapper mobileMapper;
 
     @Autowired
@@ -48,6 +58,9 @@ public class UserServiceImpl implements UserService
 
     @Autowired
     private CarNumOpenIdMapper carNumOpenIdMapper;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
@@ -298,129 +311,129 @@ public class UserServiceImpl implements UserService
         LOGGER.info("结束存储用户信息至redis方法");
     }
 
-//    //    重写认证方法,实现自定义springsecurity用户认证（用户名密码登录）
-//    @Override
-//    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException
-//    {
-//        LOGGER.debug("进入通过用户名获取用户信息权限信息方法");
-//        User user = userMapper.selectByUsername(userName);
-//        if (user == null)
-//        {
-//            throw new UsernameNotFoundException("用户名不存在!");
-//        }
-//
-//        LOGGER.debug("结束通过用户名获取用户信息权限信息方法");
-//        return user;
-//    }
-//
-//    @Override
-//    public User loadUserByMobile(String mobile) throws UsernameNotFoundException
-//    {
-//        LOGGER.debug("进入通过手机号获取用户信息权限信息方法");
-//        User user = userMapper.selectByMobile(mobile);
-//        if (user == null)
-//        {
-//            throw new MobileNotFoundException("手机号未注册!");
-//        }
-//
-//        LOGGER.debug("结束通过手机号获取用户信息权限信息方法");
-//        return user;
-//    }
-//
-//    @Override
-//    public int checkUserExistByMobile(String mobile) throws Exception
-//    {
-//        LOGGER.debug("开始通过手机号查询用户信息方法");
-//        Integer mobileExist;
-//        byte isDeleted = 0;
-//        byte isEnable = 1;
-//        byte isLocked = 0;
-//        mobileExist = userMapper.checkUserByMobile(mobile,isDeleted,isEnable,isLocked);
-//        if(mobileExist == null)
-//        {
-//            mobileExist = 0;
-//        }
-//        LOGGER.debug("结束通过手机号查询用户信息方法");
-//        return mobileExist;
-//    }
-//
-//    @Override
-//    public void updatePassword(String mobile, String newPassword) throws Exception
-//    {
-//        LOGGER.debug("进入更改用户密码方法mobile={} newPassword={}",mobile,newPassword);
-//        userMapper.updatePwdByMobile(mobile,bCryptPasswordEncoder.encode(newPassword));
-//        LOGGER.debug("结束更改用户密码方法mobile={} newPassword={}",mobile,newPassword);
-//
-//    }
-//
-//    @Override
-//    public int checkUserRegByUsername(String username) throws Exception
-//    {
-//        LOGGER.debug("开始通过用户名查询用户信息方法 username={}",username);
-//        Integer usernameExist;
-//        byte isDeleted = 0;
-//        usernameExist = userMapper.selectRegUserByUsername(username,isDeleted);
-//        if(usernameExist == null)
-//        {
-//            usernameExist = 0;
-//        }
-//        LOGGER.debug("结束通过用户名查询用户信息方法 username={}",username);
-//        return usernameExist;
-//    }
-//
-//    @Override
-//    public int checkUserRegByMobile(String mobile) throws Exception
-//    {
-//        LOGGER.debug("开始通过手机号查询用户信息方法 mobile={}",mobile);
-//        Integer mobileExist;
-//        byte isDeleted = 0;
-//        mobileExist = userMapper.selectRegUserByMobile(mobile,isDeleted);
-//        if(mobileExist == null)
-//        {
-//            mobileExist = 0;
-//        }
-//        LOGGER.debug("结束通过手机号查询用户信息方法 mobile={}",mobile);
-//        return mobileExist;
-//    }
-//
-//    @Override
-//    public void addUser(String userName, String password, String mobile, String userRealName, Byte isDelete,
-//                        Byte isEnable, Byte isLocked, Long userCreate, String mesCode) throws Exception
-//    {
-//        LOGGER.debug("进入新增用户方法 mobile={} mesCode={}",mobile,mesCode);
-//        String storedMesCode = mobileMapper.selectMesCodeByMobile(mobile);
-//        if(storedMesCode == null)
-//        {
-//            LOGGER.debug("短信验证码过期 mobile={}",mobile);
-//            throw new MesCodeExpiredException("短信验证码过期，请点击重新发送");
-//        }
-//        if(!storedMesCode.equals(mesCode))
-//        {
-//            LOGGER.debug("短信验证码错误 mobile={} storedMesCode={} mesCode={}",mobile,storedMesCode,mesCode);
-//            throw new MesCodeErrorException("短信验证码错误");
-//        }
-//        else        //验证通过，将当前验证码改为无效状态
-//        {
-//            byte status = 0;
-//            LOGGER.debug("验证通过，将当前验证码改为无效状态 mobile={} storedMesCode={}",mobile,storedMesCode);
-//            mobileMapper.updateMesCodeStatus(mobile,status,new Date());
-//        }
-//        PcUser pcUser = new User();
-//        pcUser.setUserName(userName);
-//        pcUser.setPassword(bCryptPasswordEncoder.encode(password));
-//        pcUser.setMobile(mobile);
-//        pcUser.setUserRealName(userRealName);
-//        pcUser.setIsDeleted(isDelete);
-//        pcUser.setIsEnable(isEnable);
-//        pcUser.setIsLocked(isLocked);
-//        pcUser.setGmtCreate(new Date());
-//        pcUser.setGmtModified(new Date());
-//        pcUser.setUserCreate(userCreate);
-//        pcUser.setUserModified(userCreate);
-//        int id = userMapper.insert(pcUser);
-//        System.out.println(id);
-//        LOGGER.debug("结束新增用户方法 mobile={} mesCode={}",mobile,mesCode);
-//    }
+    //    重写认证方法,实现自定义springsecurity用户认证（用户名密码登录）
+    @Override
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException
+    {
+        LOGGER.debug("进入通过用户名获取用户信息权限信息方法");
+        PcUser pcUser = pcUserMapper.selectByUsername(userName);
+        if (pcUser == null)
+        {
+            throw new UsernameNotFoundException("用户名不存在!");
+        }
+
+        LOGGER.debug("结束通过用户名获取用户信息权限信息方法");
+        return pcUser;
+    }
+
+    @Override
+    public PcUser loadUserByMobile(String mobile) throws UsernameNotFoundException
+    {
+        LOGGER.debug("进入通过手机号获取用户信息权限信息方法");
+        PcUser pcUser = pcUserMapper.selectByMobile(mobile);
+        if (pcUser == null)
+        {
+            throw new MobileNotFoundException("手机号未注册!");
+        }
+
+        LOGGER.debug("结束通过手机号获取用户信息权限信息方法");
+        return pcUser;
+    }
+
+    @Override
+    public int checkUserExistByMobile(String mobile) throws Exception
+    {
+        LOGGER.debug("开始通过手机号查询用户信息方法");
+        Integer mobileExist;
+        byte isDeleted = 0;
+        byte isEnable = 1;
+        byte isLocked = 0;
+        mobileExist = pcUserMapper.checkUserByMobile(mobile,isDeleted,isEnable,isLocked);
+        if(mobileExist == null)
+        {
+            mobileExist = 0;
+        }
+        LOGGER.debug("结束通过手机号查询用户信息方法");
+        return mobileExist;
+    }
+
+    @Override
+    public void updatePassword(String mobile, String newPassword) throws Exception
+    {
+        LOGGER.debug("进入更改pc端用户密码方法mobile={} newPassword={}",mobile,newPassword);
+        pcUserMapper.updatePwdByMobile(mobile,bCryptPasswordEncoder.encode(newPassword));
+        LOGGER.debug("结束更改pc端用户密码方法mobile={} newPassword={}",mobile,newPassword);
+
+    }
+
+    @Override
+    public int checkUserRegByUsername(String username) throws Exception
+    {
+        LOGGER.debug("开始通过用户名查询pc端用户信息方法 username={}",username);
+        Integer usernameExist;
+        byte isDeleted = 0;
+        usernameExist = pcUserMapper.selectRegUserByUsername(username,isDeleted);
+        if(usernameExist == null)
+        {
+            usernameExist = 0;
+        }
+        LOGGER.debug("结束通过用户名查询pc端用户信息方法 username={}",username);
+        return usernameExist;
+    }
+
+    @Override
+    public int checkUserRegByMobile(String mobile) throws Exception
+    {
+        LOGGER.debug("开始通过手机号查询pc端用户信息方法 mobile={}",mobile);
+        Integer mobileExist;
+        byte isDeleted = 0;
+        mobileExist = pcUserMapper.selectRegUserByMobile(mobile,isDeleted);
+        if(mobileExist == null)
+        {
+            mobileExist = 0;
+        }
+        LOGGER.debug("结束通过手机号查询pc端用户信息方法 mobile={}",mobile);
+        return mobileExist;
+    }
+
+    @Override
+    public void addUser(String userName, String password, String mobile, String userRealName, Byte isDelete,
+                        Byte isEnable, Byte isLocked, Long userCreate, String mesCode) throws Exception
+    {
+        LOGGER.debug("进入新增pc端用户方法 mobile={} mesCode={}",mobile,mesCode);
+        String storedMesCode = mobileMapper.selectPcMesCodeByMobile(mobile);
+        if(storedMesCode == null)
+        {
+            LOGGER.debug("pc端短信验证码过期 mobile={}",mobile);
+            throw new MesCodeExpiredException("短信验证码过期，请点击重新发送");
+        }
+        if(!storedMesCode.equals(mesCode))
+        {
+            LOGGER.debug("pc端短信验证码错误 mobile={} storedMesCode={} mesCode={}",mobile,storedMesCode,mesCode);
+            throw new MesCodeErrorException("pc端短信验证码错误");
+        }
+        else        //验证通过，将当前验证码改为无效状态
+        {
+            byte status = 0;
+            LOGGER.debug("验证通过，将当前pc端验证码改为无效状态 mobile={} storedMesCode={}",mobile,storedMesCode);
+            mobileMapper.updatePcMesCodeStatus(mobile,status,new Date());
+        }
+        PcUser pcUser = new PcUser();
+        pcUser.setUserName(userName);
+        pcUser.setPassword(bCryptPasswordEncoder.encode(password));
+        pcUser.setMobile(mobile);
+        pcUser.setUserRealName(userRealName);
+        pcUser.setIsDeleted(isDelete);
+        pcUser.setIsEnable(isEnable);
+        pcUser.setIsLocked(isLocked);
+        pcUser.setGmtCreate(new Date());
+        pcUser.setGmtModified(new Date());
+        pcUser.setUserCreate(userCreate);
+        pcUser.setUserModified(userCreate);
+        int id = pcUserMapper.insert(pcUser);
+        System.out.println(id);
+        LOGGER.debug("结束新增pc端用户方法 mobile={} mesCode={}",mobile,mesCode);
+    }
 
     //通过手机号查询角色编码及工号
     public String[] queryRoleCodeByMobile(String mobile) throws Exception

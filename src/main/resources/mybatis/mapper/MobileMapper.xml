@@ -37,4 +37,46 @@
         </where>
     </select>
 
+
+
+
+    <select id="selectPcMesCodeByMobile" resultType="java.lang.String">
+        select a.msgCode from
+        pc_mobile_msgcode a
+        <where>
+            <if test="mobile != null">
+                and a.mobile = #{mobile}
+            </if>
+            and a.status = 1
+        </where>
+    </select>
+
+    <insert id="insertPcMesCode">
+        insert into pc_mobile_msgcode(
+        msgCode, mobile,status,gmt_create,gmt_modified
+        )
+        values (#{mesCode,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
+        #{gmtCreate,jdbcType=TIMESTAMP},#{gmtModified,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <update id="updatePcMesCodeStatus">
+        update pc_mobile_msgcode
+        set status = #{status,jdbcType=VARCHAR},
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+        where mobile = #{mobile,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectValidPcMesCode" resultType="java.lang.String">
+        select a.m from pc_mobile_msgcode a
+        <where>
+            <if test="mobile != null">
+                and a.mobile = #{mobile}
+            </if>
+            and a.status = 1
+        </where>
+    </select>
+
+
+
 </mapper>

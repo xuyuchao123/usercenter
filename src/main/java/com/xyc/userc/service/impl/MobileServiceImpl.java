@@ -29,10 +29,10 @@ public class MobileServiceImpl implements MobileService
 
     //用手机号查询当前有效的短信验证码
     @Override
-    public String loadMesCodeByMobile(String mobile) throws Exception
+    public String loadPcMesCodeByMobile(String mobile) throws Exception
     {
         LOGGER.info("进入通过手机号获取有效短信验证码方法 mobile={}",mobile);
-        String mesCode = mobileMapper.selectMesCodeByMobile(mobile);
+        String mesCode = mobileMapper.selectPcMesCodeByMobile(mobile);
         LOGGER.info("结束通过手机号获取有效短信验证码方法 mesCode={}",mesCode);
         return mesCode;
     }
@@ -41,12 +41,12 @@ public class MobileServiceImpl implements MobileService
     @Override
     public String addMesCode(String mobile, String mesCode) throws Exception
     {
-        LOGGER.info("进入新增手机验证码方法 mobile={}, mesCode={}",mobile,mesCode);
+        LOGGER.info("进入新增pc端手机验证码方法 mobile={}, mesCode={}",mobile,mesCode);
         byte status = 1;
         Date gmtCreate = new Date();
         Date gmtModified = gmtCreate;
-        mobileMapper.insertMesCode(mobile,mesCode,status,gmtCreate,gmtModified);
-        LOGGER.info("结束新增手机验证码方法");
+        mobileMapper.insertPcMesCode(mobile,mesCode,status,gmtCreate,gmtModified);
+        LOGGER.info("结束新增pc端手机验证码方法");
         return null;
     }
 
@@ -58,7 +58,7 @@ public class MobileServiceImpl implements MobileService
         LOGGER.info("进入设置验证码失效状态方法 mobile={}", mobile);
         byte status = 0;
         Date gmtModified = new Date();
-        mobileMapper.updateMesCodeStatus(mobile,status,gmtModified);
+        mobileMapper.updatePcMesCodeStatus(mobile,status,gmtModified);
         LOGGER.info("结束设置验证码失效状态方法 mobile={}", mobile);
 
     }

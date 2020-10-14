@@ -21,4 +21,18 @@ public interface MobileMapper
 
     public String selectValidMesCode(@Param("mobile")String mobile);
 
+
+
+    public String selectPcMesCodeByMobile(String mobile);
+
+    public void insertPcMesCode(@Param("mobile")String mobile, @Param("mesCode")String mesCode,
+                              @Param("status")Byte status, @Param("gmtCreate")Date gmtCreate,
+                              @Param("gmtModified")Date gmtModified);
+
+    public void updatePcMesCodeStatus(@Param("mobile")String mobile, @Param("status")Byte status,
+                                    @Param("gmtModified")Date gmtModified);
+
+    public String selectValidPcMesCode(@Param("mobile")String mobile);
+
+
 }

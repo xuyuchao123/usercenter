@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyc.userc.dao.PcUserMapper">
+
+    <resultMap id="BaseResultMap" type="com.xyc.userc.entity.PcUser">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="user_num" jdbcType="VARCHAR" property="userNum" />
+        <result column="user_realname" jdbcType="VARCHAR" property="userRealName" />
+        <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
+        <result column="is_enable" jdbcType="TINYINT" property="isEnable" />
+        <result column="is_locked" jdbcType="TINYINT" property="isLocked" />
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+        <result column="user_create" jdbcType="BIGINT" property="userCreate" />
+        <result column="user_modified" jdbcType="BIGINT" property="userModified" />
+        <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+    </resultMap>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from pc_user
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.xyc.userc.entity.PcUser">
+        insert into pc_user (id,user_name, password, user_Realname,mobile,
+        is_deleted, is_enable, is_locked, gmt_create,
+        gmt_modified, user_create, user_modified, last_login_time
+        )
+        values (PC_USER_SEQ.NEXTVAL, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{userRealName,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},
+        #{isDeleted,jdbcType=TINYINT}, #{isEnable,jdbcType=TINYINT}, #{isLocked,jdbcType=TINYINT}, #{gmtCreate,jdbcType=TIMESTAMP},
+        #{gmtModified,jdbcType=TIMESTAMP}, #{userCreate,jdbcType=BIGINT}, #{userModified,jdbcType=BIGINT},
+        #{lastLoginTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.xyc.userc.entity.User">
+        update pc_user
+        set user_name = #{userName,jdbcType=VARCHAR},
+        user_realname = #{userRealName,jdbcType=VARCHAR},
+        mobile = #{mobile,jdbcType=VARCHAR},
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+        is_enable = #{isEnable,jdbcType=TINYINT},
+        is_locked = #{isLocked,jdbcType=TINYINT},
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+        user_create = #{userCreate,jdbcType=BIGINT},
+        user_modified = #{userModified,jdbcType=BIGINT},
+        last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select id, user_name, user_realname, mobile, is_deleted, is_enable, is_locked, gmt_create, gmt_modified,
+        user_create, user_modified, last_login_time
+        from pc_user
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select id, user_name, user_realname, mobile, is_deleted, is_enable, is_locked, gmt_create, gmt_modified,
+        user_create, user_modified, last_login_time
+        from pc_user
+    </select>
+
+
+    <!--关联的嵌套查询，多次sql查询得到所需对象，可配置懒加载提高性能。column可配置多个，用逗号隔开-->
+    <resultMap id="selectByUsernameMap" type="com.xyc.userc.entity.User" extends="BaseResultMap">
+        <collection property="roles" column="{userId=id}" fetchType="eager"
+                    select="com.xyc.userc.dao.RoleMapper.selectByUserId" />
+    </resultMap>
+
+    <select id="selectByUsername" resultMap="selectByUsernameMap" parameterType="java.lang.String">
+        select a.id, a.user_name, a.password, a.user_realname, a.mobile, a.is_deleted, a.is_enable, a.is_locked, a.gmt_create,
+        a.gmt_modified, a.user_create, a.user_modified, a.last_login_time
+        from pc_user a
+        <where>
+            <if test="userName != null">
+                and a.user_name = #{userName}
+            </if>
+        </where>
+        order by user_name
+    </select>
+
+    <select id="selectByMobile" resultMap="selectByUsernameMap" parameterType="java.lang.String">
+        select a.id, a.user_name, a.password, a.user_realname, a.mobile, a.is_deleted, a.is_enable, a.is_locked, a.gmt_create,
+        a.gmt_modified, a.user_create, a.user_modified, a.last_login_time
+        from pc_user a
+        <where>
+            <if test="mobile != null">
+                and a.mobile = #{mobile}
+            </if>
+        </where>
+        order by user_name
+    </select>
+
+    <select id="checkUserByMobile" resultType="java.lang.Integer">
+        select count(*) from pc_user a
+        <where>
+            <if test="mobile != null">
+                and a.mobile = #{mobile}
+            </if>
+            and a.is_deleted = #{isDeleted}
+            and a.is_enable = #{isEnable}
+            and a.is_locked = #{isLocked}
+        </where>
+    </select>
+
+    <select id="selectRegUserByUsername" resultType="java.lang.Integer">
+        select count(*) from pc_user a
+        <where>
+            <if test="username != null">
+                and a.user_name = #{username}
+            </if>
+            and a.is_deleted = #{isDeleted}
+        </where>
+    </select>
+
+    <select id="selectRegUserByMobile" resultType="java.lang.Integer">
+        select count(*) from pc_user a
+        <where>
+            <if test="mobile != null">
+                and a.mobile = #{mobile}
+            </if>
+            and a.is_deleted = #{isDeleted}
+        </where>
+    </select>
+
+
+    <update id="updatePwdByMobile" >
+        update pc_user
+        set password = #{newPassword,jdbcType=VARCHAR}
+        where mobile = #{mobile,jdbcType=VARCHAR}
+    </update>
+
+</mapper>
