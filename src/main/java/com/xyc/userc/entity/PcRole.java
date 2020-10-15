@@ -24,6 +24,8 @@ public class PcRole implements Serializable
 
     private Permission permission;
 
+    private Application application;
+
     /**
      * 1：已删除 0：未删除
      * is_deleted
@@ -76,6 +78,14 @@ public class PcRole implements Serializable
 
     public void setPermission(Permission permission) {
         this.permission = permission;
+    }
+
+    public Application getApplication() {
+        return application;
+    }
+
+    public void setApplication(Application application) {
+        this.application = application;
     }
 
     public Byte getIsDeleted() {
