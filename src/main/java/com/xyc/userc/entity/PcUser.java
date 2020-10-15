@@ -98,13 +98,13 @@ public class PcUser implements Serializable,UserDetails
 
 
 
-    private List<Role> roles;
+    private List<PcRole> roles;
 
-    public List<Role> getRoles() {
+    public List<PcRole> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(List<PcRole> roles) {
         this.roles = roles;
     }
 
@@ -212,9 +212,9 @@ public class PcUser implements Serializable,UserDetails
     public Collection<? extends GrantedAuthority> getAuthorities()
     {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>(roles.size());
-        for (Role role : roles)
+        for (PcRole pcRole : roles)
         {
-            authorities.add(new SimpleGrantedAuthority(String.valueOf(role.getId())));
+            authorities.add(new SimpleGrantedAuthority(String.valueOf(pcRole.getId())));
         }
         return authorities;
     }
