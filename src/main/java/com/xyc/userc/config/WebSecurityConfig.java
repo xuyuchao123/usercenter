@@ -66,6 +66,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
         http.cors().and().csrf().disable();
         http.authorizeRequests()
                 .anyRequest().authenticated()
+            .and().exceptionHandling()
+                .authenticationEntryPoint(myAuthenticationEntryPoint)   //用户未登录的异常处理逻辑
             .and().formLogin()
                 .loginProcessingUrl("/login")                       //登录form表单action的地址，即处理登录认证的请求地址
                 .permitAll()                                        //允许所有用户
