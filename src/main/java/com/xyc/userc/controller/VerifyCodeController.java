@@ -25,7 +25,7 @@ import java.awt.image.BufferedImage;
 @Controller
 @CrossOrigin
 @RequestMapping("/mes")
-@Api(tags = "验证码相关api")
+//@Api(tags = "验证码相关api")
 public class VerifyCodeController
 {
     protected static final Logger LOGGER = LoggerFactory.getLogger(VerifyCodeController.class);

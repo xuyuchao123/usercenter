@@ -139,20 +139,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
         return defaultKaptcha;
     }
 
-    @Bean
-    MyDaoAuthenticationProvider myDaoAuthenticationProvider()
-    {
-        MyDaoAuthenticationProvider myDaoAuthenticationProvider = new MyDaoAuthenticationProvider();
-        myDaoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        myDaoAuthenticationProvider.setUserDetailsService(userService);
-        return myDaoAuthenticationProvider;
-    }
-
-    @Override
-    @Bean
-    protected AuthenticationManager authenticationManager() throws Exception
-    {
-        ProviderManager manager = new ProviderManager(Arrays.asList(myDaoAuthenticationProvider()));
-        return manager;
-    }
+    //验证码功能暂时不用
+//    @Bean
+//    MyDaoAuthenticationProvider myDaoAuthenticationProvider()
+//    {
+//        MyDaoAuthenticationProvider myDaoAuthenticationProvider = new MyDaoAuthenticationProvider();
+//        myDaoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+//        myDaoAuthenticationProvider.setUserDetailsService(userService);
+//        return myDaoAuthenticationProvider;
+//    }
+//
+//    @Override
+//    @Bean
+//    protected AuthenticationManager authenticationManager() throws Exception
+//    {
+//        ProviderManager manager = new ProviderManager(Arrays.asList(myDaoAuthenticationProvider()));
+//        return manager;
+//    }
 }
