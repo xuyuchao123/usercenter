@@ -227,7 +227,7 @@ public class TemplateController {
 		return resultObj;
 	}
 
-	//重置密码
+	//重置pc端用户密码
 	@RequestMapping(value = "/resetPassword",method = RequestMethod.POST)
 	@ResponseBody
 	@ApiOperation(value="pc端用户重置密码")
@@ -254,7 +254,7 @@ public class TemplateController {
 		return resultObj;
 	}
 
-	//测试用户名是否已注册
+	//测试pc端用户名是否已注册
 	@RequestMapping(value = "/checkUsernameExist",method = RequestMethod.POST)
 	@ResponseBody
 	@ApiOperation(value="pc端测试用户名是否已注册")
@@ -289,7 +289,7 @@ public class TemplateController {
 
 	}
 
-	//测试手机号是否已注册
+	//测试pc端手机号是否已注册
 	@RequestMapping(value = "/checkMobileExist",method = RequestMethod.POST)
 	@ResponseBody
 	@ApiOperation(value="pc端测试手机号是否已注册")

@@ -66,9 +66,9 @@
 
 
     <!--关联的嵌套查询，多次sql查询得到所需对象，可配置懒加载提高性能。column可配置多个，用逗号隔开-->
-    <resultMap id="selectByUsernameMap" type="com.xyc.userc.entity.User" extends="BaseResultMap">
+    <resultMap id="selectByUsernameMap" type="com.xyc.userc.entity.PcUser" extends="BaseResultMap">
         <collection property="roles" column="{userId=id}" fetchType="eager"
-                    select="com.xyc.userc.dao.RoleMapper.selectByUserId" />
+                    select="com.xyc.userc.dao.PcRoleMapper.selectByUserId" />
     </resultMap>
 
     <select id="selectByUsername" resultMap="selectByUsernameMap" parameterType="java.lang.String">

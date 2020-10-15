@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyc.userc.dao.PermissionMapper">
+
+  <resultMap id="BaseResultMap" type="com.xyc.userc.entity.Permission">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="permission_name" jdbcType="VARCHAR" property="permissionName" />
+    <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="user_create" jdbcType="BIGINT" property="userCreate" />
+    <result column="user_modified" jdbcType="BIGINT" property="userModified" />
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from pc_permission
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.xyc.userc.entity.Permission">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into pc_permission (id, permission_name, is_deleted, 
+      gmt_create, gmt_modified, user_create, 
+      user_modified)
+    values (#{id,jdbcType=BIGINT}, #{permissionName,jdbcType=VARCHAR}, #{isDeleted,jdbcType=TINYINT}, 
+      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, #{userCreate,jdbcType=BIGINT}, 
+      #{userModified,jdbcType=BIGINT})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.xyc.userc.entity.Permission">
+    update pc_permission
+    set permission_name = #{permissionName,jdbcType=VARCHAR},
+      is_deleted = #{isDeleted,jdbcType=TINYINT},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      user_create = #{userCreate,jdbcType=BIGINT},
+      user_modified = #{userModified,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <resultMap id="selectByPrimaryKeyMap" type="com.xyc.userc.entity.Permission" extends="BaseResultMap">
+    <collection property="requestpaths" column="{permissionId=id}" fetchType="eager"
+                select="com.xyc.userc.dao.RequestpathMapper.selectByPermissionId" />
+  </resultMap>
+
+  <select id="selectByPrimaryKey"  resultMap="selectByPrimaryKeyMap">
+    select p.id, p.permission_name, p.is_deleted, p.gmt_create, p.gmt_modified,
+    p.user_create, p.user_modified
+    from pc_permission p
+    where p.id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, permission_name, is_deleted, gmt_create, gmt_modified, user_create, user_modified
+    from pc_permission
+  </select>
+
+
+
+</mapper>

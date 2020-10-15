@@ -13,15 +13,15 @@
     </resultMap>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete from sys_role
+        delete from pc_role
         where id = #{id,jdbcType=BIGINT}
     </delete>
 
-    <insert id="insert" parameterType="com.xyc.userc.entity.Role">
+    <insert id="insert" parameterType="com.xyc.userc.entity.PcRole">
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into sys_role (id, role_name, permission_id,
+        insert into pc_role (id, role_name, permission_id,
         application_id, is_deleted, gmt_create,
         gmt_modified, user_create, user_modified
         )
@@ -31,8 +31,8 @@
         )
     </insert>
 
-    <update id="updateByPrimaryKey" parameterType="com.xyc.userc.entity.Role">
-        update sys_role
+    <update id="updateByPrimaryKey" parameterType="com.xyc.userc.entity.PcRole">
+        update pc_role
         set role_name = #{roleName,jdbcType=VARCHAR},
         permission_id = #{permissionId,jdbcType=BIGINT},
         application_id = #{applicationId,jdbcType=BIGINT},
@@ -47,17 +47,17 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select id, role_name, permission_id, application_id, is_deleted, gmt_create, gmt_modified,
         user_create, user_modified
-        from sys_role
+        from pc_role
         where id = #{id,jdbcType=BIGINT}
     </select>
 
     <select id="selectAll" resultMap="BaseResultMap">
         select id, role_name, permission_id, application_id, is_deleted, gmt_create, gmt_modified,
         user_create, user_modified
-        from sys_role
+        from pc_role
     </select>
 
-    <resultMap id="selectByUserIdMap" extends="BaseResultMap"  type="com.xyc.userc.entity.Role">
+    <resultMap id="selectByUserIdMap" extends="BaseResultMap"  type="com.xyc.userc.entity.PcRole">
         <association column="{id=permission_id}" fetchType="eager" property="permission" select="com.xyc.userc.dao.PermissionMapper.selectByPrimaryKey" />
         <association column="{id=application_id}" fetchType="eager" property="application" select="com.xyc.userc.dao.ApplicationMapper.selectByPrimaryKey" />
     </resultMap>
@@ -65,16 +65,16 @@
     <select id="selectByUserId" resultMap="selectByUserIdMap">
         select r.id, r.role_name, r.permission_id, r.application_id, r.is_deleted,r.gmt_create, r.gmt_modified,
         r.user_create, r.user_modified
-        from sys_user_role ur
-        left join sys_role r on ur.role_id = r.id
+        from pc_user_role ur
+        left join pc_role r on ur.role_id = r.id
         where ur.user_id = #{userId}
     </select>
 
     <select id="selectIdsByPath" resultType="java.lang.Integer">
         select sr.id from
-        sys_role sr
-        left join sys_permission_requestpath spr on sr.permission_id = spr.permission_id
-        left join sys_requestpath srp on spr.requestpath_id = srp.id where srp.url = #{url}
+        pc_role sr
+        left join pc_permission_requestpath spr on sr.permission_id = spr.permission_id
+        left join pc_requestpath srp on spr.requestpath_id = srp.id where srp.url = #{url}
     </select>
 
 </mapper>
