@@ -53,7 +53,10 @@ public enum JsonResultEnum
     PAGE_NOT_EXIST(400,"查询页数不能为空！"),
     SIZE_NOT_EXIST(401,"每页显示数目不能为空！"),
 
-    NO_PERMISSION(500, "没有权限");
+    NO_PERMISSION(500, "没有权限"),
+
+    OPENID_NOT_EXIST(600,"openId为空！"),
+    OPENID_UNDEFINED(601,"openId为undefined！");
 
     private Integer code;
     private String message;
