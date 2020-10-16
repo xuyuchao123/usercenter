@@ -43,6 +43,8 @@ public class UsernamePasswordAuthenticationFilter extends AbstractAuthentication
         }
         else
         {
+            System.out.println("************************************************session=" + request.getSession());
+            System.out.println("************************************************sessionId=" + request.getSession().getId());
             String loginType = this.obtainLoginType(request);
             if(loginType.equals("account"))
             {
