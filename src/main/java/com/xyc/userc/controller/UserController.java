@@ -14,8 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 /**
  * Created by 1 on 2020/7/2.
@@ -37,9 +39,10 @@ public class UserController
     @ResponseBody
     @ApiOperation(value="获取当前用户信息")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：获取成功 isSuccess=false：获取失败，resMsg为错误信息")})
-    public JsonResultObj getCurrentUser()
+    public JsonResultObj getCurrentUser(@ApiIgnore HttpSession session)
     {
-        LOGGER.debug("开始获取当前用户信息");
+        LOGGER.debug("开始获取当前用户信息 sessionId:{}",session.getId());
+
         PcUser pcUser = (PcUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        System.out.println(user);
         JsonResultObj resultObj = new JsonResultObj(true,pcUser);
