@@ -83,10 +83,10 @@
     </appender>
 
     <root level="debug">
-        <!--<appender-ref ref="STDOUTDEBUG" />-->
-        <!--<appender-ref ref="FILEDEBUG" />-->
-        <appender-ref ref="STDOUTINFO" />
-        <appender-ref ref="FILEINFO" />
+        <appender-ref ref="STDOUTDEBUG" />
+        <appender-ref ref="FILEDEBUG" />
+        <!--<appender-ref ref="STDOUTINFO" />-->
+        <!--<appender-ref ref="FILEINFO" />-->
     </root>
 
     <logger name="com.xyc" level="debug" additivity="false">

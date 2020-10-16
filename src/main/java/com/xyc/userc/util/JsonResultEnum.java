@@ -55,8 +55,11 @@ public enum JsonResultEnum
 
     NO_PERMISSION(500, "没有权限"),
 
-    OPENID_NOT_EXIST(600,"openId为空！"),
-    OPENID_UNDEFINED(601,"openId为undefined！");
+    OPENID_NOT_EXIST(600,"openId不能为空！"),
+    OPENID_UNDEFINED(601,"openId为undefined！"),
+
+    FILE_NOT_EXIST(700,"上传的文件不能为空！"),
+    FILE_EXIST(701,"上传的文件已存在");
 
     private Integer code;
     private String message;

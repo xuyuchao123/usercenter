@@ -238,7 +238,7 @@ public class CarNumController
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "查询车辆进出厂时间失败", LOGGER, resultObj);
+            resultObj = CommonExceptionHandler.handException(e, "查询国三车辆识别号及发动机号失败", LOGGER, resultObj);
         }
         LOGGER.info("结束查询国三车辆识别号及发动机号 carNum={}", carNum);
         return resultObj;
