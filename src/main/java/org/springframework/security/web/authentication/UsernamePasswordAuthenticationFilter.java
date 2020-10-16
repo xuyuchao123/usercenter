@@ -5,6 +5,7 @@ package org.springframework.security.web.authentication;
  */
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.xyc.userc.security.MesCodeAuthenticationToken;
 import org.springframework.lang.Nullable;
@@ -43,8 +44,12 @@ public class UsernamePasswordAuthenticationFilter extends AbstractAuthentication
         }
         else
         {
-            System.out.println("************************************************session=" + request.getSession());
-            System.out.println("************************************************sessionId=" + request.getSession().getId());
+            HttpSession session = request.getSession(false);
+            System.out.println("************************************************session=" + session);
+            if(session != null)
+            {
+                System.out.println("************************************************sessionId=" + session.getId());
+            }
             String loginType = this.obtainLoginType(request);
             if(loginType.equals("account"))
             {
