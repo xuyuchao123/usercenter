@@ -52,10 +52,10 @@
     </select>
 
     <insert id="insertPcMesCode">
-        insert into pc_mobile_msgcode(
+        insert into pc_mobile_msgcode(id,
         msgCode, mobile,status,gmt_create,gmt_modified
         )
-        values (#{mesCode,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
+        values (PC_MOBILE_MESCODE_SEQ.nextval, #{mesCode,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
         #{gmtCreate,jdbcType=TIMESTAMP},#{gmtModified,jdbcType=TIMESTAMP}
         )
     </insert>
