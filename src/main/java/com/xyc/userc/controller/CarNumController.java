@@ -48,17 +48,20 @@ public class CarNumController
         if(openId == null)
         {
             LOGGER.info("未获取到用户的openId");
-            resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
+            resultObj = new JsonResultObj(false, JsonResultEnum.OPENID_NOT_EXIST);
         }
-        try
+        else
         {
-            LOGGER.info("获取到用户openId={}",openId);
-            List<CarNumOpenId> carNumOpenIdList = carNumService.getCarNum(openId);
-            resultObj = new JsonResultObj(true,carNumOpenIdList);
-        }
-        catch (Exception e)
-        {
-            resultObj = CommonExceptionHandler.handException(e, "查询车牌号失败", LOGGER, resultObj);
+            try
+            {
+                LOGGER.info("获取到用户openId={}", openId);
+                List<CarNumOpenId> carNumOpenIdList = carNumService.getCarNum(openId);
+                resultObj = new JsonResultObj(true, carNumOpenIdList);
+            }
+            catch (Exception e)
+            {
+                resultObj = CommonExceptionHandler.handException(e, "查询车牌号失败", LOGGER, resultObj);
+            }
         }
         LOGGER.info("结束查询车牌号");
         return resultObj;
@@ -76,7 +79,7 @@ public class CarNumController
         if(openId == null)
         {
             LOGGER.info("未获取到用户的openId");
-            resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
+            resultObj = new JsonResultObj(false, JsonResultEnum.OPENID_NOT_EXIST);
         }
         else
         {
@@ -109,7 +112,7 @@ public class CarNumController
         if(openId == null)
         {
             LOGGER.info("未获取到用户的openId");
-            resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
+            resultObj = new JsonResultObj(false, JsonResultEnum.OPENID_NOT_EXIST);
         }
         else
         {
@@ -144,7 +147,7 @@ public class CarNumController
         if(openId == null)
         {
             LOGGER.info("未获取到用户的openId");
-            resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
+            resultObj = new JsonResultObj(false, JsonResultEnum.OPENID_NOT_EXIST);
         }
         else
         {
@@ -175,7 +178,7 @@ public class CarNumController
         if(openId == null)
         {
             LOGGER.info("未获取到用户的openId");
-            resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
+            resultObj = new JsonResultObj(false, JsonResultEnum.OPENID_NOT_EXIST);
         }
         else
         {
@@ -205,7 +208,7 @@ public class CarNumController
         if(openId == null)
         {
             LOGGER.info("未获取到用户的openId");
-            resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
+            resultObj = new JsonResultObj(false, JsonResultEnum.OPENID_NOT_EXIST);
         }
         else
         {

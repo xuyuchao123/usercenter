@@ -75,7 +75,7 @@ public class BlacklistController
         if(openId == null)
         {
             LOGGER.info("未获取到用户的openId");
-            resultObj = new JsonResultObj(false, JsonResultEnum.USER_INFO_NOT_EXIST);
+            resultObj = new JsonResultObj(false, JsonResultEnum.OPENID_NOT_EXIST);
         }
         else
         {
