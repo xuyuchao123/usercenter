@@ -430,6 +430,7 @@ public class UserServiceImpl implements UserService
         pcUser.setGmtModified(new Date());
         pcUser.setUserCreate(userCreate);
         pcUser.setUserModified(userCreate);
+        pcUser.setLastLoginTime(new Date());
         int id = pcUserMapper.insert(pcUser);
         System.out.println(id);
         LOGGER.debug("结束新增pc端用户方法 mobile={} mesCode={}",mobile,mesCode);
