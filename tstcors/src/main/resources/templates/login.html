@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="/login" method ="post" id="loginForm">
+    <input type="text" name="username" />
+    <input type="text" name = password />
+    <input type="submit" name="subbtn" />
+</form>
+<button id="btn" name="btn" onclick="func()">测试</button>
+
+<script language="JavaScript">
+ function func()
+ {
+     $.ajax({
+         url: "http://10.99.1.202:3333/mobile/user/getCurrentUser",
+         type: "GET",
+         success: function (data) {
+             if(data != '')
+             {
+                alert(data);
+             }
+         }
+     })
+ }
+</script>
+</body>
+
+
+</html>
