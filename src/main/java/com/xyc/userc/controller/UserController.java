@@ -1,5 +1,4 @@
 package com.xyc.userc.controller;
-
 import com.xyc.userc.entity.PcUser;
 import com.xyc.userc.service.UserService;
 import com.xyc.userc.util.JsonResultObj;
@@ -11,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,6 +25,7 @@ import javax.servlet.http.HttpSession;
  */
 
 @Controller
+@CrossOrigin
 @RequestMapping("/user")
 @Api(tags = "pc端用户管理相关api")
 public class UserController
@@ -41,7 +42,12 @@ public class UserController
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：获取成功 isSuccess=false：获取失败，resMsg为错误信息")})
     public JsonResultObj getCurrentUser(@ApiIgnore HttpSession session)
     {
-        LOGGER.debug("开始获取当前用户信息 sessionId:{}",session.getId());
+        String sessionId = null;
+        if(session != null)
+        {
+            sessionId = session.getId();
+        }
+        LOGGER.debug("开始获取当前用户信息 sessionId:{}",sessionId);
 
         PcUser pcUser = (PcUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        System.out.println(user);
