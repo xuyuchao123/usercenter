@@ -46,9 +46,9 @@ public class BlacklistServiceImpl implements BlacklistService
     }
 
     @Override
-    public void addBlacklist(String mobile, String reason, String openId)
+    public void addBlacklist(String mobile, String reason, Long createUserId)
     {
-        LOGGER.info("开始新增黑名单方法 mobile={} reason={} openId={}",mobile,reason,openId);
+        LOGGER.info("开始新增黑名单方法 mobile={} reason={} createUserId={}",mobile,reason,createUserId);
         //查询手机号绑定关系
         MobileOpenId mobileOpenId = null;
         mobileOpenId = mobileOpenIdMapper.selectByMobileOpenId(mobile,null);
@@ -65,9 +65,9 @@ public class BlacklistServiceImpl implements BlacklistService
             throw new BusinessException(JsonResultEnum.MOBILE_BLACKLIST_EXIST);
         }
         Date date = new Date();
-        Blacklist blacklist = new Blacklist(null,mobileOpenId.getId(),reason,openId,date,openId,date,1);
+        Blacklist blacklist = new Blacklist(null,mobileOpenId.getId(),reason,String.valueOf(createUserId),date,String.valueOf(createUserId),date,1);
         int i = blacklistMapper.insertBlacklist(blacklist);
-        LOGGER.info("结束新增黑名单方法 mobile={} reason={} openId={}",mobile,reason,openId);
+        LOGGER.info("结束新增黑名单方法 mobile={} reason={} createUserId={}",mobile,reason,createUserId);
     }
 
     @Override

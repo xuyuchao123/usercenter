@@ -11,7 +11,7 @@ public interface BlacklistService
 {
     List<BlacklistVo> getBlacklist(String name, String mobile, String createName, String createMobile) throws Exception;
 
-    void addBlacklist(String mobile, String reason, String openId) throws Exception;
+    void addBlacklist(String mobile, String reason, Long createUserId) throws Exception;
 
     void removeBlacklist(String mobile) throws Exception;
 }

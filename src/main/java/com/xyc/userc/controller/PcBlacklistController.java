@@ -1,7 +1,7 @@
 package com.xyc.userc.controller;
 
 import com.avei.shriety.wx_sdk.constant.WxsdkConstant;
-import com.xyc.userc.entity.User;
+import com.xyc.userc.entity.PcUser;
 import com.xyc.userc.service.BlacklistService;
 import com.xyc.userc.util.CommonExceptionHandler;
 import com.xyc.userc.util.JsonResultEnum;
@@ -11,6 +11,7 @@ import com.xyc.userc.vo.BlacklistVo;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,9 +28,9 @@ import java.util.List;
  */
 @RestController
 @CrossOrigin
-@RequestMapping("/mes")
+@RequestMapping("/user")
 @Api(tags = "黑名单管理相关api")
-public class BlacklistController
+public class PcBlacklistController
 {
     protected static final Logger LOGGER = LoggerFactory.getLogger(TemplateController.class);
 
@@ -71,17 +72,17 @@ public class BlacklistController
     {
         LOGGER.info("开始新增黑名单 mobile={} reason={}", mobile,reason);
         JsonResultObj resultObj = null;
-        String openId = request.getHeader(UsercConstant.OPENID);
-        if(openId == null)
+        PcUser pcUser = (PcUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(pcUser == null)
         {
-            LOGGER.info("未获取到用户的openId");
-            resultObj = new JsonResultObj(false, JsonResultEnum.OPENID_NOT_EXIST);
+            LOGGER.error("用户未登陆,新增黑名单失败！mobile={}",mobile);
+            resultObj = new JsonResultObj(false,JsonResultEnum.USER_NOT_LOGIN);
         }
         else
         {
             try
             {
-                blacklistService.addBlacklist(mobile,reason,openId);
+                blacklistService.addBlacklist(mobile, reason,pcUser.getId());
                 resultObj = new JsonResultObj(true);
             }
             catch (Exception e)
@@ -89,6 +90,7 @@ public class BlacklistController
                 resultObj = CommonExceptionHandler.handException(e, "新增黑名单失败", LOGGER, resultObj);
             }
         }
+
         LOGGER.info("结束新增黑名单 mobile={} reason={}", mobile,reason);
         return  resultObj;
     }
