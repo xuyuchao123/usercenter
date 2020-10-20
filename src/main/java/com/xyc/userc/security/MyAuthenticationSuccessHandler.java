@@ -15,7 +15,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by 1 on 2020/6/30.
@@ -39,5 +41,7 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
         JsonResultObj jsonResultObj = new JsonResultObj(true,pcUser);
         response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(JSON.toJSONString(jsonResultObj));
+        response.setHeader("Access-Control-Allow-Origin","http://localhost:8080");
+        response.setHeader("Access-Control-Allow-Credentials","true");
     }
 }
