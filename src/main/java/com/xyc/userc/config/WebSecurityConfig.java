@@ -19,8 +19,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.sql.DataSource;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -63,7 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
     @Override
     protected void configure(HttpSecurity http) throws Exception
     {
-        http.cors();
+        http.cors().configurationSource(corsConfigurationSource());
         http.csrf().disable();
         http.authorizeRequests()
                 .anyRequest().authenticated()
@@ -99,6 +103,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
         myAbstractSecurityInterceptor.setMyAccessDecisionManager(myAccessDecisionManager);
         myAbstractSecurityInterceptor.setSecurityMetadataSource(myFilterInvocationSecurityMetadataSource);
         http.addFilterAfter(myAbstractSecurityInterceptor, FilterSecurityInterceptor.class);
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource()
+    {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowCredentials(true);                    //允许前台请求携带cookie
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080"));
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setMaxAge(Duration.ofHours(1));
+        source.registerCorsConfiguration("/**",configuration);
+        return source;
     }
 
     @Override
