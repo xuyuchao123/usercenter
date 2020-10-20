@@ -25,7 +25,7 @@ import javax.servlet.http.HttpSession;
  */
 
 @Controller
-@CrossOrigin("http://localhost:8080")
+//@CrossOrigin("http://localhost:8080")
 @RequestMapping("/user")
 @Api(tags = "pc端用户管理相关api")
 public class UserController

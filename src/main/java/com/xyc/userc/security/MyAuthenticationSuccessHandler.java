@@ -41,7 +41,7 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
         JsonResultObj jsonResultObj = new JsonResultObj(true,pcUser);
         response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(JSON.toJSONString(jsonResultObj));
-        response.setHeader("Access-Control-Allow-Origin","http://localhost:8080");
-        response.setHeader("Access-Control-Allow-Credentials","true");
+//        response.setHeader("Access-Control-Allow-Origin","http://localhost:8080");
+//        response.setHeader("Access-Control-Allow-Credentials","true");
     }
 }
