@@ -260,10 +260,15 @@ public class CarNumController
         JsonResultObj_Page resultObj_Page = null;
         try
         {
-            List<EnvInfoVo> envInfoVos = carNumService.queryEnvInfo(carNum,startDate,page,size);
-//            String total = resList.get(0).toString();
-//            List<EnvInfoVo> envInfoVos = (List<EnvInfoVo>)resList.get(1);
-            resultObj_Page = new JsonResultObj_Page(true,envInfoVos,page,size);
+            List resList = carNumService.queryEnvInfo(carNum,startDate,page,size);
+            String total = null;
+            List<EnvInfoVo> envInfoVos = null;
+            if(resList != null && resList.size() == 2)
+            {
+                total = resList.get(0).toString();
+                envInfoVos = (List<EnvInfoVo>)resList.get(1);
+            }
+            resultObj_Page = new JsonResultObj_Page(true,envInfoVos,total,page,size);
         }
         catch (Exception e)
         {
