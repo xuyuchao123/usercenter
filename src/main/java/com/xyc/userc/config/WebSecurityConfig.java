@@ -111,7 +111,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);                    //允许前台请求携带cookie
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080"));
+//        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080"));
+        configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setMaxAge(Duration.ofHours(1));
