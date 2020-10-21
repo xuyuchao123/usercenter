@@ -107,13 +107,13 @@ public class CarNumServiceImpl implements CarNumService
     }
 
     @Override
-    public void addCarNum(String carNum, String openId, String engineNum, String identNum,String emissionStd) throws Exception
+    public void addCarNum(String carNum,String openId,String engineNum,String identNum,String emissionStd,String fleetName,Date regDate) throws Exception
     {
         LOGGER.info("进入新增车牌号方法carNum={} openId={}",carNum,openId);
         LOGGER.info("开始检查车牌号是否已被绑定carNum={} openId={}",carNum,openId);
         int cnt = carNumOpenIdMapper.selectCntByCarNumOpenId(carNum,null);
         Date date = new Date();
-        CarNumOpenId carNumOpenId = new CarNumOpenId(null,openId,carNum,engineNum,identNum,emissionStd,0,0,openId,openId,date,date);
+        CarNumOpenId carNumOpenId = new CarNumOpenId(null,openId,carNum,engineNum,identNum,emissionStd,fleetName,regDate,0,0,openId,openId,date,date);
         if(cnt > 0)
         {
             LOGGER.info("该车牌号已被绑定，不能重复绑定 carNum={} openId={}",carNum,openId);
@@ -136,15 +136,15 @@ public class CarNumServiceImpl implements CarNumService
     }
 
     @Override
-    public void modifyCarNumByOpenId(String oldCarNum, String newCarNum, String engineNum,
-                                     String identNum, String emissionStd, String openId) throws Exception
+    public void modifyCarNumByOpenId(String oldCarNum, String newCarNum, String engineNum, String identNum,
+                                     String emissionStd, String fleetName, Date regDate, String openId) throws Exception
     {
-        LOGGER.info("进入修改车牌号方法 oldCarNum={} newCarNum={} engineNum={} identNum={} emissionStd={} openId={}",
-                oldCarNum,newCarNum,engineNum,identNum,emissionStd,openId);
+        LOGGER.info("进入修改车牌号方法 oldCarNum={} newCarNum={} engineNum={} identNum={} emissionStd={} fleetName={} regDate={} openId={}",
+                oldCarNum,newCarNum,engineNum,identNum,emissionStd,fleetName,regDate,openId);
         int selectCnt = carNumOpenIdMapper.selectCntByCarNumOpenId(oldCarNum,openId);
         if(selectCnt == 1)
         {
-            carNumOpenIdMapper.updateCarNum(oldCarNum,newCarNum,engineNum,identNum,emissionStd,openId,new Date());
+            carNumOpenIdMapper.updateCarNum(oldCarNum,newCarNum,engineNum,identNum,emissionStd,fleetName,regDate,openId,new Date());
             LOGGER.info("成功修改车牌号 openId={}",openId);
 
             LOGGER.info("开始更新redis中用户车牌号信息openId={}",openId);

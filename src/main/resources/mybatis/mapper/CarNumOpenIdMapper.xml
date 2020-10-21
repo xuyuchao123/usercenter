@@ -9,6 +9,8 @@
         <result column="ENGINENUM" jdbcType="VARCHAR" property="engineNum" />
         <result column="IDENTNUM" jdbcType="VARCHAR" property="identNum" />
         <result column="EMISSIONSTD" jdbcType="VARCHAR" property="emissionStd" />
+        <result column="FLEETNAME" jdbcType="VARCHAR" property="fleetName" />
+        <result column="REGDATE" jdbcType="VARCHAR" property="regDate" />
         <result column="is_deleted" jdbcType="NUMERIC" property="isDeleted" />
         <result column="user_create" jdbcType="NUMERIC" property="userCreate" />
         <result column="user_modified" jdbcType="NUMERIC" property="userModified" />
@@ -31,7 +33,7 @@
 
     <select id="selectByOpenId" resultMap="BaseResultMap">
         select DISTINCT oc.ID, oc.OPENID, oc.CARNUMBER, oc.ENGINENUM, oc.IDENTNUM, oc.EMISSIONSTD,
-        oc.IS_ENABLED, oc.IS_DELETED, oc.USER_CREATE,
+        oc.FLEETNAME,oc.REGDATE,oc.IS_ENABLED, oc.IS_DELETED, oc.USER_CREATE,
         oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED, oc.IS_ENABLED from
         SYS_OPENID_CARNUMBER oc
         <where>
@@ -44,7 +46,7 @@
 
     <select id="selectByOpenIdCarNum" resultMap="BaseResultMap">
         select oc.ID, oc.OPENID, oc.CARNUMBER,oc.ENGINENUM, oc.IDENTNUM, oc.EMISSIONSTD,
-        oc.IS_ENABLED, oc.IS_DELETED, oc.USER_CREATE,
+        oc.FLEETNAME,oc.REGDATE,oc.IS_ENABLED, oc.IS_DELETED, oc.USER_CREATE,
         oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED, oc.IS_ENABLED from
         SYS_OPENID_CARNUMBER oc
         <where>
@@ -119,8 +121,8 @@
     </select>
 
     <insert id="insert">
-        insert into SYS_OPENID_CARNUMBER(ID,OPENID,CARNUMBER,IS_DELETED,USER_CREATE,USER_MODIFIED,GMT_CREATE,GMT_MODIFIED,IS_ENABLED,ENGINENUM,IDENTNUM,EMISSIONSTD)
-        VALUES (OPENID_CARNUM_SEQ.nextval,#{openId},#{carNum},#{isDeleted},#{userCreate},#{userModified},#{gmtCreate},#{gmtModified},#{isEnabled},#{engineNum},#{identNum},#{emissionStd})
+        insert into SYS_OPENID_CARNUMBER(ID,OPENID,CARNUMBER,IS_DELETED,USER_CREATE,USER_MODIFIED,GMT_CREATE,GMT_MODIFIED,IS_ENABLED,ENGINENUM,IDENTNUM,EMISSIONSTD,FLEETNAME,REGDATE)
+        VALUES (OPENID_CARNUM_SEQ.nextval,#{openId},#{carNum},#{isDeleted},#{userCreate},#{userModified},#{gmtCreate},#{gmtModified},#{isEnabled},#{engineNum},#{identNum},#{emissionStd},#{fleetName},#{regDate})
     </insert>
 
     <update id="updateCarNum">
@@ -129,6 +131,8 @@
             oc.ENGINENUM = #{engineNum},
             oc.IDENTNUM = #{identNum},
             oc.EMISSIONSTD = #{emissionStd},
+            oc.FLEETNAME = #{fleetName},
+            oc.REGDATE = #{regDate},
           oc.GMT_MODIFIED = #{gmtModified}
         where oc.OPENID = #{openId}
         and oc.CARNUMBER = #{oldCarNum}

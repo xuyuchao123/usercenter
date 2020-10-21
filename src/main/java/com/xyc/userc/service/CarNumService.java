@@ -5,6 +5,7 @@ import com.xyc.userc.vo.CarNumInOutTimeVo;
 import com.xyc.userc.vo.EnvInfoVo;
 import com.xyc.userc.vo.GsCarInfoVo;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -17,10 +18,11 @@ public interface CarNumService
 
     void removeCarNum(String carNum, String openId) throws Exception;
 
-    void addCarNum(String carNum, String openId, String engineNum, String identNum,String emissionStd) throws Exception;
+    void addCarNum(String carNum, String openId, String engineNum, String identNum,
+                   String emissionStd, String fleetName, Date regDate) throws Exception;
 
-    void modifyCarNumByOpenId(String oldCarNum, String newCarNum, String engineNum,
-                              String identNum, String emissionStd, String openId) throws Exception;
+    void modifyCarNumByOpenId(String oldCarNum, String newCarNum, String engineNum, String identNum,
+                              String emissionStd, String fleetName, Date regDate, String openId) throws Exception;
 
     void enableCarNum(String carNum, String openId) throws Exception;
 
