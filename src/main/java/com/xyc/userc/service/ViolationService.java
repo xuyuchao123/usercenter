@@ -1,6 +1,7 @@
 package com.xyc.userc.service;
 
 import com.xyc.userc.entity.Violation;
+import com.xyc.userc.entity.ViolationDetail;
 
 import java.util.List;
 
@@ -10,4 +11,6 @@ import java.util.List;
 public interface ViolationService
 {
     List<Violation> getAllViolation() throws Exception;
+
+    List<ViolationDetail> getViolationDetail(String typeId) throws Exception;
 }

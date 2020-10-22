@@ -3,6 +3,7 @@ package com.xyc.userc.service.impl;
 import com.xyc.userc.dao.UserMapper;
 import com.xyc.userc.dao.ViolationMapper;
 import com.xyc.userc.entity.Violation;
+import com.xyc.userc.entity.ViolationDetail;
 import com.xyc.userc.service.ViolationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,15 @@ public class ViolationServiceImpl implements ViolationService
         List<Violation> violations = violationMapper.selectAllViolation();
         LOGGER.info("结束查询违章大类方法");
         return violations;
+    }
+
+    @Override
+    public List<ViolationDetail> getViolationDetail(String typeId) throws Exception
+    {
+        LOGGER.info("进入查询违章细类方法 typeId={}",typeId);
+        List<ViolationDetail> violationDetails = violationMapper.selectViolationDetail(typeId);
+        LOGGER.info("结束查询违章大类方法 typeId={}",typeId);
+        return violationDetails;
     }
 
 

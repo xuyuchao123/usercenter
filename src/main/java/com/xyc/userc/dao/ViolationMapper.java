@@ -1,6 +1,7 @@
 package com.xyc.userc.dao;
 
 import com.xyc.userc.entity.Violation;
+import com.xyc.userc.entity.ViolationDetail;
 import com.xyc.userc.vo.UserInfoVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -12,4 +13,6 @@ import java.util.List;
 public interface ViolationMapper
 {
     List<Violation> selectAllViolation();
+
+    List<ViolationDetail> selectViolationDetail(@Param("typeId")String typeId);
 }

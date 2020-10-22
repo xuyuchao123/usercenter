@@ -8,10 +8,30 @@
         <result column="IS_DELETED" jdbcType="NUMERIC" property="isDeleted" />
     </resultMap>
 
-    <select id="selectAllViolation" resultType="com.xyc.userc.entity.Violation">
+    <resultMap id="BaseDetailResultMap" type="com.xyc.userc.entity.Violation">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="VIOLATION_ID" jdbcType="NUMERIC" property="typeName" />
+        <result column="ITEMNAME" jdbcType="VARCHAR" property="itemName" />
+        <result column="FINEAMT" jdbcType="VARCHAR" property="fineAmt" />
+        <result column="IS_DELETED" jdbcType="NUMERIC" property="isDeleted" />
+    </resultMap>
+
+    <select id="selectAllViolation" resultMap="BaseResultMap">
         select * from
         SYS_VIOLATION v
-        where v.IS_DELETED = '0'
+        where v.IS_DELETED = 0
     </select>
+
+    <select id="selectViolationDetail" resultMap="BaseDetailResultMap">
+        select * from
+        SYS_VIOLATION_DETAIL vd
+        <where>
+            <if test="typeId != null">
+                and vd.VIOLATION_ID = #{typeId}
+            </if>
+            and vd.IS_DELETED = 0
+        </where>
+    </select>
+
 
 </mapper>
