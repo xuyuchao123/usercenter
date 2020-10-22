@@ -51,7 +51,7 @@ public class ViolationController {
         return resultObj;
     }
 
-    @GetMapping("/queryViolationDetailType")
+    @PostMapping("/queryViolationDetailType")
     @ApiOperation(value = "查询违章细类")
     @ApiImplicitParam(name="typeId", value="违章大类id", required=true, dataType="String")
     @ApiResponses({@ApiResponse(code = 200, message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
