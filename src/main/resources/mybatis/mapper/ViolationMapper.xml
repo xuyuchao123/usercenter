@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyc.userc.dao.ViolationMapper">
+
+    <resultMap id="BaseResultMap" type="com.xyc.userc.entity.Violation">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="TYPENAME" jdbcType="VARCHAR" property="typeName" />
+        <result column="IS_DELETED" jdbcType="NUMERIC" property="isDeleted" />
+    </resultMap>
+
+    <select id="selectAllViolation" resultType="com.xyc.userc.entity.Violation">
+        select * from
+        SYS_VIOLATION v
+        where v.IS_DELETED = '0'
+    </select>
+
+</mapper>
