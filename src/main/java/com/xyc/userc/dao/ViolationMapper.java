@@ -14,5 +14,5 @@ public interface ViolationMapper
 {
     List<Violation> selectAllViolation();
 
-    List<ViolationDetail> selectViolationDetail(@Param("typeId")String typeId);
+    List<ViolationDetail> selectViolationDetail(@Param("typeId")Integer typeId);
 }

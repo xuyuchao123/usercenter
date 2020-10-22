@@ -33,7 +33,7 @@ public class ViolationServiceImpl implements ViolationService
     }
 
     @Override
-    public List<ViolationDetail> getViolationDetail(String typeId) throws Exception
+    public List<ViolationDetail> getViolationDetail(Integer typeId) throws Exception
     {
         LOGGER.info("进入查询违章细类方法 typeId={}",typeId);
         List<ViolationDetail> violationDetails = violationMapper.selectViolationDetail(typeId);

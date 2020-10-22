@@ -61,7 +61,7 @@ public class ViolationController {
         JsonResultObj resultObj = null;
         try
         {
-            List<ViolationDetail> violations = violationService.getViolationDetail(typeId);
+            List<ViolationDetail> violations = violationService.getViolationDetail(Integer.valueOf(typeId));
             resultObj = new JsonResultObj(true, violations);
         }
         catch (Exception e)

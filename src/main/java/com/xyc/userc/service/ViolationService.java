@@ -12,5 +12,5 @@ public interface ViolationService
 {
     List<Violation> getAllViolation() throws Exception;
 
-    List<ViolationDetail> getViolationDetail(String typeId) throws Exception;
+    List<ViolationDetail> getViolationDetail(Integer typeId) throws Exception;
 }
