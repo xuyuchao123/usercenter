@@ -276,10 +276,12 @@ public class CarNumController
             List resList = carNumService.queryEnvInfo(carNum,startDate,page,size);
             String total = null;
             List<EnvInfoVo> envInfoVos = null;
-            if(resList != null && resList.size() == 2)
+            if(resList != null && resList.size() == 4)
             {
                 total = resList.get(0).toString();
-                envInfoVos = (List<EnvInfoVo>)resList.get(1);
+                page = resList.get(1).toString();
+                size = resList.get(2).toString();
+                envInfoVos = (List<EnvInfoVo>)resList.get(3);
             }
             resultObj_Page = new JsonResultObj_Page(true,envInfoVos,total,page,size);
         }
