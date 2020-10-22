@@ -27,7 +27,7 @@ import java.util.List;
  * Created by 1 on 2020/8/24.
  */
 @RestController
-@CrossOrigin
+//@CrossOrigin
 @RequestMapping("/user")
 @Api(tags = "黑名单管理相关api")
 public class PcBlacklistController
