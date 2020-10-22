@@ -37,7 +37,7 @@ public class ViolationServiceImpl implements ViolationService
     {
         LOGGER.info("进入查询违章细类方法 typeId={}",typeId);
         List<ViolationDetail> violationDetails = violationMapper.selectViolationDetail(typeId);
-        LOGGER.info("结束查询违章大类方法 typeId={}",typeId);
+        LOGGER.info("结束查询违章细类方法 typeId={}",typeId);
         return violationDetails;
     }
 

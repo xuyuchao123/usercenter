@@ -10,7 +10,6 @@
 
     <resultMap id="BaseDetailResultMap" type="com.xyc.userc.entity.ViolationDetail">
         <id column="ID" jdbcType="NUMERIC" property="id" />
-        <result column="VIOLATION_ID" jdbcType="NUMERIC" property="typeName" />
         <result column="ITEMNAME" jdbcType="VARCHAR" property="itemName" />
         <result column="FINEAMT" jdbcType="VARCHAR" property="fineAmt" />
         <result column="IS_DELETED" jdbcType="NUMERIC" property="isDeleted" />
