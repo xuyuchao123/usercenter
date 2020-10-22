@@ -8,7 +8,7 @@
         <result column="IS_DELETED" jdbcType="NUMERIC" property="isDeleted" />
     </resultMap>
 
-    <resultMap id="BaseDetailResultMap" type="com.xyc.userc.entity.Violation">
+    <resultMap id="BaseDetailResultMap" type="com.xyc.userc.entity.ViolationDetail">
         <id column="ID" jdbcType="NUMERIC" property="id" />
         <result column="VIOLATION_ID" jdbcType="NUMERIC" property="typeName" />
         <result column="ITEMNAME" jdbcType="VARCHAR" property="itemName" />
