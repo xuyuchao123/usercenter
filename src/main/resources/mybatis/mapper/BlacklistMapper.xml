@@ -6,8 +6,8 @@
         <id column="NICKNAME" jdbcType="VARCHAR" property="name" />
         <result column="MOBILE" jdbcType="VARCHAR" property="mobile" />
         <result column="REASON" jdbcType="VARCHAR" property="reason" />
-        <result column="CREATENICKNAME" jdbcType="VARCHAR" property="createName" />
-        <result column="CREATEMOBILEPHONE" jdbcType="VARCHAR" property="createMobile" />
+        <result column="USER_NAME" jdbcType="VARCHAR" property="createName" />
+        <result column="CREATEMOBILE" jdbcType="VARCHAR" property="createMobile" />
         <result column="GMT_CREATE" jdbcType="DATE" property="gmtCreate" />
     </resultMap>
 
@@ -24,18 +24,13 @@
 
 
     <select id="selectBlacklist" resultMap="BaseVoResultMap">
-        select DISTINCT u.NICKNAME, m.MOBILE, b.REASON,
-        uu.NICKNAME as CREATENICKNAME,
-        mm.MOBILE as CREATEMOBILEPHONE, b.GMT_CREATE
+        select DISTINCT m.NICKNAME , m.MOBILE, b.REASON,
+        u.USER_NAME, u.MOBILE as CREATEMOBILE, b.GMT_CREATE
         from SYS_BLACKLIST b
         left join SYS_MOBILE_OPENID m
         on b.MOBILE_OPENID_ID = m.ID
-        left join SYS_MOBILE_OPENID mm
-        on b.USER_CREATE = mm.OPENID
-        left join SYS_USER u
-        on m.OPENID = u.OPENID
-        left join SYS_USER uu
-        on b.USER_CREATE = uu.OPENID
+        left join PC_USER u
+        on b.USER_CREATE = u.ID
         <where>
             <if test="name != null">
                 and u.NICKNAME = #{name}
@@ -57,6 +52,7 @@
         select *
         from SYS_BLACKLIST b
         where b.MOBILE_OPENID_ID = #{mobileOpenIdId}
+        and b.IS_ENABLE = 1
     </select>
 
     <update id="deleteBlacklist">

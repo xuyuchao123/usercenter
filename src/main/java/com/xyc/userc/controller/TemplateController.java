@@ -103,11 +103,12 @@ public class TemplateController {
 	@PostMapping("/bindMobile")
 	@ApiOperation(value = "绑定手机号")
 	@ApiImplicitParams({@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String"),
+			@ApiImplicitParam(name = "nickName", value = "微信昵称", required = true, dataType = "String"),
 			@ApiImplicitParam(name = "mesCode", value = "短信验证码", required = true, dataType = "String")})
 	@ApiResponses({@ApiResponse(code = 200, message = "isSuccess=true：绑定成功 isSuccess=false：绑定失败，resMsg为错误信息")})
-	public JsonResultObj bindMobile(@ApiIgnore HttpServletRequest request, String mobile, String mesCode)
+	public JsonResultObj bindMobile(@ApiIgnore HttpServletRequest request, String mobile, String nickName, String mesCode)
     {
-		LOGGER.info("开始绑定手机号 mobile={},mesCode={}", mobile, mesCode);
+		LOGGER.info("开始绑定手机号 mobile={},nickName={},mesCode={}", mobile, nickName,mesCode);
         JsonResultObj resultObj = null;
 		String openId = request.getHeader(UsercConstant.OPENID);
         if(openId == null)
@@ -124,7 +125,7 @@ public class TemplateController {
         {
             try
             {
-                User user = userService.bindMobileToOpenId(mobile, mesCode, openId);
+                User user = userService.bindMobileToOpenId(mobile, nickName, mesCode, openId);
                 resultObj = new JsonResultObj(true, user);
             }
             catch (Exception e)
@@ -132,7 +133,7 @@ public class TemplateController {
                 resultObj = CommonExceptionHandler.handException(e, "绑定手机号失败", LOGGER, resultObj);
             }
         }
-		LOGGER.info("结束绑定手机号 mobile={}", mobile);
+		LOGGER.info("结束绑定手机号 mobile={},nickName={},", mobile,nickName);
 		return resultObj;
 	}
 
