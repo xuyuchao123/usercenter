@@ -24,7 +24,7 @@
 
 
     <select id="selectBlacklist" resultMap="BaseVoResultMap">
-        select DISTINCT m.NICKNAME , m.MOBILE, b.REASON,
+        select m.NICKNAME , m.MOBILE, b.REASON,
         u.USER_NAME, u.MOBILE as CREATEMOBILE, b.GMT_CREATE
         from SYS_BLACKLIST b
         left join SYS_MOBILE_OPENID m
@@ -33,16 +33,40 @@
         on b.USER_CREATE = u.ID
         <where>
             <if test="name != null">
-                and u.NICKNAME = #{name}
+                and m.NICKNAME = #{name}
             </if>
             <if test="mobile != null">
-                and u.MOBILEPHONE = #{mobile}
+                and m.MOBILE = #{mobile}
             </if>
             <if test="createName != null">
-                and uu.NICKNAME = #{createName}
+                and u.USER_NAME = #{createName}
             </if>
             <if test="createMobile != null">
-                and uu.MOBILEPHONE = #{createMobile}
+                and u.MOBILE = #{createMobile}
+            </if>
+            and b.IS_ENABLE = 1
+        </where>
+    </select>
+
+    <select id="selectBlacklistCnt" resultType="java.lang.Integer">
+        select count(*)
+        from SYS_BLACKLIST b
+        left join SYS_MOBILE_OPENID m
+        on b.MOBILE_OPENID_ID = m.ID
+        left join PC_USER u
+        on b.USER_CREATE = u.ID
+        <where>
+            <if test="name != null">
+                and m.NICKNAME = #{name}
+            </if>
+            <if test="mobile != null">
+                and m.MOBILE = #{mobile}
+            </if>
+            <if test="createName != null">
+                and u.USER_NAME = #{createName}
+            </if>
+            <if test="createMobile != null">
+                and u.MOBILE = #{createMobile}
             </if>
             and b.IS_ENABLE = 1
         </where>

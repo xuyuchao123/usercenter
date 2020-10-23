@@ -14,6 +14,9 @@ public interface BlacklistMapper
     List<BlacklistVo> selectBlacklist(@Param("name")String name, @Param("mobile")String mobile,
                                       @Param("createName")String createName,@Param("createMobile")String createMobile);
 
+    int selectBlacklistCnt(@Param("name")String name, @Param("mobile")String mobile,
+                           @Param("createName")String createName,@Param("createMobile")String createMobile);
+
     int insertBlacklist(Blacklist blacklist);
 
     List<Blacklist> selectByMobileOpenIdId(Integer mobileOpenIdId);
