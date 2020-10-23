@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface BlacklistService
 {
-    List<BlacklistVo> getBlacklist(String name, String mobile, String createName, String createMobile) throws Exception;
+    List<BlacklistVo> getBlacklist(String name, String mobile, String createName, String createMobile, String page, String size) throws Exception;
 
     void addBlacklist(String mobile, String reason, Long createUserId) throws Exception;
 

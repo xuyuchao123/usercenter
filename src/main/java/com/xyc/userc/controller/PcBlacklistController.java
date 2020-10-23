@@ -39,19 +39,21 @@ public class PcBlacklistController
 
     @PostMapping("/queryBlacklist")
     @ApiOperation(value="查询黑名单")
-    @ApiImplicitParams({@ApiImplicitParam(name="name", value="被拉入黑名单的人的昵称", required=true, dataType="String"),
-            @ApiImplicitParam(name="mobile", value="被拉入黑名单的人的手机号", required=true, dataType="String"),
-            @ApiImplicitParam(name="createName", value="黑名创建人的昵称", required=true, dataType="String"),
-            @ApiImplicitParam(name="createMobile", value="黑名创建人的手机号", required=true, dataType="String")})
+    @ApiImplicitParams({@ApiImplicitParam(name="name", value="被拉入黑名单的人的昵称", required=false, dataType="String"),
+            @ApiImplicitParam(name="mobile", value="被拉入黑名单的人的手机号", required=false, dataType="String"),
+            @ApiImplicitParam(name="createName", value="黑名创建人的昵称", required=false, dataType="String"),
+            @ApiImplicitParam(name="createMobile", value="黑名创建人的手机号", required=false, dataType="String"),
+            @ApiImplicitParam(name="page", value="当前页码", required=true, dataType="String"),
+            @ApiImplicitParam(name="size", value="每页记录条数", required=true, dataType="String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
     public JsonResultObj queryBlacklist(String name, String mobile, String createName,
-                                        String createMobile)
+                                        String createMobile, String page, String size)
     {
-        LOGGER.info("开始查询黑名单 name={} mobile={} createName={} createMobile={}",name,mobile,createName,createMobile);
+        LOGGER.info("开始查询黑名单 name={} mobile={} createName={} createMobile={} page={} size={}",name,mobile,createName,createMobile,page,size);
         JsonResultObj resultObj = null;
         try
         {
-            List<BlacklistVo> blacklistVoList = blacklistService.getBlacklist(name,mobile,createName,createMobile);
+            List<BlacklistVo> blacklistVoList = blacklistService.getBlacklist(name,mobile,createName,createMobile,page,size);
             resultObj = new JsonResultObj(true,blacklistVoList);
             LOGGER.info("查询黑名单成功，查询结果：{}",blacklistVoList.toString());
         }
@@ -59,7 +61,7 @@ public class PcBlacklistController
         {
             resultObj = CommonExceptionHandler.handException(e, "查询黑名单失败", LOGGER, resultObj);
         }
-        LOGGER.info("结束查询黑名单 name={} mobile={} createName={} createMobile={}",name,mobile,createName,createMobile);
+        LOGGER.info("结束查询黑名单 name={} mobile={} createName={} createMobile={} page={} size={}",name,mobile,createName,createMobile,page,size);
         return resultObj;
     }
 

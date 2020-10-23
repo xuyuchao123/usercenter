@@ -35,13 +35,35 @@ public class BlacklistServiceImpl implements BlacklistService
     private MobileOpenIdMapper mobileOpenIdMapper;
 
     @Override
-    public List<BlacklistVo> getBlacklist(String name, String mobile,
-                                          String createName, String createMobile) throws Exception
+    public List<BlacklistVo> getBlacklist(String name, String mobile, String createName, String createMobile, String page, String size) throws Exception
     {
-        LOGGER.info("进入查询黑名单方法 name={} mobile={} createName={} createMobile={}",name,mobile,createName,createMobile);
+        LOGGER.info("进入查询黑名单方法 name={} mobile={} createName={} createMobile={} page={} size={}",
+                name,mobile,createName,createMobile,page,size);
+        if(page == null)
+        {
+            throw new BusinessException(JsonResultEnum.PAGE_NOT_EXIST);
+        }
+        if(size == null)
+        {
+            throw new BusinessException(JsonResultEnum.SIZE_NOT_EXIST);
+        }
+
+        int pageInt = Integer.valueOf(page);
+        int sizeInt = Integer.valueOf(size);
+        //查询总记录数
+        int cnt = blacklistMapper.selectBlacklistCnt(name,mobile,createName,createMobile);
+        int pageCnt = cnt / sizeInt + 1;
+        if(pageInt > pageCnt)
+        {
+            pageInt = pageCnt;
+        }
+        int start = (pageInt - 1) * sizeInt + 1;
+        int end = start + sizeInt - 1;
+        LOGGER.info("查询黑名单信息 start={},end={},cnt={}",start,end,cnt);
         List<BlacklistVo> blacklistVoList = blacklistMapper.selectBlacklist(name,mobile,createName,createMobile);
         LOGGER.info("黑名单查询成功，查询结果：", blacklistVoList != null ? blacklistVoList.toString() : null);
-        LOGGER.info("结束查询黑名单方法 name={} mobile={} createName={} createMobile={}",name,mobile,createName,createMobile);
+        LOGGER.info("结束查询黑名单方法 name={} mobile={} createName={} createMobile={} page={} size={}",
+                name,mobile,createName,createMobile,page,size);
         return blacklistVoList;
     }
 
