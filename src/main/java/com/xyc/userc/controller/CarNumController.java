@@ -213,7 +213,7 @@ public class CarNumController
     @GetMapping("/queryInOutTime")
     @ApiOperation(value="查询车辆本月及上月进出厂时间")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
-    public JsonResultObj enableCarNum(@ApiIgnore HttpServletRequest request)
+    public JsonResultObj queryInOutTime(@ApiIgnore HttpServletRequest request)
     {
         LOGGER.info("开始查询车辆进出厂时间");
         JsonResultObj resultObj = null;
