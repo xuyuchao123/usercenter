@@ -11,8 +11,8 @@ import java.util.List;
  */
 public interface BlacklistMapper
 {
-    List<BlacklistVo> selectBlacklist(@Param("name")String name, @Param("mobile")String mobile,
-                                      @Param("createName")String createName,@Param("createMobile")String createMobile);
+    List<BlacklistVo> selectBlacklist(@Param("name")String name, @Param("mobile")String mobile, @Param("createName")String createName,
+                                      @Param("createMobile")String createMobile, @Param("start")int start, @Param("end")int end);
 
     int selectBlacklistCnt(@Param("name")String name, @Param("mobile")String mobile,
                            @Param("createName")String createName,@Param("createMobile")String createMobile);

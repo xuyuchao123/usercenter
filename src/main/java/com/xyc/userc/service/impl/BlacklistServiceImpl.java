@@ -60,7 +60,7 @@ public class BlacklistServiceImpl implements BlacklistService
         int start = (pageInt - 1) * sizeInt + 1;
         int end = start + sizeInt - 1;
         LOGGER.info("查询黑名单信息 start={},end={},cnt={}",start,end,cnt);
-        List<BlacklistVo> blacklistVoList = blacklistMapper.selectBlacklist(name,mobile,createName,createMobile);
+        List<BlacklistVo> blacklistVoList = blacklistMapper.selectBlacklist(name,mobile,createName,createMobile,start,end);
         LOGGER.info("黑名单查询成功，查询结果：", blacklistVoList != null ? blacklistVoList.toString() : null);
         LOGGER.info("结束查询黑名单方法 name={} mobile={} createName={} createMobile={} page={} size={}",
                 name,mobile,createName,createMobile,page,size);
