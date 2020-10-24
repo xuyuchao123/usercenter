@@ -16,9 +16,9 @@ public class BlacklistVo implements Serializable
     private String reason;
     private String createName;
     private String createMobile;
-    private Timestamp gmtCreate;
+    private Long gmtCreate;
 
-    public BlacklistVo(String name, String mobile, String reason, String createName, String createMobile, Timestamp gmtCreate) {
+    public BlacklistVo(String name, String mobile, String reason, String createName, String createMobile, Long gmtCreate) {
         this.name = name;
         this.mobile = mobile;
         this.reason = reason;
@@ -67,11 +67,11 @@ public class BlacklistVo implements Serializable
         this.createMobile = createMobile;
     }
 
-    public Timestamp getGmtCreate() {
+    public Long getGmtCreate() {
         return gmtCreate;
     }
 
-    public void setGmtCreate(Timestamp gmtCreate) {
+    public void setGmtCreate(Long gmtCreate) {
         this.gmtCreate = gmtCreate;
     }
 }
