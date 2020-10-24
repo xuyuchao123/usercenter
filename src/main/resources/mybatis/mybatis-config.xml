@@ -10,8 +10,8 @@
         <setting name="aggressiveLazyLoading" value="false"/>
     </settings>
 
-    <typeHandlers>
-        <typeHandler handler="com.xyc.userc.config.LongDateTypeHandler"/>
-    </typeHandlers>
+    <!--<typeHandlers>-->
+        <!--<typeHandler handler="com.xyc.userc.mybatis.typehandler.LongDateTypeHandler"/>-->
+    <!--</typeHandlers>-->
 
 </configuration>

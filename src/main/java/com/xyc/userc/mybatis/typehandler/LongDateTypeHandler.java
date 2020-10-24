@@ -1,4 +1,4 @@
-package com.xyc.userc.config;
+package com.xyc.userc.mybatis.typehandler;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.ibatis.type.JdbcType;

@@ -50,6 +50,7 @@ mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
   type-aliases-package: com.xyc.userc.entity
   config-location: classpath:mybatis/mybatis-config.xml
+  type-handlers-package: com.xyc.userc.mybatis.typehandler
 
 logging:
 #  level:
