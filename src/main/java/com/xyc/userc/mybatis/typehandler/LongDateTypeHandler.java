@@ -6,36 +6,36 @@ import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
 import org.apache.ibatis.type.TypeHandler;
 
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Date;
+import java.sql.*;
 
 /**
  * Created by 1 on 2020/10/24.
  */
 @MappedTypes(java.lang.Long.class)
-@MappedJdbcTypes(JdbcType.DATE)
+@MappedJdbcTypes(JdbcType.TIMESTAMP)
 public class LongDateTypeHandler implements TypeHandler<Long>
 {
+
+    public LongDateTypeHandler() {
+    }
+
     @Override
     public void setParameter(PreparedStatement ps, int i, Long parameter, JdbcType jdbcType) throws SQLException
     {
-        Date date = new Date(parameter);
-        ps.setDate(i, date);
+        Timestamp timestamp = new Timestamp(parameter);
+        ps.setTimestamp(i, timestamp);
     }
 
     @Override
     public Long getResult(ResultSet rs, String columnName) throws SQLException
     {
-        return rs.getDate(columnName).getTime();
+        return rs.getTimestamp(columnName).getTime();
     }
 
     @Override
     public Long getResult(ResultSet rs, int columnIndex) throws SQLException
     {
-        return rs.getDate(columnIndex).getTime();
+        return rs.getTimestamp(columnIndex).getTime();
     }
 
     @Override

@@ -8,7 +8,7 @@
         <result column="REASON" jdbcType="VARCHAR" property="reason" />
         <result column="USER_NAME" jdbcType="VARCHAR" property="createName" />
         <result column="CREATEMOBILE" jdbcType="VARCHAR" property="createMobile" />
-        <result column="GMT_CREATE" jdbcType="DATE" property="gmtCreate" />
+        <result column="GMT_CREATE" jdbcType="TIMESTAMP" javaType="java.lang.Long" property="gmtCreate" />
     </resultMap>
 
     <resultMap id="BaseResultMap" type="com.xyc.userc.entity.Blacklist">
