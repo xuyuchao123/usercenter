@@ -53,16 +53,16 @@ public class PcBlacklistController
         {
             List resList = blacklistService.getBlacklist(name,mobile,createName,createMobile,page,size);
 //            resultObj = new JsonResultObj(true,blacklistVoList);
-            List<EnvInfoVo> envInfoVos = null;
+            List<BlacklistVo> blacklistVos = null;
             String total = null;
             if(resList != null && resList.size() == 4)
             {
                 total = resList.get(0).toString();
                 page = resList.get(1).toString();
                 size = resList.get(2).toString();
-                envInfoVos = (List<EnvInfoVo>)resList.get(3);
+                blacklistVos = (List<BlacklistVo>)resList.get(3);
             }
-            resultObj_Page = new JsonResultObj_Page(true,envInfoVos,total,page,size);
+            resultObj_Page = new JsonResultObj_Page(true,blacklistVos,total,page,size);
             LOGGER.info("查询黑名单成功");
         }
         catch (Exception e)

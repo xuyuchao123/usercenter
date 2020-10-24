@@ -1,6 +1,7 @@
 package com.xyc.userc.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -15,7 +16,7 @@ public class BlacklistVo implements Serializable
     private String reason;
     private String createName;
     private String createMobile;
-    private Date gmtCreate;
+    private Timestamp gmtCreate;
 
     public BlacklistVo(String name, String mobile, String reason, String createName, String createMobile, Date gmtCreate) {
         this.name = name;
