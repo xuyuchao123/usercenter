@@ -24,8 +24,9 @@
 
 
     <select id="selectBlacklist" resultMap="BaseVoResultMap">
+        select * from (
         select m.NICKNAME , m.MOBILE, b.REASON,
-        u.USER_NAME, u.MOBILE as CREATEMOBILE, b.GMT_CREATE
+        u.USER_NAME, u.MOBILE as CREATEMOBILE, b.GMT_CREATE,rownum as rn
         from SYS_BLACKLIST b
         left join SYS_MOBILE_OPENID m
         on b.MOBILE_OPENID_ID = m.ID
@@ -45,7 +46,9 @@
                 and u.MOBILE = #{createMobile}
             </if>
             and b.IS_ENABLE = 1
+            and rownum <![CDATA[ <= ]]> #{end})
         </where>
+        where rn <![CDATA[ >= ]]> #{start}
     </select>
 
     <select id="selectBlacklistCnt" resultType="java.lang.Integer">

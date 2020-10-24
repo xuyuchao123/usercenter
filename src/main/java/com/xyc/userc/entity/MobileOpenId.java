@@ -16,17 +16,20 @@ public class MobileOpenId implements Serializable
 
     private String nickName;
 
+    private String department;
+
     private String openId;
 
     private String userCreate;
 
     private Date gmtCreate;
 
-    public MobileOpenId(Integer id, String mobile, String nickName, String openId, String userCreate, Date gmtCreate)
+    public MobileOpenId(Integer id, String mobile, String nickName, String department, String openId, String userCreate, Date gmtCreate)
     {
         this.id = id;
         this.mobile = mobile;
         this.nickName = nickName;
+        this.department = department;
         this.openId = openId;
         this.userCreate = userCreate;
         this.gmtCreate = gmtCreate;
@@ -54,6 +57,14 @@ public class MobileOpenId implements Serializable
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public String getOpenId() {

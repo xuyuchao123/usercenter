@@ -3,11 +3,9 @@ package com.xyc.userc.controller;
 import com.avei.shriety.wx_sdk.constant.WxsdkConstant;
 import com.xyc.userc.entity.PcUser;
 import com.xyc.userc.service.BlacklistService;
-import com.xyc.userc.util.CommonExceptionHandler;
-import com.xyc.userc.util.JsonResultEnum;
-import com.xyc.userc.util.JsonResultObj;
-import com.xyc.userc.util.UsercConstant;
+import com.xyc.userc.util.*;
 import com.xyc.userc.vo.BlacklistVo;
+import com.xyc.userc.vo.EnvInfoVo;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,19 +48,29 @@ public class PcBlacklistController
                                         String createMobile, String page, String size)
     {
         LOGGER.info("开始查询黑名单 name={} mobile={} createName={} createMobile={} page={} size={}",name,mobile,createName,createMobile,page,size);
-        JsonResultObj resultObj = null;
+        JsonResultObj_Page resultObj_Page = null;
         try
         {
-            List<BlacklistVo> blacklistVoList = blacklistService.getBlacklist(name,mobile,createName,createMobile,page,size);
-            resultObj = new JsonResultObj(true,blacklistVoList);
-            LOGGER.info("查询黑名单成功，查询结果：{}",blacklistVoList.toString());
+            List resList = blacklistService.getBlacklist(name,mobile,createName,createMobile,page,size);
+//            resultObj = new JsonResultObj(true,blacklistVoList);
+            List<EnvInfoVo> envInfoVos = null;
+            String total = null;
+            if(resList != null && resList.size() == 4)
+            {
+                total = resList.get(0).toString();
+                page = resList.get(1).toString();
+                size = resList.get(2).toString();
+                envInfoVos = (List<EnvInfoVo>)resList.get(3);
+            }
+            resultObj_Page = new JsonResultObj_Page(true,envInfoVos,total,page,size);
+            LOGGER.info("查询黑名单成功");
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "查询黑名单失败", LOGGER, resultObj);
+            resultObj_Page = CommonExceptionHandler.handException_page(e, "查询黑名单失败", LOGGER, resultObj_Page);
         }
         LOGGER.info("结束查询黑名单 name={} mobile={} createName={} createMobile={} page={} size={}",name,mobile,createName,createMobile,page,size);
-        return resultObj;
+        return resultObj_Page;
     }
 
     @PostMapping("/addBlacklist")

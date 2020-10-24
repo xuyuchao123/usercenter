@@ -14,8 +14,8 @@
         <selectKey resultType="int" order="BEFORE" keyProperty="id">
             SELECT MOBILE_OPENID_SEQ.NEXTVAL FROM DUAL
         </selectKey>
-        insert into SYS_MOBILE_OPENID (ID,MOBILE,NICKNAME,OPENID,USER_CREATE,GMT_CREATE)
-        VALUES (#{id},#{mobile},#{nickName},#{openId},#{userCreate},#{gmtCreate})
+        insert into SYS_MOBILE_OPENID (ID,MOBILE,NICKNAME,DEPARTMENT,OPENID,USER_CREATE,GMT_CREATE)
+        VALUES (#{id},#{mobile},#{nickName},#{department},#{openId},#{userCreate},#{gmtCreate})
     </insert>
 
     <select id="selectByMobileOpenId" resultMap="BaseResultMap">
