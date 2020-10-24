@@ -25,7 +25,8 @@ public interface CarNumOpenIdMapper
     void updateCarNum(@Param("oldCarNum")String oldCarNum, @Param("newCarNum")String newCarNum,
                       @Param("engineNum")String engineNum, @Param("identNum")String identNum,
                       @Param("emissionStd")String emissionStd,@Param("fleetName")String fleetName,
-                      @Param("regDate")Date regDate,@Param("openId")String openId, @Param("gmtModified")Date gmtModified);
+                      @Param("regDate")Date regDate,@Param("department")String department,
+                      @Param("openId")String openId, @Param("gmtModified")Date gmtModified);
 
     void updateCarNumEnable(@Param("isEnable")Integer isEnable, @Param("gmtModified")Date gmtModified,
                                 @Param("carNum")String carNum, @Param("openId")String openId);

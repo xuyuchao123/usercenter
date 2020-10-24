@@ -19,7 +19,7 @@ public interface UserService extends UserDetailsService
 {
      User getUser(User user) throws Exception;
 
-     User bindMobileToOpenId(String mobile, String nickName, String department, String mesCode, String openId) throws Exception;
+     User bindMobileToOpenId(String mobile, String nickName,String mesCode, String openId) throws Exception;
 
      void storeUserInfoVo() throws Exception;
 

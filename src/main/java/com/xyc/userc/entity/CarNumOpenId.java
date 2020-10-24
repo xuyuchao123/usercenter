@@ -18,6 +18,7 @@ public class CarNumOpenId implements Serializable
     private String emissionStd;
     private String fleetName;
     private Date regDate;
+    private String department;
     private Integer isEnabled;
     private Integer isDeleted;
     private String userCreate;
@@ -26,7 +27,7 @@ public class CarNumOpenId implements Serializable
     private Date gmtModified;
 
     public CarNumOpenId(Integer id, String openId, String carNum, String engineNum, String identNum,
-                        String emissionStd, String fleetName, Date regDate, Integer isEnabled, Integer isDeleted, String userCreate,
+                        String emissionStd, String fleetName, Date regDate, String department, Integer isEnabled, Integer isDeleted, String userCreate,
                         String userModified, Date gmtCreate, Date gmtModified)
     {
         this.id = id;
@@ -37,6 +38,7 @@ public class CarNumOpenId implements Serializable
         this.emissionStd = emissionStd;
         this.fleetName = fleetName;
         this.regDate = regDate;
+        this.department = department;
         this.isEnabled = isEnabled;
         this.isDeleted = isDeleted;
         this.userCreate = userCreate;
@@ -107,6 +109,14 @@ public class CarNumOpenId implements Serializable
 
     public void setRegDate(Date regDate) {
         this.regDate = regDate;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public Integer getIsDeleted() {

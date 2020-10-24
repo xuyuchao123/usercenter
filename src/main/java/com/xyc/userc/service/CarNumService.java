@@ -19,10 +19,10 @@ public interface CarNumService
     void removeCarNum(String carNum, String openId) throws Exception;
 
     void addCarNum(String carNum, String openId, String engineNum, String identNum,
-                   String emissionStd, String fleetName, Date regDate) throws Exception;
+                   String emissionStd, String fleetName, Date regDate, String department) throws Exception;
 
     void modifyCarNumByOpenId(String oldCarNum, String newCarNum, String engineNum, String identNum,
-                              String emissionStd, String fleetName, Date regDate, String openId) throws Exception;
+                              String emissionStd, String fleetName, Date regDate, String department, String openId) throws Exception;
 
     void enableCarNum(String carNum, String openId) throws Exception;
 

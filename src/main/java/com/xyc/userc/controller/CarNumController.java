@@ -105,13 +105,14 @@ public class CarNumController
             @ApiImplicitParam(name = "identNum", value = "车辆识别号", required = true, dataType = "String"),
             @ApiImplicitParam(name = "emissionStd", value = "排放标准", required = true, dataType = "String"),
             @ApiImplicitParam(name = "fleetName", value = "车队名称", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "regDate", value = "注册日期", required = true, dataType = "String")})
+            @ApiImplicitParam(name = "regDate", value = "注册日期", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "department", value = "业务管理部门", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：新增成功 isSuccess=false：新增失败，resMsg为错误信息")})
     public JsonResultObj addCarNum(String carNum, String engineNum, String identNum,String emissionStd,String fleetName,
-                                   String regDate, @ApiIgnore HttpServletRequest request)
+                                   String regDate, String department, @ApiIgnore HttpServletRequest request)
     {
-        LOGGER.info("开始新增车牌号 carNum={} engineNum={} identNum={} emissionStd={} fleetName={} regDate={}",
-                carNum,engineNum,identNum,emissionStd,fleetName,regDate);
+        LOGGER.info("开始新增车牌号 carNum={} engineNum={} identNum={} emissionStd={} fleetName={} regDate={} department={}",
+                carNum,engineNum,identNum,emissionStd,fleetName,regDate,department);
         JsonResultObj resultObj = null;
         String openId = request.getHeader(UsercConstant.OPENID);
         if(openId == null)
@@ -125,7 +126,7 @@ public class CarNumController
             {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(Long.valueOf(regDate));
-                carNumService.addCarNum(carNum,openId,engineNum,identNum,emissionStd,fleetName,calendar.getTime());
+                carNumService.addCarNum(carNum,openId,engineNum,identNum,emissionStd,fleetName,calendar.getTime(),department);
                 resultObj = new JsonResultObj(true);
             }
             catch (Exception e)
@@ -133,8 +134,8 @@ public class CarNumController
                 resultObj = CommonExceptionHandler.handException(e, "新增车牌号失败", LOGGER, resultObj);
             }
         }
-        LOGGER.info("结束新增车牌号 carNum={} engineNum={} identNum={} emissionStd={} fleetName={} regDate={}",
-                carNum,engineNum,identNum,emissionStd,fleetName,regDate);
+        LOGGER.info("结束新增车牌号 carNum={} engineNum={} identNum={} emissionStd={} fleetName={} regDate={} department={}",
+                carNum,engineNum,identNum,emissionStd,fleetName,regDate,department);
         return resultObj;
     }
 
@@ -146,13 +147,14 @@ public class CarNumController
             @ApiImplicitParam(name = "identNum", value = "车辆识别号", required = true, dataType = "String"),
             @ApiImplicitParam(name = "emissionStd", value = "排放标准", required = true, dataType = "String"),
             @ApiImplicitParam(name = "fleetName", value = "车队名称", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "regDate", value = "注册日期", required = true, dataType = "String")})
+            @ApiImplicitParam(name = "regDate", value = "注册日期", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "department", value = "业务管理部门", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：修改成功 isSuccess=false：修改失败，resMsg为错误信息")})
     public JsonResultObj updateCarNum(String oldCarNum, String newCarNum, String engineNum, String identNum,
-                                      String emissionStd, String fleetName, String  regDate, @ApiIgnore HttpServletRequest request)
+                                      String emissionStd, String fleetName, String regDate, String department, @ApiIgnore HttpServletRequest request)
     {
-        LOGGER.info("开始修改车牌号 oldCarNum={} newCarNum={} engineNum={} identNum={} emissionStd={} fleetName={} regDate={}",
-                oldCarNum, newCarNum,engineNum,identNum,emissionStd,fleetName,regDate);
+        LOGGER.info("开始修改车牌号 oldCarNum={} newCarNum={} engineNum={} identNum={} emissionStd={} fleetName={} regDate={} department={}",
+                oldCarNum, newCarNum,engineNum,identNum,emissionStd,fleetName,regDate,department);
         JsonResultObj resultObj = null;
         String openId = request.getHeader(UsercConstant.OPENID);
         if(openId == null)
@@ -166,7 +168,7 @@ public class CarNumController
             {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(Long.valueOf(regDate));
-                carNumService.modifyCarNumByOpenId(oldCarNum,newCarNum,engineNum,identNum,emissionStd,fleetName,calendar.getTime(),openId);
+                carNumService.modifyCarNumByOpenId(oldCarNum,newCarNum,engineNum,identNum,emissionStd,fleetName,calendar.getTime(),department,openId);
                 resultObj = new JsonResultObj(true);
             }
             catch (Exception e)
@@ -174,8 +176,8 @@ public class CarNumController
                 resultObj = CommonExceptionHandler.handException(e, "修改车牌号失败", LOGGER, resultObj);
             }
         }
-        LOGGER.info("结束修改车牌号 oldCarNum={} newCarNum={} engineNum={} identNum={} emissionStd={} fleetName={} regDate={}",
-                oldCarNum, newCarNum,engineNum,identNum,emissionStd,fleetName,regDate);
+        LOGGER.info("结束修改车牌号 oldCarNum={} newCarNum={} engineNum={} identNum={} emissionStd={} fleetName={} regDate={} department={}",
+                oldCarNum, newCarNum,engineNum,identNum,emissionStd,fleetName,regDate,department);
         return resultObj;
     }
 

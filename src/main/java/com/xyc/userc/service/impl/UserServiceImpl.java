@@ -84,11 +84,11 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public User bindMobileToOpenId(String mobile, String nickName, String department, String mesCode, String openId) throws Exception
+    public User bindMobileToOpenId(String mobile, String nickName,String mesCode, String openId) throws Exception
     {
-        LOGGER.info("进入绑定手机号方法 mobile={} nickName={} department={} mesCode={} openid={}",mobile,nickName,department,mesCode,openId);
+        LOGGER.info("进入绑定手机号方法 mobile={} nickName={} mesCode={} openid={}",mobile,nickName,mesCode,openId);
 //        HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        MobileOpenId mobileOpenId = new MobileOpenId(null,mobile,nickName,department,openId,openId,new Date());
+        MobileOpenId mobileOpenId = new MobileOpenId(null,mobile,nickName,openId,openId,new Date());
         LOGGER.info("开始校验短信验证码是否正确 mobile={} mesCode={}",mobile,mesCode);
         String storedMesCode = mobileMapper.selectMesCodeByMobile(mobile);
         if(storedMesCode == null)
