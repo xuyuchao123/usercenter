@@ -5,6 +5,7 @@
     <resultMap id="BaseResultMap" type="com.xyc.userc.entity.MobileOpenId">
         <id column="id" jdbcType="NUMERIC" property="id" />
         <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+        <result column="nickname" jdbcType="VARCHAR" property="nickName" />
         <result column="openid" jdbcType="VARCHAR" property="openId" />
         <result column="user_create" jdbcType="VARCHAR" property="userCreate" />
         <result column="gmt_create" jdbcType="VARCHAR" property="gmtCreate" />
@@ -19,7 +20,7 @@
     </insert>
 
     <select id="selectByMobileOpenId" resultMap="BaseResultMap">
-        select DISTINCT mo.ID, mo.MOBILE, mo.OPENID, mo.USER_CREATE, mo.GMT_CREATE
+        select DISTINCT mo.ID, mo.MOBILE, mo.NICKNAME, mo.OPENID, mo.USER_CREATE, mo.GMT_CREATE
          from SYS_MOBILE_OPENID mo
         <where>
             <if test="mobile != null">
