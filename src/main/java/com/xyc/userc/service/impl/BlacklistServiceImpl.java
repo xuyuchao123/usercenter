@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -92,7 +93,7 @@ public class BlacklistServiceImpl implements BlacklistService
             LOGGER.info("该手机号已被拉黑,新增黑名单失败 mobile={}",mobile);
             throw new BusinessException(JsonResultEnum.MOBILE_BLACKLIST_EXIST);
         }
-        Date date = new Date();
+        Timestamp date = new Timestamp(new Date().getTime());
         Blacklist blacklist = new Blacklist(null,mobileOpenId.getId(),reason,String.valueOf(createUserId),date,String.valueOf(createUserId),date,1);
         int i = blacklistMapper.insertBlacklist(blacklist);
         LOGGER.info("结束新增黑名单方法 mobile={} reason={} createUserId={}",mobile,reason,createUserId);
