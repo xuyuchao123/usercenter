@@ -2,6 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xyc.userc.dao.CarNumOpenIdMapper">
 
+    <resultMap id="BaseResultMapC" type="com.xyc.userc.entity.CarNumOpenId">
+        <id column="id" jdbcType="NUMERIC" property="id" />
+        <result column="openid" jdbcType="VARCHAR" property="openId" />
+        <result column="carnumber" jdbcType="VARCHAR" property="carNum" />
+        <result column="ENGINENUM" jdbcType="VARCHAR" property="engineNum" />
+        <result column="IDENTNUM" jdbcType="VARCHAR" property="identNum" />
+        <result column="EMISSIONSTD" jdbcType="VARCHAR" property="emissionStd" />
+        <result column="FLEETNAME" jdbcType="VARCHAR" property="fleetName" />
+        <result column="REGDATE" jdbcType="VARCHAR" property="regDate" />
+        <result column="DEPARTMENT" jdbcType="VARCHAR" property="department" />
+        <result column="is_deleted" jdbcType="NUMERIC" property="isDeleted" />
+        <result column="is_enabled" jdbcType="VARCHAR" property="isEnabled" />
+        <result column="user_create" jdbcType="VARCHAR" property="userCreate" />
+        <result column="user_modified" jdbcType="VARCHAR" property="userModified" />
+        <result column="gmt_create" jdbcType="VARCHAR" property="gmtCreate" />
+        <result column="gmt_modified" jdbcType="VARCHAR" property="gmtModified" />
+
+    </resultMap>
+
+
     <resultMap id="BaseResultMap" type="com.xyc.userc.entity.CarNumOpenId">
         <id column="id" jdbcType="NUMERIC" property="id" />
         <result column="openid" jdbcType="VARCHAR" property="openId" />
@@ -13,13 +33,12 @@
         <result column="REGDATE" jdbcType="VARCHAR" property="regDate" />
         <result column="DEPARTMENT" jdbcType="VARCHAR" property="department" />
         <result column="is_deleted" jdbcType="NUMERIC" property="isDeleted" />
-        <result column="user_create" jdbcType="NUMERIC" property="userCreate" />
+        <result column="user_create" jdbcType="VARCHAR" property="userCreate" />
         <result column="user_modified" jdbcType="NUMERIC" property="userModified" />
         <result column="gmt_create" jdbcType="VARCHAR" property="gmtCreate" />
         <result column="gmt_modified" jdbcType="VARCHAR" property="gmtModified" />
         <result column="is_enabled" jdbcType="VARCHAR" property="isEnabled" />
     </resultMap>
-
     <resultMap id="BaseVoResultMap" type="com.xyc.userc.entity.CarNumOpenId">
         <id column="id" jdbcType="NUMERIC" property="id" />
         <result column="openid" jdbcType="VARCHAR" property="openId" />
@@ -34,8 +53,8 @@
 
     <select id="selectByOpenId" resultMap="BaseResultMap">
         select DISTINCT oc.ID, oc.OPENID, oc.CARNUMBER, oc.ENGINENUM, oc.IDENTNUM, oc.EMISSIONSTD,
-        oc.FLEETNAME,oc.REGDATE,oc.DEPARTMENT, oc.IS_ENABLED, oc.IS_DELETED, oc.USER_CREATE,
-        oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED, oc.IS_ENABLED from
+        oc.FLEETNAME,oc.REGDATE,oc.DEPARTMENT, oc.IS_DELETED, oc.IS_ENABLED, oc.USER_CREATE,
+        oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED from
         SYS_OPENID_CARNUMBER oc
         <where>
             <if test="openId != null">
@@ -45,10 +64,10 @@
         </where>
     </select>
 
-    <select id="selectByOpenIdCarNum" resultMap="BaseResultMap">
+    <select id="selectByOpenIdCarNum" resultMap="BaseResultMapC">
         select oc.ID, oc.OPENID, oc.CARNUMBER,oc.ENGINENUM, oc.IDENTNUM, oc.EMISSIONSTD,
-        oc.FLEETNAME,oc.REGDATE,oc.IS_ENABLED, oc.IS_DELETED, oc.USER_CREATE,
-        oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED, oc.IS_ENABLED from
+        oc.FLEETNAME,oc.REGDATE, oc.DEPARTMENT, oc.IS_DELETED, oc.IS_ENABLED, oc.USER_CREATE,
+        oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED from
         SYS_OPENID_CARNUMBER oc
         <where>
             <if test="openId != null">

@@ -27,7 +27,8 @@ public class CarNumOpenId implements Serializable
     private Date gmtModified;
 
     public CarNumOpenId(Integer id, String openId, String carNum, String engineNum, String identNum,
-                        String emissionStd, String fleetName, Date regDate, String department, Integer isEnabled, Integer isDeleted, String userCreate,
+                        String emissionStd, String fleetName, Date regDate, String department,
+                        Integer isEnabled, Integer isDeleted, String userCreate,
                         String userModified, Date gmtCreate, Date gmtModified)
     {
         this.id = id;
