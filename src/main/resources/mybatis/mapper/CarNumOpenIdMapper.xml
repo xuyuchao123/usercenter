@@ -33,11 +33,12 @@
         <result column="REGDATE" jdbcType="VARCHAR" property="regDate" />
         <result column="DEPARTMENT" jdbcType="VARCHAR" property="department" />
         <result column="is_deleted" jdbcType="NUMERIC" property="isDeleted" />
+        <result column="is_enabled" jdbcType="VARCHAR" property="isEnabled" />
         <result column="user_create" jdbcType="VARCHAR" property="userCreate" />
         <result column="user_modified" jdbcType="NUMERIC" property="userModified" />
         <result column="gmt_create" jdbcType="VARCHAR" property="gmtCreate" />
         <result column="gmt_modified" jdbcType="VARCHAR" property="gmtModified" />
-        <result column="is_enabled" jdbcType="VARCHAR" property="isEnabled" />
+
     </resultMap>
     <resultMap id="BaseVoResultMap" type="com.xyc.userc.entity.CarNumOpenId">
         <id column="id" jdbcType="NUMERIC" property="id" />

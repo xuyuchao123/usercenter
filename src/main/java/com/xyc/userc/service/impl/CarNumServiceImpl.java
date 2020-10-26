@@ -270,19 +270,18 @@ public class CarNumServiceImpl implements CarNumService
 
         int pageInt = Integer.valueOf(page);
         int sizeInt = Integer.valueOf(size);
-//        int start = (pageInt - 1) * sizeInt + 1;
-//        int end = start + sizeInt - 1;
+
         //查询总记录数
-        int cnt = carNumOpenIdMapper.selectEnvInfoCnt(carNum,startDate);
-        int pageCnt = cnt / sizeInt + 1;
-        if(pageInt > pageCnt)
-        {
-            pageInt = pageCnt;
-        }
+//        int cnt = carNumOpenIdMapper.selectEnvInfoCnt(carNum,startDate);
+//        int pageCnt = cnt / sizeInt + 1;
+//        if(pageInt > pageCnt)
+//        {
+//            pageInt = pageCnt;
+//        }
+        int cnt = 0;
         int start = (pageInt - 1) * sizeInt + 1;
         int end = start + sizeInt - 1;
         LOGGER.info("查询车辆环保信息 startDate={},start={},end={},cnt={}",startDate,start,end,cnt);
-//        List<EnvInfoVo> envInfoVoList = new ArrayList<>();
         List<EnvInfoVo> envInfoVoList = carNumOpenIdMapper.selectEnvInfo(carNum,startDate,start,end);
         List resList = new ArrayList();
         resList.add(cnt);
