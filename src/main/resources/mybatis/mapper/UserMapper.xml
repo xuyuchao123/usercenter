@@ -39,7 +39,7 @@
   <!--</select>-->
 
   <select id="selectUserRoleByOpenId" resultType="java.util.Map">
-    select ITEM FROM HLJLYXX where PHONE_NO = #{mobile}
+    select ITEM, USER_ID FROM HLJLYXX where PHONE_NO = #{mobile}
   </select>
 
   <select id="selectUserId" resultType="java.lang.String">
