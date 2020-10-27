@@ -38,7 +38,7 @@
     <!--and r.IS_DELETED = 0-->
   <!--</select>-->
 
-  <select id="selectUserRoleByOpenId" resultType="java.util.Map">
+  <select id="selectUserRoleByMobile" resultType="java.util.Map">
     select ITEM, USER_ID FROM HLJLYXX where PHONE_NO = #{mobile}
   </select>
 

@@ -177,10 +177,11 @@ public class UserServiceImpl implements UserService
                 }
             }
 //            角色为开单员则获取其工号
-            if(roleCode.equals(RoleTypeEnum.ROLE_KDY.getRoleCode()))
-            {
-                userInfoVo.setGh(gh);
-            }
+//            if(roleCode.equals(RoleTypeEnum.ROLE_KDY.getRoleCode()))
+//            {
+//                userInfoVo.setGh(gh);
+//            }
+            userInfoVo.setGh(gh);
             redisTemplate.opsForValue().set(openId, JSON.toJSONString(userInfoVo));
 
             //构建user对象返回
@@ -439,7 +440,7 @@ public class UserServiceImpl implements UserService
     //通过手机号查询角色编码及工号
     public String[] queryRoleCodeByMobile(String mobile) throws Exception
     {
-        List<Map> maps = userMapper.selectUserRoleByOpenId(mobile);
+        List<Map> maps = userMapper.selectUserRoleByMobile(mobile);
         String roleCode = null;
         String gh = null;
         if (maps == null || maps.size() == 0)

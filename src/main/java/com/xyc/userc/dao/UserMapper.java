@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface UserMapper
 {
-    List<Map> selectUserRoleByOpenId(String mobile);
+    List<Map> selectUserRoleByMobile(String mobile);
 
     List<Map> selectUserIdByMobile(List<String> mobiles);
 
