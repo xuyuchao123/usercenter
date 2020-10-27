@@ -113,8 +113,15 @@
     <update id="deleteByCarNumOpenId">
         update SYS_OPENID_CARNUMBER oc
         set oc.IS_DELETED = 1
-        WHERE oc.CARNUMBER = #{carNum}
-        and oc.OPENID = #{openId}
+        <where>
+            <if test="carNum != null">
+                and oc.CARNUMBER = #{carNum}
+            </if>
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
+            </if>
+            and oc.IS_DELETED = 0
+        </where>
     </update>
 
     <update id="updateCarNumEnable">

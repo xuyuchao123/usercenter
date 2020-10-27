@@ -112,7 +112,7 @@ public class CarNumServiceImpl implements CarNumService
     {
         LOGGER.info("进入新增车牌号方法carNum={} openId={}",carNum,openId);
         LOGGER.info("开始检查车牌号是否已被绑定carNum={} openId={}",carNum,openId);
-        int cnt = carNumOpenIdMapper.selectCntByCarNumOpenId(carNum,null);
+        int cnt = carNumOpenIdMapper.selectCntByCarNumOpenId(carNum,openId);
         Date date = new Date();
         CarNumOpenId carNumOpenId = new CarNumOpenId(null,openId,carNum,engineNum,identNum,emissionStd,fleetName,regDate,department,0,0,openId,openId,date,date);
         if(cnt > 0)
@@ -165,7 +165,7 @@ public class CarNumServiceImpl implements CarNumService
     public void enableCarNum(String carNum, String openId) throws Exception
     {
         LOGGER.info("进入启用车牌号方法 CarNum={} openId={}",carNum,openId);
-        List<CarNumOpenId> carNumOpenIdList = carNumOpenIdMapper.selectByOpenIdCarNum(null,carNum);
+        List<CarNumOpenId> carNumOpenIdList = carNumOpenIdMapper.selectByOpenIdCarNum(openId,carNum);
         if(carNumOpenIdList == null || carNumOpenIdList.size() == 0)
         {
             LOGGER.info("该车牌号已删除或不存在 CarNum={} openId={}",carNum,openId);
@@ -309,11 +309,13 @@ public class CarNumServiceImpl implements CarNumService
                 userInfoVo.setCarNumList(new ArrayList<>());
             }
             //若角色为开单员则需获取其工号
-            if(userInfoVo.getRoleCode().equals(RoleTypeEnum.ROLE_KDY.getRoleCode()))
-            {
-                String gh = userMapper.selectUserId(userInfoVo.getMobilePhone());
-                userInfoVo.setGh(gh);
-            }
+//            if(userInfoVo.getRoleCode().equals(RoleTypeEnum.ROLE_KDY.getRoleCode()))
+//            {
+//                String gh = userMapper.selectUserId(userInfoVo.getMobilePhone());
+//                userInfoVo.setGh(gh);
+//            }
+            String gh = userMapper.selectUserId(userInfoVo.getMobilePhone());
+            userInfoVo.setGh(gh);
             String json = JSON.toJSONString(userInfoVo);
             redisTemplate.opsForValue().set(openId,json);
         }

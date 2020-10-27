@@ -2,10 +2,7 @@ package com.xyc.userc.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.xyc.userc.dao.*;
-import com.xyc.userc.entity.MobileOpenId;
-import com.xyc.userc.entity.PcUser;
-import com.xyc.userc.entity.Role;
-import com.xyc.userc.entity.User;
+import com.xyc.userc.entity.*;
 import com.xyc.userc.security.MesCodeErrorException;
 import com.xyc.userc.security.MesCodeExpiredException;
 import com.xyc.userc.security.MobileNotFoundException;
@@ -115,32 +112,55 @@ public class UserServiceImpl implements UserService
             String roleCode = null;
             String gh = null;
             Role role = null;
+            boolean isUpdate = false;
             if(map != null)
             {
+                isUpdate = true;
                 String mobile_ori = map.get("MOBILE").toString();
                 LOGGER.info("当前openId已绑定手机号 mobile_ori={} openId={}", mobile_ori,openId);
-                if(mobile_ori.equals(mobile))
+//                if(mobile_ori.equals(mobile))
+//                {
+//                    LOGGER.error("当前openId已绑定该手机号，不能重复绑定 mobile={} openId={}", mobile,openId);
+//                    throw new BusinessException(JsonResultEnum.MOBILE_BINDED);
+//                }
+                if(!mobile_ori.equals(mobile))
                 {
-                    LOGGER.error("当前openId已绑定该手机号，不能重复绑定 mobile={} openId={}", mobile,openId);
-                    throw new BusinessException(JsonResultEnum.MOBILE_BINDED);
+                    LOGGER.info("开始更新当前openId绑定的手机号 mobile_ori={} mobile={} openId={}", mobile_ori,mobile,openId);
+                    mobileOpenIdMapper.updateMobile(mobile, openId);
                 }
-                else
+                String[] resArray = queryRoleCodeByMobile(mobile);
+                roleCode = resArray[0];
+                gh = resArray[1];
+                String roleCode_ori = map.get("ROLE_CODE").toString();
+                LOGGER.info("当前手机号：{},对应的角色编码：{}, 工号：{} 原来的角色编码：{}",mobile,roleCode,gh,roleCode_ori);
+                //若新手机号对应的角色为司机0，且该openId原先对应的角色为司机1，则修改绑定的手机号之后角色仍然为司机1
+                if(RoleTypeEnum.ROLE_SJ_0.getRoleCode().equals(roleCode) && RoleTypeEnum.ROLE_SJ_1.getRoleCode().equals(roleCode_ori))
                 {
-                    LOGGER.info("开始更新当前openId绑定的手机号 mobile={} openId={}", mobile,openId);
-                    mobileOpenIdMapper.updateMobile(mobile,openId);
-                    String[] resArray = queryRoleCodeByMobile(mobile);
-                    roleCode = resArray[0];
-                    gh = resArray[1];
-                    LOGGER.info("当前手机号：{},对应的角色编码：{}, 工号：{}",mobile,roleCode,gh);
-                    role = roleMapper.selectByRoleCode(roleCode);
-                    //更新后的手机号对应的角色与原手机号对应的角色不同则需要修改角色
-                    if(!role.getId().equals(map.get("ROLE_ID").toString()))
+                    LOGGER.info("新手机号对应的角色为司机0，且该openId原先对应的角色为司机1，修改绑定的手机号之后角色仍为司机1");
+                    roleCode = RoleTypeEnum.ROLE_SJ_1.getRoleCode();
+                }
+                role = roleMapper.selectByRoleCode(roleCode);
+                //更新后的手机号对应的角色与原手机号对应的角色不同则需要修改角色
+                if(role != null && !role.getId().equals(map.get("ROLE_ID").toString()))
+                {
+                    Date date = new Date();
+                    //更新用户与角色关联表
+                    roleMapper.updateUserRole(Integer.valueOf(map.get("ID").toString()),role.getId(),date);
+                }
+                //若原角色为司机，重新绑定后角色不为司机，则需判断该oopenId下是否有绑定的车牌号，有车牌号则删除
+                if((!RoleTypeEnum.ROLE_SJ_0.equals(roleCode)) && (!RoleTypeEnum.ROLE_SJ_1.equals(roleCode))
+                        && (RoleTypeEnum.ROLE_SJ_0.equals(roleCode_ori) || RoleTypeEnum.ROLE_SJ_1.equals(roleCode_ori)))
+                {
+                    LOGGER.info("原角色为司机，重新绑定后角色不为司机，开始判断该oopenId下是否有绑定的车牌号 openId={}",openId);
+                    List<CarNumOpenId> carNumOpenIdList =  carNumOpenIdMapper.selectByOpenId(openId);
+                    if(carNumOpenIdList != null && carNumOpenIdList.size() > 0)
                     {
-                        Date date = new Date();
-                        //更新用户与角色关联表
-                        roleMapper.updateUserRole(Integer.valueOf(map.get("ID").toString()),role.getId(),date);
+                        LOGGER.info("该oopenId下有绑定的车牌号,开始删除这些车牌号的绑定关系 openId={},车牌号数量：{}",openId,carNumOpenIdList.size());
+                        int delCnt = carNumOpenIdMapper.deleteByCarNumOpenId(null,openId);
+                        LOGGER.info("成功删除 {} 个车牌号",delCnt);
                     }
                 }
+
             }
             else
             {
@@ -162,9 +182,20 @@ public class UserServiceImpl implements UserService
             userInfoVo.setOpenId(openId);
             userInfoVo.setMobilePhone(mobile);
             userInfoVo.setRoleCode(roleCode);
-            if (roleCode.equals(RoleTypeEnum.ROLE_SJ_0.getRoleCode()))
+            if (roleCode.equals(RoleTypeEnum.ROLE_SJ_0.getRoleCode()) || roleCode.equals(RoleTypeEnum.ROLE_SJ_1.getRoleCode()))
             {
-                userInfoVo.setCarNumList(new ArrayList<CarNumInfoVo>());
+                if(!isUpdate)
+                {
+                    LOGGER.info("当前openId未绑定手机号,无需获取对应的车牌号列表");
+                    userInfoVo.setCarNumList(new ArrayList<CarNumInfoVo>());
+                }
+                else
+                {
+                    LOGGER.info("当前openId已绑定手机号,需要获取对应的车牌号列表");
+                    List<CarNumInfoVo> carNumInfoVoList = new ArrayList<>();
+                    carNumInfoVoList = carNumOpenIdMapper.selectCarNumInfoVo(openId);
+                    userInfoVo.setCarNumList(carNumInfoVoList);
+                }
             }
             if (roleCode.equals(RoleTypeEnum.ROLE_JLY_BC.getRoleCode()) || roleCode.equals(RoleTypeEnum.ROLE_JLY_XC.getRoleCode()) ||
                     roleCode.equals(RoleTypeEnum.ROLE_JLY_KHB.getRoleCode()) || roleCode.equals(RoleTypeEnum.ROLE_JLY_OTHER.getRoleCode()))

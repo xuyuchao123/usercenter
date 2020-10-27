@@ -34,10 +34,12 @@
 
     <select id="selectByMobileOpenIdRole" resultType="java.util.Map">
         select  mo.ID, mo.MOBILE, mo.OPENID, mo.USER_CREATE, mo.GMT_CREATE,
-        ur.ROLE_ID
+        ur.ROLE_ID,r.ROLE_CODE
         from SYS_MOBILE_OPENID mo
         left join SYS_USER_ROLE ur
         on mo.ID = ur.MOBILE_OPENID_ID
+        left join SYS_ROLE r
+        on ur.ROLE_ID = r.ID
         <where>
             <if test="mobile != null">
                 and mo.MOBILE = #{mobile}
