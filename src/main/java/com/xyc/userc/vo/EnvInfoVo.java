@@ -17,6 +17,14 @@ public class EnvInfoVo implements Serializable
     private String engineNumber;
     private String paif;
     private String crossTime;
+    private String forecastTime;
+    private String zcrq;
+    private String carInOutString;
+    private String entranceName;
+    private String hwmc;
+    private String ysl;
+    private String cdmc;
+
 
     public Integer getId() {
         return id;
@@ -72,5 +80,61 @@ public class EnvInfoVo implements Serializable
 
     public void setCrossTime(String crossTime) {
         this.crossTime = crossTime;
+    }
+
+    public String getForecastTime() {
+        return forecastTime;
+    }
+
+    public void setForecastTime(String forecastTime) {
+        this.forecastTime = forecastTime;
+    }
+
+    public String getZcrq() {
+        return zcrq;
+    }
+
+    public void setZcrq(String zcrq) {
+        this.zcrq = zcrq;
+    }
+
+    public String getCarInOutString() {
+        return carInOutString;
+    }
+
+    public void setCarInOutString(String carInOutString) {
+        this.carInOutString = carInOutString;
+    }
+
+    public String getEntranceName() {
+        return entranceName;
+    }
+
+    public void setEntranceName(String entranceName) {
+        this.entranceName = entranceName;
+    }
+
+    public String getHwmc() {
+        return hwmc;
+    }
+
+    public void setHwmc(String hwmc) {
+        this.hwmc = hwmc;
+    }
+
+    public String getYsl() {
+        return ysl;
+    }
+
+    public void setYsl(String ysl) {
+        this.ysl = ysl;
+    }
+
+    public String getCdmc() {
+        return cdmc;
+    }
+
+    public void setCdmc(String cdmc) {
+        this.cdmc = cdmc;
     }
 }

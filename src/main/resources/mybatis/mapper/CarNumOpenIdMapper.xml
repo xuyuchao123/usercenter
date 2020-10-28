@@ -248,39 +248,67 @@
         </where>
     </select>
 
+    <!--<select id="selectEnvInfo" resultType="com.xyc.userc.vo.EnvInfoVo">-->
+        <!--select * from-->
+        <!--(select aa.bumen as bumen, aa.car_number as carNumber,aa.car_vin_number as carVinNumber,-->
+          <!--aa.engine_number as engineNumber, aa.paif as paif, bb.crosstime as crossTime,rownum as id-->
+        <!--from (select DISTINCT a.bumen,a.car_number,a.car_vin_number,a.engine_number,a.paif-->
+          <!--from sell.cdp a) aa-->
+        <!--left join (select b.PLATENO,b.crosstime-->
+                    <!--from T_ZZYY_RC_CAR_HIK@rcdb b-->
+                    <!--where b.crosstime like concat(#{startDate},'%')-->
+                    <!--and (b.carinoutstring = '入场' or b.carinoutstring = '0')) bb-->
+        <!--on aa.car_number = bb.PLATENO-->
+        <!--<where>-->
+            <!--<if test="carNum != null">-->
+                <!--and aa.car_number = #{carNum}-->
+            <!--</if>-->
+            <!--and rownum <![CDATA[ <= ]]> #{end})-->
+        <!--</where>-->
+        <!--where id <![CDATA[ >= ]]> #{start}-->
+    <!--</select>-->
+
     <select id="selectEnvInfo" resultType="com.xyc.userc.vo.EnvInfoVo">
         select * from
-        (select aa.bumen as bumen, aa.car_number as carNumber,aa.car_vin_number as carVinNumber,
-          aa.engine_number as engineNumber, aa.paif as paif, bb.crosstime as crossTime,rownum as id
-        from (select DISTINCT a.bumen,a.car_number,a.car_vin_number,a.engine_number,a.paif
-          from sell.cdp a) aa
-        left join (select b.PLATENO,b.crosstime
-                    from T_ZZYY_RC_CAR_HIK@rcdb b
-                    where b.crosstime like concat(#{startDate},'%')
-                    and (b.carinoutstring = '入场' or b.carinoutstring = '0')) bb
-        on aa.car_number = bb.PLATENO
+        (select cf.BUMEN as bumen, cf.CAR_NUMBER as carNumber, cf.CAR_VIN_NUM as carVinNumber,
+          cf.ENGINE_NUM as engineNumber, cf.PAIF as paif, cf.CROSSTIME as crossTime, cf.FORCAST_TIME as forecastTime,
+          cf.ZCRQ as zcrq, cf.CARINOUTSTRING as carInOutString, cf.ENTRANCENAME as entranceName, cf.HWMC as hwmc,
+          cf.YSL as ysl, cf.CDMC as cdmc, rownum as id
+        from report.carinfo cf
         <where>
             <if test="carNum != null">
-                and aa.car_number = #{carNum}
+              and cf.car_number = #{carNum}
             </if>
+            and cf.CROSSTIME like concat(#{startDate},'%')
             and rownum <![CDATA[ <= ]]> #{end})
         </where>
         where id <![CDATA[ >= ]]> #{start}
     </select>
 
+    <!--<select id="selectEnvInfoCnt" resultType="java.lang.Integer">-->
+        <!--select count(*)-->
+        <!--from (select DISTINCT a.bumen,a.car_number,a.car_vin_number,a.engine_number,a.paif-->
+        <!--from sell.cdp a) aa-->
+        <!--left join (select b.PLATENO,b.crosstime-->
+        <!--from T_ZZYY_RC_CAR_HIK@rcdb b-->
+        <!--where b.crosstime like concat(#{startDate},'%')-->
+        <!--and (b.carinoutstring = '入场' or b.carinoutstring = '0')) bb-->
+        <!--on aa.car_number = bb.PLATENO-->
+        <!--<where>-->
+            <!--<if test="carNum != null">-->
+                <!--and aa.car_number = #{carNum}-->
+            <!--</if>-->
+        <!--</where>-->
+    <!--</select>-->
+
     <select id="selectEnvInfoCnt" resultType="java.lang.Integer">
         select count(*)
-        from (select DISTINCT a.bumen,a.car_number,a.car_vin_number,a.engine_number,a.paif
-        from sell.cdp a) aa
-        left join (select b.PLATENO,b.crosstime
-        from T_ZZYY_RC_CAR_HIK@rcdb b
-        where b.crosstime like concat(#{startDate},'%')
-        and (b.carinoutstring = '入场' or b.carinoutstring = '0')) bb
-        on aa.car_number = bb.PLATENO
+        from report.carinfo cf
         <where>
             <if test="carNum != null">
-                and aa.car_number = #{carNum}
+              and cf.CAR_NUMBER = #{carNum}
             </if>
+            and cf.CROSSTIME like concat(#{startDate},'%')
         </where>
     </select>
 

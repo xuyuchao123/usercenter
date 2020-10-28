@@ -280,7 +280,7 @@ public class CarNumController
             List<EnvInfoVo> envInfoVos = null;
             if(resList != null && resList.size() == 4)
             {
-//                total = resList.get(0).toString();
+                total = resList.get(0).toString();
                 page = resList.get(1).toString();
                 size = resList.get(2).toString();
                 envInfoVos = (List<EnvInfoVo>)resList.get(3);
