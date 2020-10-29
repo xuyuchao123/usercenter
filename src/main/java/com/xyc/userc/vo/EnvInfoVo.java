@@ -1,17 +1,24 @@
 package com.xyc.userc.vo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by 1 on 2020/10/10.
  */
+@ApiModel(value="查询环保管控信息返回类型")
 public class EnvInfoVo implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
     private Integer id;
+
+    @ApiModelProperty(value="业务部门", example="综合销售处", position=1)
     private String bumen;
+
     private String carNumber;
     private String carVinNumber;
     private String engineNumber;
