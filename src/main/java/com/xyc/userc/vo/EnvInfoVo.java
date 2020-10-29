@@ -24,6 +24,7 @@ public class EnvInfoVo implements Serializable
     private String hwmc;
     private String ysl;
     private String cdmc;
+    private String vehicleUrl;
 
 
     public Integer getId() {
@@ -136,5 +137,13 @@ public class EnvInfoVo implements Serializable
 
     public void setCdmc(String cdmc) {
         this.cdmc = cdmc;
+    }
+
+    public String getVehicleUrl() {
+        return vehicleUrl;
+    }
+
+    public void setVehicleUrl(String vehicleUrl) {
+        this.vehicleUrl = vehicleUrl;
     }
 }
