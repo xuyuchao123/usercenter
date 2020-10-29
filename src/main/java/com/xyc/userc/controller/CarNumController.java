@@ -269,7 +269,7 @@ public class CarNumController
             @ApiImplicitParam(name = "page", value = "第几页", required = true, dataType = "String"),
             @ApiImplicitParam(name = "size", value = "每页显示页数", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
-    public JsonResultObj_Page queryEnvInfo(String carNum, String startDate, String page, String size)
+    public JsonResultObj_Page<EnvInfoVo> queryEnvInfo(String carNum, String startDate, String page, String size)
     {
         LOGGER.info("开始查询环保管控信息 carNum={},startDate={},page={},size={}",carNum,startDate,page,size);
         JsonResultObj_Page resultObj_Page = null;
