@@ -273,7 +273,7 @@
         (select cf.BUMEN as bumen, cf.CAR_NUMBER as carNumber, cf.CAR_VIN_NUM as carVinNumber,
           cf.ENGINE_NUM as engineNumber, cf.PAIF as paif, cf.CROSSTIME as crossTime, cf.FORECAST_TIME as forecastTime,
           cf.ZCRQ as zcrq, cf.CARINOUTSTRING as carInOutString, cf.ENTRANCENAME as entranceName, cf.HWMC as hwmc,
-          cf.YSL as ysl, cf.CDMC as cdmc, rownum as id
+          cf.YSL as ysl, cf.CDMC as cdmc, cf.VEHICLEURL as vehicleUrl, rownum as id
         from report.carinfo cf
         <where>
             <if test="carNum != null">
