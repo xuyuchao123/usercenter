@@ -141,7 +141,7 @@ public class UserServiceImpl implements UserService
                 }
                 role = roleMapper.selectByRoleCode(roleCode);
                 //更新后的手机号对应的角色与原手机号对应的角色不同则需要修改角色
-                if(role != null && !role.getId().equals(map.get("ROLE_ID").toString()))
+                if(role != null && !(role.getId().toString()).equals(map.get("ROLE_ID").toString()))
                 {
                     Date date = new Date();
                     //更新用户与角色关联表

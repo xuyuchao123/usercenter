@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * Created by 1 on 2020/10/10.
  */
-@ApiModel(value="查询环保管控信息返回类型")
+@ApiModel(value="环保管控信息返回对象类型")
 public class EnvInfoVo implements Serializable
 {
     private static final long serialVersionUID = 1L;
