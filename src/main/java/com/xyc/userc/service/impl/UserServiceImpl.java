@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService
                     roleCodeStrs += roleCode;
                     roleCodeStrs += ",";
                 }
-                roleCodeStrs = roleCodeStrs.substring(0,roleCodeStrs.length()-2);
+                roleCodeStrs = roleCodeStrs.substring(0,roleCodeStrs.length()-1);
                 gh = (String)resList.get(1);
                 List<String> oriRoleCodeList = new ArrayList<>();
                 String oriRoleCodeStrs = "";
@@ -207,7 +207,7 @@ public class UserServiceImpl implements UserService
                     roleCodeStrs += roleCode;
                     roleCodeStrs += ",";
                 }
-                roleCodeStrs = roleCodeStrs.substring(0,roleCodeStrs.length()-2);
+                roleCodeStrs = roleCodeStrs.substring(0,roleCodeStrs.length()-1);
                 LOGGER.info("当前手机号：{},对应的角色编码：{}, 工号：{}",mobile,roleCodeStrs,gh);
             }
 
@@ -269,6 +269,44 @@ public class UserServiceImpl implements UserService
         {
             return;
         }
+        UserInfoVo tmpVo = userInfoVoList.get(0);
+        String tmpOpenId = userInfoVoList.get(0).getOpenId();
+//        String tmpRoleCode = tmpVo.getRoleCode();
+        for(int i = 1; i < userInfoVoList.size(); i++)
+        {
+            UserInfoVo loopVo = userInfoVoList.get(i);
+            if(tmpOpenId.equals(loopVo.getOpenId()))
+            {
+                String tmpRoleCode = tmpVo.getRoleCode();
+                if(tmpRoleCode.indexOf(",") == -1)
+                {
+                    tmpRoleCode += ",";
+                }
+                tmpRoleCode += loopVo.getRoleCode();
+                tmpRoleCode += ",";
+                tmpVo.setRoleCode(tmpRoleCode);
+                userInfoVoList.remove(i);
+                i--;
+            }
+            else
+            {
+                String roleCode = tmpVo.getRoleCode();
+                if(roleCode.charAt(roleCode.length()-1) == ',')
+                {
+                    roleCode = roleCode.substring(0,roleCode.length()-1);
+                    tmpVo.setRoleCode(roleCode);
+                }
+                tmpVo = loopVo;
+                tmpOpenId = loopVo.getOpenId();
+            }
+        }
+        String lastRoleCode = tmpVo.getRoleCode();
+        if(lastRoleCode.charAt(lastRoleCode.length()-1) == ',')
+        {
+            lastRoleCode = lastRoleCode.substring(0,lastRoleCode.length()-1);
+            tmpVo.setRoleCode(lastRoleCode);
+        }
+
         List<Map> list = carNumOpenIdMapper.selectCarNumInfo(null);
         List KdyMobileList = null;
         if(list != null && list.size() > 0)
@@ -529,6 +567,9 @@ public class UserServiceImpl implements UserService
                         break;
                     case "KDY":
                         roleCode = RoleTypeEnum.ROLE_KDY.getRoleCode();
+                        break;
+                    case "HBGK":
+                        roleCode = RoleTypeEnum.ROLE_HBGK.getRoleCode();
                         break;
                     default:
                         roleCode = RoleTypeEnum.ROLE_JLY_OTHER.getRoleCode();

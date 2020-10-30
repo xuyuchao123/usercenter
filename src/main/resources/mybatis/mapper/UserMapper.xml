@@ -53,7 +53,7 @@
   </update>
 
   <select id="selectUserInfoVo" resultType="com.xyc.userc.vo.UserInfoVo">
-    select DISTINCT mo.OPENID as openId,
+    select mo.OPENID as openId,
     mo.MOBILE as mobilePhone, r.ROLE_CODE as roleCode,
     js.LASTSTOCKCODE as lastStockCode,
     js.JLYOPERATORTIME as operatorTime

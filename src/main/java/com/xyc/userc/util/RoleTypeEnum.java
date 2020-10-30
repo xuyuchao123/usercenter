@@ -6,7 +6,7 @@ package com.xyc.userc.util;
  */
 public enum RoleTypeEnum
 {
-    ROLE_ADMIN("ADMIN", "管理员"),
+//    ROLE_ADMIN("ADMIN", "管理员"),
 
     ROLE_SJ_0("SJ0", "客户、司机0"),
 
@@ -20,7 +20,9 @@ public enum RoleTypeEnum
 
     ROLE_JLY_KHB("JLY_KHB", "海力物流计量员（宽厚板）"),
 
-    ROLE_JLY_OTHER("JLY_OTHER", "海力物流计量员（其它）");
+    ROLE_JLY_OTHER("JLY_OTHER", "海力物流计量员（其它）"),
+
+    ROLE_HBGK("HBGK","环保管控");
 
 
     private String roleCode;

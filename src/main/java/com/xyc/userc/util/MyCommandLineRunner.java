@@ -1,16 +1,10 @@
 package com.xyc.userc.util;
 
-import com.alibaba.fastjson.JSON;
-import com.xyc.userc.controller.TemplateController;
 import com.xyc.userc.service.UserService;
-import com.xyc.userc.vo.CarNumInfoVo;
-import com.xyc.userc.vo.UserInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
