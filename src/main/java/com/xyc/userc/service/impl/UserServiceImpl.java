@@ -108,15 +108,17 @@ public class UserServiceImpl implements UserService
             LOGGER.info("成功设置验证码失效状态 mobile={} mesCode={}", mobile,mesCode);
 
             LOGGER.info("开始查询当前openId是否已绑定其它手机号 mobile={} openId={}", mobile,openId);
-            Map map = mobileOpenIdMapper.selectByMobileOpenIdRole(null,openId);
-            String roleCode = null;
+            List<Map> maps = mobileOpenIdMapper.selectByMobileOpenIdRole(null,openId);
+            List<String> roleCodeList = null;
             String gh = null;
-            Role role = null;
+            List<Role> roles = new ArrayList<>();
             boolean isUpdate = false;
-            if(map != null)
+            Date date = new Date();
+            String roleCodeStrs = "";
+            if(maps != null && maps.size() > 0)
             {
                 isUpdate = true;
-                String mobile_ori = map.get("MOBILE").toString();
+                String mobile_ori = maps.get(0).get("MOBILE").toString();
                 LOGGER.info("当前openId已绑定手机号 mobile_ori={} openId={}", mobile_ori,openId);
 //                if(mobile_ori.equals(mobile))
 //                {
@@ -128,28 +130,55 @@ public class UserServiceImpl implements UserService
                     LOGGER.info("开始更新当前openId绑定的手机号 mobile_ori={} mobile={} openId={}", mobile_ori,mobile,openId);
                     mobileOpenIdMapper.updateMobile(mobile, openId);
                 }
-                String[] resArray = queryRoleCodeByMobile(mobile);
-                roleCode = resArray[0];
-                gh = resArray[1];
-                String roleCode_ori = map.get("ROLE_CODE").toString();
-                LOGGER.info("当前手机号：{},对应的角色编码：{}, 工号：{} 原来的角色编码：{}",mobile,roleCode,gh,roleCode_ori);
+                List<Object> resList = queryRoleCodeByMobile(mobile);
+                roleCodeList = (List<String>)resList.get(0);
+//                String roleCodeStrs = "";
+                for(String roleCode : roleCodeList)
+                {
+                    roleCodeStrs += roleCode;
+                    roleCodeStrs += ",";
+                }
+                roleCodeStrs = roleCodeStrs.substring(0,roleCodeStrs.length()-2);
+                gh = (String)resList.get(1);
+                List<String> oriRoleCodeList = new ArrayList<>();
+                String oriRoleCodeStrs = "";
+                for(Map map : maps)
+                {
+                    String oriRoleCode = map.get("ROLE_CODE").toString();
+                    oriRoleCodeList.add(oriRoleCode);
+                    oriRoleCodeStrs += oriRoleCode;
+                    oriRoleCodeStrs += " ";
+                }
+                LOGGER.info("当前手机号：{},对应的角色编码：{}, 工号：{} 原来的角色编码：{}",mobile,roleCodeStrs,gh,oriRoleCodeStrs);
                 //若新手机号对应的角色为司机0，且该openId原先对应的角色为司机1，则修改绑定的手机号之后角色仍然为司机1
-                if(RoleTypeEnum.ROLE_SJ_0.getRoleCode().equals(roleCode) && RoleTypeEnum.ROLE_SJ_1.getRoleCode().equals(roleCode_ori))
+                if(roleCodeList.size() == 1 && roleCodeList.get(0).equals(RoleTypeEnum.ROLE_SJ_0.getRoleCode())
+                        && oriRoleCodeList.size() == 1 && oriRoleCodeList.get(0).equals(RoleTypeEnum.ROLE_SJ_1.getRoleCode()))
                 {
                     LOGGER.info("新手机号对应的角色为司机0，且该openId原先对应的角色为司机1，修改绑定的手机号之后角色仍为司机1");
-                    roleCode = RoleTypeEnum.ROLE_SJ_1.getRoleCode();
+                    roleCodeList.set(0,RoleTypeEnum.ROLE_SJ_1.getRoleCode());
                 }
-                role = roleMapper.selectByRoleCode(roleCode);
-                //更新后的手机号对应的角色与原手机号对应的角色不同则需要修改角色
-                if(role != null && !(role.getId().toString()).equals(map.get("ROLE_ID").toString()))
+//                if(roleCodeList.size() == oriRoleCodeList.size() && )
+//                role = roleMapper.selectByRoleCode(roleCode);
+//                //更新后的手机号对应的角色与原手机号对应的角色不同则需要修改角色
+//                if(role != null && !(role.getId().toString()).equals(map.get("ROLE_ID").toString()))
+//                {
+//                    Date date = new Date();
+//                    //更新用户与角色关联表
+//                    roleMapper.updateUserRole(Integer.valueOf(map.get("ID").toString()),role.getId(),date);
+//                }
+                Integer mobileOpenIdId = Integer.valueOf(maps.get(0).get("ID").toString());
+                //删除原先手机号对应的角色关联关系
+                roleMapper.deleteUserRole(mobileOpenIdId);
+                for(String roleCode : roleCodeList)
                 {
-                    Date date = new Date();
-                    //更新用户与角色关联表
-                    roleMapper.updateUserRole(Integer.valueOf(map.get("ID").toString()),role.getId(),date);
+                    Role role = roleMapper.selectByRoleCode(roleCode);
+                    roles.add(role);
+                    //插入用户与角色关联表
+                    roleMapper.insertUserRole(mobileOpenIdId, role.getId(), date, date);
                 }
                 //若原角色为司机，重新绑定后角色不为司机，则需判断该oopenId下是否有绑定的车牌号，有车牌号则删除
-                if((!RoleTypeEnum.ROLE_SJ_0.equals(roleCode)) && (!RoleTypeEnum.ROLE_SJ_1.equals(roleCode))
-                        && (RoleTypeEnum.ROLE_SJ_0.equals(roleCode_ori) || RoleTypeEnum.ROLE_SJ_1.equals(roleCode_ori)))
+                if(oriRoleCodeList.size() == 1 && (oriRoleCodeList.get(0).equals(RoleTypeEnum.ROLE_SJ_0) || oriRoleCodeList.get(0).equals(RoleTypeEnum.ROLE_SJ_1))
+                        && roleCodeList.size() > 1)
                 {
                     LOGGER.info("原角色为司机，重新绑定后角色不为司机，开始判断该oopenId下是否有绑定的车牌号 openId={}",openId);
                     List<CarNumOpenId> carNumOpenIdList =  carNumOpenIdMapper.selectByOpenId(openId);
@@ -160,29 +189,35 @@ public class UserServiceImpl implements UserService
                         LOGGER.info("成功删除 {} 个车牌号",delCnt);
                     }
                 }
-
             }
             else
             {
                 LOGGER.info("当前openId未绑定手机号openId={}", openId);
                 int insertCnt = mobileOpenIdMapper.insertMobileOpenId(mobileOpenId);
                 int id = mobileOpenId.getId();
-                String[] resArray = queryRoleCodeByMobile(mobile);
-                roleCode = resArray[0];
-                gh = resArray[1];
-                LOGGER.info("当前手机号：{},对应的角色编码：{}, 工号：{}",mobile,roleCode,gh);
-                role = roleMapper.selectByRoleCode(roleCode);
-                Date date = new Date();
-                //插入用户与角色关联表
-                roleMapper.insertUserRole(id, role.getId(), date, date);
+                List<Object> resList = queryRoleCodeByMobile(mobile);
+                roleCodeList = (List<String>)resList.get(0);
+                gh = (String)resList.get(1);
+                for(String roleCode : roleCodeList)
+                {
+                    Role role = roleMapper.selectByRoleCode(roleCode);
+                    roles.add(role);
+                    //插入用户与角色关联表
+                    roleMapper.insertUserRole(id, role.getId(), date, date);
+                    roleCodeStrs += roleCode;
+                    roleCodeStrs += ",";
+                }
+                roleCodeStrs = roleCodeStrs.substring(0,roleCodeStrs.length()-2);
+                LOGGER.info("当前手机号：{},对应的角色编码：{}, 工号：{}",mobile,roleCodeStrs,gh);
             }
 
             LOGGER.info("开始将用户绑定信息存入redis openId={} mobile={}", openId, mobile);
             UserInfoVo userInfoVo = new UserInfoVo();
             userInfoVo.setOpenId(openId);
             userInfoVo.setMobilePhone(mobile);
-            userInfoVo.setRoleCode(roleCode);
-            if (roleCode.equals(RoleTypeEnum.ROLE_SJ_0.getRoleCode()) || roleCode.equals(RoleTypeEnum.ROLE_SJ_1.getRoleCode()))
+            userInfoVo.setRoleCode(roleCodeStrs);
+            if (roleCodeList.size() == 1 && (roleCodeList.get(0).equals(RoleTypeEnum.ROLE_SJ_0.getRoleCode())
+                    || roleCodeList.get(0).equals(RoleTypeEnum.ROLE_SJ_1.getRoleCode())))
             {
                 if(!isUpdate)
                 {
@@ -197,8 +232,7 @@ public class UserServiceImpl implements UserService
                     userInfoVo.setCarNumList(carNumInfoVoList);
                 }
             }
-            if (roleCode.equals(RoleTypeEnum.ROLE_JLY_BC.getRoleCode()) || roleCode.equals(RoleTypeEnum.ROLE_JLY_XC.getRoleCode()) ||
-                    roleCode.equals(RoleTypeEnum.ROLE_JLY_KHB.getRoleCode()) || roleCode.equals(RoleTypeEnum.ROLE_JLY_OTHER.getRoleCode()))
+            if (roleCodeList.contains(RoleTypeEnum.ROLE_JLY_BC.getRoleCode()) || roleCodeList.contains(RoleTypeEnum.ROLE_JLY_OTHER.getRoleCode()))
             {
                 Map stockCodeMap = userMapper.selectStockCodeInfo(openId);
                 if (stockCodeMap != null)
@@ -219,8 +253,6 @@ public class UserServiceImpl implements UserService
             User user = new User();
             user.setOpenid(openId);
             user.setMobilePhone(mobile);
-            List<Role> roles = new ArrayList<>();
-            roles.add(role);
             user.setRoles(roles);
             LOGGER.info("结束绑定手机号方法 mobile={} nickName={} mesCode={} openid={}",mobile,nickName,mesCode,openId);
             return user;
@@ -469,44 +501,45 @@ public class UserServiceImpl implements UserService
     }
 
     //通过手机号查询角色编码及工号
-    public String[] queryRoleCodeByMobile(String mobile) throws Exception
+    public List<Object> queryRoleCodeByMobile(String mobile) throws Exception
     {
         List<Map> maps = userMapper.selectUserRoleByMobile(mobile);
-        String roleCode = null;
+        List<String> roleCodeList = new ArrayList<>();
         String gh = null;
         if (maps == null || maps.size() == 0)
         {
-            roleCode = RoleTypeEnum.ROLE_SJ_0.getRoleCode();
-        }
-        else if (maps.size() == 1)
-        {
-            String item = maps.get(0).get("ITEM").toString().toUpperCase();
-            switch (item)
-            {
-                case "XC":
-                    roleCode = RoleTypeEnum.ROLE_JLY_XC.getRoleCode();
-                    break;
-                case "BC":
-                    roleCode = RoleTypeEnum.ROLE_JLY_BC.getRoleCode();
-                    break;
-                case "HP":
-                    roleCode = RoleTypeEnum.ROLE_JLY_KHB.getRoleCode();
-                    break;
-                case "KDY":
-                    roleCode = RoleTypeEnum.ROLE_KDY.getRoleCode();
-                    break;
-                default:
-                    roleCode = RoleTypeEnum.ROLE_JLY_OTHER.getRoleCode();
-            }
-            gh = maps.get(0).get("USER_ID").toString();
+            roleCodeList.add(RoleTypeEnum.ROLE_SJ_0.getRoleCode());
         }
         else
         {
-            roleCode = RoleTypeEnum.ROLE_ADMIN.getRoleCode();
+            for(Map map : maps)
+            {
+                String item = map.get("ITEM").toString().toUpperCase();
+                String roleCode = null;
+                switch (item)
+                {
+                    case "XC":
+                        roleCode = RoleTypeEnum.ROLE_JLY_XC.getRoleCode();
+                        break;
+                    case "BC":
+                        roleCode = RoleTypeEnum.ROLE_JLY_BC.getRoleCode();
+                        break;
+                    case "HP":
+                        roleCode = RoleTypeEnum.ROLE_JLY_KHB.getRoleCode();
+                        break;
+                    case "KDY":
+                        roleCode = RoleTypeEnum.ROLE_KDY.getRoleCode();
+                        break;
+                    default:
+                        roleCode = RoleTypeEnum.ROLE_JLY_OTHER.getRoleCode();
+                }
+                roleCodeList.add(roleCode);
+            }
+            gh = maps.get(0).get("USER_ID").toString();
         }
-        String[] resArray = new String[2];
-        resArray[0] = roleCode;
-        resArray[1] = gh;
-        return resArray;
+        List<Object> resList = new ArrayList<>();
+        resList.add(roleCodeList);
+        resList.add(gh);
+        return resList;
     }
 }

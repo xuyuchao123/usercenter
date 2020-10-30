@@ -21,4 +21,6 @@ public interface RoleMapper {
     void updateUserRole(@Param("mobileOpenIdId")Integer mobileOpenIdId, @Param("roleId")Integer roleId,
                         @Param("gmtModified")Date gmtModified);
 
+    void deleteUserRole(@Param("mobileOpenIdId")Integer mobileOpenIdId);
+
 }

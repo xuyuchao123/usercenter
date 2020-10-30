@@ -54,5 +54,10 @@
     and r.IS_DELETED = 0
   </select>
 
+  <delete id="deleteUserRole" >
+    delete from SYS_USER_ROLE ur
+    where ur.MOBILE_OPENID_ID = #{mobileOpenIdId}
+  </delete>
+
 
 </mapper>
