@@ -93,7 +93,7 @@
     </select>
 
     <select id="selectBlackListInInfo" resultType="java.util.Map">
-        select b.CARNUM, NVL(aa.CROSSDATE,'') as CROSSDATE from SYS_BLACKLIST b
+        select b.CARNUM, NVL(aa.CROSSDATE,' ') as CROSSDATE from SYS_BLACKLIST b
         left join
         (
             select distinct a.PLATENO, substr(a.CROSSTIME,0,10) as CROSSDATE
@@ -105,5 +105,28 @@
         on b.CARNUM = aa.PLATENO
         where b.IS_ENABLE = 1
     </select>
+
+    <insert id="insertBlacklistEnter">
+        insert into SYS_BLACKLIST_ENTER(ID,CARNUM,ENTER_DATE,STATUS)
+        values(BLACKLIST_ENTER_SEQ.nextval,#{carNum},#{enterDate},1)
+    </insert>
+
+    <update id="updateCurDateValidStat">
+        update SYS_BLACKLIST_ENTER be
+        set be.ENTER_DATE = #{curDate}, be.STATUS = 1
+        where be.CARNUM IN
+        <foreach collection="list" open="(" close=")" separator="," item="carNum" index="i">
+            #{carNum}
+        </foreach>
+    </update>
+
+    <update id="updateStatInvalid">
+        update SYS_BLACKLIST_ENTER be
+        set be.STATUS = 0
+        where be.CARNUM IN
+        <foreach collection="list" open="(" close=")" separator="," item="carNum" index="i">
+            #{carNum}
+        </foreach>
+    </update>
 
 </mapper>

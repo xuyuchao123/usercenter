@@ -27,4 +27,10 @@ public interface BlacklistMapper
     List<BlackListEnter> selectBlacklistEnter();
 
     List<Map> selectBlackListInInfo(@Param("startTime")String startTime, @Param("endTime")String endTime);
+
+    int insertBlacklistEnter(@Param("carNum")String carNum, @Param("enterDate")String enterDate);
+
+    void updateCurDateValidStat(@Param("list")List<String> uptCurDateValidStatList, @Param("curDate")String curDate);
+
+    void updateStatInvalid(@Param("list")List<String> uptStatInvalidList);
 }
