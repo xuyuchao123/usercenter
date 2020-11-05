@@ -11,36 +11,26 @@ public class BlacklistVo implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    private String name;
-    private String mobile;
+    private String carNum;
     private String reason;
     private String createName;
     private String createMobile;
     private Long gmtCreate;
 
-    public BlacklistVo(String name, String mobile, String reason, String createName, String createMobile, Long gmtCreate) {
-        this.name = name;
-        this.mobile = mobile;
+    public BlacklistVo(String carNum, String reason, String createName, String createMobile, Long gmtCreate) {
+        this.carNum = carNum;
         this.reason = reason;
         this.createName = createName;
         this.createMobile = createMobile;
         this.gmtCreate = gmtCreate;
     }
 
-    public String getName() {
-        return name;
+    public String getCarNum() {
+        return carNum;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setCarNum(String carNum) {
+        this.carNum = carNum;
     }
 
     public String getReason() {

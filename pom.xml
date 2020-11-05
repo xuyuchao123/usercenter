@@ -121,6 +121,13 @@
 			<version>2.3.2</version>
 		</dependency>
 
+		<!--定时任务-->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>2.2.1</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.avei.shriety</groupId>
 			<artifactId>wx_sdk</artifactId>

@@ -157,15 +157,7 @@ public class UserServiceImpl implements UserService
                     LOGGER.info("新手机号对应的角色为司机0，且该openId原先对应的角色为司机1，修改绑定的手机号之后角色仍为司机1");
                     roleCodeList.set(0,RoleTypeEnum.ROLE_SJ_1.getRoleCode());
                 }
-//                if(roleCodeList.size() == oriRoleCodeList.size() && )
-//                role = roleMapper.selectByRoleCode(roleCode);
-//                //更新后的手机号对应的角色与原手机号对应的角色不同则需要修改角色
-//                if(role != null && !(role.getId().toString()).equals(map.get("ROLE_ID").toString()))
-//                {
-//                    Date date = new Date();
-//                    //更新用户与角色关联表
-//                    roleMapper.updateUserRole(Integer.valueOf(map.get("ID").toString()),role.getId(),date);
-//                }
+
                 Integer mobileOpenIdId = Integer.valueOf(maps.get(0).get("ID").toString());
                 //删除原先手机号对应的角色关联关系
                 roleMapper.deleteUserRole(mobileOpenIdId);

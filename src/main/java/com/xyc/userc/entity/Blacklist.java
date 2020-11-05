@@ -11,7 +11,7 @@ public class Blacklist implements Serializable
     private static final long serialVersionUID = 1L;
 
     private Integer id;
-    private Integer mobileOpenIdId;
+    private String carNum;
     private String reason;
     private String userCreate;
     private Date gmtCreate;
@@ -19,10 +19,10 @@ public class Blacklist implements Serializable
     private Date gmtModified;
     private Integer isEnable;
 
-    public Blacklist(Integer id, Integer mobileOpenIdId, String reason, String userCreate,
+    public Blacklist(Integer id, String carNum, String reason, String userCreate,
                      Date gmtCreate, String userModified, Date gmtModified, Integer isEnable) {
         this.id = id;
-        this.mobileOpenIdId = mobileOpenIdId;
+        this.carNum = carNum;
         this.reason = reason;
         this.userCreate = userCreate;
         this.gmtCreate = gmtCreate;
@@ -39,12 +39,12 @@ public class Blacklist implements Serializable
         this.id = id;
     }
 
-    public Integer getMobileOpenIdId() {
-        return mobileOpenIdId;
+    public String getCarNum() {
+        return carNum;
     }
 
-    public void setMobileOpenIdId(Integer mobileOpenIdId) {
-        this.mobileOpenIdId = mobileOpenIdId;
+    public void setCarNum(String carNum) {
+        this.carNum = carNum;
     }
 
     public String getReason() {
