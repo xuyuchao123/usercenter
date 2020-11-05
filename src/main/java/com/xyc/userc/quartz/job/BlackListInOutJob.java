@@ -2,6 +2,7 @@ package com.xyc.userc.quartz.job;
 
 import com.xyc.userc.service.BlacklistService;
 import com.xyc.userc.service.UserService;
+import com.xyc.userc.util.ApplicationContextHolder;
 import com.xyc.userc.util.MyCommandLineRunner;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -16,8 +17,6 @@ import javax.annotation.Resource;
  */
 public class BlackListInOutJob implements Job
 {
-    @Resource
-    BlacklistService blacklistService;
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(BlackListInOutJob.class);
 
@@ -25,6 +24,7 @@ public class BlackListInOutJob implements Job
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException
     {
         LOGGER.info("开始执行查询黑名单车辆进场情况定时任务");
+        BlacklistService blacklistService = (BlacklistService)ApplicationContextHolder.getBean("blacklistService");
         try
         {
             blacklistService.refreshBlackListEnter();
