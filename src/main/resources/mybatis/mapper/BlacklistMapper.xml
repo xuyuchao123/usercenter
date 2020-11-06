@@ -92,17 +92,31 @@
         select * from SYS_BLACKLIST_ENTER
     </select>
 
+    <!--<select id="selectBlackListInInfo" resultType="java.util.Map">-->
+        <!--select b.CARNUM, NVL(aa.CROSSDATE,' ') as CROSSDATE from SYS_BLACKLIST b-->
+        <!--left join-->
+        <!--(-->
+            <!--select distinct a.PLATENO, substr(a.CROSSTIME,0,10) as CROSSDATE-->
+            <!--from T_ZZYY_RC_CAR_HIK@rcdb a-->
+            <!--where a.CROSSTIME <![CDATA[ >= ]]> #{startTime}-->
+            <!--and a.CROSSTIME <![CDATA[ <= ]]> #{endTime}-->
+            <!--and (a.CARINOUTSTRING = '0' or a.CARINOUTSTRING = '入场')-->
+        <!--) aa-->
+        <!--on b.CARNUM = aa.PLATENO-->
+        <!--where b.IS_ENABLE = 1-->
+    <!--</select>-->
+
     <select id="selectBlackListInInfo" resultType="java.util.Map">
         select b.CARNUM, NVL(aa.CROSSDATE,' ') as CROSSDATE from SYS_BLACKLIST b
         left join
         (
-            select distinct a.PLATENO, substr(a.CROSSTIME,0,10) as CROSSDATE
-            from T_ZZYY_RC_CAR_HIK@rcdb a
-            where a.CROSSTIME <![CDATA[ >= ]]> #{startTime}
-            and a.CROSSTIME <![CDATA[ <= ]]> #{endTime}
-            and (a.CARINOUTSTRING = '0' or a.CARINOUTSTRING = '入场')
+        select distinct cf.CAR_NUMBER, substr(cf.CROSSTIME,0,10) as CROSSDATE
+        from report.carinfo cf
+        where cf.CROSSTIME <![CDATA[ >= ]]> #{startTime}
+        and cf.CROSSTIME <![CDATA[ <= ]]> #{endTime}
+        and cf.CARINOUTSTRING = '入场'
         ) aa
-        on b.CARNUM = aa.PLATENO
+        on b.CARNUM = aa.CAR_NUMBER
         where b.IS_ENABLE = 1
     </select>
 
