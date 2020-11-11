@@ -37,10 +37,10 @@
         on b.USER_CREATE = u.ID
         <where>
             <if test="carNum != null">
-                and b.CARNUM = #{carNum}
+                and b.CARNUM like concat(concat('%',#{carNum}),'%')
             </if>
             <if test="createName != null">
-                and u.USER_NAME = #{createName}
+                and u.USER_NAME like concat(concat('%',#{createName}),'%')
             </if>
             <if test="createMobile != null">
                 and u.MOBILE = #{createMobile}
@@ -58,10 +58,10 @@
         on b.USER_CREATE = u.ID
         <where>
             <if test="carNum != null">
-                and b.CARNUM like concat('%',#{carNum},'%')
+                and b.CARNUM like concat(concat('%',#{carNum}),'%')
             </if>
             <if test="createName != null">
-                and u.USER_NAME like concat('%',#{createName},'%')
+                and u.USER_NAME like concat(concat('%',#{createName}),'%')
             </if>
             <if test="createMobile != null">
                 and u.MOBILE = #{createMobile}

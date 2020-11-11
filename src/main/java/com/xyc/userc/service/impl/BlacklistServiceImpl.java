@@ -175,7 +175,7 @@ public class BlacklistServiceImpl implements BlacklistService
         {
             blacklistMapper.updateStatInvalid(uptStatInvalidList);
         }
-        //将carNumCrosDateMap 中剩下的key，value 即为新增的黑名单车牌号，因此需要插入车辆当日进场情况表中
+        //carNumCrosDateMap 中剩下的key，value 即为新增的黑名单车牌号，因此需要插入车辆当日进场情况表中
         if(carNumCrosDateMap.size() > 0)
         {
             for(Map.Entry<String, String> entry : carNumCrosDateMap.entrySet())
