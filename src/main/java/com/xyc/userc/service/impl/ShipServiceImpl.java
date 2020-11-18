@@ -1,9 +1,6 @@
 package com.xyc.userc.service.impl;
 
 import com.xyc.userc.dao.ShipMapper;
-import com.xyc.userc.dao.ShipReportMapper;
-import com.xyc.userc.dao.UserMapper;
-import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.ShipInfo;
 import com.xyc.userc.entity.ShipReport;
 import com.xyc.userc.service.ShipService;
