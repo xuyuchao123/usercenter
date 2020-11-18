@@ -31,7 +31,7 @@
         VALUES (#{id},#{shipNum},#{mobile},#{cargoName},#{name},#{gmtCreate},#{gmtModified})
     </insert>
 
-    <select id="checkShipInfo">
+    <select id="checkShipInfo" resultType="int">
         select count(*) from v_ship_online@wl where SHIP_NAME_CN = #{shipNum} AND SHIP_PHONE_NUM = #{mobile}
     </select>
 
