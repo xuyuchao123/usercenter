@@ -32,7 +32,7 @@ import java.util.List;
 @Api(tags = "车牌号管理相关api")
 public class CarNumController
 {
-    protected static final Logger LOGGER = LoggerFactory.getLogger(TemplateController.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(CarNumController.class);
 
     @Resource
     CarNumService carNumService;
