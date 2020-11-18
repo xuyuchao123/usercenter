@@ -136,7 +136,7 @@ public class UserServiceImpl implements UserService
                 for(String roleCode : roleCodeList)
                 {
                     roleCodeStrs += roleCode;
-                    roleCodeStrs += ",";
+                    roleCodeStrs += "=";
                 }
                 roleCodeStrs = roleCodeStrs.substring(0,roleCodeStrs.length()-1);
                 gh = (String)resList.get(1);
@@ -197,7 +197,7 @@ public class UserServiceImpl implements UserService
                     //插入用户与角色关联表
                     roleMapper.insertUserRole(id, role.getId(), date, date);
                     roleCodeStrs += roleCode;
-                    roleCodeStrs += ",";
+                    roleCodeStrs += "=";
                 }
                 roleCodeStrs = roleCodeStrs.substring(0,roleCodeStrs.length()-1);
                 LOGGER.info("当前手机号：{},对应的角色编码：{}, 工号：{}",mobile,roleCodeStrs,gh);
@@ -270,12 +270,12 @@ public class UserServiceImpl implements UserService
             if(tmpOpenId.equals(loopVo.getOpenId()))
             {
                 String tmpRoleCode = tmpVo.getRoleCode();
-                if(tmpRoleCode.indexOf(",") == -1)
+                if(tmpRoleCode.indexOf("=") == -1)
                 {
-                    tmpRoleCode += ",";
+                    tmpRoleCode += "=";
                 }
                 tmpRoleCode += loopVo.getRoleCode();
-                tmpRoleCode += ",";
+                tmpRoleCode += "=";
                 tmpVo.setRoleCode(tmpRoleCode);
                 userInfoVoList.remove(i);
                 i--;
@@ -283,7 +283,7 @@ public class UserServiceImpl implements UserService
             else
             {
                 String roleCode = tmpVo.getRoleCode();
-                if(roleCode.charAt(roleCode.length()-1) == ',')
+                if(roleCode.charAt(roleCode.length()-1) == '=')
                 {
                     roleCode = roleCode.substring(0,roleCode.length()-1);
                     tmpVo.setRoleCode(roleCode);
@@ -293,7 +293,7 @@ public class UserServiceImpl implements UserService
             }
         }
         String lastRoleCode = tmpVo.getRoleCode();
-        if(lastRoleCode.charAt(lastRoleCode.length()-1) == ',')
+        if(lastRoleCode.charAt(lastRoleCode.length()-1) == '=')
         {
             lastRoleCode = lastRoleCode.substring(0,lastRoleCode.length()-1);
             tmpVo.setRoleCode(lastRoleCode);

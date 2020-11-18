@@ -296,7 +296,7 @@ public class CarNumServiceImpl implements CarNumService
     public void updateRedis(String openId) throws Exception
     {
         List<UserInfoVo> userInfoVoList = userMapper.selectUserInfoVo(openId);
-        //单个openid可能对应多个角色，需将角色编码统一汇总至一个userInfoVo中，用 "," 分隔
+        //单个openid可能对应多个角色，需将角色编码统一汇总至一个userInfoVo中，用 "=" 分隔
         if(userInfoVoList != null && userInfoVoList.size() > 0)
         {
             if(userInfoVoList.size() > 1)
@@ -306,7 +306,7 @@ public class CarNumServiceImpl implements CarNumService
                 int size = userInfoVoList.size();
                 for(int i = 1; i < size; i++)
                 {
-                    tmpRoleCode += ",";
+                    tmpRoleCode += "=";
                     tmpRoleCode += userInfoVoList.get(i).getRoleCode();
                 }
                 tmpVo.setRoleCode(tmpRoleCode);
