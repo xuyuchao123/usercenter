@@ -57,7 +57,8 @@ public class ShipServiceImpl implements ShipService
         Date date = new Date();
         shipInfo.setGmtCreate(date);
         shipInfo.setGmtModified(date);
-        int id = shipMapper.insert(shipInfo);
+        int insertCnt = shipMapper.insert(shipInfo);
+        int id = shipInfo.getId();
         LOGGER.info("保存废钢处船户信息成功，返回id号 ：{}",id);
         LOGGER.info("结束保存废钢处船户信息方法: shipNum:{} mobile:{} cargoName:{} name:{}",shipNum,mobile,cargoName,name);
         return id;
@@ -80,7 +81,8 @@ public class ShipServiceImpl implements ShipService
             Date date = new Date();
             shipInfo.setGmtCreate(date);
             shipInfo.setGmtModified(date);
-            id = shipMapper.insert(shipInfo);
+            int insertCnt = shipMapper.insert(shipInfo);
+            id = shipInfo.getId();
             LOGGER.info("保存海力物流船户信息成功，返回id号 ：{}",id);
         }
         else
