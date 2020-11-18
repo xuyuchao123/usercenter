@@ -128,7 +128,7 @@ public class ShipController
 
     @PostMapping("/queryShipInfo")
     @ApiOperation(value="查询船户信息")
-    @ApiImplicitParam(name = "", value = "id号", required = true, dataType = "String")
+    @ApiImplicitParam(name = "id", value = "id号", required = true, dataType = "String")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：保存成功 isSuccess=false：保存失败，resMsg为错误信息")})
     public JsonResultObj<ShipInfoVo> queryShipInfo(String id)
     {
