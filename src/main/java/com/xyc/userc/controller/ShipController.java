@@ -81,7 +81,7 @@ public class ShipController
 
 
     @PostMapping("/addShipInfo-hl")
-    @ApiOperation(value="保存海力物流船户信息")
+    @ApiOperation(value="审核并保存海力物流船户信息")
     @ApiImplicitParams({@ApiImplicitParam(name = "shipNum", value = "船舶号", required = true, dataType = "String"),
             @ApiImplicitParam(name = "mobile", value = "船民电话", required = true, dataType = "String"),
             @ApiImplicitParam(name = "cargoName", value = "货名", required = true, dataType = "String")})
