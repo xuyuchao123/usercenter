@@ -310,8 +310,8 @@ public class UserServiceImpl implements UserService
             KdyMobileList = new ArrayList<String>();
             for (UserInfoVo userInfoVo : userInfoVoList)
             {
-                //若是开单员角色则收集其手机号到 KdyMobileList 中，方便统一查询对应的工号
-                if(RoleTypeEnum.ROLE_KDY.getRoleCode().equals(userInfoVo.getRoleCode()))
+                //若角色列表包含开单员角色则收集其手机号到 KdyMobileList 中，方便统一查询对应的工号
+                if(userInfoVo.getRoleCode() != null && userInfoVo.getRoleCode().contains(RoleTypeEnum.ROLE_KDY.getRoleCode()))
                 {
                     KdyMobileList.add(userInfoVo.getMobilePhone());
                 }
@@ -342,8 +342,8 @@ public class UserServiceImpl implements UserService
             KdyMobileList = new ArrayList<String>();
             for (UserInfoVo userInfoVo : userInfoVoList)
             {
-                //若是开单员角色则收集其手机号到 KdyMobileList 中，方便统一查询对应的工号
-                if(RoleTypeEnum.ROLE_KDY.getRoleCode().equals(userInfoVo.getRoleCode()))
+                //若角色列表包含开单员角色则收集其手机号到 KdyMobileList 中，方便统一查询对应的工号
+                if(userInfoVo.getRoleCode() != null && userInfoVo.getRoleCode().contains(RoleTypeEnum.ROLE_KDY.getRoleCode()))
                 {
                     KdyMobileList.add(userInfoVo.getMobilePhone());
                 }
@@ -380,7 +380,7 @@ public class UserServiceImpl implements UserService
                 userInfoVo.setCarNumList(null);
                 userInfoVo.setGh(null);
             }
-            else if(RoleTypeEnum.ROLE_KDY.getRoleCode().equals(roleCode))
+            else if(roleCode.contains(RoleTypeEnum.ROLE_KDY.getRoleCode()))
             {
                 userInfoVo.setCarNumList(null);
                 userInfoVo.setOperatorTime(null);
