@@ -228,7 +228,7 @@
     </select>
 
     <select id="confirmCarNumExist" resultType="java.util.Map">
-        select mo.ID, r.ROLE_CODE
+        select mo.ID, r.ROLE_CODE, r.ID as ROLEID
         from SYS_OPENID_CARNUMBER oc
         left join SYS_MOBILE_OPENID mo
         on oc.OPENID = mo.OPENID

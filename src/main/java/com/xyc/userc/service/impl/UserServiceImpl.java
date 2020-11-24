@@ -150,12 +150,39 @@ public class UserServiceImpl implements UserService
                     oriRoleCodeStrs += " ";
                 }
                 LOGGER.info("当前手机号：{},对应的角色编码：{}, 工号：{} 原来的角色编码：{}",mobile,roleCodeStrs,gh,oriRoleCodeStrs);
-                //若新手机号对应的角色为司机0，且该openId原先对应的角色为司机1，则修改绑定的手机号之后角色仍然为司机1
-                if(roleCodeList.size() == 1 && roleCodeList.get(0).equals(RoleTypeEnum.ROLE_SJ_0.getRoleCode())
-                        && oriRoleCodeList.size() == 1 && oriRoleCodeList.get(0).equals(RoleTypeEnum.ROLE_SJ_1.getRoleCode()))
+
+                //若新手机号对应的角色司机0
+                if(roleCodeList.size() == 1 && roleCodeList.get(0).equals(RoleTypeEnum.ROLE_SJ_0.getRoleCode()))
                 {
-                    LOGGER.info("新手机号对应的角色为司机0，且该openId原先对应的角色为司机1，修改绑定的手机号之后角色仍为司机1");
-                    roleCodeList.set(0,RoleTypeEnum.ROLE_SJ_1.getRoleCode());
+                    //该openId原先对应的角色为司机1，或者为 HLDD， 则需要修改绑定的手机号之后角色仍为司机1
+                    if((oriRoleCodeList.size() == 1 && oriRoleCodeList.get(0).equals(RoleTypeEnum.ROLE_SJ_1.getRoleCode()))
+                            || oriRoleCodeList.contains(RoleTypeEnum.ROLE_HLDD.getRoleCode()))
+                    {
+                        LOGGER.info("新手机号对应的角色为司机0，且该openId原先对应的角色为司机1 或者为 HLDD，修改绑定的手机号之后角色仍为司机1");
+                        roleCodeList.set(0,RoleTypeEnum.ROLE_SJ_1.getRoleCode());
+                    }
+                }
+
+//                //若新手机号对应的角色为司机0，且该openId原先对应的角色为司机1，则修改绑定的手机号之后角色仍然为司机1
+//                if(roleCodeList.size() == 1 && roleCodeList.get(0).equals(RoleTypeEnum.ROLE_SJ_0.getRoleCode())
+//                        && oriRoleCodeList.size() == 1 && oriRoleCodeList.get(0).equals(RoleTypeEnum.ROLE_SJ_1.getRoleCode()))
+//                {
+//                    LOGGER.info("新手机号对应的角色为司机0，且该openId原先对应的角色为司机1，修改绑定的手机号之后角色仍为司机1");
+//                    roleCodeList.set(0,RoleTypeEnum.ROLE_SJ_1.getRoleCode());
+//                }
+
+                //若新手机号对应角色包含 HLDD
+                if(roleCodeList.contains(RoleTypeEnum.ROLE_HLDD.getRoleCode()))
+                {
+                    //该openId原先对应的角色不包含 HLDD,和 SJ1 则绑定的手机号之后的角色列表中的 HLDD 角色应修改为 SJ0
+                    if(!oriRoleCodeList.contains(RoleTypeEnum.ROLE_HLDD.getRoleCode()) && !oriRoleCodeList.contains(RoleTypeEnum.ROLE_SJ_1.getRoleCode()))
+                    {
+                        LOGGER.info("新手机号对应的角色包含HLDD，该openId原先对应的角色不包含 HLDD,和 SJ1 绑定手机号之后的角色列表中的 HLDD 角色应修改为 SJ0");
+                        {
+                            int  hlddIdx = roleCodeList.indexOf(RoleTypeEnum.ROLE_HLDD.getRoleCode());
+                            roleCodeList.set(hlddIdx,RoleTypeEnum.ROLE_SJ_0.getRoleCode());
+                        }
+                    }
                 }
 
                 Integer mobileOpenIdId = Integer.valueOf(maps.get(0).get("ID").toString());
@@ -168,11 +195,14 @@ public class UserServiceImpl implements UserService
                     //插入用户与角色关联表
                     roleMapper.insertUserRole(mobileOpenIdId, role.getId(), date, date);
                 }
-                //若原角色为司机，重新绑定后角色不为司机，则需判断该oopenId下是否有绑定的车牌号，有车牌号则删除
-                if(oriRoleCodeList.size() == 1 && (oriRoleCodeList.get(0).equals(RoleTypeEnum.ROLE_SJ_0) || oriRoleCodeList.get(0).equals(RoleTypeEnum.ROLE_SJ_1))
-                        && roleCodeList.size() > 1)
+                //若原角色为司机或者HLDD，重新绑定后角色不为司机和HLDD，则需判断该oopenId下是否有绑定的车牌号，有车牌号则删除
+                if((oriRoleCodeList.contains(RoleTypeEnum.ROLE_SJ_1.getRoleCode())
+                        || oriRoleCodeList.contains(RoleTypeEnum.ROLE_HLDD.getRoleCode())
+                        || oriRoleCodeList.contains(RoleTypeEnum.ROLE_SJ_0.getRoleCode()))
+                        && (!roleCodeList.contains(RoleTypeEnum.ROLE_SJ_1.getRoleCode()) && !roleCodeList.contains(RoleTypeEnum.ROLE_HLDD.getRoleCode())
+                            && !roleCodeList.contains(RoleTypeEnum.ROLE_SJ_0.getRoleCode())))
                 {
-                    LOGGER.info("原角色为司机，重新绑定后角色不为司机，开始判断该oopenId下是否有绑定的车牌号 openId={}",openId);
+                    LOGGER.info("原角色为司机或者HLDD，重新绑定后角色不为司机和HLDD，开始判断该oopenId下是否有绑定的车牌号 openId={}",openId);
                     List<CarNumOpenId> carNumOpenIdList =  carNumOpenIdMapper.selectByOpenId(openId);
                     if(carNumOpenIdList != null && carNumOpenIdList.size() > 0)
                     {
@@ -192,6 +222,11 @@ public class UserServiceImpl implements UserService
                 gh = (String)resList.get(1);
                 for(String roleCode : roleCodeList)
                 {
+                    //若当前遍历的角色为 HLDD 则需将其修改为 SJ0
+                    if(roleCode.equals(RoleTypeEnum.ROLE_HLDD.getRoleCode()))
+                    {
+                        roleCode = RoleTypeEnum.ROLE_SJ_0.getRoleCode();
+                    }
                     Role role = roleMapper.selectByRoleCode(roleCode);
                     roles.add(role);
                     //插入用户与角色关联表
@@ -208,8 +243,8 @@ public class UserServiceImpl implements UserService
             userInfoVo.setOpenId(openId);
             userInfoVo.setMobilePhone(mobile);
             userInfoVo.setRoleCode(roleCodeStrs);
-            if (roleCodeList.size() == 1 && (roleCodeList.get(0).equals(RoleTypeEnum.ROLE_SJ_0.getRoleCode())
-                    || roleCodeList.get(0).equals(RoleTypeEnum.ROLE_SJ_1.getRoleCode())))
+            if(roleCodeList.contains(RoleTypeEnum.ROLE_SJ_0.getRoleCode()) || roleCodeList.contains(RoleTypeEnum.ROLE_SJ_1.getRoleCode())
+                || roleCodeList.contains(RoleTypeEnum.ROLE_HLDD.getRoleCode()) )
             {
                 if(!isUpdate)
                 {
@@ -562,6 +597,9 @@ public class UserServiceImpl implements UserService
                         break;
                     case "HBGK":
                         roleCode = RoleTypeEnum.ROLE_HBGK.getRoleCode();
+                        break;
+                    case "HLDD":
+                        roleCode = RoleTypeEnum.ROLE_HLDD.getRoleCode();
                         break;
                     default:
                         roleCode = RoleTypeEnum.ROLE_JLY_OTHER.getRoleCode();

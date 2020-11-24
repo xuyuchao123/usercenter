@@ -22,8 +22,9 @@ public enum RoleTypeEnum
 
     ROLE_JLY_OTHER("JLY_OTHER", "海力物流计量员（其它）"),
 
-    ROLE_HBGK("HBGK","环保管控");
+    ROLE_HBGK("HBGK","环保管控"),
 
+    ROLE_HLDD("HLDD","海力调度");
 
     private String roleCode;
     private String roleName;

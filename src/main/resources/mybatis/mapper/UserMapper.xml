@@ -42,6 +42,13 @@
     select ITEM, USER_ID FROM HLJLYXX where PHONE_NO = #{mobile}
   </select>
 
+  <select id="selectUserRoleByOpenIdRoleCode" resultType="java.util.Map">
+    select ITEM, USER_ID FROM HLJLYXX hl
+    left join SYS_MOBILE_OPENID mo
+    on hl.phone_no = mo.mobile
+    where mo.openid = #{openId} and hl.ITEM = #{roleCode}
+  </select>
+
   <select id="selectUserId" resultType="java.lang.String">
     select DISTINCT User_ID FROM HLJLYXX where PHONE_NO = #{mobile}
   </select>
@@ -50,6 +57,12 @@
     update SYS_USER_ROLE ur
     set ur.ROLE_ID = #{roleId},ur.GMT_MODIFIED = #{gmtModified}
     where ur.MOBILE_OPENID_ID = #{mobileOpenIdId}
+  </update>
+
+  <update id="updateRoleIdByMobileOpenIdRoleId">
+    update SYS_USER_ROLE ur
+    set ur.ROLE_ID = #{roleId},ur.GMT_MODIFIED = #{gmtModified}
+    where ur.MOBILE_OPENID_ID = #{mobileOpenIdId} and ur.ROLE_ID = #{oriRoleId}
   </update>
 
   <select id="selectUserInfoVo" resultType="com.xyc.userc.vo.UserInfoVo">

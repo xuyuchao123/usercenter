@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import springfox.documentation.spring.web.json.Json;
+import sun.nio.cs.ext.SJIS;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -72,25 +73,48 @@ public class CarNumServiceImpl implements CarNumService
             LOGGER.info("当前用户未绑定该车牌 carNum={} openId={}",carNum,openId);
             throw new BusinessException(JsonResultEnum.CARNUM_NOT_BINDED);
         }
-        Map map = maps.get(0);
-        String roleCode = map.get("ROLE_CODE").toString();
-        int mobileOpenIdId = Integer.valueOf(map.get("ID").toString());
+//        Map map = maps.get(0);
+//        String roleCode = map.get("ROLE_CODE").toString();
+        List<String> roleCodeList = new ArrayList<>();
+        int roleHlddId = -1;
+        for(Map map : maps)
+        {
+            String tmpRoleCode = map.get("ROLE_CODE").toString();
+            roleCodeList.add(tmpRoleCode);
+            //获取角色 HLDD 对应的roleId
+            if(RoleTypeEnum.ROLE_HLDD.getRoleCode().equals(tmpRoleCode))
+            {
+                roleHlddId = Integer.valueOf(map.get("ROLEID").toString());
+            }
+        }
+        int mobileOpenIdId = Integer.valueOf(maps.get(0).get("ID").toString());
         int deleteCnt = carNumOpenIdMapper.deleteByCarNumOpenId(carNum,openId);
         if(deleteCnt > 0)
         {
             //查找该openid下已启用的车牌号数量
             int  enabledCarNumCnt = carNumOpenIdMapper.confirmEnabledCarNumExist(openId,null);
-            //若删除车牌后该openid下没有已启用的车牌并且角色为SJ1,则修改其角色
-            if((enabledCarNumCnt == 0) && RoleTypeEnum.ROLE_SJ_1.getRoleCode().equals(roleCode))
+            //若删除车牌后该openid下没有已启用的车牌并且角色包含SJ1或HLDD,则修改其角色
+            if((enabledCarNumCnt == 0) && (roleCodeList.contains(RoleTypeEnum.ROLE_SJ_1.getRoleCode()) || roleCodeList.contains(RoleTypeEnum.ROLE_HLDD.getRoleCode())) )
             {
-                LOGGER.info("删除成功，当前用户角色为SJ1且没有已绑定的车牌号，准备修改其角色 carNum={} openId={}",carNum,openId);
+                LOGGER.info("删除成功，当前用户角色包含SJ1或HLDD 且没有已绑定的车牌号，准备修改其角色 carNum={} openId={}",carNum,openId);
                 //获取角色"司机0"
                 Role role = roleMapper.selectByRoleCode(RoleTypeEnum.ROLE_SJ_0.getRoleCode());
                 if(role != null)
                 {
                     //更新当前用户的角色为司机0
-                    userMapper.updateRoleIdByMobileOpenId(role.getId(),mobileOpenIdId,new Date());
-                    LOGGER.info("角色修改成功carNum={} openId={}",carNum,openId);
+                    if(roleCodeList.size() == 1)
+                    {
+                        userMapper.updateRoleIdByMobileOpenId(role.getId(),mobileOpenIdId,new Date());
+                        LOGGER.info("角色修改成功carNum={} openId={}",carNum,openId);
+                    }
+                    else
+                    {
+                        //多个角色的情况下只更新其中的一个
+                        if(roleHlddId != -1)
+                        {
+                            userMapper.updateRoleIdByMobileOpenIdRoleId(role.getId(),mobileOpenIdId,roleHlddId,new Date());
+                        }
+                    }
                 }
             }
             LOGGER.info("开始更新redis中用户车牌号信息 openId={}",openId);
@@ -187,17 +211,61 @@ public class CarNumServiceImpl implements CarNumService
         LOGGER.info("成功启用车牌号 carNum={} openId={}", carNum,openId);
         //查找当前用户的角色
         List<MobileOpenIdRoleVo> mobileOpenIdRoleVoList = roleMapper.selectMobileOpenIdRoleVo(openId);
-        if(mobileOpenIdRoleVoList != null && mobileOpenIdRoleVoList.size() > 0
-                && RoleTypeEnum.ROLE_SJ_0.getRoleCode().equals(mobileOpenIdRoleVoList.get(0).getRoleCode()))
+        if(mobileOpenIdRoleVoList != null && mobileOpenIdRoleVoList.size() > 0)
         {
-            LOGGER.info("当前用户角色为SJ0，准备修改其角色为SJ1 carNum={} openId={}",carNum,openId);
-            //获取角色"司机1"
-            Role role = roleMapper.selectByRoleCode(RoleTypeEnum.ROLE_SJ_1.getRoleCode());
-            if(role != null)
+            if(mobileOpenIdRoleVoList.size() == 1)
             {
-                //更新当前用户的角色为司机1
-                userMapper.updateRoleIdByMobileOpenId(role.getId(),mobileOpenIdRoleVoList.get(0).getMobileOpenIdId(),new Date());
-                LOGGER.info("角色修改成功 carNum={} openId={}",carNum,openId);
+                if(RoleTypeEnum.ROLE_SJ_0.getRoleCode().equals(mobileOpenIdRoleVoList.get(0).getRoleCode()))
+                {
+                    LOGGER.info("当前用户角色为SJ0，判断其原始角色是否为 HLDD, carNum={} openId={}",carNum,openId);
+                    List<Map> maps = userMapper.selectUserRoleByOpenIdRoleCode(openId,RoleTypeEnum.ROLE_HLDD.getRoleCode());
+                    if(maps != null && maps.size() > 0)
+                    {
+                        LOGGER.info("原始角色为 HLDD, carNum={} openId={}",carNum,openId);
+                        //获取角色"HLDD"
+                        Role role = roleMapper.selectByRoleCode(RoleTypeEnum.ROLE_HLDD.getRoleCode());
+                        if(role != null)
+                        {
+                            //更新当前用户的角色为HLDD
+                            userMapper.updateRoleIdByMobileOpenId(role.getId(),mobileOpenIdRoleVoList.get(0).getMobileOpenIdId(),new Date());
+                            LOGGER.info("角色修改成功 carNum={} openId={}",carNum,openId);
+                        }
+                    }
+                    else
+                    {
+                        LOGGER.info("原始角色不为 HLDD, carNum={} openId={}",carNum,openId);
+                        //获取角色"司机1"
+                        Role role = roleMapper.selectByRoleCode(RoleTypeEnum.ROLE_SJ_1.getRoleCode());
+                        if(role != null)
+                        {
+                            //更新当前用户的角色为司机1
+                            userMapper.updateRoleIdByMobileOpenId(role.getId(),mobileOpenIdRoleVoList.get(0).getMobileOpenIdId(),new Date());
+                            LOGGER.info("角色修改成功 carNum={} openId={}",carNum,openId);
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                for(MobileOpenIdRoleVo mobileOpenIdRoleVo : mobileOpenIdRoleVoList)
+                {
+                    if(RoleTypeEnum.ROLE_SJ_0.getRoleCode().equals(mobileOpenIdRoleVo.getRoleCode()))
+                    {
+                        int sjId = mobileOpenIdRoleVo.getMobileOpenIdId();
+                        int oriRoleId = mobileOpenIdRoleVo.getRoleId();
+                        LOGGER.info("该用户对应多个角色，其中存在 SJ0 角色，准备修改其为 HLDD, sjId={} oriRoleId={} carNum={} openId={}", sjId,oriRoleId,carNum,openId);
+                        //获取角色"HLDD"
+                        Role role = roleMapper.selectByRoleCode(RoleTypeEnum.ROLE_HLDD.getRoleCode());
+                        if(role != null)
+                        {
+                            //修改当前用户的 SJ0 角色为 HLDD
+                            userMapper.updateRoleIdByMobileOpenIdRoleId(role.getId(),sjId,oriRoleId,new Date());
+                            LOGGER.info("角色修改成功 carNum={} openId={}",carNum,openId);
+                        }
+                        break;
+                    }
+                }
             }
         }
 

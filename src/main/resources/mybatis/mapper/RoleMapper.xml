@@ -25,7 +25,7 @@
   </select>
 
   <select id="selectMobileOpenIdRoleVo" resultType="com.xyc.userc.vo.MobileOpenIdRoleVo">
-    select DISTINCT r.role_code as roleCode, mo.id as mobileOpenIdId
+    select DISTINCT r.role_code as roleCode, mo.id as mobileOpenIdId, ur.role_id as roleId
     from sys_role r
     left join sys_user_role ur
       on r.id = ur.role_id
