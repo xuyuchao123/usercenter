@@ -9,16 +9,16 @@ public class DefaultRoleVo implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    private String jobName;
+    private String jobNum;
     private String mobile;
-    private Integer roleId;
+    private String roleIds;
 
-    public String getJobName() {
-        return jobName;
+    public String getJobNum() {
+        return jobNum;
     }
 
-    public void setJobName(String jobName) {
-        this.jobName = jobName;
+    public void setJobNum(String jobNum) {
+        this.jobNum = jobNum;
     }
 
     public String getMobile() {
@@ -29,11 +29,11 @@ public class DefaultRoleVo implements Serializable
         this.mobile = mobile;
     }
 
-    public Integer getRoleId() {
-        return roleId;
+    public String getRoleIds() {
+        return roleIds;
     }
 
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
+    public void setRoleIds(String roleIds) {
+        this.roleIds = roleIds;
     }
 }

@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * Created by 1 on 2020/12/3.
@@ -28,8 +30,34 @@ public class RoleServiceImpl implements RoleService
     public List<DefaultRoleVo> getDefaultRole(String jobNum, String mobile, String roleName)
     {
         LOGGER.debug("进入查询默认角色配置信息方法 jobNum={} mobile={} roleName={}",jobNum,mobile,roleName);
-        List<DefaultRoleVo> defaultRoleVos = roleMapper.selectDefaultRole(jobNum,mobile,roleName);
+        List<DefaultRoleVo> defaultRoleVos = new ArrayList<>();
+        defaultRoleVos = roleMapper.selectDefaultRole(jobNum,mobile,roleName);
+        List<DefaultRoleVo> colDefaultRoleVos = new ArrayList<>();
+        if(defaultRoleVos.size() > 0)
+        {
+            colDefaultRoleVos.add(defaultRoleVos.get(0));
+            String tmpJobNum = defaultRoleVos.get(0).getJobNum();
+            StringJoiner stringJoiner = new StringJoiner(",");
+            stringJoiner.add(defaultRoleVos.get(0).getRoleIds());
+            DefaultRoleVo tmpDefaultRoleVo;
+            for(int i = 1; i < defaultRoleVos.size(); i++)
+            {
+                tmpDefaultRoleVo = defaultRoleVos.get(i);
+                if(tmpDefaultRoleVo.getJobNum().equals(tmpJobNum))
+                {
+                    stringJoiner.add(tmpDefaultRoleVo.getRoleIds());
+                }
+                else
+                {
+                    colDefaultRoleVos.get(colDefaultRoleVos.size()-1).setRoleIds(stringJoiner.toString());
+                    tmpJobNum = tmpDefaultRoleVo.getJobNum();
+                    colDefaultRoleVos.add(tmpDefaultRoleVo);
+                    stringJoiner = new StringJoiner(",");
+                    stringJoiner.add(tmpDefaultRoleVo.getRoleIds());
+                }
+            }
+        }
         LOGGER.debug("结束查询默认角色默认配置信息方法 jobNum={} mobile={} roleName={}",jobNum,mobile,roleName);
-        return defaultRoleVos;
+        return colDefaultRoleVos;
     }
 }
