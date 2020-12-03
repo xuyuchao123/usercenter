@@ -50,6 +50,11 @@ public class RoleServiceImpl implements RoleService
                 else
                 {
                     colDefaultRoleVos.get(colDefaultRoleVos.size()-1).setRoleIds(stringJoiner.toString());
+                    //只取前20条返回
+                    if(colDefaultRoleVos.size() == 20)
+                    {
+                        break;
+                    }
                     tmpJobNum = tmpDefaultRoleVo.getJobNum();
                     colDefaultRoleVos.add(tmpDefaultRoleVo);
                     stringJoiner = new StringJoiner(",");
