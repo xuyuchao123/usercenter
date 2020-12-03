@@ -57,7 +57,7 @@ public class RoleServiceImpl implements RoleService
                 }
             }
         }
-        LOGGER.debug("结束查询用户默认角色默认配置信息方法 jobNum={} mobile={} roleName={}",jobNum,mobile,roleName);
+        LOGGER.debug("结束查询用户默认角色配置信息方法 jobNum={} mobile={} roleName={}",jobNum,mobile,roleName);
         return colDefaultRoleVos;
     }
 }
