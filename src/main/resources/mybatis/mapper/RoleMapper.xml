@@ -60,12 +60,27 @@
   </delete>
 
   <select id="" resultType="com.xyc.userc.vo.DefaultRoleVo">
-    select hlmi.USER_ID as jobNum, hlmi.PHONE_NO as mobile,
+    select hm.jobNum, hm.mobile, r.ID as roleId
+    from (select distinct hlmi.USER_ID as jobNum, hlmi.PHONE_NO as mobile,
      decode(hlmi.ITEM, 'XC','JLY_XC', 'BC','JLY_BC', 'HP','JLY_KHB', 'other','JLY_OTHER', hlmi.ITEM) as roleCode
     from
     (select * from HLJLYXX hl
     union all
-    select * from MANAGERINFO mi) hlmi
+    select * from MANAGERINFO mi) hlmi) hm
+    left join SYS_ROLE r
+    on hm.roleCode = r.ROLE_CODE and r.IS_DELETED = 0
+    <where>
+      <if test="jobNum != null">
+        and hm.jobNum = #{jobNum}
+      </if>
+      <if test="mobile != null">
+        and hm.mobile = #{mobile}
+      </if>
+      <if test="roleName != null">
+        and r.ROLE_NAME like concat(concat('%',#{roleName}),'%')
+      </if>
+    </where>
+    order by hm.jobNum
   </select>
 
 
