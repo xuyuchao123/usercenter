@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by 1 on 2020/7/17.
  */
-@Service("roleService")
+@Service("pcRoleService")
 @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class PcRoleServiceImpl implements PcRoleService
 {

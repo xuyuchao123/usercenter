@@ -32,14 +32,14 @@ public class RoleManageController
     RoleService roleService;
 
     @PostMapping("/queryDefaultRole")
-    @ApiOperation(value="查询默认角色配置信息")
+    @ApiOperation(value="查询用户默认角色配置信息")
     @ApiImplicitParams({@ApiImplicitParam(name="jobNum", value="工号", required=false, dataType="String"),
             @ApiImplicitParam(name="mobile", value="手机号", required=false, dataType="String"),
             @ApiImplicitParam(name="roleName", value="角色名称", required=false, dataType="String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
     public JsonResultObj queryBlacklist(String jobNum, String mobile, String roleName)
     {
-        LOGGER.info("开始查询默认角色配置信息 jobNum={} mobile={} roleName={}",jobNum,mobile,roleName);
+        LOGGER.info("开始查询用户默认角色配置信息 jobNum={} mobile={} roleName={}",jobNum,mobile,roleName);
         JsonResultObj resultObj = null;
         try
         {
@@ -51,7 +51,7 @@ public class RoleManageController
         {
             resultObj = CommonExceptionHandler.handException(e, "查询黑名单失败", LOGGER, resultObj);
         }
-        LOGGER.info("结束查询默认角色配置信息 jobNum={} mobile={} roleName={}",jobNum,mobile,roleName);
+        LOGGER.info("结束查询用户默认角色配置信息 jobNum={} mobile={} roleName={}",jobNum,mobile,roleName);
         return resultObj;
     }
 

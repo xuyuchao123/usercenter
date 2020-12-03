@@ -29,7 +29,7 @@ public class RoleServiceImpl implements RoleService
     @Override
     public List<DefaultRoleVo> getDefaultRole(String jobNum, String mobile, String roleName)
     {
-        LOGGER.debug("进入查询默认角色配置信息方法 jobNum={} mobile={} roleName={}",jobNum,mobile,roleName);
+        LOGGER.debug("进入查询用户默认角色配置信息方法 jobNum={} mobile={} roleName={}",jobNum,mobile,roleName);
         List<DefaultRoleVo> defaultRoleVos = new ArrayList<>();
         defaultRoleVos = roleMapper.selectDefaultRole(jobNum,mobile,roleName);
         List<DefaultRoleVo> colDefaultRoleVos = new ArrayList<>();
@@ -57,7 +57,7 @@ public class RoleServiceImpl implements RoleService
                 }
             }
         }
-        LOGGER.debug("结束查询默认角色默认配置信息方法 jobNum={} mobile={} roleName={}",jobNum,mobile,roleName);
+        LOGGER.debug("结束查询用户默认角色默认配置信息方法 jobNum={} mobile={} roleName={}",jobNum,mobile,roleName);
         return colDefaultRoleVos;
     }
 }
