@@ -1,6 +1,7 @@
 package com.xyc.userc.dao;
 
 import com.xyc.userc.entity.Role;
+import com.xyc.userc.vo.DefaultRoleVo;
 import com.xyc.userc.vo.MobileOpenIdRoleVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,5 +23,7 @@ public interface RoleMapper {
                         @Param("gmtModified")Date gmtModified);
 
     void deleteUserRole(@Param("mobileOpenIdId")Integer mobileOpenIdId);
+
+    List<DefaultRoleVo> selectDefaultRole(@Param("jobNum")String jobNum, @Param("mobile")String mobile, @Param("roleName")String roleName);
 
 }

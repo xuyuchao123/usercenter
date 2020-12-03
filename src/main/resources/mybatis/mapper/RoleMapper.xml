@@ -59,5 +59,14 @@
     where ur.MOBILE_OPENID_ID = #{mobileOpenIdId}
   </delete>
 
+  <select id="" resultType="com.xyc.userc.vo.DefaultRoleVo">
+    select hlmi.USER_ID as jobNum, hlmi.PHONE_NO as mobile,
+     decode(hlmi.ITEM, 'XC','JLY_XC', 'BC','JLY_BC', 'HP','JLY_KHB', 'other','JLY_OTHER', hlmi.ITEM) as roleCode
+    from
+    (select * from HLJLYXX hl
+    union all
+    select * from MANAGERINFO mi) hlmi
+  </select>
+
 
 </mapper>
