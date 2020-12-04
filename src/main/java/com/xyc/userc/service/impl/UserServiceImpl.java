@@ -401,7 +401,9 @@ public class UserServiceImpl implements UserService
         {
             roleCode = userInfoVo.getRoleCode();
             if(RoleTypeEnum.ROLE_SJ_0.getRoleCode().equals(roleCode) ||
-                    RoleTypeEnum.ROLE_SJ_1.getRoleCode().equals(roleCode))
+                    RoleTypeEnum.ROLE_SJ_1.getRoleCode().equals(roleCode) ||
+                    roleCode.contains(RoleTypeEnum.ROLE_SJ_0.getRoleCode()) ||
+                    roleCode.contains(RoleTypeEnum.ROLE_HLDD.getRoleCode()))
             {
                 userInfoVo.setOperatorTime(null);
                 userInfoVo.setLastStockCode(null);
