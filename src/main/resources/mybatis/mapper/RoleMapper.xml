@@ -59,7 +59,7 @@
     where ur.MOBILE_OPENID_ID = #{mobileOpenIdId}
   </delete>
 
-  <select id="selectDefaultRole" resultType="com.xyc.userc.vo.DefaultRoleVo">
+  <select id="selectDefaultUserRole" resultType="com.xyc.userc.vo.DefaultUserRoleVo">
     select hm.jobNum, hm.mobile, r.ID as roleIds
     from (select distinct hlmi.USER_ID as jobNum, hlmi.PHONE_NO as mobile,
      decode(hlmi.ITEM, 'XC','JLY_XC', 'BC','JLY_BC', 'HP','JLY_KHB', 'other','JLY_OTHER', hlmi.ITEM) as roleCode
@@ -70,17 +70,17 @@
     left join SYS_ROLE r
     on hm.roleCode = r.ROLE_CODE and r.IS_DELETED = 0
     <where>
-      <if test="jobNum != null">
-        and hm.jobNum = #{jobNum}
-      </if>
       <if test="mobile != null">
         and hm.mobile = #{mobile}
       </if>
-      <if test="roleName != null">
-        and r.ROLE_NAME like concat(concat('%',#{roleName}),'%')
-      </if>
     </where>
     order by hm.jobNum
+  </select>
+
+  <select id="selectAllRole" resultType="com.xyc.userc.vo.RoleVo">
+    select r.ID as id, r.ROLE_NAME as roleName
+    from SYS_ROLE r
+    where r.IS_DELETED = 0
   </select>
 
 

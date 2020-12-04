@@ -1,6 +1,7 @@
 package com.xyc.userc.service;
 
-import com.xyc.userc.vo.DefaultRoleVo;
+import com.xyc.userc.vo.DefaultUserRoleVo;
+import com.xyc.userc.vo.RoleVo;
 
 import java.util.List;
 
@@ -9,5 +10,7 @@ import java.util.List;
  */
 public interface RoleService
 {
-    List<DefaultRoleVo> getDefaultRole(String jobNum, String mobile, String roleName);
+    List<DefaultUserRoleVo> getDefaultUserRole(String mobile, String page, String size);
+
+    List<RoleVo> getAllRole();
 }

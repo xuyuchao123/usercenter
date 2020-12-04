@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by 1 on 2020/12/3.
  */
-public class DefaultRoleVo implements Serializable
+public class DefaultUserRoleVo implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
