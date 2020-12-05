@@ -26,7 +26,7 @@ public class MyAccessDecisionManager implements AccessDecisionManager
     public void decide(Authentication authentication, Object o, Collection<ConfigAttribute> collection) throws AccessDeniedException, InsufficientAuthenticationException
     {
         Iterator<ConfigAttribute> iterator = collection.iterator();
-        //便利可访问当前请求路径的所有权限，判断登录用户是否拥有这些权限（拥有其中一个权限即可访问）
+        //遍历可访问当前请求路径的所有权限，判断登录用户是否拥有这些权限（拥有其中一个权限即可访问）
         while (iterator.hasNext())
         {
             ConfigAttribute configAttribute = iterator.next();

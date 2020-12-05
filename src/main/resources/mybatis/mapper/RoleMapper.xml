@@ -59,6 +59,7 @@
     where ur.MOBILE_OPENID_ID = #{mobileOpenIdId}
   </delete>
 
+
   <select id="selectDefaultUserRole" resultType="com.xyc.userc.vo.DefaultUserRoleVo">
     select hm.jobNum, hm.mobile, r.ID as roleIds
     from (select distinct hlmi.USER_ID as jobNum, hlmi.PHONE_NO as mobile,
@@ -78,10 +79,27 @@
   </select>
 
   <select id="selectAllRole" resultType="com.xyc.userc.vo.RoleVo">
-    select r.ID as id, r.ROLE_NAME as roleName
+    select r.ID as id, r.ROLE_NAME as roleName, r.ROLE_CODE as roleCode
     from SYS_ROLE r
     where r.IS_DELETED = 0
   </select>
 
+  <delete id="deleteDefaultUserRole">
+    delete from MANAGERINFO m
+    where m.PHONE_NO = #{mobile}
+  </delete>
+
+  <insert id="insertDefaultUserRole">
+    insert into MANAGERINFO (USER_ID,PHONE_NO,ITEM,ITEM1) VALUES (#{jobNum},#{mobile},#{preRoleCode},' ')
+  </insert>
+
+  <select id="selectBindedUserRole" resultType="com.xyc.userc.vo.BindedUserRoleVo">
+    select mo.MOBILE, r.ROLE_ID as roleIds, r.GMT_MODIFIED as gmtModified
+    from SYS_USER_ROLE r
+    left join SYS_MOBILE_OPENID mo
+    on r.MOBILE_OPENID_ID = mo.ID
+    where mo.mobile = #{mobile}
+    order by r.GMT_MODIFIED DESC
+  </select>
 
 </mapper>

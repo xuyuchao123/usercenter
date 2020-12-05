@@ -346,10 +346,12 @@ public class UserServiceImpl implements UserService
             for (UserInfoVo userInfoVo : userInfoVoList)
             {
                 //若角色列表包含开单员角色则收集其手机号到 KdyMobileList 中，方便统一查询对应的工号
-                if(userInfoVo.getRoleCode() != null && userInfoVo.getRoleCode().contains(RoleTypeEnum.ROLE_KDY.getRoleCode()))
-                {
-                    KdyMobileList.add(userInfoVo.getMobilePhone());
-                }
+//                if(userInfoVo.getRoleCode() != null && userInfoVo.getRoleCode().contains(RoleTypeEnum.ROLE_KDY.getRoleCode()))
+//                {
+//                    KdyMobileList.add(userInfoVo.getMobilePhone());
+//                }
+                //不管角色是不是开单员，都要收集手机号到 KdyMobileList 中，方便统一查询对应的工号
+                KdyMobileList.add(userInfoVo.getMobilePhone());
                 curOpenId = userInfoVo.getOpenId();
                 List<CarNumInfoVo> carNumInfoVoList = new ArrayList<>();
                 while (listIdx < listSize)
@@ -371,20 +373,22 @@ public class UserServiceImpl implements UserService
                 userInfoVo.setCarNumList(carNumInfoVoList);
             }
         }
-        // kdyMobileList 为空，表示 list 为空，开单员手机号未开始收集
+        // kdyMobileList 为空，表示 list 为空，用户手机号未开始收集
         if(KdyMobileList == null)
         {
             KdyMobileList = new ArrayList<String>();
             for (UserInfoVo userInfoVo : userInfoVoList)
             {
                 //若角色列表包含开单员角色则收集其手机号到 KdyMobileList 中，方便统一查询对应的工号
-                if(userInfoVo.getRoleCode() != null && userInfoVo.getRoleCode().contains(RoleTypeEnum.ROLE_KDY.getRoleCode()))
-                {
-                    KdyMobileList.add(userInfoVo.getMobilePhone());
-                }
+//                if(userInfoVo.getRoleCode() != null && userInfoVo.getRoleCode().contains(RoleTypeEnum.ROLE_KDY.getRoleCode()))
+//                {
+//                    KdyMobileList.add(userInfoVo.getMobilePhone());
+//                }
+                //不管角色是不是开单员，都要收集手机号到 KdyMobileList 中，方便统一查询对应的工号
+                KdyMobileList.add(userInfoVo.getMobilePhone());
             }
         }
-        //表示userinfovoList中存在开单员角色，则按照手机号列表查询对应工号
+        //开始按照手机号列表查询对应工号，并将手机号和工号的对应关系放到 mobileUserIdMap 中
         Map<String,String> mobileUserIdMap = new HashMap<>();
         if(KdyMobileList.size() > 0)
         {
@@ -399,6 +403,13 @@ public class UserServiceImpl implements UserService
         String roleCode = null;
         for(UserInfoVo userInfoVo : userInfoVoList)
         {
+            String gh = mobileUserIdMap.get(userInfoVo.getMobilePhone());
+            if(gh == null)
+            {
+                gh = "";
+            }
+            userInfoVo.setGh(gh);
+
             roleCode = userInfoVo.getRoleCode();
             if(RoleTypeEnum.ROLE_SJ_0.getRoleCode().equals(roleCode) ||
                     RoleTypeEnum.ROLE_SJ_1.getRoleCode().equals(roleCode) ||
@@ -407,7 +418,7 @@ public class UserServiceImpl implements UserService
             {
                 userInfoVo.setOperatorTime(null);
                 userInfoVo.setLastStockCode(null);
-                userInfoVo.setGh(null);
+//                userInfoVo.setGh(null);
             }
             else if(RoleTypeEnum.ROLE_JLY_KHB.getRoleCode().equals(roleCode) ||
                     RoleTypeEnum.ROLE_JLY_BC.getRoleCode().equals(roleCode) ||
@@ -415,25 +426,25 @@ public class UserServiceImpl implements UserService
                     RoleTypeEnum.ROLE_JLY_OTHER.getRoleCode().equals(roleCode))
             {
                 userInfoVo.setCarNumList(null);
-                userInfoVo.setGh(null);
+//                userInfoVo.setGh(null);
             }
             else if(roleCode.contains(RoleTypeEnum.ROLE_KDY.getRoleCode()))
             {
                 userInfoVo.setCarNumList(null);
                 userInfoVo.setOperatorTime(null);
                 userInfoVo.setLastStockCode(null);
-                if(mobileUserIdMap.size() > 0)
-                {
-                    String gh = mobileUserIdMap.get(userInfoVo.getMobilePhone()).toString();
-                    userInfoVo.setGh(gh);
-                }
+//                if(mobileUserIdMap.size() > 0)
+//                {
+//                    String gh = mobileUserIdMap.get(userInfoVo.getMobilePhone()).toString();
+//                    userInfoVo.setGh(gh);
+//                }
             }
             else
             {
                 userInfoVo.setCarNumList(null);
                 userInfoVo.setOperatorTime(null);
                 userInfoVo.setLastStockCode(null);
-                userInfoVo.setGh(null);
+//                userInfoVo.setGh(null);
             }
             String json = JSON.toJSONString(userInfoVo);
             String openId = userInfoVo.getOpenId();

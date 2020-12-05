@@ -1,10 +1,12 @@
 package com.xyc.userc.dao;
 
 import com.xyc.userc.entity.Role;
+import com.xyc.userc.vo.BindedUserRoleVo;
 import com.xyc.userc.vo.DefaultUserRoleVo;
 import com.xyc.userc.vo.MobileOpenIdRoleVo;
 import com.xyc.userc.vo.RoleVo;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.Date;
 import java.util.List;
@@ -28,5 +30,11 @@ public interface RoleMapper {
     List<DefaultUserRoleVo> selectDefaultUserRole(@Param("mobile")String mobile);
 
     List<RoleVo> selectAllRole();
+
+    void deleteDefaultUserRole(@Param("mobile")String mobile);
+
+    void insertDefaultUserRole(@Param("jobNum")String jobNum, @Param("mobile")String mobile, @Param("preRoleCode")String preRoleCode);
+
+    List<BindedUserRoleVo> selectBindedUserRole(@Param("mobile")String mobile);
 
 }

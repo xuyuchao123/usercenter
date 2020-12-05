@@ -51,6 +51,14 @@ public class JsonResultObj<T> implements Serializable
         this.resMsg = jsonResultEnum.getMessage();
     }
 
+    //请求失败并返回失败原因
+    public JsonResultObj(boolean isSuccess, Integer resCode, String msg)
+    {
+        this.isSuccess = isSuccess;
+        this.resCode = resCode;
+        this.resMsg = msg;
+    }
+
     //请求成功/失败并返回数据对象,resMsg为默认值
     public JsonResultObj(boolean isSuccess, T resData)
     {

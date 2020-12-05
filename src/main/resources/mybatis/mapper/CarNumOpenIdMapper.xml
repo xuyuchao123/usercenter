@@ -65,6 +65,21 @@
         </where>
     </select>
 
+    <select id="selectByMobile" resultMap="BaseResultMap">
+        select DISTINCT oc.ID, oc.OPENID, oc.CARNUMBER, oc.ENGINENUM, oc.IDENTNUM, oc.EMISSIONSTD,
+        oc.FLEETNAME,oc.REGDATE,oc.DEPARTMENT, oc.IS_DELETED, oc.IS_ENABLED, oc.USER_CREATE,
+        oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED from
+        SYS_OPENID_CARNUMBER oc
+        left join SYS_MOBILE_OPENID mo
+        on oc.OPENID = mo.OPENID
+        <where>
+            <if test="mobile != null">
+                and mo.MOBILE = #{mobile}
+            </if>
+            and oc.IS_DELETED = 0
+        </where>
+    </select>
+
     <select id="selectByOpenIdCarNum" resultMap="BaseResultMapC">
         select oc.ID, oc.OPENID, oc.CARNUMBER,oc.ENGINENUM, oc.IDENTNUM, oc.EMISSIONSTD,
         oc.FLEETNAME,oc.REGDATE, oc.DEPARTMENT, oc.IS_DELETED, oc.IS_ENABLED, oc.USER_CREATE,

@@ -13,7 +13,7 @@ public interface MobileOpenIdMapper
 {
     int insertMobileOpenId(MobileOpenId mobileOpenId);
 
-    MobileOpenId selectByMobileOpenId(@Param("mobile")String mobile, @Param("openId")String openId);
+    List<MobileOpenId> selectByMobileOpenId(@Param("mobile")String mobile, @Param("openId")String openId);
 
     List<Map> selectByMobileOpenIdRole(@Param("mobile")String mobile, @Param("openId")String openId);
 

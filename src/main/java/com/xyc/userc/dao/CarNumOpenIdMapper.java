@@ -16,6 +16,8 @@ public interface CarNumOpenIdMapper
 {
     List<CarNumOpenId> selectByOpenId(@Param("openId")String openId);
 
+    List<CarNumOpenId> selectByMobile(@Param("mobile")String mobile);
+
     int deleteByCarNumOpenId(@Param("carNum")String carNum, @Param("openId")String openId);
 
     List<Integer> selectMobileOpenIdIdByOpenId(@Param("openId")String openId);

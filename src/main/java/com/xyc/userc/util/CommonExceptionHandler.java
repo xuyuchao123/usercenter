@@ -13,8 +13,17 @@ public class CommonExceptionHandler
     {
         if(e instanceof BusinessException)
         {
-            LOGGER.error(msg + "：{}", ((BusinessException)e).getJsonResultEnum().getMessage());
-            resultObj = new JsonResultObj(false,((BusinessException)e).getJsonResultEnum());
+            if(((BusinessException)e).getJsonResultEnum() != null)
+            {
+                LOGGER.error(msg + "：{}", ((BusinessException)e).getJsonResultEnum().getMessage());
+                resultObj = new JsonResultObj(false,((BusinessException)e).getJsonResultEnum());
+            }
+            else
+            {
+                LOGGER.error(msg + "：{}", ((BusinessException)e).getMessage());
+                resultObj = new JsonResultObj(false, JsonResultEnum.FAIL.getCode(), ((BusinessException)e).getMessage());
+            }
+
         }
         else
         {
