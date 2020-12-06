@@ -86,12 +86,22 @@
     order by mo.OPENID
   </select>
 
-  <select id="selectUserIdByMobile" resultType="java.util.Map">
-    select PHONE_NO, User_ID FROM HLJLYXX
-    where PHONE_NO IN
-    <foreach collection="list" open="(" close=")" separator="," item="mobile" index="i">
-      #{mobile}
-    </foreach>
+  <!--<select id="selectUserIdByMobile" resultType="java.util.Map">-->
+    <!--select hlm.PHONE_NO, hlm.User_ID FROM -->
+    <!--(select * HLJLYXX-->
+    <!--union all -->
+    <!--select * from MANAGERINFO) hlm-->
+    <!--where PHONE_NO IN-->
+    <!--<foreach collection="list" open="(" close=")" separator="," item="mobile" index="i">-->
+      <!--#{mobile}-->
+    <!--</foreach>-->
+  <!--</select>-->
+
+  <select id="selectAllUserId" resultType="java.util.Map">
+    select hlm.PHONE_NO, hlm.User_ID FROM
+    (select * HLJLYXX
+    union all
+    select * from MANAGERINFO) hlm
   </select>
 
   <select id="selectStockCodeInfo" resultType="java.util.Map">

@@ -14,7 +14,7 @@ public interface UserMapper
 
     List<Map> selectUserRoleByOpenIdRoleCode(@Param("openId")String openId, @Param("roleCode")String roleCode);
 
-    List<Map> selectUserIdByMobile(List<String> mobiles);
+    List<Map> selectAllUserId();
 
     String selectUserId(String mobile);
 

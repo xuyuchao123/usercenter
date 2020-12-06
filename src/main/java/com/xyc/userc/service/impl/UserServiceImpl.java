@@ -335,14 +335,14 @@ public class UserServiceImpl implements UserService
         }
 
         List<Map> list = carNumOpenIdMapper.selectCarNumInfo(null);
-        List KdyMobileList = null;
+//        List KdyMobileList = null;
         if(list != null && list.size() > 0)
         {
             String curOpenId = null;
             int listIdx = 0;
             int listSize = list.size();
             Map curMap = null;
-            KdyMobileList = new ArrayList<String>();
+//            KdyMobileList = new ArrayList<String>();
             for (UserInfoVo userInfoVo : userInfoVoList)
             {
                 //若角色列表包含开单员角色则收集其手机号到 KdyMobileList 中，方便统一查询对应的工号
@@ -351,7 +351,7 @@ public class UserServiceImpl implements UserService
 //                    KdyMobileList.add(userInfoVo.getMobilePhone());
 //                }
                 //不管角色是不是开单员，都要收集手机号到 KdyMobileList 中，方便统一查询对应的工号
-                KdyMobileList.add(userInfoVo.getMobilePhone());
+//                KdyMobileList.add(userInfoVo.getMobilePhone());
                 curOpenId = userInfoVo.getOpenId();
                 List<CarNumInfoVo> carNumInfoVoList = new ArrayList<>();
                 while (listIdx < listSize)
@@ -374,30 +374,28 @@ public class UserServiceImpl implements UserService
             }
         }
         // kdyMobileList 为空，表示 list 为空，用户手机号未开始收集
-        if(KdyMobileList == null)
-        {
-            KdyMobileList = new ArrayList<String>();
-            for (UserInfoVo userInfoVo : userInfoVoList)
-            {
-                //若角色列表包含开单员角色则收集其手机号到 KdyMobileList 中，方便统一查询对应的工号
-//                if(userInfoVo.getRoleCode() != null && userInfoVo.getRoleCode().contains(RoleTypeEnum.ROLE_KDY.getRoleCode()))
-//                {
-//                    KdyMobileList.add(userInfoVo.getMobilePhone());
-//                }
-                //不管角色是不是开单员，都要收集手机号到 KdyMobileList 中，方便统一查询对应的工号
-                KdyMobileList.add(userInfoVo.getMobilePhone());
-            }
-        }
+//        if(KdyMobileList == null)
+//        {
+//            KdyMobileList = new ArrayList<String>();
+//            for (UserInfoVo userInfoVo : userInfoVoList)
+//            {
+//                //若角色列表包含开单员角色则收集其手机号到 KdyMobileList 中，方便统一查询对应的工号
+////                if(userInfoVo.getRoleCode() != null && userInfoVo.getRoleCode().contains(RoleTypeEnum.ROLE_KDY.getRoleCode()))
+////                {
+////                    KdyMobileList.add(userInfoVo.getMobilePhone());
+////                }
+//                //不管角色是不是开单员，都要收集手机号到 KdyMobileList 中，方便统一查询对应的工号
+//                KdyMobileList.add(userInfoVo.getMobilePhone());
+//            }
+//        }
         //开始按照手机号列表查询对应工号，并将手机号和工号的对应关系放到 mobileUserIdMap 中
         Map<String,String> mobileUserIdMap = new HashMap<>();
-        if(KdyMobileList.size() > 0)
+        List<Map> maps = userMapper.selectAllUserId();
+        for(Map map : maps)
         {
-            List<Map> maps = userMapper.selectUserIdByMobile(KdyMobileList);
-            for(Map map : maps)
-            {
-                mobileUserIdMap.put(map.get("PHONE_NO").toString(),map.get("USER_ID").toString());
-            }
+            mobileUserIdMap.put(map.get("PHONE_NO").toString(),map.get("USER_ID").toString());
         }
+
         redisTemplate.setKeySerializer(RedisSerializer.string());
         redisTemplate.setValueSerializer(RedisSerializer.string());
         String roleCode = null;
