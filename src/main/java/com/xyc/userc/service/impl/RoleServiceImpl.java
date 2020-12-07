@@ -351,6 +351,10 @@ public class RoleServiceImpl implements RoleService
         else
         {
             jobNum = defaultUserRoleVos.get(0).getJobNum();
+            if(jobNum == null)
+            {
+                jobNum = "";
+            }
             LOGGER.info("该手机号有预置角色，开始删除预置角色 mobile={} jobNum={}",mobile);
             //删除该手机号原先的预置角色
             roleMapper.deleteDefaultUserRole(mobile);
