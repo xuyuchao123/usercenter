@@ -69,6 +69,10 @@ public class RoleServiceImpl implements RoleService
                 if(tmpDefaultRoleVo.getMobile().equals(tmpMobile))
                 {
                     stringJoiner.add(tmpDefaultRoleVo.getRoleIds());
+                    if(i == defaultRoleVos.size()-1)
+                    {
+                        colDefaultRoleVos.get(colDefaultRoleVos.size()-1).setRoleIds(stringJoiner.toString());
+                    }
                 }
                 else
                 {
@@ -142,6 +146,10 @@ public class RoleServiceImpl implements RoleService
                 if(tmpBindedRoleVo.getMobile().equals(tmpMobile))
                 {
                     stringJoiner.add(tmpBindedRoleVo.getRoleIds());
+                    if(i == bindedUserRoleVos.size()-1)
+                    {
+                        colBindedRoleVos.get(colBindedRoleVos.size()-1).setRoleIds(stringJoiner.toString());
+                    }
                 }
                 else
                 {
@@ -193,6 +201,20 @@ public class RoleServiceImpl implements RoleService
     {
         LOGGER.info("进入查询所有角色信息方法");
         List<RoleVo> roleVos = roleMapper.selectAllRole();
+        if(roleVos != null && roleVos.size() > 0)
+        {
+            for(RoleVo roleVo : roleVos)
+            {
+                if(UsercConstant.ROLECODERELMAP.get(roleVo.getRoleCode()) != null)
+                {
+                    roleVo.setPreset(1);
+                }
+                else
+                {
+                    roleVo.setPreset(0);
+                }
+            }
+        }
         LOGGER.info("结束查询所有角色信息方法");
         return roleVos;
     }

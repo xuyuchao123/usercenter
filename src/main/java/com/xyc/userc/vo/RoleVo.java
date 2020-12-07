@@ -12,6 +12,7 @@ public class RoleVo implements Serializable
     private Integer id;
     private String roleName;
     private String roleCode;
+    private Integer preset;
 
     public Integer getId() {
         return id;
@@ -35,5 +36,13 @@ public class RoleVo implements Serializable
 
     public void setRoleCode(String roleCode) {
         this.roleCode = roleCode;
+    }
+
+    public Integer getPreset() {
+        return preset;
+    }
+
+    public void setPreset(Integer preset) {
+        this.preset = preset;
     }
 }

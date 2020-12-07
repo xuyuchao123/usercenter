@@ -295,7 +295,8 @@
               and cf.car_number = #{carNum}
             </if>
             and cf.CROSSTIME like concat(#{startDate},'%')
-            and rownum <![CDATA[ <= ]]> #{end})
+            and rownum <![CDATA[ <= ]]> #{end}
+            order by cf.CROSSTIME desc)
         </where>
         where id <![CDATA[ >= ]]> #{start}
     </select>
