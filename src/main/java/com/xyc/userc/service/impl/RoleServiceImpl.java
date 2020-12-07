@@ -59,26 +59,21 @@ public class RoleServiceImpl implements RoleService
         if(defaultRoleVos.size() > 0)
         {
             colDefaultRoleVos.add(defaultRoleVos.get(0));
-            String tmpJobNum = defaultRoleVos.get(0).getJobNum();
+            String tmpMobile = defaultRoleVos.get(0).getMobile();
             StringJoiner stringJoiner = new StringJoiner(",");
             stringJoiner.add(defaultRoleVos.get(0).getRoleIds());
             DefaultUserRoleVo tmpDefaultRoleVo;
             for(int i = 1; i < defaultRoleVos.size(); i++)
             {
                 tmpDefaultRoleVo = defaultRoleVos.get(i);
-                if(tmpDefaultRoleVo.getJobNum().equals(tmpJobNum))
+                if(tmpDefaultRoleVo.getMobile().equals(tmpMobile))
                 {
                     stringJoiner.add(tmpDefaultRoleVo.getRoleIds());
                 }
                 else
                 {
                     colDefaultRoleVos.get(colDefaultRoleVos.size()-1).setRoleIds(stringJoiner.toString());
-                    //只取前20条返回
-//                    if(colDefaultRoleVos.size() == 20)
-//                    {
-//                        break;
-//                    }
-                    tmpJobNum = tmpDefaultRoleVo.getJobNum();
+                    tmpMobile = tmpDefaultRoleVo.getMobile();
                     colDefaultRoleVos.add(tmpDefaultRoleVo);
                     stringJoiner = new StringJoiner(",");
                     stringJoiner.add(tmpDefaultRoleVo.getRoleIds());

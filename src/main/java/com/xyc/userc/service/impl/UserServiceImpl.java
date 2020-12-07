@@ -391,9 +391,15 @@ public class UserServiceImpl implements UserService
         //开始按照手机号列表查询对应工号，并将手机号和工号的对应关系放到 mobileUserIdMap 中
         Map<String,String> mobileUserIdMap = new HashMap<>();
         List<Map> maps = userMapper.selectAllUserId();
+        String tmpUserId = null;
         for(Map map : maps)
         {
-            mobileUserIdMap.put(map.get("PHONE_NO").toString(),map.get("USER_ID").toString());
+            tmpUserId = (String)map.get("USER_ID");
+            if(tmpUserId == null)
+            {
+                tmpUserId = "";
+            }
+            mobileUserIdMap.put(map.get("PHONE_NO").toString(),tmpUserId);
         }
 
         redisTemplate.setKeySerializer(RedisSerializer.string());
