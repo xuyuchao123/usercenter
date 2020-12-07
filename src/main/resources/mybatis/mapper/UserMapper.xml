@@ -99,7 +99,7 @@
 
   <select id="selectAllUserId" resultType="java.util.Map">
     select hlm.PHONE_NO, hlm.User_ID FROM
-    (select * HLJLYXX
+    (select * from HLJLYXX
     union all
     select * from MANAGERINFO) hlm
   </select>

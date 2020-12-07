@@ -10,13 +10,13 @@
 
     <select id="selectByPrimaryKey" resultMap="BaseResultMap">
         select id, url, description
-        from sys_requestpath
+        from pc_requestpath
         where id = #{id,jdbcType=BIGINT}
     </select>
 
     <select id="selectByPermissionId" resultMap="BaseResultMap">
-        select * from sys_permission_requestpath spr
-        left join sys_requestpath sr on spr.requestpath_id = sr.id
+        select * from pc_permission_requestpath spr
+        left join pc_requestpath sr on spr.requestpath_id = sr.id
         where spr.permission_id = #{permissionId}
     </select>
 
