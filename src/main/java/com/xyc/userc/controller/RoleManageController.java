@@ -169,7 +169,7 @@ public class RoleManageController
     @PostMapping("/updateBindedUserRole")
     @ApiOperation(value="修改用户已绑定角色信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="mobile", value="手机号", required=false, dataType="String"),
+            @ApiImplicitParam(name="mobile", value="手机号", required=true, dataType="String"),
             @ApiImplicitParam(name="role", value="角色id列表", required=true, dataType="String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：修改成功 isSuccess=false：修改失败，resMsg为错误信息")})
     public JsonResultObj updateBindedUserRole(String mobile, String role)

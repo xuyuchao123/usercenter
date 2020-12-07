@@ -10,6 +10,7 @@ public class PasswordEncodeTest
     public static void main(String[] args)
     {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        System.out.println(bCryptPasswordEncoder.encode("1"));
+
+        System.out.println(bCryptPasswordEncoder.encode("12345"));
     }
 }

@@ -37,6 +37,7 @@ public class RoleServiceImpl implements RoleService
     @Autowired
     private MobileOpenIdMapper mobileOpenIdMapper;
 
+    @Autowired
     private CarNumOpenIdMapper carNumOpenIdMapper;
 
     @Override
@@ -189,7 +190,7 @@ public class RoleServiceImpl implements RoleService
         resList.add(sizeInt);
         resList.add(colBindedRoleVos_page);
         LOGGER.info("进入查询用户已绑定角色配置信息方法 mobile={} page={} size={}",mobile,page,size);
-        return null;
+        return resList;
     }
 
     @Override
@@ -336,6 +337,11 @@ public class RoleServiceImpl implements RoleService
         {
             for(String s : roleArr)
             {
+                if(roleIdToCodeMap.get(Integer.valueOf(s)) == null)
+                {
+                    LOGGER.error("要修改的角色id不存在,或已删除 roleId={}",s);
+                    throw new BusinessException(JsonResultEnum.ROLE_NOT_EXIST);
+                }
                 roleMapper.insertUserRole(mobileOpenId.getId(),Integer.valueOf(s),date,date);
             }
         }

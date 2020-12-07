@@ -62,7 +62,9 @@ public enum JsonResultEnum
     FILE_NOT_EXIST(700,"上传的文件不能为空！"),
     FILE_EXIST(701,"上传的文件已存在"),
 
-    SHIPINFO_CHECK_FAIL(800,"船户信息审核失败！");
+    SHIPINFO_CHECK_FAIL(800,"船户信息审核失败！"),
+
+    ROLE_NOT_EXIST(900,"角色不存在或已删除！");
 
     private Integer code;
     private String message;

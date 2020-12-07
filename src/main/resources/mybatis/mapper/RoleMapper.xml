@@ -98,7 +98,11 @@
     from SYS_USER_ROLE r
     left join SYS_MOBILE_OPENID mo
     on r.MOBILE_OPENID_ID = mo.ID
-    where mo.mobile = #{mobile}
+    <where>
+      <if test="mobile != null">
+        and mo.mobile = #{mobile}
+      </if>
+    </where>
     order by r.GMT_MODIFIED DESC
   </select>
 
