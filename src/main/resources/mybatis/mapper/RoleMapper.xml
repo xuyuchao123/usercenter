@@ -61,17 +61,14 @@
 
 
   <select id="selectDefaultUserRole" resultType="com.xyc.userc.vo.DefaultUserRoleVo">
-    select distinct hlmi.USER_ID as jobNum, hlmi.PHONE_NO as mobile, hlmi.ITEM as roleIds
-    from
-    (select * from HLJLYXX hl
-    union all
-    select * from MANAGERINFO mi) hlmi
+    select distinct hl.USER_ID as jobNum, hl.PHONE_NO as mobile, hl.ITEM as roleIds
+    from HLJLYXX hl
     <where>
       <if test="mobile != null">
-        and hlmi.PHONE_NO = #{mobile}
+        and hl.PHONE_NO = #{mobile}
       </if>
     </where>
-    order by hlmi.PHONE_NO
+    order by hl.PHONE_NO
   </select>
 
   <select id="selectAllRole" resultType="com.xyc.userc.vo.RoleVo">
