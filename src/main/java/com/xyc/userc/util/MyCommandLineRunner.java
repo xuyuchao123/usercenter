@@ -1,6 +1,6 @@
 package com.xyc.userc.util;
 
-import com.xyc.userc.service.UserService;
+import com.xyc.userc.service.RedisService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -20,13 +20,11 @@ import java.util.List;
 public class MyCommandLineRunner implements CommandLineRunner
 {
 
-    protected static final Logger LOGGER = LoggerFactory.getLogger(MyCommandLineRunner.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(MyCommandLineRunnr.class);
 
     @Resource
-    UserService userService;
+    RedisService redisService;
 
-//    @Resource
-//    private RedisTemplate<String, Object> redisTemplate;
 
     //启动s任务的核心逻辑，当项目启动时，run方法会被自动执行。
     @Override
@@ -36,7 +34,7 @@ public class MyCommandLineRunner implements CommandLineRunner
 //        redisTemplate.setKeySerializer(RedisSerializer.string());
 //        redisTemplate.setValueSerializer(RedisSerializer.json());
 //        Object obj = (String)redisTemplate.opsForValue().get("tst");
-        userService.storeUserInfoVo();
+        redisService.storeUserInfoVo();
 
         LOGGER.info("结束存入用户信息至redis");
     }
