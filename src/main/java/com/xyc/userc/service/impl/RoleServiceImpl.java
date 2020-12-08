@@ -75,6 +75,7 @@ public class RoleServiceImpl implements RoleService
             String tmpMobile = defaultRoleVos.get(0).getMobile();
             StringJoiner stringJoiner = new StringJoiner(",");
             tmpRoleId = roleCodeToIdMap.get(UsercConstant.ROLECODERELMAP_REV.get(defaultRoleVos.get(0).getRoleIds()));
+            defaultRoleVos.get(0).setRoleIds(tmpRoleId);
             if(tmpRoleId != null)
             {
                 stringJoiner.add(tmpRoleId);
