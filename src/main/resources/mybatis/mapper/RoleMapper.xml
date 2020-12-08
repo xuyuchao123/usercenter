@@ -101,7 +101,6 @@
     </where>
     order by mo.mobile,r.GMT_MODIFIED DESC
   </select>
-  statementType="CALLABLE"
 
   <select id="refreshDefaultUserRole" statementType="CALLABLE">
     {call REFDEFROLE()}
