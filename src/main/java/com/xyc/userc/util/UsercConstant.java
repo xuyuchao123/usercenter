@@ -12,6 +12,8 @@ public class UsercConstant
 
     public static final Map<String,String> ROLECODERELMAP;
 
+    public static final Map<String,String> ROLECODERELMAP_REV;
+
     static
     {
         ROLECODERELMAP = new HashMap<>();
@@ -22,5 +24,15 @@ public class UsercConstant
         ROLECODERELMAP.put(RoleTypeEnum.ROLE_HBGK.getRoleCode(), "HBGK");
         ROLECODERELMAP.put(RoleTypeEnum.ROLE_HLDD.getRoleCode(), "HLDD");
         ROLECODERELMAP.put(RoleTypeEnum.ROLE_JLY_OTHER.getRoleCode(), "other");
+
+        ROLECODERELMAP_REV = new HashMap<>();
+        ROLECODERELMAP_REV.put("XC",RoleTypeEnum.ROLE_JLY_XC.getRoleCode());
+        ROLECODERELMAP_REV.put("BC",RoleTypeEnum.ROLE_JLY_BC.getRoleCode());
+        ROLECODERELMAP_REV.put("HP",RoleTypeEnum.ROLE_JLY_KHB.getRoleCode());
+        ROLECODERELMAP_REV.put("KDY",RoleTypeEnum.ROLE_KDY.getRoleCode());
+        ROLECODERELMAP_REV.put("HBGK",RoleTypeEnum.ROLE_HBGK.getRoleCode());
+        ROLECODERELMAP_REV.put("HLDD",RoleTypeEnum.ROLE_HLDD.getRoleCode());
+        ROLECODERELMAP_REV.put("other",RoleTypeEnum.ROLE_JLY_OTHER.getRoleCode());
+
     }
 }

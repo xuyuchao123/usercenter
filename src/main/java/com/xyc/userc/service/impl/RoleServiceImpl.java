@@ -59,20 +59,37 @@ public class RoleServiceImpl implements RoleService
         List<DefaultUserRoleVo> defaultRoleVos = new ArrayList<>();
         defaultRoleVos = roleMapper.selectDefaultUserRole(mobile);
 
+        //获取已绑定角色编码和角色id的对应关系
+        List<RoleVo> roleVos = roleMapper.selectAllRole();
+        Map<String,String> roleCodeToIdMap = new HashMap<>();
+        for(RoleVo roleVo : roleVos)
+        {
+            roleCodeToIdMap.put(roleVo.getRoleCode(),String.valueOf(roleVo.getId()));
+        }
+
         List<DefaultUserRoleVo> colDefaultRoleVos = new ArrayList<>();
+        String tmpRoleId = null;
         if(defaultRoleVos.size() > 0)
         {
             colDefaultRoleVos.add(defaultRoleVos.get(0));
             String tmpMobile = defaultRoleVos.get(0).getMobile();
             StringJoiner stringJoiner = new StringJoiner(",");
-            stringJoiner.add(defaultRoleVos.get(0).getRoleIds());
+            tmpRoleId = roleCodeToIdMap.get(UsercConstant.ROLECODERELMAP_REV.get(defaultRoleVos.get(0).getRoleIds()));
+            if(tmpRoleId != null)
+            {
+                stringJoiner.add(tmpRoleId);
+            }
             DefaultUserRoleVo tmpDefaultRoleVo;
             for(int i = 1; i < defaultRoleVos.size(); i++)
             {
                 tmpDefaultRoleVo = defaultRoleVos.get(i);
+                tmpRoleId = roleCodeToIdMap.get(UsercConstant.ROLECODERELMAP_REV.get(tmpDefaultRoleVo.getRoleIds()));
                 if(tmpDefaultRoleVo.getMobile().equals(tmpMobile))
                 {
-                    stringJoiner.add(tmpDefaultRoleVo.getRoleIds());
+                    if(tmpRoleId != null)
+                    {
+                        stringJoiner.add(tmpRoleId);
+                    }
                     if(i == defaultRoleVos.size()-1)
                     {
                         colDefaultRoleVos.get(colDefaultRoleVos.size()-1).setRoleIds(stringJoiner.toString());
@@ -84,7 +101,10 @@ public class RoleServiceImpl implements RoleService
                     tmpMobile = tmpDefaultRoleVo.getMobile();
                     colDefaultRoleVos.add(tmpDefaultRoleVo);
                     stringJoiner = new StringJoiner(",");
-                    stringJoiner.add(tmpDefaultRoleVo.getRoleIds());
+                    if(tmpRoleId != null)
+                    {
+                        stringJoiner.add(tmpRoleId);
+                    }
                 }
             }
         }

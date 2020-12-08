@@ -61,7 +61,7 @@
 
 
   <select id="selectDefaultUserRole" resultType="com.xyc.userc.vo.DefaultUserRoleVo">
-    select distinct hlmi.USER_ID as jobNum, hlmi.PHONE_NO as mobile, hlmi.ITEM as roleCode
+    select distinct hlmi.USER_ID as jobNum, hlmi.PHONE_NO as mobile, hlmi.ITEM as roleIds
     from
     (select * from HLJLYXX hl
     union all
