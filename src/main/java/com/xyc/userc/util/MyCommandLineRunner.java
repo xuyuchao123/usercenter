@@ -20,7 +20,7 @@ import java.util.List;
 public class MyCommandLineRunner implements CommandLineRunner
 {
 
-    protected static final Logger LOGGER = LoggerFactory.getLogger(MyCommandLineRunnr.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(MyCommandLineRunner.class);
 
     @Resource
     RedisService redisService;
