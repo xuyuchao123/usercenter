@@ -37,4 +37,6 @@ public interface RoleMapper {
 
     List<BindedUserRoleVo> selectBindedUserRole(@Param("mobile")String mobile);
 
+    void refreshDefaultUserRole();
+
 }

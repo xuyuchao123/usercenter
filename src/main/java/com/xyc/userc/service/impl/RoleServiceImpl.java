@@ -281,6 +281,7 @@ public class RoleServiceImpl implements RoleService
             }
             roleMapper.insertDefaultUserRole(jobNum,mobile,preRoleCode);
         }
+        roleMapper.refreshDefaultUserRole();
         LOGGER.info("结束新增/修改用户预置角色信息方法 jobNum={} mobile={} role={}",jobNum,mobile,role);
         
     }
@@ -431,7 +432,7 @@ public class RoleServiceImpl implements RoleService
             }
             roleMapper.insertDefaultUserRole(jobNum,mobile,preRoleCode);
         }
-
+        roleMapper.refreshDefaultUserRole();
         LOGGER.info("结束修改用户已绑定角色信息方法 mobile={} role={}",mobile,role);
 
     }
@@ -441,6 +442,7 @@ public class RoleServiceImpl implements RoleService
     {
         LOGGER.info("开始删除用户预置角色信息方法 mobile={}",mobile);
         roleMapper.deleteDefaultUserRole(mobile);
+        roleMapper.refreshDefaultUserRole();
         LOGGER.info("结束删除用户预置角色信息方法 mobile={}",mobile);
     }
 }
