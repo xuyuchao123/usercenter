@@ -21,8 +21,6 @@ public interface UserService extends UserDetailsService
 
      User bindMobileToOpenId(String mobile, String nickName,String mesCode, String openId) throws Exception;
 
-     void storeUserInfoVo() throws Exception;
-
 //******************************************************************************************************
 
      void addUser(String userName, String password, String mobile, String userRealName, Byte isDelete,

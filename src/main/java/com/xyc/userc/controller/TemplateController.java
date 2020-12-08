@@ -11,6 +11,7 @@ import com.xyc.userc.entity.User;
 import com.xyc.userc.security.MesCodeErrorException;
 import com.xyc.userc.security.MesCodeExpiredException;
 import com.xyc.userc.service.MobileService;
+import com.xyc.userc.service.RedisService;
 import com.xyc.userc.service.UserService;
 import com.xyc.userc.util.CommonExceptionHandler;
 import com.xyc.userc.util.UsercConstant;
@@ -40,6 +41,9 @@ public class TemplateController {
 
 	@Resource
 	UserService userService;
+
+	@Resource
+	RedisService redisService;
 
 	@Resource
 	MobileService mobileService;
@@ -168,7 +172,7 @@ public class TemplateController {
 		JsonResultObj resultObj = null;
 		try
 		{
-			userService.storeUserInfoVo();
+			redisService.storeUserInfoVo();
 			resultObj = new JsonResultObj(true);
 		}
 		catch (Exception e)

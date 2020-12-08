@@ -61,21 +61,17 @@
 
 
   <select id="selectDefaultUserRole" resultType="com.xyc.userc.vo.DefaultUserRoleVo">
-    select hm.jobNum, hm.mobile, r.ID as roleIds
-    from (select distinct hlmi.USER_ID as jobNum, hlmi.PHONE_NO as mobile,
-     decode(hlmi.ITEM, 'XC','JLY_XC', 'BC','JLY_BC', 'HP','JLY_KHB', 'other','JLY_OTHER', hlmi.ITEM) as roleCode
+    select distinct hlmi.USER_ID as jobNum, hlmi.PHONE_NO as mobile, hlmi.ITEM as roleCode
     from
     (select * from HLJLYXX hl
     union all
-    select * from MANAGERINFO mi) hlmi) hm
-    left join SYS_ROLE r
-    on hm.roleCode = r.ROLE_CODE and r.IS_DELETED = 0
+    select * from MANAGERINFO mi) hlmi
     <where>
       <if test="mobile != null">
-        and hm.mobile = #{mobile}
+        and hlmi.PHONE_NO = #{mobile}
       </if>
     </where>
-    order by hm.jobNum
+    order by hlmi.PHONE_NO
   </select>
 
   <select id="selectAllRole" resultType="com.xyc.userc.vo.RoleVo">
@@ -103,7 +99,7 @@
         and mo.mobile = #{mobile}
       </if>
     </where>
-    order by r.GMT_MODIFIED DESC
+    order by mo.mobile,r.GMT_MODIFIED DESC
   </select>
 
 </mapper>

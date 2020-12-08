@@ -5,6 +5,7 @@ import com.xyc.userc.dao.MobileOpenIdMapper;
 import com.xyc.userc.dao.RoleMapper;
 import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.MobileOpenId;
+import com.xyc.userc.service.RedisService;
 import com.xyc.userc.service.RoleService;
 import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.JsonResultEnum;
@@ -40,10 +41,13 @@ public class RoleServiceImpl implements RoleService
     @Autowired
     private CarNumOpenIdMapper carNumOpenIdMapper;
 
+    @Autowired
+    private RedisService redisService;
+
     @Override
     public List<DefaultUserRoleVo> getDefaultUserRole(String mobile, String page, String size) throws Exception
     {
-        LOGGER.info("进入查询用户默认角色配置信息方法 mobile={} page={} size={}",mobile,page,size);
+        LOGGER.info("进入查询用户预置角色信息方法 mobile={} page={} size={}",mobile,page,size);
         if(page == null)
         {
             throw new BusinessException(JsonResultEnum.PAGE_NOT_EXIST);
@@ -350,8 +354,10 @@ public class RoleServiceImpl implements RoleService
 
         //插入修改后的角色
         Date date = new Date();
+        Set<String> openIdSet = new HashSet<>();
         for(MobileOpenId mobileOpenId : mobileOpenIds)
         {
+            openIdSet.add(mobileOpenId.getOpenId());
             for(String s : roleArr)
             {
                 if(roleIdToCodeMap.get(Integer.valueOf(s)) == null)
@@ -361,6 +367,12 @@ public class RoleServiceImpl implements RoleService
                 }
                 roleMapper.insertUserRole(mobileOpenId.getId(),Integer.valueOf(s),date,date);
             }
+        }
+        for(String openId : openIdSet)
+        {
+            LOGGER.info("开始更新redis中用户信息及车牌号信息 openId={}",openId);
+            redisService.updateRedis(openId);
+            LOGGER.info("结束redis中用户信息及车牌号信息 openId={}",openId);
         }
 
         String jobNum = "";

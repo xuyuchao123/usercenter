@@ -7,6 +7,7 @@ import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.Role;
 import com.xyc.userc.entity.User;
 import com.xyc.userc.service.CarNumService;
+import com.xyc.userc.service.RedisService;
 import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.RoleTypeEnum;
@@ -50,8 +51,8 @@ public class CarNumServiceImpl implements CarNumService
     @Autowired
     private CarNumOpenIdMapper carNumOpenIdMapper;
 
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private RedisService redisService;
 
 
     @Override
@@ -118,7 +119,7 @@ public class CarNumServiceImpl implements CarNumService
                 }
             }
             LOGGER.info("开始更新redis中用户车牌号信息 openId={}",openId);
-            updateRedis(openId);
+            redisService.updateRedis(openId);
             LOGGER.info("结束更新redis中用户车牌号信息 openId={}",openId);
         }
         else
@@ -149,7 +150,7 @@ public class CarNumServiceImpl implements CarNumService
         {
             LOGGER.info("新增车牌成功 carNum={} openId={}",carNum,openId);
             LOGGER.info("开始更新redis中用户车牌号信息 openId={}",openId);
-            updateRedis(openId);
+            redisService.updateRedis(openId);
             LOGGER.info("结束更新redis中用户车牌号信息 openId={}",openId);
         }
         else
@@ -173,7 +174,7 @@ public class CarNumServiceImpl implements CarNumService
             LOGGER.info("成功修改车牌号 openId={}",openId);
 
             LOGGER.info("开始更新redis中用户车牌号信息openId={}",openId);
-            updateRedis(openId);
+            redisService.updateRedis(openId);
             LOGGER.info("结束更新redis中用户车牌号信息 openId={}",openId);
         }
         else
@@ -270,7 +271,7 @@ public class CarNumServiceImpl implements CarNumService
         }
 
         LOGGER.info("开始更新redis中用户车牌号信息openId={}",openId);
-        updateRedis(openId);
+        redisService.updateRedis(openId);
         LOGGER.info("结束更新redis中用户车牌号信息 openId={}",openId);
 
         LOGGER.info("结束启用车牌号方法 CarNum={} openId={}",carNum,openId);
@@ -360,49 +361,7 @@ public class CarNumServiceImpl implements CarNumService
         return resList;
     }
 
-    //更新redis中用户信息及车牌号信息
-    public void updateRedis(String openId) throws Exception
-    {
-        List<UserInfoVo> userInfoVoList = userMapper.selectUserInfoVo(openId);
-        //单个openid可能对应多个角色，需将角色编码统一汇总至一个userInfoVo中，用 "=" 分隔
-        if(userInfoVoList != null && userInfoVoList.size() > 0)
-        {
-            if(userInfoVoList.size() > 1)
-            {
-                UserInfoVo tmpVo = userInfoVoList.get(0);
-                String tmpRoleCode = tmpVo.getRoleCode();
-                int size = userInfoVoList.size();
-                for(int i = 1; i < size; i++)
-                {
-                    tmpRoleCode += "=";
-                    tmpRoleCode += userInfoVoList.get(i).getRoleCode();
-                }
-                tmpVo.setRoleCode(tmpRoleCode);
-                userInfoVoList.clear();
-                userInfoVoList.add(tmpVo);
-            }
-            UserInfoVo userInfoVo = userInfoVoList.get(0);
-            List<CarNumInfoVo> carNumInfoVoList = carNumOpenIdMapper.selectCarNumInfoVo(openId);
-            if(carNumInfoVoList != null && carNumInfoVoList.size() > 0)
-            {
-                userInfoVo.setCarNumList(carNumInfoVoList);
-            }
-            else
-            {
-                userInfoVo.setCarNumList(new ArrayList<>());
-            }
-            //若角色为开单员则需获取其工号
-//            if(userInfoVo.getRoleCode().equals(RoleTypeEnum.ROLE_KDY.getRoleCode()))
-//            {
-//                String gh = userMapper.selectUserId(userInfoVo.getMobilePhone());
-//                userInfoVo.setGh(gh);
-//            }
-            String gh = userMapper.selectUserId(userInfoVo.getMobilePhone());
-            userInfoVo.setGh(gh);
-            String json = JSON.toJSONString(userInfoVo);
-            redisTemplate.opsForValue().set(openId,json);
-        }
-    }
+
 
 
 }
