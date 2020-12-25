@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * Created by 1 on 2020/6/28.
@@ -36,7 +37,10 @@ public class MyAuthenticationEntryPoint implements AuthenticationEntryPoint
         }
         response.setContentType("text/json;charset=utf-8");
 //        String json = JSON.toJSONString(jsonResultObj);
-        response.getWriter().write(JSON.toJSONString(jsonResultObj));
+        PrintWriter printWriter = response.getWriter();
+        printWriter.write(JSON.toJSONString(jsonResultObj));
+        printWriter.flush();
+        printWriter.close();
     }
 
 }
