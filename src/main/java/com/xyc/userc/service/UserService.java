@@ -5,6 +5,7 @@ import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.PcUser;
 import com.xyc.userc.entity.Role;
 import com.xyc.userc.entity.User;
+import com.xyc.userc.vo.OpenIdNickNameVo;
 import com.xyc.userc.vo.UserInfoVo;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,5 +36,8 @@ public interface UserService extends UserDetailsService
      int checkUserRegByUsername(String username) throws Exception;
 
      int checkUserRegByMobile(String mobile) throws Exception;
+
+//     List<String> getOpenIdNickName(String jobNum) throws Exception;
+
 
 }

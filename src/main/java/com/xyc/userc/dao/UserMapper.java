@@ -26,4 +26,6 @@ public interface UserMapper
     List<UserInfoVo> selectUserInfoVo(@Param("openId")String openId);
 
     Map selectStockCodeInfo(String openId);
+
+
 }

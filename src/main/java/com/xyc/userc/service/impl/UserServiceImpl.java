@@ -12,6 +12,7 @@ import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.RoleTypeEnum;
 import com.xyc.userc.vo.CarNumInfoVo;
 import com.xyc.userc.vo.EnabledCarInfoVo;
+import com.xyc.userc.vo.OpenIdNickNameVo;
 import com.xyc.userc.vo.UserInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -414,6 +415,7 @@ public class UserServiceImpl implements UserService
         LOGGER.debug("结束新增pc端用户方法 mobile={} mesCode={}",mobile,mesCode);
     }
 
+
     //通过手机号查询角色编码及工号
     public List<Object> queryRoleCodeByMobile(String mobile) throws Exception
     {
@@ -462,4 +464,6 @@ public class UserServiceImpl implements UserService
         resList.add(gh);
         return resList;
     }
+
+
 }

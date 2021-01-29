@@ -64,7 +64,9 @@ public enum JsonResultEnum
 
     SHIPINFO_CHECK_FAIL(800,"船户信息审核失败！"),
 
-    ROLE_NOT_EXIST(900,"角色不存在或已删除！");
+    ROLE_NOT_EXIST(900,"角色不存在或已删除！"),
+
+    GARAGEINFO_NOT_EXIST(1000,"库位配置信息不存在！");
 
     private Integer code;
     private String message;
