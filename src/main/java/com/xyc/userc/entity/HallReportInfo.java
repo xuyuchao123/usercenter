@@ -19,8 +19,9 @@ public class HallReportInfo implements Serializable
     private Integer orderId;
     private Integer lateTimes;
     private String BigLadingBillNo;
+    private Date lastCalledTime;
 
-    public HallReportInfo(Integer id, String openId, String mobile, String carNumber, Date gmtCreate, Integer dataStatus, Integer orderId, Integer lateTimes, String bigLadingBillNo) {
+    public HallReportInfo(Integer id, String openId, String mobile, String carNumber, Date gmtCreate, Integer dataStatus, Integer orderId, Integer lateTimes, String bigLadingBillNo, Date lastCalledTime) {
         this.id = id;
         this.openId = openId;
         this.mobile = mobile;
@@ -30,6 +31,7 @@ public class HallReportInfo implements Serializable
         this.orderId = orderId;
         this.lateTimes = lateTimes;
         BigLadingBillNo = bigLadingBillNo;
+        this.lastCalledTime = lastCalledTime;
     }
 
     public Integer getId() {
@@ -102,5 +104,13 @@ public class HallReportInfo implements Serializable
 
     public void setBigLadingBillNo(String bigLadingBillNo) {
         BigLadingBillNo = bigLadingBillNo;
+    }
+
+    public Date getLastCalledTime() {
+        return lastCalledTime;
+    }
+
+    public void setLastCalledTime(Date lastCalledTime) {
+        this.lastCalledTime = lastCalledTime;
     }
 }

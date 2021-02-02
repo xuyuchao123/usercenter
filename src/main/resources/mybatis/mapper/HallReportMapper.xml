@@ -6,8 +6,8 @@
         <selectKey resultType="int" order="BEFORE" keyProperty="id">
             SELECT REPORT_QUEUE_INFO_SEQ.NEXTVAL FROM DUAL
         </selectKey>
-        insert into SYS_REPORT_QUEUE_INFO(ID,OPENID,MOBILE,CARNUMBER,GMT_CREATE,DATA_STATUS,ORDER_ID,LATE_TIMES,BIG_LADING_BILL_NO)
-        VALUES (#{id},#{openId},#{mobile},#{carNumber},#{gmtCreate},#{dataStatus},#{id},#{lateTimes},#{BigLadingBillNo})
+        insert into SYS_REPORT_QUEUE_INFO(ID,OPENID,MOBILE,CARNUMBER,GMT_CREATE,DATA_STATUS,ORDER_ID,LATE_TIMES,BIG_LADING_BILL_NO,LAST_CALLED_TIME)
+        VALUES (#{id},#{openId},#{mobile},#{carNumber},#{gmtCreate},#{dataStatus},#{id},#{lateTimes},#{BigLadingBillNo},#{lastCalledTime})
     </insert>
 
     <select id="selectHallReportInfo" resultType="com.xyc.userc.entity.HallReportInfo">
@@ -19,7 +19,8 @@
                DATA_STATUS as dataStatus,
                ORDER_ID as orderId,
                LATE_TIMES as lateTimes,
-               BIG_LADING_BILL_NO as bigLadingBillNo
+               BIG_LADING_BILL_NO as bigLadingBillNo,
+               LAST_CALLED_TIME as lastCalledTime
         from SYS_REPORT_QUEUE_INFO
         <where>
             <if test="openId != null">

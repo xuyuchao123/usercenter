@@ -38,7 +38,7 @@ public class HallReportServiceImpl implements HallReportService
             return id;
         }
         Date date = new Date();
-        HallReportInfo hallReportInfo = new HallReportInfo(null,openId,mobile,carNum,date,1,null,0,"");
+        HallReportInfo hallReportInfo = new HallReportInfo(null,openId,mobile,carNum,date,1,null,0,"",date);
         hallReportMapper.insert(hallReportInfo);
         int id = hallReportInfo.getId();
         LOGGER.info("初始化列表序号：id={}",id);
