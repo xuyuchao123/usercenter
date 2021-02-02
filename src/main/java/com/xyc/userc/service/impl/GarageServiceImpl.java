@@ -117,4 +117,6 @@ public class GarageServiceImpl implements GarageService
         LOGGER.info("结束查询库位最大限制量方法 garageType={} sumMaxLimit={}",garageType,sumMaxLimit);
         return sumMaxLimit;
     }
+
+
 }

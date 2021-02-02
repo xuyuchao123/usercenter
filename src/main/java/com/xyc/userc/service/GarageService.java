@@ -19,4 +19,6 @@ public interface GarageService
 
     int getMaxLimit(String garageType) throws Exception;
 
+
+
 }

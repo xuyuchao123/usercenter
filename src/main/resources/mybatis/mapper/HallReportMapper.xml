@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyc.userc.dao.HallReportMapper">
+
+    <insert id="insert" parameterType="com.xyc.userc.entity.HallReportInfo">
+        <selectKey resultType="int" order="BEFORE" keyProperty="id">
+            SELECT REPORT_QUEUQ_INFO_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        insert into SYS_REPORT_QUEUQ_INFO(ID,OPENID,MOBILE,CARNUMBER,GMT_CREATE,DATA_STATUS,ORDER_ID,LATE_TIMES,BIG_LADING_BILL_NO)
+        VALUES (#{id},#{openId},#{mobile},#{carNumber},#{gmtCreate},#{dataStatus},#{id},#{lateTimes},#{BigLadingBillNo})
+    </insert>
+
+    <select id="selectHallReportInfo" resultType="com.xyc.userc.entity.HallReportInfo">
+        select ID as id,
+               OPENID as openId,
+               MOBILE as mobile,
+               CARNUMBER as carNumber,
+               GMT_CREATE as gmtCreate,
+               DATA_STATUS as dataStatus,
+               ORDER_ID as orderId,
+               LATE_TIMES as lateTimes,
+               BIG_LADING_BILL_NO as bigLadingBillNo
+        from SYS_REPORT_QUEUQ_INFO
+        <where>
+            <if test="openId != null">
+                and OPENID = #{openId}
+            </if>
+            <if test="mobile != null">
+                and MOBILE = #{mobile}
+            </if>
+            <if test="carNum != null">
+                and CARNUMBER = #{carNum}
+            </if>
+            <if test="dataStatus != null">
+                and DATA_STATUS = #{dataStatus}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWaitingNum">
+        select count(*)
+        from SYS_REPORT_QUEUQ_INFO rq
+        where rq.ORDER_ID <![CDATA[ < ]]> (
+          select NVL(ORDER_ID,0)
+          from SYS_REPORT_QUEUQ_INFO
+          <where>
+              <if test="openId != null">
+                  and OPENID = #{openId}
+              </if>
+              and DATA_STATUS = 1
+          </where>
+        ) and rq.DATA_STATUS = 1
+    </select>
+
+    <select id="selectCurrentNum">
+        select * from (
+          select ORDER_ID from SYS_REPORT_QUEUE_INFO
+          where DATA_STATUS = 1
+          order by ORDER_ID
+        ) where rownum = 1
+    </select>
+
+</mapper>
