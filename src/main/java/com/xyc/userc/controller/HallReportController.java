@@ -66,7 +66,7 @@ public class HallReportController
         return resultObj;
     }
 
-    @PostMapping("/queryWaitingNum")
+    @GetMapping("/queryWaitingNum")
     @ApiOperation(value="查询等待人数")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
     public JsonResultObj queryWaitingNum(@ApiIgnore HttpServletRequest request)
