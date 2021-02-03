@@ -1,8 +1,11 @@
 package com.xyc.userc.service.impl;
 
 import com.xyc.userc.dao.HallReportMapper;
+import com.xyc.userc.entity.HallReportComment;
 import com.xyc.userc.entity.HallReportInfo;
 import com.xyc.userc.service.HallReportService;
+import com.xyc.userc.util.BusinessException;
+import com.xyc.userc.vo.HallReportInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,5 +66,31 @@ public class HallReportServiceImpl implements HallReportService
         curNum = hallReportMapper.selectCurrentNum();
         LOGGER.info("结束查询当前被叫到的序号方法 curNum = {}",curNum);
         return curNum;
+    }
+
+    @Override
+    public HallReportInfoVo getHallReportInfo(String openId) throws Exception
+    {
+        LOGGER.info("进入查询大厅报道信息方法 openId={}",openId);
+        List<HallReportInfo> hallReportInfoList = hallReportMapper.selectHallReportInfo(openId,null,null,null);
+        if(hallReportInfoList == null || hallReportInfoList.size() == 0)
+        {
+            LOGGER.error("大厅报道信息不存在 openId={}",openId);
+            throw new BusinessException("大厅报道信息不存在!");
+        }
+        HallReportInfo hallReportInfo = hallReportInfoList.get(0);
+        HallReportInfoVo hallReportInfoVo = new HallReportInfoVo(hallReportInfo.getId(),hallReportInfo.getMobile(),
+                hallReportInfo.getCarNumber(),hallReportInfo.getLateTimes());
+        LOGGER.info("结束查询当前被叫到的序号方法 openId={}",openId);
+        return hallReportInfoVo;
+    }
+
+    @Override
+    public void addHallReportComment(String openId, String carNum, String comment, String bigLadingBillNo) throws Exception
+    {
+        LOGGER.info("进入新增大厅报道评论方法 openId={} carNum={} bigLadingBillNo={}",openId,carNum,bigLadingBillNo);
+        HallReportComment hallReportComment = new HallReportComment(null,openId,carNum,comment,new Date(),bigLadingBillNo);
+        hallReportMapper.insertComment(hallReportComment);
+        LOGGER.info("结束新增大厅报道评论方法 openId={} carNum={} bigLadingBillNo={}",openId,carNum,bigLadingBillNo);
     }
 }

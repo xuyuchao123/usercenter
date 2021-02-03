@@ -1,5 +1,8 @@
 package com.xyc.userc.service;
 
+import com.xyc.userc.entity.HallReportInfo;
+import com.xyc.userc.vo.HallReportInfoVo;
+
 /**
  * Created by 1 on 2021/2/1.
  */
@@ -10,4 +13,8 @@ public interface HallReportService
     int getWaitingNum(String openId) throws Exception;
 
     int getCurrentNum() throws Exception;
+
+    HallReportInfoVo getHallReportInfo(String openId) throws  Exception;
+
+    void addHallReportComment(String openId, String carNum, String comment, String bigLadingBillNo) throws Exception;
 }

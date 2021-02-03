@@ -61,4 +61,9 @@
         ) where rownum = 1
     </select>
 
+    <insert id="insertComment" parameterType="com.xyc.userc.entity.HallReportComment">
+        insert into SYS_REPORT_QUEUE_COMMENT(ID,OPENID,CARNUMBER,COMMENT,GMT_CREATE,BIG_LADING_BILL_NO)
+        VALUES (REPORT_QUEUE_INFO_SEQ.NEXTVAL,#{openId},#{carNum},#{comment},#{gmtCreate},#{bigLadingBillNo})
+    </insert>
+
 </mapper>

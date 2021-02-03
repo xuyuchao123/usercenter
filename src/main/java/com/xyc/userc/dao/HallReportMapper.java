@@ -1,5 +1,6 @@
 package com.xyc.userc.dao;
 
+import com.xyc.userc.entity.HallReportComment;
 import com.xyc.userc.entity.HallReportInfo;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,4 +18,6 @@ public interface HallReportMapper
     int selectWaitingNum(String openId);
 
     int selectCurrentNum();
+
+    void insertComment(HallReportComment hallReportComment);
 }

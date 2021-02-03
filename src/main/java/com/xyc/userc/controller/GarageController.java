@@ -40,7 +40,7 @@ public class GarageController
             @ApiImplicitParam(name = "garageNum", value = "库位编码", required = true, dataType = "String"),
             @ApiImplicitParam(name = "garageName", value = "库位名称", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
-    public JsonResultObj queryGarageInfo(String garageType,String garageNum,String garageName)
+    public JsonResultObj<GarageInfoVo> queryGarageInfo(String garageType,String garageNum,String garageName)
     {
         LOGGER.info("开始查询库位配置信息 garageType={} garageNum={} garageName={}",garageType,garageNum,garageName);
         JsonResultObj resultObj = null;

@@ -5,6 +5,7 @@ import com.xyc.userc.util.CommonExceptionHandler;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
 import com.xyc.userc.util.UsercConstant;
+import com.xyc.userc.vo.HallReportInfoVo;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +29,12 @@ public class HallReportController
     @Resource
     HallReportService hallReportService;
 
-    @PostMapping("/addReportInfo")
+    @PostMapping("/addHallReportInfo")
     @ApiOperation(value="新增物流大厅报道记录")
     @ApiImplicitParams({@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String"),
             @ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：新增成功 isSuccess=false：新增失败，resMsg为错误信息")})
-    public JsonResultObj addReportInfo(@ApiIgnore HttpServletRequest request, String mobile, String carNum)
+    public JsonResultObj addHallReportInfo(@ApiIgnore HttpServletRequest request, String mobile, String carNum)
     {
         LOGGER.info("开始新增物流大厅报道记录 mobile={} carNum={}",mobile,mobile);
         JsonResultObj resultObj = null;
@@ -122,4 +123,81 @@ public class HallReportController
         LOGGER.info("结束查询当前被叫到的序号");
         return resultObj;
     }
+
+    @GetMapping("/queryHallReportInfo")
+    @ApiOperation(value="查询大厅报道信息")
+    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
+    public JsonResultObj queryHallReportInfo(@ApiIgnore HttpServletRequest request)
+    {
+        LOGGER.info("开始查询大厅报道信息");
+        JsonResultObj resultObj = null;
+        String openId = request.getHeader(UsercConstant.OPENID);
+        if(openId == null)
+        {
+            LOGGER.info("未获取到用户的openId");
+            resultObj = new JsonResultObj(false, JsonResultEnum.OPENID_NOT_EXIST);
+        }
+        else if(openId.equals("undefined"))
+        {
+            LOGGER.info("openId为 undefined");
+            resultObj = new JsonResultObj(false,JsonResultEnum.OPENID_UNDEFINED);
+        }
+        else
+        {
+            LOGGER.info("openId={}", openId);
+            try
+            {
+                HallReportInfoVo hallReportInfoVo = hallReportService.getHallReportInfo(openId);
+                resultObj = new JsonResultObj(true, hallReportInfoVo);
+            }
+            catch (Exception e)
+            {
+                resultObj = CommonExceptionHandler.handException(e, "查询大厅报道信息失败", LOGGER, resultObj);
+            }
+        }
+
+        LOGGER.info("结束查询大厅报道信息");
+        return resultObj;
+    }
+
+    @PostMapping("/addHallReportComment")
+    @ApiOperation(value="新增大厅报道评论")
+    @ApiImplicitParams({@ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "comment", value = "评论内容", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "bigLadingBillNo", value = "提单号", required = true, dataType = "String")})
+    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：新增成功 isSuccess=false：新增失败，resMsg为错误信息")})
+    public JsonResultObj addHallReportComment(@ApiIgnore HttpServletRequest request, String carNum, String comment, String bigLadingBillNo)
+    {
+        LOGGER.info("开始新增大厅报道评论 carNum={},bigLadingBillNo={}",carNum,bigLadingBillNo);
+        JsonResultObj resultObj = null;
+        String openId = request.getHeader(UsercConstant.OPENID);
+        if(openId == null)
+        {
+            LOGGER.info("未获取到用户的openId");
+            resultObj = new JsonResultObj(false, JsonResultEnum.OPENID_NOT_EXIST);
+        }
+        else if(openId.equals("undefined"))
+        {
+            LOGGER.info("openId为 undefined");
+            resultObj = new JsonResultObj(false,JsonResultEnum.OPENID_UNDEFINED);
+        }
+        else
+        {
+            LOGGER.info("openId={}", openId);
+            try
+            {
+                hallReportService.addHallReportComment(openId,carNum,comment,bigLadingBillNo);
+                resultObj = new JsonResultObj(true);
+            }
+            catch (Exception e)
+            {
+                resultObj = CommonExceptionHandler.handException(e, "新增大厅报道评论失败", LOGGER, resultObj);
+            }
+        }
+
+        LOGGER.info("结束新增大厅报道评论 carNum={},bigLadingBillNo={}",carNum,bigLadingBillNo);
+        return resultObj;
+    }
+
+
 }

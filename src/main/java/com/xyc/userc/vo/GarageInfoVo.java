@@ -3,11 +3,13 @@ package com.xyc.userc.vo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.io.Serializable;
+
 /**
  * Created by 1 on 2021/1/26.
  */
 @ApiModel(value="库位配置信息返回对象类型")
-public class GarageInfoVo
+public class GarageInfoVo implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
