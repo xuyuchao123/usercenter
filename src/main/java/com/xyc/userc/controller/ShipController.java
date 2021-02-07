@@ -71,7 +71,7 @@ public class ShipController
             }
             catch (Exception e)
             {
-                resultObj = CommonExceptionHandler.handException(e, "新增船户报港数据失败", LOGGER, resultObj);
+                resultObj = CommonExceptionHandler.handException(e, "新增船户报港数据失败", LOGGER);
             }
         }
         LOGGER.info("结束新增船户报港数据");
@@ -97,7 +97,7 @@ public class ShipController
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "审核并保存海力物流船户信息失败", LOGGER, resultObj);
+            resultObj = CommonExceptionHandler.handException(e, "审核并保存海力物流船户信息失败", LOGGER);
         }
         LOGGER.info("结束审核并保存海力物流船户信息: shipNum:{} mobile:{} cargoName:{}",shipNum,mobile,cargoName);
         return resultObj;
@@ -120,7 +120,7 @@ public class ShipController
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "保存废钢处船户信息失败", LOGGER, resultObj);
+            resultObj = CommonExceptionHandler.handException(e, "保存废钢处船户信息失败", LOGGER);
         }
         LOGGER.info("结束保存废钢处船户信息: shipNum:{} mobile:{} name:{}",shipNum,mobile,name);
         return resultObj;
@@ -141,7 +141,7 @@ public class ShipController
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "查询船户信息失败", LOGGER, resultObj);
+            resultObj = CommonExceptionHandler.handException(e, "查询船户信息失败", LOGGER);
         }
         LOGGER.info("结束查询船户信息 id:{}",id);
         return resultObj;

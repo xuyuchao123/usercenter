@@ -134,7 +134,7 @@ public class TemplateController {
             }
             catch (Exception e)
             {
-                resultObj = CommonExceptionHandler.handException(e, "绑定手机号失败", LOGGER, resultObj);
+                resultObj = CommonExceptionHandler.handException(e, "绑定手机号失败", LOGGER);
             }
         }
 		LOGGER.info("结束绑定手机号 mobile={},nickName={},", mobile,nickName);
@@ -157,7 +157,7 @@ public class TemplateController {
 		}
 		catch (Exception e)
 		{
-			resultObj = CommonExceptionHandler.handException(e, "短信验证码生成发送失败", LOGGER, resultObj);
+			resultObj = CommonExceptionHandler.handException(e, "短信验证码生成发送失败", LOGGER);
 		}
 		LOGGER.info("结束生成发送短信验证码");
 		return resultObj;
@@ -177,7 +177,7 @@ public class TemplateController {
 		}
 		catch (Exception e)
 		{
-			resultObj = CommonExceptionHandler.handException(e, "重置redis中的用户信息失败", LOGGER, resultObj);
+			resultObj = CommonExceptionHandler.handException(e, "重置redis中的用户信息失败", LOGGER);
 		}
 		LOGGER.info("结束重置redis中的用户信息");
 		return resultObj;

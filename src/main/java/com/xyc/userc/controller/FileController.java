@@ -46,7 +46,7 @@ public class FileController
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "上传附件失败", LOGGER, resultObj);
+            resultObj = CommonExceptionHandler.handException(e, "上传附件失败", LOGGER);
         }
         LOGGER.info("结束上传附件 filename:{}", file.getOriginalFilename());
         return resultObj;

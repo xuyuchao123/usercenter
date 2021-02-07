@@ -65,7 +65,7 @@ public class PcBlacklistController
         }
         catch (Exception e)
         {
-            resultObj_Page = CommonExceptionHandler.handException_page(e, "查询黑名单失败", LOGGER, resultObj_Page);
+            resultObj_Page = CommonExceptionHandler.handException_page(e, "查询黑名单失败", LOGGER);
         }
         LOGGER.info("结束查询黑名单 carNum={} createName={} createMobile={} page={} size={}",carNum,createName,createMobile,page,size);
         return resultObj_Page;
@@ -95,7 +95,7 @@ public class PcBlacklistController
             }
             catch (Exception e)
             {
-                resultObj = CommonExceptionHandler.handException(e, "新增黑名单失败", LOGGER, resultObj);
+                resultObj = CommonExceptionHandler.handException(e, "新增黑名单失败", LOGGER);
             }
         }
 
@@ -118,7 +118,7 @@ public class PcBlacklistController
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "删除黑名单失败", LOGGER, resultObj);
+            resultObj = CommonExceptionHandler.handException(e, "删除黑名单失败", LOGGER);
         }
         LOGGER.info("结束删除黑名单 carNum={}", carNum);
         return resultObj;

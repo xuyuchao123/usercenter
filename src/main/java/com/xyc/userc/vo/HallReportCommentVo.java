@@ -18,7 +18,7 @@ public class HallReportCommentVo implements Serializable
     private String comment;
 
     @ApiModelProperty(value="创建时间", position=1)
-    private Date gmtCreate;
+    private String gmtCreate;
 
     public String getComment() {
         return comment;
@@ -28,11 +28,11 @@ public class HallReportCommentVo implements Serializable
         this.comment = comment;
     }
 
-    public Date getGmtCreate() {
+    public String getGmtCreate() {
         return gmtCreate;
     }
 
-    public void setGmtCreate(Date gmtCreate) {
+    public void setGmtCreate(String gmtCreate) {
         this.gmtCreate = gmtCreate;
     }
 }

@@ -60,7 +60,7 @@ public class HallReportController
             }
             catch (Exception e)
             {
-                resultObj = CommonExceptionHandler.handException(e, "新增物流大厅报道记录失败", LOGGER, resultObj);
+                resultObj = CommonExceptionHandler.handException(e, "新增物流大厅报道记录失败", LOGGER);
             }
         }
 
@@ -96,7 +96,7 @@ public class HallReportController
             }
             catch (Exception e)
             {
-                resultObj = CommonExceptionHandler.handException(e, "查询等待人数失败", LOGGER, resultObj);
+                resultObj = CommonExceptionHandler.handException(e, "查询等待人数失败", LOGGER);
             }
         }
 
@@ -118,7 +118,7 @@ public class HallReportController
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "查询当前被叫到的序号失败", LOGGER, resultObj);
+            resultObj = CommonExceptionHandler.handException(e, "查询当前被叫到的序号失败", LOGGER);
         }
 
         LOGGER.info("结束查询当前被叫到的序号");
@@ -153,7 +153,7 @@ public class HallReportController
             }
             catch (Exception e)
             {
-                resultObj = CommonExceptionHandler.handException(e, "查询大厅报道信息失败", LOGGER, resultObj);
+                resultObj = CommonExceptionHandler.handException(e, "查询大厅报道信息失败", LOGGER);
             }
         }
 
@@ -192,7 +192,7 @@ public class HallReportController
             }
             catch (Exception e)
             {
-                resultObj = CommonExceptionHandler.handException(e, "新增大厅报道评论失败", LOGGER, resultObj);
+                resultObj = CommonExceptionHandler.handException(e, "新增大厅报道评论失败", LOGGER);
             }
         }
 

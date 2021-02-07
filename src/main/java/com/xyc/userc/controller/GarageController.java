@@ -51,7 +51,7 @@ public class GarageController
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "查询库位配置信息失败", LOGGER, resultObj);
+            resultObj = CommonExceptionHandler.handException(e, "查询库位配置信息失败", LOGGER);
         }
         LOGGER.info("结束查询库位配置信息 garageType={} garageNum={} garageName={}",garageType,garageNum,garageName);
         return resultObj;
@@ -76,7 +76,7 @@ public class GarageController
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "新增库位配置信息失败", LOGGER, resultObj);
+            resultObj = CommonExceptionHandler.handException(e, "新增库位配置信息失败", LOGGER);
         }
         LOGGER.info("结束新增库位配置信息 garageType={} garageNum={} garageName={} maxLimit={}",garageType,garageNum,garageName,maxLimit);
         return resultObj;
@@ -99,7 +99,7 @@ public class GarageController
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "修改库位配置信息失败", LOGGER, resultObj);
+            resultObj = CommonExceptionHandler.handException(e, "修改库位配置信息失败", LOGGER);
         }
         LOGGER.info("结束修改库位配置信息 garageNum={} maxLimit={}",garageNum,maxLimit);
         return resultObj;
@@ -120,7 +120,7 @@ public class GarageController
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "删除库位配置信息失败", LOGGER, resultObj);
+            resultObj = CommonExceptionHandler.handException(e, "删除库位配置信息失败", LOGGER);
         }
         LOGGER.info("结束删除库位配置信息 garageNum={}",garageNum);
         return resultObj;
@@ -141,7 +141,7 @@ public class GarageController
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "查询库位最大限制量失败", LOGGER, resultObj);
+            resultObj = CommonExceptionHandler.handException(e, "查询库位最大限制量失败", LOGGER);
         }
         LOGGER.info("结束查询库位最大限制量 garageNum={}",garageNum);
         return resultObj;

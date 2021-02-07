@@ -14,6 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -95,7 +99,13 @@ public class HallReportServiceImpl implements HallReportService
         hallReportMapper.insertComment(hallReportComment);
         HallReportCommentVo hallReportCommentVo = new HallReportCommentVo();
         hallReportCommentVo.setComment(comment);
-        hallReportCommentVo.setGmtCreate(date);
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Instant instant = date.toInstant();
+        ZoneId zoneId = ZoneId.systemDefault();
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zoneId);
+        String dateStr = dateTimeFormatter.format(localDateTime);
+        hallReportCommentVo.setGmtCreate(dateStr);
         LOGGER.info("结束新增大厅报道评论方法 openId={} carNum={} bigLadingBillNo={}",openId,carNum,bigLadingBillNo);
         return hallReportCommentVo;
     }

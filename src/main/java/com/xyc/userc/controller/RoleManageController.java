@@ -60,7 +60,7 @@ public class RoleManageController
         }
         catch (Exception e)
         {
-            resultObj_page = CommonExceptionHandler.handException_page(e, "查询用户默认角色配置信息失败", LOGGER, resultObj_page);
+            resultObj_page = CommonExceptionHandler.handException_page(e, "查询用户默认角色配置信息失败", LOGGER);
         }
         LOGGER.info("结束查询用户预置角色信息 mobile={} page={} size={}" ,mobile,page,size);
         return resultObj_page;
@@ -85,7 +85,7 @@ public class RoleManageController
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "新增/修改用户默认角色配置信息失败", LOGGER, resultObj);
+            resultObj = CommonExceptionHandler.handException(e, "新增/修改用户默认角色配置信息失败", LOGGER);
         }
         LOGGER.info("结束新增/修改用户预置角色信息 jobNum={} mobile={} role={}",jobNum,mobile,role);
         return resultObj;
@@ -106,7 +106,7 @@ public class RoleManageController
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "删除用户默认角色配置信息失败", LOGGER, resultObj);
+            resultObj = CommonExceptionHandler.handException(e, "删除用户默认角色配置信息失败", LOGGER);
         }
         LOGGER.info("结束删除用户预置角色信息 jobNum={} mobile={} role={}",jobNum,mobile,role);
         return resultObj;
@@ -127,7 +127,7 @@ public class RoleManageController
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "查询黑名单失败", LOGGER, resultObj);
+            resultObj = CommonExceptionHandler.handException(e, "查询黑名单失败", LOGGER);
         }
         LOGGER.info("结束查询所有角色列表");
         return resultObj;
@@ -160,7 +160,7 @@ public class RoleManageController
         }
         catch (Exception e)
         {
-            resultObj_page = CommonExceptionHandler.handException_page(e, "查询用户已绑定角色信息失败", LOGGER, resultObj_page);
+            resultObj_page = CommonExceptionHandler.handException_page(e, "查询用户已绑定角色信息失败", LOGGER);
         }
         LOGGER.info("结束查询用户已绑定角色信息 mobile={} page={} size={}" ,mobile,page,size);
         return resultObj_page;
@@ -183,7 +183,7 @@ public class RoleManageController
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "修改用户已绑定角色信息失败", LOGGER, resultObj);
+            resultObj = CommonExceptionHandler.handException(e, "修改用户已绑定角色信息失败", LOGGER);
         }
         LOGGER.info("结束修改用户已绑定角色信息 mobile={} role={}" ,mobile,role);
         return resultObj;

@@ -61,7 +61,7 @@ public class CarNumController
             }
             catch (Exception e)
             {
-                resultObj = CommonExceptionHandler.handException(e, "查询车牌号失败", LOGGER, resultObj);
+                resultObj = CommonExceptionHandler.handException(e, "查询车牌号失败", LOGGER);
             }
         }
         LOGGER.info("结束查询车牌号");
@@ -91,7 +91,7 @@ public class CarNumController
             }
             catch (Exception e)
             {
-                resultObj = CommonExceptionHandler.handException(e, "删除车牌号失败", LOGGER, resultObj);
+                resultObj = CommonExceptionHandler.handException(e, "删除车牌号失败", LOGGER);
             }
         }
         LOGGER.info("结束删除车牌号");
@@ -131,7 +131,7 @@ public class CarNumController
             }
             catch (Exception e)
             {
-                resultObj = CommonExceptionHandler.handException(e, "新增车牌号失败", LOGGER, resultObj);
+                resultObj = CommonExceptionHandler.handException(e, "新增车牌号失败", LOGGER);
             }
         }
         LOGGER.info("结束新增车牌号 carNum={} engineNum={} identNum={} emissionStd={} fleetName={} regDate={} department={}",
@@ -173,7 +173,7 @@ public class CarNumController
             }
             catch (Exception e)
             {
-                resultObj = CommonExceptionHandler.handException(e, "修改车牌号失败", LOGGER, resultObj);
+                resultObj = CommonExceptionHandler.handException(e, "修改车牌号失败", LOGGER);
             }
         }
         LOGGER.info("结束修改车牌号 oldCarNum={} newCarNum={} engineNum={} identNum={} emissionStd={} fleetName={} regDate={} department={}",
@@ -204,7 +204,7 @@ public class CarNumController
             }
             catch (Exception e)
             {
-                resultObj = CommonExceptionHandler.handException(e, "启用车牌号失败", LOGGER, resultObj);
+                resultObj = CommonExceptionHandler.handException(e, "启用车牌号失败", LOGGER);
             }
         }
         LOGGER.info("结束启用车牌号");
@@ -234,7 +234,7 @@ public class CarNumController
             }
             catch (Exception e)
             {
-                resultObj = CommonExceptionHandler.handException(e, "查询车辆进出厂时间失败", LOGGER, resultObj);
+                resultObj = CommonExceptionHandler.handException(e, "查询车辆进出厂时间失败", LOGGER);
             }
         }
         LOGGER.info("结束查询车辆进出厂时间");
@@ -256,7 +256,7 @@ public class CarNumController
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "查询国三车辆识别号及发动机号失败", LOGGER, resultObj);
+            resultObj = CommonExceptionHandler.handException(e, "查询国三车辆识别号及发动机号失败", LOGGER);
         }
         LOGGER.info("结束查询国三车辆识别号及发动机号 carNum={}", carNum);
         return resultObj;
@@ -289,7 +289,7 @@ public class CarNumController
         }
         catch (Exception e)
         {
-            resultObj_Page = CommonExceptionHandler.handException_page(e, "查询环保管控信息失败", LOGGER, resultObj_Page);
+            resultObj_Page = CommonExceptionHandler.handException_page(e, "查询环保管控信息失败", LOGGER);
         }
         LOGGER.info("结束查询环保管控信息 carNum={},startDate={},page={},size={}",carNum,startDate,page,size);
         return resultObj_Page;

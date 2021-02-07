@@ -45,7 +45,7 @@ public class ViolationController {
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "查询违章大类失败", LOGGER, resultObj);
+            resultObj = CommonExceptionHandler.handException(e, "查询违章大类失败", LOGGER);
         }
         LOGGER.info("结束查询违章大类");
         return resultObj;
@@ -66,7 +66,7 @@ public class ViolationController {
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException(e, "查询违章细类失败", LOGGER, resultObj);
+            resultObj = CommonExceptionHandler.handException(e, "查询违章细类失败", LOGGER);
         }
         LOGGER.info("结束查询违章细类 typeId={}",typeId);
         return resultObj;
