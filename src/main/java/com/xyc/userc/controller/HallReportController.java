@@ -5,6 +5,7 @@ import com.xyc.userc.util.CommonExceptionHandler;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.JsonResultObj;
 import com.xyc.userc.util.UsercConstant;
+import com.xyc.userc.vo.HallReportCommentVo;
 import com.xyc.userc.vo.HallReportInfoVo;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -166,7 +167,7 @@ public class HallReportController
             @ApiImplicitParam(name = "comment", value = "评论内容", required = true, dataType = "String"),
             @ApiImplicitParam(name = "bigLadingBillNo", value = "提单号", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：新增成功 isSuccess=false：新增失败，resMsg为错误信息")})
-    public JsonResultObj addHallReportComment(@ApiIgnore HttpServletRequest request, String carNum, String comment, String bigLadingBillNo)
+    public JsonResultObj<HallReportCommentVo> addHallReportComment(@ApiIgnore HttpServletRequest request, String carNum, String comment, String bigLadingBillNo)
     {
         LOGGER.info("开始新增大厅报道评论 carNum={},bigLadingBillNo={}",carNum,bigLadingBillNo);
         JsonResultObj resultObj = null;
@@ -186,8 +187,8 @@ public class HallReportController
             LOGGER.info("openId={}", openId);
             try
             {
-                hallReportService.addHallReportComment(openId,carNum,comment,bigLadingBillNo);
-                resultObj = new JsonResultObj(true);
+                HallReportCommentVo hallReportCommentVo = hallReportService.addHallReportComment(openId,carNum,comment,bigLadingBillNo);
+                resultObj = new JsonResultObj(true,hallReportCommentVo);
             }
             catch (Exception e)
             {

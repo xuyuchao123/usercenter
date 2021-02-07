@@ -5,6 +5,7 @@ import com.xyc.userc.entity.HallReportComment;
 import com.xyc.userc.entity.HallReportInfo;
 import com.xyc.userc.service.HallReportService;
 import com.xyc.userc.util.BusinessException;
+import com.xyc.userc.vo.HallReportCommentVo;
 import com.xyc.userc.vo.HallReportInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,11 +87,16 @@ public class HallReportServiceImpl implements HallReportService
     }
 
     @Override
-    public void addHallReportComment(String openId, String carNum, String comment, String bigLadingBillNo) throws Exception
+    public HallReportCommentVo addHallReportComment(String openId, String carNum, String comment, String bigLadingBillNo) throws Exception
     {
         LOGGER.info("进入新增大厅报道评论方法 openId={} carNum={} bigLadingBillNo={}",openId,carNum,bigLadingBillNo);
-        HallReportComment hallReportComment = new HallReportComment(null,openId,carNum,comment,new Date(),bigLadingBillNo);
+        Date date = new Date();
+        HallReportComment hallReportComment = new HallReportComment(null,openId,carNum,comment,date,bigLadingBillNo);
         hallReportMapper.insertComment(hallReportComment);
+        HallReportCommentVo hallReportCommentVo = new HallReportCommentVo();
+        hallReportCommentVo.setComment(comment);
+        hallReportCommentVo.setGmtCreate(date);
         LOGGER.info("结束新增大厅报道评论方法 openId={} carNum={} bigLadingBillNo={}",openId,carNum,bigLadingBillNo);
+        return hallReportCommentVo;
     }
 }

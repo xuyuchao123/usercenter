@@ -1,6 +1,7 @@
 package com.xyc.userc.service;
 
 import com.xyc.userc.entity.HallReportInfo;
+import com.xyc.userc.vo.HallReportCommentVo;
 import com.xyc.userc.vo.HallReportInfoVo;
 
 /**
@@ -16,5 +17,5 @@ public interface HallReportService
 
     HallReportInfoVo getHallReportInfo(String openId) throws  Exception;
 
-    void addHallReportComment(String openId, String carNum, String comment, String bigLadingBillNo) throws Exception;
+    HallReportCommentVo addHallReportComment(String openId, String carNum, String comment, String bigLadingBillNo) throws Exception;
 }
