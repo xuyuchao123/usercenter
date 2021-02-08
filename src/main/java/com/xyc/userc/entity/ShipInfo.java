@@ -17,6 +17,8 @@ public class ShipInfo implements Serializable
     private String name;
     private Date gmtCreate;
     private Date gmtModified;
+    private String idNumber;
+    private String type;
 
     public Integer getId() {
         return id;
@@ -72,5 +74,21 @@ public class ShipInfo implements Serializable
 
     public void setGmtModified(Date gmtModified) {
         this.gmtModified = gmtModified;
+    }
+
+    public String getIdNumber() {
+        return idNumber;
+    }
+
+    public void setIdNumber(String idNumber) {
+        this.idNumber = idNumber;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

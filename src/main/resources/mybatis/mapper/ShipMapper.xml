@@ -27,8 +27,8 @@
         <selectKey resultType="int" order="BEFORE" keyProperty="id">
             SELECT SHIPINFO_SEQ.NEXTVAL FROM DUAL
         </selectKey>
-        insert into SYS_SHIPINFO(ID,SHIPNUM,MOBILE,CARGONAME,NAME,GMT_CREATE,GMT_MODIFIED)
-        VALUES (#{id},#{shipNum},#{mobile},#{cargoName},#{name},#{gmtCreate},#{gmtModified})
+        insert into SYS_SHIPINFO(ID,SHIPNUM,MOBILE,CARGONAME,NAME,GMT_CREATE,GMT_MODIFIED,IDNUMBER,SHIP_TYPE)
+        VALUES (#{id},#{shipNum},#{mobile},#{cargoName},#{name},#{gmtCreate},#{gmtModified},#{idNumber},#{type})
     </insert>
 
     <select id="checkShipInfo" resultType="int">
@@ -37,7 +37,7 @@
 
     <select id="selectById" resultType="com.xyc.userc.vo.ShipInfoVo">
         select si.SHIPNUM as shipNum, si.MOBILE as mobile, si.CARGONAME as cargoName,
-        si.NAME as name, si.GMT_CREATE as gmtCreate
+        si.NAME as name, si.GMT_CREATE as gmtCreate, si.IDNUMBER as idNumber
         from  SYS_SHIPINFO si
         where si.id = #{id}
     </select>

@@ -84,22 +84,23 @@ public class ShipController
     @ApiOperation(value="审核并保存海力物流船户信息")
     @ApiImplicitParams({@ApiImplicitParam(name = "shipNum", value = "船舶号", required = true, dataType = "String"),
             @ApiImplicitParam(name = "mobile", value = "船民电话", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "cargoName", value = "货名", required = true, dataType = "String")})
+            @ApiImplicitParam(name = "cargoName", value = "货名", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "idNumber", value = "身份证号", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：保存成功 isSuccess=false：保存失败，resMsg为错误信息")})
-    public JsonResultObj addShipInfo_hl(String shipNum, String mobile, String cargoName)
+    public JsonResultObj addShipInfo_hl(String shipNum, String mobile, String cargoName, String idNumber)
     {
-        LOGGER.info("开始审核并保存海力物流船户信息: shipNum:{} mobile:{} cargoName:{}",shipNum,mobile,cargoName);
+        LOGGER.info("开始审核并保存海力物流船户信息: shipNum:{} mobile:{} cargoName:{} idNumber:{}",shipNum,mobile,cargoName,idNumber);
         JsonResultObj resultObj = null;
         try
         {
-            int id = shipService.checkAndAddShipInfo(shipNum,mobile,cargoName);
+            int id = shipService.checkAndAddShipInfo(shipNum,mobile,cargoName,idNumber);
             resultObj = new JsonResultObj(true, id);
         }
         catch (Exception e)
         {
             resultObj = CommonExceptionHandler.handException(e, "审核并保存海力物流船户信息失败", LOGGER);
         }
-        LOGGER.info("结束审核并保存海力物流船户信息: shipNum:{} mobile:{} cargoName:{}",shipNum,mobile,cargoName);
+        LOGGER.info("结束审核并保存海力物流船户信息: shipNum:{} mobile:{} cargoName:{} idNumber:{}",shipNum,mobile,cargoName,idNumber);
         return resultObj;
     }
 
@@ -107,29 +108,31 @@ public class ShipController
     @ApiOperation(value="保存废钢处船户信息")
     @ApiImplicitParams({@ApiImplicitParam(name = "shipNum", value = "船舶号", required = true, dataType = "String"),
             @ApiImplicitParam(name = "mobile", value = "船民电话", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "name", value = "姓名", required = true, dataType = "String")})
+            @ApiImplicitParam(name = "name", value = "姓名", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "idNumber", value = "身份证号", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "type", value = "类型", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：保存成功 isSuccess=false：保存失败，resMsg为错误信息")})
-    public JsonResultObj addShipInfo_fg(String shipNum, String mobile, String name)
+    public JsonResultObj addShipInfo_fg(String shipNum, String mobile, String name, String idNumber, String type)
     {
-        LOGGER.info("开始保存废钢处船户信息: shipNum:{} mobile:{} name:{}",shipNum,mobile,name);
+        LOGGER.info("开始保存废钢处船户信息: shipNum:{} mobile:{} name:{} idNumber:{} type:{}",shipNum,mobile,name,idNumber,type);
         JsonResultObj resultObj = null;
         try
         {
-            int id = shipService.addShipInfo(shipNum,mobile,"",name);
+            int id = shipService.addShipInfo(shipNum,mobile,"",name,idNumber,type);
             resultObj = new JsonResultObj(true, id);
         }
         catch (Exception e)
         {
             resultObj = CommonExceptionHandler.handException(e, "保存废钢处船户信息失败", LOGGER);
         }
-        LOGGER.info("结束保存废钢处船户信息: shipNum:{} mobile:{} name:{}",shipNum,mobile,name);
+        LOGGER.info("结束保存废钢处船户信息: shipNum:{} mobile:{} name:{} type:{}",shipNum,mobile,name,idNumber,type);
         return resultObj;
     }
 
     @PostMapping("/queryShipInfo")
     @ApiOperation(value="查询船户信息")
     @ApiImplicitParam(name = "id", value = "id号", required = true, dataType = "String")
-    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：保存成功 isSuccess=false：保存失败，resMsg为错误信息")})
+    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
     public JsonResultObj<ShipInfoVo> queryShipInfo(String id)
     {
         LOGGER.info("开始查询船户信息 id:{}",id);

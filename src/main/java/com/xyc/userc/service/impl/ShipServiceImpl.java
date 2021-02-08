@@ -46,9 +46,9 @@ public class ShipServiceImpl implements ShipService
     }
 
     @Override
-    public int addShipInfo(String shipNum, String mobile, String cargoName, String name) throws Exception
+    public int addShipInfo(String shipNum, String mobile, String cargoName, String name, String idNumber, String type) throws Exception
     {
-        LOGGER.info("进入保存废钢处船户信息方法: shipNum:{} mobile:{} cargoName:{} name:{}",shipNum,mobile,cargoName,name);
+        LOGGER.info("进入保存废钢处船户信息方法: shipNum:{} mobile:{} cargoName:{} name:{} idNumber:{} type:{}",shipNum,mobile,cargoName,name,idNumber,type);
         ShipInfo shipInfo = new ShipInfo();
         shipInfo.setShipNum(shipNum);
         shipInfo.setMobile(mobile);
@@ -57,17 +57,19 @@ public class ShipServiceImpl implements ShipService
         Date date = new Date();
         shipInfo.setGmtCreate(date);
         shipInfo.setGmtModified(date);
+        shipInfo.setIdNumber(idNumber);
+        shipInfo.setType(type);
         int insertCnt = shipMapper.insert(shipInfo);
         int id = shipInfo.getId();
         LOGGER.info("保存废钢处船户信息成功，返回id号 ：{}",id);
-        LOGGER.info("结束保存废钢处船户信息方法: shipNum:{} mobile:{} cargoName:{} name:{}",shipNum,mobile,cargoName,name);
+        LOGGER.info("结束保存废钢处船户信息方法: shipNum:{} mobile:{} cargoName:{} name:{} idNumber:{} type:{}",shipNum,mobile,cargoName,name,idNumber,type);
         return id;
     }
 
     @Override
-    public int checkAndAddShipInfo(String shipNum, String mobile, String cargoName) throws Exception
+    public int checkAndAddShipInfo(String shipNum, String mobile, String cargoName, String idNumber) throws Exception
     {
-        LOGGER.info("进入审核并保存海力物流船户信息方法: shipNum:{} mobile:{} cargoName:{}",shipNum,mobile,cargoName);
+        LOGGER.info("进入审核并保存海力物流船户信息方法: shipNum:{} mobile:{} cargoName:{} idNumber:{}",shipNum,mobile,cargoName,idNumber);
         int cnt = shipMapper.checkShipInfo(shipNum,mobile);
         int id = 0;
         if(cnt > 0)
@@ -81,6 +83,8 @@ public class ShipServiceImpl implements ShipService
             Date date = new Date();
             shipInfo.setGmtCreate(date);
             shipInfo.setGmtModified(date);
+            shipInfo.setIdNumber(idNumber);
+            shipInfo.setType("");
             int insertCnt = shipMapper.insert(shipInfo);
             id = shipInfo.getId();
             LOGGER.info("保存海力物流船户信息成功，返回id号 ：{}",id);
@@ -90,7 +94,7 @@ public class ShipServiceImpl implements ShipService
             LOGGER.info("审核失败 cnt：{}",cnt);
             throw new BusinessException(JsonResultEnum.SHIPINFO_CHECK_FAIL);
         }
-        LOGGER.info("结束审核并保存海力物流船户信息方法: shipNum:{} mobile:{} cargoName:{}",shipNum,mobile,cargoName);
+        LOGGER.info("结束审核并保存海力物流船户信息方法: shipNum:{} mobile:{} cargoName:{} idNumber:{}",shipNum,mobile,cargoName,idNumber);
         return id;
     }
 

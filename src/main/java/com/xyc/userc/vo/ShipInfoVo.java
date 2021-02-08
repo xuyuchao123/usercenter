@@ -28,6 +28,9 @@ public class ShipInfoVo
     @ApiModelProperty(value="创建时间", position=4)
     private Long gmtCreate;
 
+    @ApiModelProperty(value="身份证号", position=5)
+    private String idNumber;
+
     public String getShipNum() {
         return shipNum;
     }
@@ -66,5 +69,13 @@ public class ShipInfoVo
 
     public void setGmtCreate(Long gmtCreate) {
         this.gmtCreate = gmtCreate;
+    }
+
+    public String getIdNumber() {
+        return idNumber;
+    }
+
+    public void setIdNumber(String idNumber) {
+        this.idNumber = idNumber;
     }
 }

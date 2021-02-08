@@ -13,9 +13,9 @@ public interface ShipService
     void addShipReport(String shipNum, String name, String reportDepartment,
                        Date travelTimeStart, Date travelTimeEnd, String openId) throws Exception;
 
-    int addShipInfo(String shipNum, String mobile, String cargoName, String name) throws Exception;
+    int addShipInfo(String shipNum, String mobile, String cargoName, String name, String idNumber, String type) throws Exception;
 
-    int checkAndAddShipInfo(String shipNum, String mobile, String cargoName) throws Exception;
+    int checkAndAddShipInfo(String shipNum, String mobile, String cargoName, String idNumber) throws Exception;
 
     List<ShipInfoVo> queryShipInfo(String id) throws Exception;
 
