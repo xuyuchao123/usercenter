@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService
     @Override
     public User getUser(User user) throws Exception
     {
-        String openId = user.getOpenid();
+        String openId = user.getOpenId();
         LOGGER.info("进入获取用户信息方法 openid：{}",openId);
         List<Role> roleList = roleMapper.selectByOpenId(openId);
         user.setRoles(roleList);
@@ -279,7 +279,7 @@ public class UserServiceImpl implements UserService
 
             //构建user对象返回
             User user = new User();
-            user.setOpenid(openId);
+            user.setOpenId(openId);
             user.setMobilePhone(mobile);
             user.setRoles(roles);
             LOGGER.info("结束绑定手机号方法 mobile={} nickName={} mesCode={} openid={}",mobile,nickName,mesCode,openId);

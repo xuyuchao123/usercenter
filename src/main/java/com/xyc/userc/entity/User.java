@@ -1,8 +1,5 @@
 package com.xyc.userc.entity;
 
-import com.avei.shriety.wx_sdk.pojo.Userinfo;
-
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,11 +13,11 @@ import java.util.List;
  *
  * @mbggenerated do_not_delete_during_merge
  */
-public class User extends Userinfo implements Serializable
+public class User implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-
+    private String openId;
 
     private String mobilePhone;
 
@@ -28,18 +25,18 @@ public class User extends Userinfo implements Serializable
 
     private List<Role> roles;
 
-    public User(String openId, String nickName, String sex, String province, String city, String country,
-                String headImgUrl, String privilege, String unionId,String mobilePhone, List<Role> roles)
+    public User(String openId,String mobilePhone, List<Role> roles)
     {
-        this.setOpenid(openId);
-        this.setNickname(nickName);
-        this.setSex(sex);
-        this.setProvince(province);
-        this.setCity(city);
-        this.setCountry(country);
-        this.setHeadimgurl(headImgUrl);
-        this.setPrivilege(privilege);
-        this.setUnionid(unionId);
+//        this.setOpenid(openId);
+//        this.setNickname(nickName);
+//        this.setSex(sex);
+//        this.setProvince(province);
+//        this.setCity(city);
+//        this.setCountry(country);
+//        this.setHeadimgurl(headImgUrl);
+//        this.setPrivilege(privilege);
+//        this.setUnionid(unionId);
+        this.openId = openId;
         this.mobilePhone = mobilePhone;
 //        this.carNum = carNum;
         this.roles = roles;
@@ -73,6 +70,14 @@ public class User extends Userinfo implements Serializable
 
     public void setCarNum(String carNum) {
         this.carNum = carNum;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
     }
 
     //    @Override

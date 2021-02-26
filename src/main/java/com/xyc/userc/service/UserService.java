@@ -1,12 +1,7 @@
 package com.xyc.userc.service;
 
-import com.avei.shriety.wx_sdk.pojo.Userinfo;
-import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.PcUser;
-import com.xyc.userc.entity.Role;
 import com.xyc.userc.entity.User;
-import com.xyc.userc.vo.OpenIdNickNameVo;
-import com.xyc.userc.vo.UserInfoVo;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
