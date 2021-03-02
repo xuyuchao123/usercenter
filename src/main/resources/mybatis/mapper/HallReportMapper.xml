@@ -65,9 +65,10 @@
     </select>
 
     <select id="selectBigLadingBillNo" resultType="java.lang.String">
-        select BIG_LADING_BILL_NO from sell.SJFORECASTTIME
+        select distinct BIG_LADING_BILL_NO from sell.SJFORECASTTIME
           where substr(SJ,1,10) = #{timeStr}
             and CARNUM = #{carNum}
+            and TEL = #{mobile}
     </select>
 
     <insert id="insertComment" parameterType="com.xyc.userc.entity.HallReportComment">

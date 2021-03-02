@@ -44,7 +44,7 @@ public class HallReportServiceImpl implements HallReportService
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String timeStr = dateTimeFormatter.format(LocalDateTime.now());
             LOGGER.info("提单号参数为空,开始查询提单号 carNum={} timeStr",carNum,timeStr);
-            List<String> bigLadingBillNos = hallReportMapper.selectBigLadingBillNo(carNum,timeStr);
+            List<String> bigLadingBillNos = hallReportMapper.selectBigLadingBillNo(carNum,mobile,timeStr);
             if(bigLadingBillNos == null || bigLadingBillNos.size() == 0)
             {
                 LOGGER.error("提单号不存在 carNum={} timeStr",carNum,timeStr);

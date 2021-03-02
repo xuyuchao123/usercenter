@@ -13,7 +13,7 @@ public interface HallReportMapper
 {
     int insert(HallReportInfo hallReportInfo);
 
-    List<String> selectBigLadingBillNo(@Param("carNum")String carNum, @Param("timeStr")String timeStr);
+    List<String> selectBigLadingBillNo(@Param("carNum")String carNum, @Param("mobile")String mobile, @Param("timeStr")String timeStr);
 
     List<HallReportInfo> selectHallReportInfo(@Param("openId")String openId, @Param("mobile")String mobile, @Param("carNum")String carNum,
                                               @Param("bigLadingBillNo")String bigLadingBillNo,@Param("dataStatus")Integer dataStatus);

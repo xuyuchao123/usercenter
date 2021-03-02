@@ -58,7 +58,15 @@ public class HallReportController
             try
             {
                 List<String> list = hallReportService.addReportInfo(openId,mobile,carNum,bigLadingBillNo);
-                resultObj = new JsonResultObj(true,list);
+                if(list.size() == 1)
+                {
+                    resultObj = new JsonResultObj(true,list.get(0));
+                }
+                else
+                {
+                    resultObj = new JsonResultObj(false,list);
+                }
+
             }
             catch (Exception e)
             {
