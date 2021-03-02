@@ -5,6 +5,7 @@ import com.xyc.userc.entity.HallReportComment;
 import com.xyc.userc.entity.HallReportInfo;
 import com.xyc.userc.service.HallReportService;
 import com.xyc.userc.util.BusinessException;
+import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.vo.HallReportCommentVo;
 import com.xyc.userc.vo.HallReportInfoVo;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,24 +36,50 @@ public class HallReportServiceImpl implements HallReportService
     private HallReportMapper hallReportMapper;
 
     @Override
-    public int addReportInfo(String openId, String mobile, String carNum) throws Exception
+    public List<String> addReportInfo(String openId, String mobile, String carNum, String bigLadingBillNo) throws Exception
     {
-        LOGGER.info("进入新增物流大厅报道记录方法 openid={} mobile={} carNum={}",openId,mobile,carNum);
+        LOGGER.info("进入新增物流大厅报道记录方法 openid={} mobile={} carNum={} bigLadingBillNo={}",openId,mobile,carNum,bigLadingBillNo);
+        if(bigLadingBillNo == null || "".equals(bigLadingBillNo))
+        {
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String timeStr = dateTimeFormatter.format(LocalDateTime.now());
+            LOGGER.info("提单号参数为空,开始查询提单号 carNum={} timeStr",carNum,timeStr);
+            List<String> bigLadingBillNos = hallReportMapper.selectBigLadingBillNo(carNum,timeStr);
+            if(bigLadingBillNos == null || bigLadingBillNos.size() == 0)
+            {
+                LOGGER.error("提单号不存在 carNum={} timeStr",carNum,timeStr);
+                throw new BusinessException(JsonResultEnum.BIGLADINGBILLNO_NOT_EXIST);
+            }
+            if(bigLadingBillNos.size() > 1)
+            {
+                LOGGER.info("存在多个提单号,返回提单号列表 carNum={} timeStr",carNum,timeStr);
+                return bigLadingBillNos;
+            }
+            else
+            {
+                LOGGER.info("只有一个提单号,准备新增物流大厅报道记录 carNum={} timeStr",carNum,timeStr);
+                bigLadingBillNo = bigLadingBillNos.get(0);
+            }
+        }
         int dataStatus = 1;
-        List<HallReportInfo> hallReportInfoList = hallReportMapper.selectHallReportInfo(openId,mobile,carNum,dataStatus);
+        List<HallReportInfo> hallReportInfoList = hallReportMapper.selectHallReportInfo(openId,mobile,carNum,bigLadingBillNo,dataStatus);
         if(hallReportInfoList != null && hallReportInfoList.size() == 1)
         {
             int id = hallReportInfoList.get(0).getId();
             LOGGER.info("报道记录已存在 id={}",id);
-            return id;
+            List<String> list = new ArrayList<>();
+            list.add(String.valueOf(id));
+            return list;
         }
         Date date = new Date();
-        HallReportInfo hallReportInfo = new HallReportInfo(null,openId,mobile,carNum,date,1,null,0,"",date);
+        HallReportInfo hallReportInfo = new HallReportInfo(null,openId,mobile,carNum,date,1,null,0,bigLadingBillNo,date);
         hallReportMapper.insert(hallReportInfo);
         int id = hallReportInfo.getId();
         LOGGER.info("初始化列表序号：id={}",id);
-        LOGGER.info("结束新增物流大厅报道记录方法 openid={} mobile={} carNum={}",openId,mobile,carNum);
-        return id;
+        LOGGER.info("结束新增物流大厅报道记录方法 openid={} mobile={} carNum={} bigLadingBillNo={}",openId,mobile,carNum,bigLadingBillNo);
+        List<String> list = new ArrayList<>();
+        list.add(String.valueOf(id));
+        return list;
     }
 
     @Override
@@ -77,7 +105,7 @@ public class HallReportServiceImpl implements HallReportService
     public HallReportInfoVo getHallReportInfo(String openId) throws Exception
     {
         LOGGER.info("进入查询大厅报道信息方法 openId={}",openId);
-        List<HallReportInfo> hallReportInfoList = hallReportMapper.selectHallReportInfo(openId,null,null,null);
+        List<HallReportInfo> hallReportInfoList = hallReportMapper.selectHallReportInfo(openId,null,null,null,null);
         if(hallReportInfoList == null || hallReportInfoList.size() == 0)
         {
             LOGGER.error("大厅报道信息不存在 openId={}",openId);

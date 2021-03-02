@@ -15,6 +15,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * Created by 1 on 2021/2/1.
@@ -33,11 +34,12 @@ public class HallReportController
     @PostMapping("/addHallReportInfo")
     @ApiOperation(value="新增物流大厅报道记录")
     @ApiImplicitParams({@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String")})
+            @ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "bigLadingBillNo", value = "提单号", required = false, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：新增成功 isSuccess=false：新增失败，resMsg为错误信息")})
-    public JsonResultObj addHallReportInfo(@ApiIgnore HttpServletRequest request, String mobile, String carNum)
+    public JsonResultObj addHallReportInfo(@ApiIgnore HttpServletRequest request, String mobile, String carNum, String bigLadingBillNo)
     {
-        LOGGER.info("开始新增物流大厅报道记录 mobile={} carNum={}",mobile,mobile);
+        LOGGER.info("开始新增物流大厅报道记录 mobile={} carNum={} bigLadingBillNo={}",mobile,carNum,bigLadingBillNo);
         JsonResultObj resultObj = null;
         String openId = request.getHeader(UsercConstant.OPENID);
         if(openId == null)
@@ -55,8 +57,8 @@ public class HallReportController
             LOGGER.info("openId={}",openId);
             try
             {
-                int id = hallReportService.addReportInfo(openId,mobile,carNum);
-                resultObj = new JsonResultObj(true,id);
+                List<String> list = hallReportService.addReportInfo(openId,mobile,carNum,bigLadingBillNo);
+                resultObj = new JsonResultObj(true,list);
             }
             catch (Exception e)
             {
@@ -64,7 +66,7 @@ public class HallReportController
             }
         }
 
-        LOGGER.info("结束新增物流大厅报道记录 mobile={} carNum={}",mobile,mobile);
+        LOGGER.info("结束新增物流大厅报道记录 mobile={} carNum={} bigLadingBillNo={}",mobile,carNum,bigLadingBillNo);
         return resultObj;
     }
 

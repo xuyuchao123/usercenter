@@ -4,12 +4,14 @@ import com.xyc.userc.entity.HallReportInfo;
 import com.xyc.userc.vo.HallReportCommentVo;
 import com.xyc.userc.vo.HallReportInfoVo;
 
+import java.util.List;
+
 /**
  * Created by 1 on 2021/2/1.
  */
 public interface HallReportService
 {
-    int addReportInfo(String openId, String mobile, String carNum) throws Exception;
+    List<String> addReportInfo(String openId, String mobile, String carNum, String bigLadingBillNo) throws Exception;
 
     int getWaitingNum(String openId) throws Exception;
 

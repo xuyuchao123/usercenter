@@ -32,6 +32,9 @@
             <if test="carNum != null">
                 and CARNUMBER = #{carNum}
             </if>
+            <if test="bigLadingBillNo != null">
+                and BIG_LADING_BILL_NO = #{bigLadingBillNo}
+            </if>
             <if test="dataStatus != null">
                 and DATA_STATUS = #{dataStatus}
             </if>
@@ -59,6 +62,12 @@
           where DATA_STATUS = 1
           order by ORDER_ID
         ) where rownum = 1
+    </select>
+
+    <select id="selectBigLadingBillNo" resultType="java.lang.String">
+        select BIG_LADING_BILL_NO from sell.SJFORECASTTIME
+          where substr(SJ,1,10) = #{timeStr}
+            and CARNUM = #{carNum}
     </select>
 
     <insert id="insertComment" parameterType="com.xyc.userc.entity.HallReportComment">
