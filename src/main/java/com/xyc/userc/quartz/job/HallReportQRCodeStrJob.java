@@ -19,7 +19,7 @@ public class HallReportQRCodeStrJob implements Job
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException
     {
         LOGGER.info("开始执行更新玖厅报道二维码字符串定时任务");
-        HallReportService hallReportService = (HallReportService) ApplicationContextHolder.getBean("HallReportService");
+        HallReportService hallReportService = (HallReportService) ApplicationContextHolder.getBean("hallReportService");
         try
         {
             hallReportService.refreshQRCodeStr();
