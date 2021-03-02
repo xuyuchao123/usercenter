@@ -34,5 +34,6 @@ public class BlackListInOutJob implements Job
             LOGGER.info("查询黑名单车辆进场情况定时任务失败");
             e.printStackTrace();
         }
+        LOGGER.info("查询黑名单车辆进场情况定时任务结束");
     }
 }

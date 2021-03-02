@@ -3,9 +3,11 @@ package com.xyc.userc.service.impl;
 import com.xyc.userc.dao.HallReportMapper;
 import com.xyc.userc.entity.HallReportComment;
 import com.xyc.userc.entity.HallReportInfo;
+import com.xyc.userc.entity.QRCodeStrInfo;
 import com.xyc.userc.service.HallReportService;
 import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.JsonResultEnum;
+import com.xyc.userc.util.UsercConstant;
 import com.xyc.userc.vo.HallReportCommentVo;
 import com.xyc.userc.vo.HallReportInfoVo;
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by 1 on 2021/2/1.
@@ -136,5 +139,28 @@ public class HallReportServiceImpl implements HallReportService
         hallReportCommentVo.setGmtCreate(dateStr);
         LOGGER.info("结束新增大厅报道评论方法 openId={} carNum={} bigLadingBillNo={}",openId,carNum,bigLadingBillNo);
         return hallReportCommentVo;
+    }
+
+    @Override
+    public void refreshQRCodeStr() throws Exception
+    {
+        LOGGER.info("进入更新玖厅报道二维码字符串方法");
+        int delCnt = hallReportMapper.deleteEarliestQRCodeStr();
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+        QRCodeStrInfo qrCodeStrInfo = new QRCodeStrInfo();
+        qrCodeStrInfo.setqRCodeStr(UsercConstant.QRCODESTR_JL + uuid);
+        qrCodeStrInfo.setGmtCreate(new Date());
+        hallReportMapper.insertQRCodeStr(qrCodeStrInfo);
+        LOGGER.info("结束更新玖厅报道二维码字符串方法");
+
+    }
+
+    @Override
+    public List<QRCodeStrInfo> getQRCodeStr() throws Exception
+    {
+        LOGGER.info("进入获取玖隆大厅厅报道二维码字符串方法");
+        List<QRCodeStrInfo> qrCodeStrInfoList = hallReportMapper.selectQRCodeStr();
+        LOGGER.info("结束获取玖隆大厅厅报道二维码字符串方法");
+        return qrCodeStrInfoList;
     }
 }

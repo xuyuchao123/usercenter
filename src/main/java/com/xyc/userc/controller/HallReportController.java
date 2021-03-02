@@ -1,5 +1,6 @@
 package com.xyc.userc.controller;
 
+import com.xyc.userc.entity.QRCodeStrInfo;
 import com.xyc.userc.service.HallReportService;
 import com.xyc.userc.util.CommonExceptionHandler;
 import com.xyc.userc.util.JsonResultEnum;
@@ -207,6 +208,26 @@ public class HallReportController
         }
 
         LOGGER.info("结束新增大厅报道评论 carNum={},bigLadingBillNo={}",carNum,bigLadingBillNo);
+        return resultObj;
+    }
+
+    @GetMapping("/getHallReportQRCodeStr")
+    @ApiOperation(value="获取大厅报道二维码字符串")
+    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：获取成功 isSuccess=false：获取失败，resMsg为错误信息")})
+    public JsonResultObj<QRCodeStrInfo> getHallReportQRCodeStr()
+    {
+        LOGGER.info("开始获取大厅报道二维码字符串");
+        JsonResultObj resultObj = null;
+        try
+        {
+            List<QRCodeStrInfo> qrCodeStrInfoList = hallReportService.getQRCodeStr();
+            resultObj = new JsonResultObj(true,qrCodeStrInfoList);
+        }
+        catch (Exception e)
+        {
+            resultObj = CommonExceptionHandler.handException(e, "获取大厅报道二维码字符串失败", LOGGER);
+        }
+        LOGGER.info("结束获取大厅报道二维码字符串");
         return resultObj;
     }
 

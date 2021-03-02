@@ -2,6 +2,7 @@ package com.xyc.userc.dao;
 
 import com.xyc.userc.entity.HallReportComment;
 import com.xyc.userc.entity.HallReportInfo;
+import com.xyc.userc.entity.QRCodeStrInfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -23,4 +24,10 @@ public interface HallReportMapper
     int selectCurrentNum();
 
     void insertComment(HallReportComment hallReportComment);
+
+    int deleteEarliestQRCodeStr();
+
+    int insertQRCodeStr(QRCodeStrInfo qrCodeStrInfo);
+
+    List<QRCodeStrInfo> selectQRCodeStr();
 }

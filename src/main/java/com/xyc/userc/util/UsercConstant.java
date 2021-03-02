@@ -10,6 +10,8 @@ public class UsercConstant
 {
     public static final String OPENID = "Wechat-Oauth2-Key";
 
+    public static final String QRCODESTR_JL = "JL";
+
     public static final Map<String,String> ROLECODERELMAP;
 
     public static final Map<String,String> ROLECODERELMAP_REV;

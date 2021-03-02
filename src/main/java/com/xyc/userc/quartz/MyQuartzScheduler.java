@@ -1,6 +1,7 @@
 package com.xyc.userc.quartz;
 
 import com.xyc.userc.quartz.job.BlackListInOutJob;
+import com.xyc.userc.quartz.job.HallReportQRCodeStrJob;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,7 @@ public class MyQuartzScheduler
     public void startJob() throws SchedulerException
     {
         scheduleJob1(scheduler);
+        scheduleJob2(scheduler);
         scheduler.start();
     }
 
@@ -121,6 +123,15 @@ public class MyQuartzScheduler
         CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule("0 0/15 * * * ? *");
         // CronTrigger表达式触发器 继承于Trigger，TriggerBuilder 用于构建触发器实例
         CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity("job1", "group1")
+                .withSchedule(cronScheduleBuilder).build();
+        scheduler.scheduleJob(jobDetail, cronTrigger);
+    }
+
+    private void scheduleJob2(Scheduler scheduler) throws SchedulerException
+    {
+        JobDetail jobDetail = JobBuilder.newJob(HallReportQRCodeStrJob.class).withIdentity("job2", "group2").build();
+        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule("0 0/2 * * * ? *");
+        CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity("job2", "group2")
                 .withSchedule(cronScheduleBuilder).build();
         scheduler.scheduleJob(jobDetail, cronTrigger);
     }

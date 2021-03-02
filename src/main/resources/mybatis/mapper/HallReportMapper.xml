@@ -76,4 +76,25 @@
         VALUES (REPORT_QUEUE_CMT_SEQ.NEXTVAL,#{openId},#{carNum},#{comment},#{gmtCreate},#{bigLadingBillNo})
     </insert>
 
+    <delete id="deleteEarliestQRCodeStr">
+        delete from SYS_QRCODE_JL
+          where QRCODE_STR = (
+              select QRCODE_STR
+              from (select QRCODE_STR from SYS_QRCODE_JL order by GMT_CREATE)
+              where rownum = 1
+            )
+    </delete>
+
+    <insert id="insertQRCodeStr">
+       insert into SYS_QRCODE_JL(QRCODE_STR,GMT_CREATE)
+       VALUES (#{qRCodeStr},#{gmtCreate})
+    </insert>
+
+    <select id="selectQRCodeStr" resultType="com.xyc.userc.entity.QRCodeStrInfo">
+        select QRCODE_STR as qRCodeStr, GMT_CREATE as gmtCreate
+          from SYS_QRCODE_JL
+          order by GMT_CREATE
+    </select>
+
+
 </mapper>

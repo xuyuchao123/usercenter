@@ -1,6 +1,7 @@
 package com.xyc.userc.service;
 
 import com.xyc.userc.entity.HallReportInfo;
+import com.xyc.userc.entity.QRCodeStrInfo;
 import com.xyc.userc.vo.HallReportCommentVo;
 import com.xyc.userc.vo.HallReportInfoVo;
 
@@ -20,4 +21,8 @@ public interface HallReportService
     HallReportInfoVo getHallReportInfo(String openId) throws  Exception;
 
     HallReportCommentVo addHallReportComment(String openId, String carNum, String comment, String bigLadingBillNo) throws Exception;
+
+    void refreshQRCodeStr() throws Exception;
+
+    List<QRCodeStrInfo> getQRCodeStr() throws Exception;
 }
