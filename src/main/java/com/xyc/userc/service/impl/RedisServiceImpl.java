@@ -206,9 +206,9 @@ public class RedisServiceImpl implements RedisService
                 userInfoVo.setLastStockCode(null);
 //                userInfoVo.setGh(null);
             }
-            String json = JSON.toJSONString(userInfoVo);
-            String openId = userInfoVo.getOpenId();
-            redisTemplate.opsForValue().set(openId,json);
+//            String json = JSON.toJSONString(userInfoVo);
+//            String openId = userInfoVo.getOpenId();
+//            redisTemplate.opsForValue().set(openId,json);
         }
 
         redisTemplate.executePipelined(new RedisCallback<List<Object>>()
@@ -216,15 +216,10 @@ public class RedisServiceImpl implements RedisService
             @Override
             public List<Object> doInRedis(RedisConnection connection) throws DataAccessException
             {
-                List<String> list = new ArrayList<>();
-                list.add("tstjson1");
-                list.add("tstjson2");
-
-                for (String str : list)
+                for (UserInfoVo userInfoVo : userInfoVoList)
                 {
-                    String key = "key"+str;
-
-                    connection.set(key.getBytes(),str.getBytes());
+                    String key = userInfoVo.getOpenId();
+                    connection.set(key.getBytes(),JSON.toJSONString(userInfoVo).getBytes());
                 }
                 return null;
             }
