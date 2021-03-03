@@ -10,6 +10,9 @@ import com.xyc.userc.vo.UserInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.stereotype.Service;
@@ -207,6 +210,26 @@ public class RedisServiceImpl implements RedisService
             String openId = userInfoVo.getOpenId();
             redisTemplate.opsForValue().set(openId,json);
         }
+
+        redisTemplate.executePipelined(new RedisCallback<List<Object>>()
+        {
+            @Override
+            public List<Object> doInRedis(RedisConnection connection) throws DataAccessException
+            {
+                List<String> list = new ArrayList<>();
+                list.add("tstjson1");
+                list.add("tstjson2");
+
+                for (String str : list)
+                {
+                    String key = "key"+str;
+
+                    connection.set(key.getBytes(),str.getBytes());
+                }
+                return null;
+            }
+        });
+
         LOGGER.info("结束存储用户信息至redis方法");
     }
 
