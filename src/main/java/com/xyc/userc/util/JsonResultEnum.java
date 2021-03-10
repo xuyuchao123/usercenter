@@ -46,6 +46,7 @@ public enum JsonResultEnum
     CARNUM_NOT_EXIST(202, "车牌号不存在或已删除!"),
     CARNUM_ENABLED(203, "车牌号已在启用状态!"),
     CARNUM_BLACKLIST_EXIST(204,"车牌号已被拉黑!"),
+    CARNUM_PARAM_NOT_EXIST(205,"车牌号参数为空！"),
 
     MOBILE_NOT_BINDED(300, "手机号未绑定用户！"),
 //    MOBILE_BLACKLIST_EXIST(301,"手机号已被拉黑!"),
@@ -58,6 +59,7 @@ public enum JsonResultEnum
 
     OPENID_NOT_EXIST(600,"openId不能为空！"),
     OPENID_UNDEFINED(601,"openId为undefined！"),
+    OPENID_BINDED(602,"openId已被绑定！"),
 
     FILE_NOT_EXIST(700,"上传的文件不能为空！"),
     FILE_EXIST(701,"上传的文件已存在"),

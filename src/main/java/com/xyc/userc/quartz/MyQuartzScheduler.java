@@ -130,7 +130,7 @@ public class MyQuartzScheduler
     private void scheduleJob2(Scheduler scheduler) throws SchedulerException
     {
         JobDetail jobDetail = JobBuilder.newJob(HallReportQRCodeStrJob.class).withIdentity("job2", "group2").build();
-        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule("0 0/2 * * * ? *");
+        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule("0 0/1 * * * ? *");
         CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity("job2", "group2")
                 .withSchedule(cronScheduleBuilder).build();
         scheduler.scheduleJob(jobDetail, cronTrigger);

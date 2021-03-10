@@ -33,6 +33,7 @@ public interface UserService extends UserDetailsService
      int checkUserRegByMobile(String mobile) throws Exception;
 
 //     List<String> getOpenIdNickName(String jobNum) throws Exception;
+     void quickRegister(String carNum,String openId) throws  Exception;
 
 
 }

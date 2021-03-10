@@ -3,6 +3,7 @@ package com.xyc.userc.dao;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,29 +11,33 @@ import java.util.Map;
  */
 public interface MobileMapper
 {
-    public String selectMesCodeByMobile(String mobile);
+     String selectMesCodeByMobile(String mobile);
 
-    public void insertMesCode(@Param("mobile")String mobile, @Param("mesCode")String mesCode,
+     void insertMesCode(@Param("mobile")String mobile, @Param("mesCode")String mesCode,
                               @Param("status")int status, @Param("gmtCreate")Date gmtCreate,
                               @Param("gmtModified")Date gmtModified);
 
-    public void updateMesCodeStatus(@Param("mobile")String mobile, @Param("status")int status,
+     void updateMesCodeStatus(@Param("mobile")String mobile, @Param("status")int status,
                                     @Param("gmtModified")Date gmtModified);
 
-    public String selectValidMesCode(@Param("mobile")String mobile);
+     String selectValidMesCode(@Param("mobile")String mobile);
 
 
 
-    public String selectPcMesCodeByMobile(String mobile);
+     String selectPcMesCodeByMobile(String mobile);
 
-    public void insertPcMesCode(@Param("mobile")String mobile, @Param("mesCode")String mesCode,
+     void insertPcMesCode(@Param("mobile")String mobile, @Param("mesCode")String mesCode,
                               @Param("status")Byte status, @Param("gmtCreate")Date gmtCreate,
                               @Param("gmtModified")Date gmtModified);
 
-    public void updatePcMesCodeStatus(@Param("mobile")String mobile, @Param("status")Byte status,
+     void updatePcMesCodeStatus(@Param("mobile")String mobile, @Param("status")Byte status,
                                     @Param("gmtModified")Date gmtModified);
 
-    public String selectValidPcMesCode(@Param("mobile")String mobile);
+     String selectValidPcMesCode(@Param("mobile")String mobile);
+
+     List<String> selectMobileByCarNum(@Param("carNum")String carNum);
+
+
 
 
 }

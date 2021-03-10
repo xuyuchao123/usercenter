@@ -289,6 +289,31 @@ public class UserServiceImpl implements UserService
     }
 
 
+    @Override
+    public void quickRegister(String carNum, String openId) throws Exception
+    {
+        LOGGER.info("开始快速注册方法 carNum={} openId={}",carNum,openId);
+        LOGGER.info("开始查询当前openId是否已绑定手机号openId={}",openId);
+        List<Map> maps = mobileOpenIdMapper.selectByMobileOpenIdRole(null,openId);
+        if(maps != null && maps.size() > 0)
+        {
+            LOGGER.info("openid 已绑定手机号，不能重复绑定openid={}",openId);
+            throw new BusinessException(JsonResultEnum.OPENID_BINDED);
+        }
+        String mobile = "";
+        //根据车牌号获取手机号。。。
+        List<String> mobiles = mobileMapper.selectMobileByCarNum(carNum);
+        if(mobiles != null && mobiles.size() > 0)
+        {
+            mobile = mobiles.get(0);
+            LOGGER.info("mobile={}",mobile);
+        }
+        MobileOpenId mobileOpenId = new MobileOpenId(null,mobile,"",openId,openId,new Date());
+        int insertCnt = mobileOpenIdMapper.insertMobileOpenId(mobileOpenId);
+        int id = mobileOpenId.getId();
+
+        LOGGER.info("结束快速注册方法 carNum={} openId={}",carNum,openId);
+    }
 
     //    重写认证方法,实现自定义springsecurity用户认证（用户名密码登录）
     @Override
@@ -464,6 +489,7 @@ public class UserServiceImpl implements UserService
         resList.add(gh);
         return resList;
     }
+
 
 
 }

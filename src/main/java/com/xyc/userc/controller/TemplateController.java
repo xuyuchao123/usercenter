@@ -163,6 +163,48 @@ public class TemplateController {
 		return resultObj;
 	}
 
+	@PostMapping("/quickRegist")
+	@ApiOperation(value = "快速注册")
+	@ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String")
+	@ApiResponses({@ApiResponse(code = 200, message = "isSuccess=true：绑定成功 isSuccess=false：绑定失败，resMsg为错误信息")})
+	public JsonResultObj quickRegist(@ApiIgnore HttpServletRequest request, String carNum)
+	{
+		LOGGER.info("开始快速注册 carNum={}", carNum);
+		JsonResultObj resultObj = null;
+		if(carNum == null || "".equals(carNum))
+		{
+			LOGGER.info("车牌号参数不存在");
+			resultObj = new JsonResultObj(false, JsonResultEnum.CARNUM_PARAM_NOT_EXIST);
+			return resultObj;
+		}
+		String openId = request.getHeader(UsercConstant.OPENID);
+		if(openId == null)
+		{
+			LOGGER.info("未获取到用户的openId");
+			resultObj = new JsonResultObj(false, JsonResultEnum.OPENID_NOT_EXIST);
+		}
+		else if(openId.equals("undefined"))
+		{
+			LOGGER.info("openId为 undefined");
+			resultObj = new JsonResultObj(false,JsonResultEnum.OPENID_UNDEFINED);
+		}
+		else
+		{
+			try
+			{
+				userService.quickRegister(carNum,openId);
+				resultObj = new JsonResultObj(true);
+			}
+			catch (Exception e)
+			{
+				resultObj = CommonExceptionHandler.handException(e, "快速注册失败", LOGGER);
+			}
+		}
+		LOGGER.info("结束快速注册 carNum={},", carNum);
+		return resultObj;
+	}
+
+
 	@GetMapping("/resetUserInfo")
 	@ApiOperation(value = "重置redis中的用户信息")
 	@ApiResponses({@ApiResponse(code = 200, message = "isSuccess=true：重置成功 isSuccess=false：重置失败，resMsg为错误信息")})

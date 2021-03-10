@@ -283,23 +283,105 @@
         <!--where id <![CDATA[ >= ]]> #{start}-->
     <!--</select>-->
 
+    <!--<select id="selectEnvInfo" resultType="com.xyc.userc.vo.EnvInfoVo">-->
+        <!--select * from-->
+        <!--(select cf.BUMEN as bumen, cf.CAR_NUMBER as carNumber, cf.CAR_VIN_NUMBER as carVinNumber,-->
+          <!--cf.ENGINE_NUMBER as engineNumber, cf.PAIF as paif, cf.CROSSTIME as crossTime, cf.FORECAST_TIME as forecastTime,-->
+          <!--cf.ZCRQ as zcrq, cf.CARINOUTSTRING as carInOutString, cf.ENTRANCENAME as entranceName, cf.HWMC as hwmc,-->
+          <!--cf.YSL as ysl, cf.CDMC as cdmc, cf.VEHICLEURL as vehicleUrl, rownum as id-->
+        <!--from report.carinfo cf-->
+        <!--<where>-->
+            <!--<if test="carNum != null">-->
+              <!--and cf.car_number = #{carNum}-->
+            <!--</if>-->
+            <!--and cf.CROSSTIME like concat(#{startDate},'%')-->
+            <!--and rownum <![CDATA[ <= ]]> #{end}-->
+            <!--order by cf.CROSSTIME desc)-->
+        <!--</where>-->
+        <!--where id <![CDATA[ >= ]]> #{start}-->
+    <!--</select>-->
+
     <select id="selectEnvInfo" resultType="com.xyc.userc.vo.EnvInfoVo">
-        select * from
-        (select cf.BUMEN as bumen, cf.CAR_NUMBER as carNumber, cf.CAR_VIN_NUMBER as carVinNumber,
-          cf.ENGINE_NUMBER as engineNumber, cf.PAIF as paif, cf.CROSSTIME as crossTime, cf.FORECAST_TIME as forecastTime,
-          cf.ZCRQ as zcrq, cf.CARINOUTSTRING as carInOutString, cf.ENTRANCENAME as entranceName, cf.HWMC as hwmc,
-          cf.YSL as ysl, cf.CDMC as cdmc, cf.VEHICLEURL as vehicleUrl, rownum as id
-        from report.carinfo cf
+        select * from (
+        select cf.BUMEN          as bumen,
+        cf.CAR_NUMBER     as carNumber,
+        cf.CAR_VIN_NUMBER as carVinNumber,
+        cf.ENGINE_NUMBER  as engineNumber,
+        cf.PAIF           as paif,
+        cf.CROSSTIME      as crossTime,
+        cf.FORECAST_TIME  as forecastTime,
+        cf.ZCRQ           as zcrq,
+        cf.CARINOUTSTRING as carInOutString,
+        cf.ENTRANCENAME   as entranceName,
+        cf.HWMC           as hwmc,
+        cf.YSL            as ysl,
+        cf.CDMC           as cdmc,
+        cf.VEHICLEURL     as vehicleUrl,
+        rownum            as id
+        from (
+        SELECT a.BUMEN,
+        a.FORECAST_TIME,
+        a.CAR_NUMBER,
+        a.CAR_VIN_NUMBER,
+        a.ENGINE_NUMBER,
+        a.PAIF,
+        a.HWMC,
+        a.YSL,
+        a.CDMC,
+        a.ZCRQ,
+        b.CARINOUTSTRING,
+        b.CROSSTIME,
+        b.ENTRANCENAME,
+        b.VEHICLEURL
+        FROM report.CDPINFO a,
+        (SELECT *
+        FROM (SELECT "PLATENO",
+        "CROSSTIME",
+        "VEHICLEURL",
+        DECODE ("CARINOUTSTRING",
+        '0', '入场',
+        '1', '出场',
+        "CARINOUTSTRING")
+        "CARINOUTSTRING",
+        "RELEASEMODENAME",
+        "PARKNAME",
+        "ENTRANCENAME",
+        RANK ()
+        OVER (
+        PARTITION BY plateno,
+        TRUNC (
+        TO_DATE (
+        crosstime,
+        'yyyy-MM-dd hh24:mi:ss'))
+        ORDER BY crosstime ASC)
+        seq
+        FROM report.rcview
         <where>
+            AND     "PARKNAME" IN ('杨锦公路', '玖隆桥洞')
+            AND (   (    DECODE ("CARINOUTSTRING",
+            '0', '入场',
+            '1', '出场',
+            "CARINOUTSTRING") = '入场'
+            AND releasemodename != '禁止放行')
+            OR DECODE ("CARINOUTSTRING",
+            '0', '入场',
+            '1', '出场',
+            "CARINOUTSTRING") = '出场')
+            and CROSSTIME like concat(#{startDate}, '%')
             <if test="carNum != null">
-              and cf.car_number = #{carNum}
+                and PLATENO = #{carNum}
             </if>
-            and cf.CROSSTIME like concat(#{startDate},'%')
-            and rownum <![CDATA[ <= ]]> #{end}
-            order by cf.CROSSTIME desc)
         </where>
-        where id <![CDATA[ >= ]]> #{start}
+        )
+        WHERE seq = 1 ) b
+        WHERE     a.car_number = b.plateno
+        AND REPLACE (SUBSTR (b.CROSSTIME, 0, 10), '-', '') =
+        a.FORECAST_TIME
+        order by b.CROSSTIME desc
+        ) cf
+        ) where id <![CDATA[ <= ]]> #{end} and id <![CDATA[ >= ]]> #{start}
     </select>
+
 
     <!--<select id="selectEnvInfoCnt" resultType="java.lang.Integer">-->
         <!--select count(*)-->
@@ -317,15 +399,64 @@
         <!--</where>-->
     <!--</select>-->
 
+    <!--<select id="selectEnvInfoCnt" resultType="java.lang.Integer">-->
+        <!--select count(*)-->
+        <!--from report.carinfo cf-->
+        <!--<where>-->
+            <!--<if test="carNum != null">-->
+              <!--and cf.CAR_NUMBER = #{carNum}-->
+            <!--</if>-->
+            <!--and cf.CROSSTIME like concat(#{startDate},'%')-->
+        <!--</where>-->
+    <!--</select>-->
+
     <select id="selectEnvInfoCnt" resultType="java.lang.Integer">
-        select count(*)
-        from report.carinfo cf
+        SELECT count(*)
+        FROM report.CDPINFO a,
+        (SELECT *
+        FROM (SELECT "PLATENO",
+        "CROSSTIME",
+        "VEHICLEURL",
+        DECODE ("CARINOUTSTRING",
+        '0', '入场',
+        '1', '出场',
+        "CARINOUTSTRING")
+        "CARINOUTSTRING",
+        "RELEASEMODENAME",
+        "PARKNAME",
+        "ENTRANCENAME",
+        RANK ()
+        OVER (
+        PARTITION BY plateno,
+        TRUNC (
+        TO_DATE (
+        crosstime,
+        'yyyy-MM-dd hh24:mi:ss'))
+        ORDER BY crosstime ASC)
+        seq
+        FROM report.rcview
         <where>
+            AND     "PARKNAME" IN ('杨锦公路', '玖隆桥洞')
+            AND (   (    DECODE ("CARINOUTSTRING",
+            '0', '入场',
+            '1', '出场',
+            "CARINOUTSTRING") = '入场'
+            AND releasemodename != '禁止放行')
+            OR DECODE ("CARINOUTSTRING",
+            '0', '入场',
+            '1', '出场',
+            "CARINOUTSTRING") = '出场')
+            and CROSSTIME like concat(#{startDate}, '%')
             <if test="carNum != null">
-              and cf.CAR_NUMBER = #{carNum}
+                and PLATENO = #{carNum}
             </if>
-            and cf.CROSSTIME like concat(#{startDate},'%')
         </where>
+        )
+        WHERE seq = 1 ) b
+        WHERE     a.car_number = b.plateno
+        AND REPLACE (SUBSTR (b.CROSSTIME, 0, 10), '-', '') =
+        a.FORECAST_TIME
+        order by b.CROSSTIME desc
     </select>
 
 
