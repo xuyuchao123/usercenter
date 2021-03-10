@@ -6,6 +6,7 @@ import com.xyc.userc.entity.*;
 import com.xyc.userc.security.MesCodeErrorException;
 import com.xyc.userc.security.MesCodeExpiredException;
 import com.xyc.userc.security.MobileNotFoundException;
+import com.xyc.userc.service.RedisService;
 import com.xyc.userc.service.UserService;
 import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.JsonResultEnum;
@@ -62,6 +63,9 @@ public class UserServiceImpl implements UserService
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    private RedisService redisService;
 
 
     @Override
@@ -308,10 +312,19 @@ public class UserServiceImpl implements UserService
             mobile = mobiles.get(0);
             LOGGER.info("mobile={}",mobile);
         }
-        MobileOpenId mobileOpenId = new MobileOpenId(null,mobile,"",openId,openId,new Date());
+        Date date = new Date();
+        LOGGER.info("开始生成手机号openid绑定关系");
+        MobileOpenId mobileOpenId = new MobileOpenId(null,mobile,"",openId,openId,date);
         int insertCnt = mobileOpenIdMapper.insertMobileOpenId(mobileOpenId);
         int id = mobileOpenId.getId();
-
+        LOGGER.info("开始生成用户权限");
+        Role role = roleMapper.selectByRoleCode(RoleTypeEnum.ROLE_SJ_1.getRoleCode());
+        roleMapper.insertUserRole(id, role.getId(), date, date);
+        LOGGER.info("开始生成车牌号绑定关系");
+        CarNumOpenId carNumOpenId = new CarNumOpenId(null,openId,carNum,null,null,null,null,null,null,1,0,openId,openId,date,date);
+        carNumOpenIdMapper.insert(carNumOpenId);
+        LOGGER.info("开始更新redis中用户信息及车牌号信息openId={}",openId);
+        redisService.updateRedis(openId);
         LOGGER.info("结束快速注册方法 carNum={} openId={}",carNum,openId);
     }
 
