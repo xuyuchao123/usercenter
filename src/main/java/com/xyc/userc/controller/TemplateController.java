@@ -165,11 +165,12 @@ public class TemplateController {
 
 	@PostMapping("/quickRegist")
 	@ApiOperation(value = "快速注册")
-	@ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String")
+	@ApiImplicitParams({@ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String"),
+			@ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String")})
 	@ApiResponses({@ApiResponse(code = 200, message = "isSuccess=true：绑定成功 isSuccess=false：绑定失败，resMsg为错误信息")})
-	public JsonResultObj quickRegist(@ApiIgnore HttpServletRequest request, String carNum)
+	public JsonResultObj quickRegist(@ApiIgnore HttpServletRequest request, String carNum, String mobile)
 	{
-		LOGGER.info("开始快速注册 carNum={}", carNum);
+		LOGGER.info("开始快速注册 carNum={} mobile={}", carNum,mobile);
 		JsonResultObj resultObj = null;
 		if(carNum == null || "".equals(carNum))
 		{
@@ -192,7 +193,7 @@ public class TemplateController {
 		{
 			try
 			{
-				userService.quickRegister(carNum,openId);
+				userService.quickRegister(carNum,mobile,openId);
 				resultObj = new JsonResultObj(true);
 			}
 			catch (Exception e)
@@ -200,7 +201,7 @@ public class TemplateController {
 				resultObj = CommonExceptionHandler.handException(e, "快速注册失败", LOGGER);
 			}
 		}
-		LOGGER.info("结束快速注册 carNum={},", carNum);
+		LOGGER.info("结束快速注册 carNum={} mobile={}", carNum,mobile);
 		return resultObj;
 	}
 

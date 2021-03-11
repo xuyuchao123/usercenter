@@ -294,9 +294,9 @@ public class UserServiceImpl implements UserService
 
 
     @Override
-    public void quickRegister(String carNum, String openId) throws Exception
+    public void quickRegister(String carNum, String mobile, String openId) throws Exception
     {
-        LOGGER.info("开始快速注册方法 carNum={} openId={}",carNum,openId);
+        LOGGER.info("开始快速注册方法 carNum={} mobile={} openId={}",carNum,mobile,openId);
         LOGGER.info("开始查询当前openId是否已绑定手机号openId={}",openId);
         List<Map> maps = mobileOpenIdMapper.selectByMobileOpenIdRole(null,openId);
         if(maps != null && maps.size() > 0)
@@ -304,14 +304,14 @@ public class UserServiceImpl implements UserService
             LOGGER.info("openid 已绑定手机号，不能重复绑定openid={}",openId);
             throw new BusinessException(JsonResultEnum.OPENID_BINDED);
         }
-        String mobile = "";
-        //根据车牌号获取手机号。。。
-        List<String> mobiles = mobileMapper.selectMobileByCarNum(carNum);
-        if(mobiles != null && mobiles.size() > 0)
-        {
-            mobile = mobiles.get(0);
-            LOGGER.info("mobile={}",mobile);
-        }
+//        String mobile = "";
+//        //根据车牌号获取手机号。。。
+//        List<String> mobiles = mobileMapper.selectMobileByCarNum(carNum);
+//        if(mobiles != null && mobiles.size() > 0)
+//        {
+//            mobile = mobiles.get(0);
+//            LOGGER.info("mobile={}",mobile);
+//        }
         Date date = new Date();
         LOGGER.info("开始生成手机号openid绑定关系");
         MobileOpenId mobileOpenId = new MobileOpenId(null,mobile,"",openId,openId,date);
@@ -325,7 +325,7 @@ public class UserServiceImpl implements UserService
         carNumOpenIdMapper.insert(carNumOpenId);
         LOGGER.info("开始更新redis中用户信息及车牌号信息openId={}",openId);
         redisService.updateRedis(openId);
-        LOGGER.info("结束快速注册方法 carNum={} openId={}",carNum,openId);
+        LOGGER.info("结束快速注册方法 carNum={} mobile={} openId={}",carNum,mobile,openId);
     }
 
     //    重写认证方法,实现自定义springsecurity用户认证（用户名密码登录）
