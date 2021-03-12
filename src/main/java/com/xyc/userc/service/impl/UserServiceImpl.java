@@ -299,30 +299,45 @@ public class UserServiceImpl implements UserService
         LOGGER.info("开始快速注册方法 carNum={} mobile={} openId={}",carNum,mobile,openId);
         LOGGER.info("开始查询当前openId是否已绑定手机号openId={}",openId);
         List<Map> maps = mobileOpenIdMapper.selectByMobileOpenIdRole(null,openId);
+        Date date = new Date();
         if(maps != null && maps.size() > 0)
         {
-            LOGGER.info("openid 已绑定手机号，不能重复绑定openid={}",openId);
-            throw new BusinessException(JsonResultEnum.OPENID_BINDED);
+            LOGGER.info("openid 已绑定手机号 openid={}",openId);
+            List<CarNumOpenId> carNumOpenIdList = carNumOpenIdMapper.selectByOpenId(openId);
+            boolean needInsert = true;
+            if(carNumOpenIdList != null && carNumOpenIdList.size() > 0)
+            {
+                //遍历已绑定的车牌号，若其中包含 carNum 则无需再次绑定
+                for(CarNumOpenId carNumOpenId : carNumOpenIdList)
+                {
+                    if(carNumOpenId.getCarNum().equals(carNum))
+                    {
+                        needInsert = false;
+                        break;
+                    }
+                }
+            }
+            if(needInsert)
+            {
+                LOGGER.info("开始生成车牌号绑定关系");
+                CarNumOpenId carNumOpenId = new CarNumOpenId(null,openId,carNum,null,null,null,null,null,null,0,0,openId,openId,date,date);
+                carNumOpenIdMapper.insert(carNumOpenId);
+            }
         }
-//        String mobile = "";
-//        //根据车牌号获取手机号。。。
-//        List<String> mobiles = mobileMapper.selectMobileByCarNum(carNum);
-//        if(mobiles != null && mobiles.size() > 0)
-//        {
-//            mobile = mobiles.get(0);
-//            LOGGER.info("mobile={}",mobile);
-//        }
-        Date date = new Date();
-        LOGGER.info("开始生成手机号openid绑定关系");
-        MobileOpenId mobileOpenId = new MobileOpenId(null,mobile,"",openId,openId,date);
-        int insertCnt = mobileOpenIdMapper.insertMobileOpenId(mobileOpenId);
-        int id = mobileOpenId.getId();
-        LOGGER.info("开始生成用户权限");
-        Role role = roleMapper.selectByRoleCode(RoleTypeEnum.ROLE_SJ_1.getRoleCode());
-        roleMapper.insertUserRole(id, role.getId(), date, date);
-        LOGGER.info("开始生成车牌号绑定关系");
-        CarNumOpenId carNumOpenId = new CarNumOpenId(null,openId,carNum,null,null,null,null,null,null,1,0,openId,openId,date,date);
-        carNumOpenIdMapper.insert(carNumOpenId);
+        else
+        {
+            LOGGER.info("openid 未绑定手机号 openid={}",openId);
+            LOGGER.info("开始生成手机号openid绑定关系");
+            MobileOpenId mobileOpenId = new MobileOpenId(null,mobile,"",openId,openId,date);
+            int insertCnt = mobileOpenIdMapper.insertMobileOpenId(mobileOpenId);
+            int id = mobileOpenId.getId();
+            LOGGER.info("开始生成用户权限");
+            Role role = roleMapper.selectByRoleCode(RoleTypeEnum.ROLE_SJ_1.getRoleCode());
+            roleMapper.insertUserRole(id, role.getId(), date, date);
+            LOGGER.info("开始生成车牌号绑定关系,并启用车牌号");
+            CarNumOpenId carNumOpenId = new CarNumOpenId(null,openId,carNum,null,null,null,null,null,null,1,0,openId,openId,date,date);
+            carNumOpenIdMapper.insert(carNumOpenId);
+        }
         LOGGER.info("开始更新redis中用户信息及车牌号信息openId={}",openId);
         redisService.updateRedis(openId);
         LOGGER.info("结束快速注册方法 carNum={} mobile={} openId={}",carNum,mobile,openId);
