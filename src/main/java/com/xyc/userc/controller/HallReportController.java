@@ -139,7 +139,7 @@ public class HallReportController
     @GetMapping("/queryHallReportInfo")
     @ApiOperation(value="查询大厅报道信息")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
-    public JsonResultObj queryHallReportInfo(@ApiIgnore HttpServletRequest request)
+    public JsonResultObj<HallReportInfoVo> queryHallReportInfo(@ApiIgnore HttpServletRequest request)
     {
         LOGGER.info("开始查询大厅报道信息");
         JsonResultObj resultObj = null;
