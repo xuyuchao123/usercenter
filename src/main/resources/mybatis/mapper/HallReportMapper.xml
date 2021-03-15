@@ -7,7 +7,7 @@
             SELECT REPORT_QUEUE_INFO_SEQ.NEXTVAL FROM DUAL
         </selectKey>
         insert into SYS_REPORT_QUEUE_INFO(ID,OPENID,MOBILE,CARNUMBER,GMT_CREATE,DATA_STATUS,LATE_WEIGHT,LATE_TIMES,BIG_LADING_BILL_NO,LAST_CALLED_TIME)
-        VALUES (#{id},#{openId},#{mobile},#{carNumber},#{gmtCreate},#{dataStatus},#{lateWeight},#{lateTimes},#{BigLadingBillNo},#{lastCalledTime})
+        VALUES (#{id},#{openId},#{mobile},#{carNumber},#{gmtCreate},#{dataStatus},#{lateWeight},#{lateTimes},#{BigLadingBillNo},#{lastCalledTime,jdbcType=DATE})
     </insert>
 
     <select id="selectHallReportInfo" resultType="com.xyc.userc.entity.HallReportInfo">
