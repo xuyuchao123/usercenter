@@ -165,7 +165,7 @@
 
     <insert id="insert">
         insert into SYS_OPENID_CARNUMBER(ID,OPENID,CARNUMBER,IS_DELETED,USER_CREATE,USER_MODIFIED,GMT_CREATE,GMT_MODIFIED,IS_ENABLED,ENGINENUM,IDENTNUM,EMISSIONSTD,FLEETNAME,REGDATE,DEPARTMENT)
-        VALUES (OPENID_CARNUM_SEQ.nextval,#{openId},#{carNum},#{isDeleted},#{userCreate},#{userModified},#{gmtCreate},#{gmtModified},#{isEnabled},#{engineNum},#{identNum},#{emissionStd},#{fleetName},#{regDate},#{department})
+        VALUES (OPENID_CARNUM_SEQ.nextval,#{openId},#{carNum},#{isDeleted},#{userCreate},#{userModified},#{gmtCreate},#{gmtModified},#{isEnabled},#{engineNum},#{identNum},#{emissionStd},#{fleetName},#{regDate,jdbcType=DATE},#{department})
     </insert>
 
     <update id="updateCarNum">

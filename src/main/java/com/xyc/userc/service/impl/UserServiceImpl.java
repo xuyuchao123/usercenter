@@ -320,7 +320,7 @@ public class UserServiceImpl implements UserService
             if(needInsert)
             {
                 LOGGER.info("开始生成车牌号绑定关系");
-                CarNumOpenId carNumOpenId = new CarNumOpenId(null,openId,carNum,null,null,null,null,null,null,0,0,openId,openId,date,date);
+                CarNumOpenId carNumOpenId = new CarNumOpenId(null,openId,carNum,"","","","",null,"",0,0,openId,openId,date,date);
                 carNumOpenIdMapper.insert(carNumOpenId);
             }
         }
@@ -335,7 +335,7 @@ public class UserServiceImpl implements UserService
             Role role = roleMapper.selectByRoleCode(RoleTypeEnum.ROLE_SJ_1.getRoleCode());
             roleMapper.insertUserRole(id, role.getId(), date, date);
             LOGGER.info("开始生成车牌号绑定关系,并启用车牌号");
-            CarNumOpenId carNumOpenId = new CarNumOpenId(null,openId,carNum,null,null,null,null,null,null,1,0,openId,openId,date,date);
+            CarNumOpenId carNumOpenId = new CarNumOpenId(null,openId,carNum,"","","","",null,"",1,0,openId,openId,date,date);
             carNumOpenIdMapper.insert(carNumOpenId);
         }
         LOGGER.info("开始更新redis中用户信息及车牌号信息openId={}",openId);
