@@ -19,7 +19,7 @@
         </where>
     </select>
 
-    <insert id="insert">
+    <insert id="insert" parameterType="com.xyc.userc.entity.GarageInfo">
         insert into SYS_GARAGE_INFO(ID,GARAGETYPE,GARAGENUM,GARAGENAME,MAXLIMIT,GMT_CREATE,GMT_MODIFIED)
         VALUES (GARAGE_INFO_SEQ.nextval,#{garageType},#{garageNum},#{garageName},#{maxLimit},#{gmtCreate},#{gmtModified},
     </insert>
