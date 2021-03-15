@@ -17,7 +17,7 @@
                CARNUMBER as carNumber,
                GMT_CREATE as gmtCreate,
                DATA_STATUS as dataStatus,
-               ORDER_ID as orderId,
+               LATE_WEIGHT as lateWeight,
                LATE_TIMES as lateTimes,
                BIG_LADING_BILL_NO as bigLadingBillNo,
                LAST_CALLED_TIME as lastCalledTime
