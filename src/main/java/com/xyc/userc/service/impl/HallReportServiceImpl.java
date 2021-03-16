@@ -116,7 +116,7 @@ public class HallReportServiceImpl implements HallReportService
         HallReportInfo hallReportInfo = hallReportInfoList.get(0);
         HallReportInfoVo hallReportInfoVo = new HallReportInfoVo(hallReportInfo.getId(),hallReportInfo.getMobile(),
                 hallReportInfo.getCarNumber(),hallReportInfo.getLateTimes());
-        LOGGER.info("结束查询当前被叫到的序号方法 openId={}",openId);
+        LOGGER.info("结束查询大厅报道信息方法 openId={}",openId);
         return hallReportInfoVo;
     }
 
