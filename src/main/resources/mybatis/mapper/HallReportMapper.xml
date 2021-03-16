@@ -87,7 +87,7 @@
 
     <insert id="insertQRCodeStr">
        insert into SYS_QRCODE_JL(QRCODE_STR,GMT_CREATE)
-       VALUES (#{qRCodeStr},#{gmtCreate,jdbcType=DATE})
+       VALUES (#{qRCodeStr},#{gmtCreate,typeHandler=com.xyc.userc.mybatis.typehandler.LongDateTypeHandler})
     </insert>
 
     <select id="selectQRCodeStr" resultType="com.xyc.userc.entity.QRCodeStrInfo">
