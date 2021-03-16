@@ -6,7 +6,9 @@ import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
 import org.apache.ibatis.type.TypeHandler;
 
+import java.security.*;
 import java.sql.*;
+import java.sql.Timestamp;
 
 /**
  * Created by 1 on 2020/10/24.
@@ -29,7 +31,12 @@ public class LongDateTypeHandler implements TypeHandler<Long>
     @Override
     public Long getResult(ResultSet rs, String columnName) throws SQLException
     {
-        return rs.getTimestamp(columnName).getTime();
+        Timestamp timestamp = rs.getTimestamp(columnName);
+        if(timestamp != null)
+        {
+            return timestamp.getTime();
+        }
+        return null;
     }
 
     @Override
