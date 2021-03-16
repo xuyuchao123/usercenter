@@ -126,8 +126,8 @@ public class HallReportController
         JsonResultObj resultObj = null;
         try
         {
-            int curNum = hallReportService.getCurrentNum();
-            resultObj = new JsonResultObj(true,curNum);
+            List<Integer> curNums = hallReportService.getCurrentNum();
+            resultObj = new JsonResultObj(true,curNums);
         }
         catch (Exception e)
         {

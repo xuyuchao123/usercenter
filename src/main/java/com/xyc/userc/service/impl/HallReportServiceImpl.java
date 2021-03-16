@@ -89,19 +89,30 @@ public class HallReportServiceImpl implements HallReportService
     public int getWaitingNum(String openId) throws Exception
     {
         LOGGER.info("进入查询等待人数方法 openid={}",openId);
-        int waitingNum = hallReportMapper.selectWaitingNum(openId);
+        int waitingNum = 0;
+        List<Map> maps = hallReportMapper.selectWaitingNum(openId);
+        if(maps != null && maps.size() > 0)
+        {
+            for(int i = 0; i < maps.size(); i++)
+            {
+                if(openId.equals(maps.get(i).get("openId")))
+                {
+                    waitingNum = i;
+                    break;
+                }
+            }
+        }
         LOGGER.info("结束查询等待人数方法 openid={} waitingNum={}",openId,waitingNum);
         return waitingNum;
     }
 
     @Override
-    public int getCurrentNum() throws Exception
+    public List<Integer> getCurrentNum() throws Exception
     {
         LOGGER.info("进入查询当前被叫到的序号方法");
-        int curNum = 0;
-        curNum = hallReportMapper.selectCurrentNum();
-        LOGGER.info("结束查询当前被叫到的序号方法 curNum = {}",curNum);
-        return curNum;
+        List<Integer> curNums = hallReportMapper.selectCurrentNum();
+        LOGGER.info("结束查询当前被叫到的序号方法");
+        return curNums;
     }
 
     @Override

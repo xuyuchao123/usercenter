@@ -7,6 +7,7 @@ import com.xyc.userc.vo.HallReportPrintQueueVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 1 on 2021/2/1.
@@ -20,9 +21,9 @@ public interface HallReportMapper
     List<HallReportInfo> selectHallReportInfo(@Param("openId")String openId, @Param("mobile")String mobile, @Param("carNum")String carNum,
                                               @Param("bigLadingBillNo")String bigLadingBillNo,@Param("dataStatus")Integer dataStatus);
 
-    int selectWaitingNum(String openId);
+    List<Map> selectWaitingNum(String openId);
 
-    int selectCurrentNum();
+    List<Integer> selectCurrentNum();
 
     void insertComment(HallReportComment hallReportComment);
 

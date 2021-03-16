@@ -41,27 +41,22 @@
         </where>
     </select>
 
-    <select id="selectWaitingNum" resultType="java.lang.Integer">
-        select count(*)
-        from SYS_REPORT_QUEUE_INFO rq
-        where rq.ORDER_ID <![CDATA[ < ]]> (
-          select NVL(ORDER_ID,0)
-          from SYS_REPORT_QUEUE_INFO
-          <where>
-              <if test="openId != null">
-                  and OPENID = #{openId}
-              </if>
-              and DATA_STATUS = 1
-          </where>
-        ) and rq.DATA_STATUS = 1
+    <select id="selectWaitingNum" resultType="java.util.Map">
+        select c.ID as id, c.OPENID as openId from (select a.ID, a.OPENID, a.BIG_LADING_BILL_NO, a.DATA_STATUS, a.LATE_WEIGHT, a.GMT_CREATE, b.BILLNO
+          from SYS_REPORT_QUEUE_INFO a
+          left join (select DISTINCT BILLNO from print_affirm@sgps where trunc(printtime) = trunc(sysdate)) b
+          on a.BIG_LADING_BILL_NO = b.BILLNO) c
+          where c.BILLNO is null
+          order by c.LATE_WEIGHT,c.GMT_CREATE
     </select>
 
     <select id="selectCurrentNum" resultType="java.lang.Integer">
-        select * from (
-          select ID from SYS_REPORT_QUEUE_INFO
-          where DATA_STATUS = 1
-          order by ORDER_ID
-        ) where rownum = 1
+          select c.ID from (select a.ID, a.BIG_LADING_BILL_NO, a.DATA_STATUS, a.LATE_WEIGHT, a.GMT_CREATE, b.BILLNO
+          from SYS_REPORT_QUEUE_INFO a
+          left join (select DISTINCT BILLNO from print_affirm@sgps where trunc(printtime) = trunc(sysdate)) b
+          on a.BIG_LADING_BILL_NO = b.BILLNO) c
+          where c.BILLNO is null and c.DATA_STATUS = 1
+          order by c.LATE_WEIGHT,c.GMT_CREATE
     </select>
 
     <select id="selectBigLadingBillNo" resultType="java.lang.String">

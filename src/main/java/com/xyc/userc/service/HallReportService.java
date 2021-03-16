@@ -18,7 +18,7 @@ public interface HallReportService
 
     int getWaitingNum(String openId) throws Exception;
 
-    int getCurrentNum() throws Exception;
+    List<Integer> getCurrentNum() throws Exception;
 
     HallReportInfoVo getHallReportInfo(String openId) throws  Exception;
 
