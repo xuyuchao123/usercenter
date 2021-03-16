@@ -28,8 +28,8 @@ public class LongDateTypeHandler implements TypeHandler<Long>
     @Override
     public void setParameter(PreparedStatement ps, int i, Long parameter, JdbcType jdbcType) throws SQLException
     {
-//        Timestamp timestamp = new Timestamp(parameter);
-        ps.setDate(i, new Date(parameter));
+        Timestamp timestamp = new Timestamp(parameter);
+        ps.setTimestamp(i, timestamp);
     }
 
     @Override
