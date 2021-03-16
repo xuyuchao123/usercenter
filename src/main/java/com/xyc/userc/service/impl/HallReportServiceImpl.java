@@ -169,14 +169,22 @@ public class HallReportServiceImpl implements HallReportService
         LOGGER.info("进入获取玖隆大厅报道及打印队列方法");
         List<HallReportPrintQueueVo> hallReportPrintQueueVoList = hallReportMapper.selectReportPrintQueue();
         List<HallReportPrintQueueVo> waitQueueVoList = new ArrayList<>();
-        List<HallReportPrintQueueVo> pringQueueList = new ArrayList<>();
+        List<HallReportPrintQueueVo> printQueueList = new ArrayList<>();
         HallReportPrintQueueVo hallReportPrintQueueVo;
         long curTimeStamp = Timestamp.valueOf(LocalDateTime.now()).getTime();
         for(int i = 0; i < hallReportPrintQueueVoList.size(); i++)
         {
+            if(waitQueueVoList.size() + printQueueList.size() == 30)
+            {
+                break;
+            }
             hallReportPrintQueueVo = hallReportPrintQueueVoList.get(i);
             if("waiting".equals(hallReportPrintQueueVo.getStatus()))
             {
+                if(waitQueueVoList.size() >= 15)
+                {
+                    continue;
+                }
                 if(hallReportPrintQueueVo.getTimeout() != null)
                 {
                     hallReportPrintQueueVo.setTimeout(null);
@@ -185,13 +193,17 @@ public class HallReportServiceImpl implements HallReportService
             }
             else
             {
+                if(printQueueList.size() >= 15)
+                {
+                    continue;
+                }
                 hallReportPrintQueueVo.setTimeout(curTimeStamp - hallReportPrintQueueVo.getTimeout());
-                pringQueueList.add(hallReportPrintQueueVo);
+                printQueueList.add(hallReportPrintQueueVo);
             }
         }
         Map<String,List<HallReportPrintQueueVo>> map = new HashMap<>();
         map.put("waitingQueue",waitQueueVoList);
-        map.put("printingQueue",pringQueueList);
+        map.put("printingQueue",printQueueList);
         LOGGER.info("结束获取玖隆大厅报道及打印队列方法");
         return map;
     }
