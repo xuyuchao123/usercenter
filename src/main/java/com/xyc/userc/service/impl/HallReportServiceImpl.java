@@ -177,6 +177,10 @@ public class HallReportServiceImpl implements HallReportService
             hallReportPrintQueueVo = hallReportPrintQueueVoList.get(i);
             if("waiting".equals(hallReportPrintQueueVo.getStatus()))
             {
+                if(hallReportPrintQueueVo.getTimeout() != null)
+                {
+                    hallReportPrintQueueVo.setTimeout(null);
+                }
                 waitQueueVoList.add(hallReportPrintQueueVo);
             }
             else
