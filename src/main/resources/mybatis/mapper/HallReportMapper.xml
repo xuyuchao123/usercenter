@@ -97,8 +97,8 @@
     </select>
 
     <select id="selectReportPrintQueue" resultType="com.xyc.userc.vo.HallReportPrintQueueVo">
-        select c.ID as no, c.CARNUMBER as carNum, c.GMT_CREATE as reportTime from
-        (select a.ID, a.CARNUMBER, a.GMT_CREATE, a.BIG_LADING_BILL_NO, a.LATE_WEIGHT, b.BILLNO
+        select c.ID as no, c.CARNUMBER as carNum, c.GMT_CREATE as reportTime,c.LAST_CALLED_TIME as timeout from
+        (select a.ID, a.CARNUMBER, a.GMT_CREATE, a.BIG_LADING_BILL_NO, a.LATE_WEIGHT,a.LAST_CALLED_TIME, b.BILLNO
         from SYS_REPORT_QUEUE_INFO a
         left join (select DISTINCT BILLNO from print_affirm@sgps where trunc(printtime) = trunc(sysdate)) b
         on a.BIG_LADING_BILL_NO = b.BILLNO) c
