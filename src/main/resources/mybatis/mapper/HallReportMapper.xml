@@ -96,7 +96,7 @@
           order by GMT_CREATE
     </select>
 
-    <select id="selectReportPrintQueue" parameterType="com.xyc.userc.vo.HallReportPrintQueueVo">
+    <select id="selectReportPrintQueue" resultType="com.xyc.userc.vo.HallReportPrintQueueVo">
         select c.ID as no, c.CARNUMBER as carNum, c.GMT_CREATE as reportTime from
         (select a.ID, a.CARNUMBER, a.GMT_CREATE, a.BIG_LADING_BILL_NO, a.LATE_WEIGHT, b.BILLNO
         from SYS_REPORT_QUEUE_INFO a
