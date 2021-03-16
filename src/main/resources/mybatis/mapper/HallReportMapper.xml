@@ -98,7 +98,7 @@
 
     <select id="selectReportPrintQueue" parameterType="com.xyc.userc.vo.HallReportPrintQueueVo">
         select c.ID as no, c.CARNUMBER as carNum, c.GMT_CREATE as reportTime from
-        (select a.ID, a.CARNUMBER, a.GMT_CREATE, a.BIG_LADING_BILL_NO from SYS_REPORT_QUEUE_INFO a
+        (select a.ID, a.CARNUMBER, a.GMT_CREATE, a.BIG_LADING_BILL_NO, a.LATE_WEIGHT from SYS_REPORT_QUEUE_INFO a
         left join (select DISTINCT BILLNO from print_affirm@sgps where trunc(printtime) = trunc(sysdate)) b
         on a.BIG_LADING_BILL_NO = b.BILLNO) c
         where c.BILLNO is null
