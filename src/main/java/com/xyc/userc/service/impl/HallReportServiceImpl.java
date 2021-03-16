@@ -10,6 +10,7 @@ import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.UsercConstant;
 import com.xyc.userc.vo.HallReportCommentVo;
 import com.xyc.userc.vo.HallReportInfoVo;
+import com.xyc.userc.vo.HallReportPrintQueueVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -158,9 +159,18 @@ public class HallReportServiceImpl implements HallReportService
     @Override
     public List<QRCodeStrInfo> getQRCodeStr() throws Exception
     {
-        LOGGER.info("进入获取玖隆大厅厅报道二维码字符串方法");
+        LOGGER.info("进入获取玖隆大厅报道二维码字符串方法");
         List<QRCodeStrInfo> qrCodeStrInfoList = hallReportMapper.selectQRCodeStr();
         LOGGER.info("结束获取玖隆大厅厅报道二维码字符串方法");
         return qrCodeStrInfoList;
+    }
+
+    @Override
+    public List<HallReportPrintQueueVo> getReportQueue() throws Exception
+    {
+        LOGGER.info("进入获取玖隆大厅报道及打印队列方法");
+        List<HallReportPrintQueueVo> hallReportPrintQueueVoList = hallReportMapper.selectReportPrintQueue();
+        LOGGER.info("结束获取玖隆大厅报道及打印队列方法");
+        return hallReportPrintQueueVoList;
     }
 }

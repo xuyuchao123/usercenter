@@ -3,6 +3,7 @@ package com.xyc.userc.dao;
 import com.xyc.userc.entity.HallReportComment;
 import com.xyc.userc.entity.HallReportInfo;
 import com.xyc.userc.entity.QRCodeStrInfo;
+import com.xyc.userc.vo.HallReportPrintQueueVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -30,4 +31,6 @@ public interface HallReportMapper
     int insertQRCodeStr(QRCodeStrInfo qrCodeStrInfo);
 
     List<QRCodeStrInfo> selectQRCodeStr();
+
+    List<HallReportPrintQueueVo> selectReportPrintQueue();
 }

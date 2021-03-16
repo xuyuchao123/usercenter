@@ -4,6 +4,7 @@ import com.xyc.userc.entity.HallReportInfo;
 import com.xyc.userc.entity.QRCodeStrInfo;
 import com.xyc.userc.vo.HallReportCommentVo;
 import com.xyc.userc.vo.HallReportInfoVo;
+import com.xyc.userc.vo.HallReportPrintQueueVo;
 
 import java.util.List;
 
@@ -25,4 +26,6 @@ public interface HallReportService
     void refreshQRCodeStr() throws Exception;
 
     List<QRCodeStrInfo> getQRCodeStr() throws Exception;
+
+    List<HallReportPrintQueueVo> getReportQueue() throws  Exception;
 }

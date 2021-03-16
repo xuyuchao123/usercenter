@@ -8,6 +8,7 @@ import com.xyc.userc.util.JsonResultObj;
 import com.xyc.userc.util.UsercConstant;
 import com.xyc.userc.vo.HallReportCommentVo;
 import com.xyc.userc.vo.HallReportInfoVo;
+import com.xyc.userc.vo.HallReportPrintQueueVo;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -228,6 +229,26 @@ public class HallReportController
             resultObj = CommonExceptionHandler.handException(e, "获取大厅报道二维码字符串失败", LOGGER);
         }
         LOGGER.info("结束获取大厅报道二维码字符串");
+        return resultObj;
+    }
+
+    @GetMapping("/getHallReportQueue")
+    @ApiOperation(value="获取大厅报道及打印队列")
+    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：获取成功 isSuccess=false：获取失败，resMsg为错误信息")})
+    public JsonResultObj<HallReportPrintQueueVo> getHallReportQueue()
+    {
+        LOGGER.info("开始获取大厅报道队列");
+        JsonResultObj resultObj = null;
+        try
+        {
+            List<HallReportPrintQueueVo> hallReportPrintQueueVoList = hallReportService.getReportQueue();
+            resultObj = new JsonResultObj(true,hallReportPrintQueueVoList);
+        }
+        catch (Exception e)
+        {
+            resultObj = CommonExceptionHandler.handException(e, "获取获取大厅报道队列失败", LOGGER);
+        }
+        LOGGER.info("结束获取大厅报道队列");
         return resultObj;
     }
 
