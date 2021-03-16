@@ -11,7 +11,7 @@ public class QRCodeStrInfo implements Serializable
     private static final long serialVersionUID = 1L;
 
     private String qRCodeStr;
-    private Date gmtCreate;
+    private Long gmtCreate;
 
     public String getqRCodeStr() {
         return qRCodeStr;
@@ -21,11 +21,11 @@ public class QRCodeStrInfo implements Serializable
         this.qRCodeStr = qRCodeStr;
     }
 
-    public Date getGmtCreate() {
+    public Long getGmtCreate() {
         return gmtCreate;
     }
 
-    public void setGmtCreate(Date gmtCreate) {
+    public void setGmtCreate(Long gmtCreate) {
         this.gmtCreate = gmtCreate;
     }
 }

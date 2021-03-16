@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -148,7 +149,7 @@ public class HallReportServiceImpl implements HallReportService
         String uuid = UUID.randomUUID().toString().replace("-", "");
         QRCodeStrInfo qrCodeStrInfo = new QRCodeStrInfo();
         qrCodeStrInfo.setqRCodeStr(UsercConstant.QRCODESTR_JL + uuid);
-        qrCodeStrInfo.setGmtCreate(new Date());
+        qrCodeStrInfo.setGmtCreate(Timestamp.valueOf(LocalDateTime.now()).getTime());
         hallReportMapper.insertQRCodeStr(qrCodeStrInfo);
         LOGGER.info("结束更新玖厅报道二维码字符串方法");
 
@@ -171,7 +172,7 @@ public class HallReportServiceImpl implements HallReportService
         List<HallReportPrintQueueVo> waitQueueVoList = new ArrayList<>();
         List<HallReportPrintQueueVo> printQueueList = new ArrayList<>();
         HallReportPrintQueueVo hallReportPrintQueueVo;
-        long curTimeStamp = Timestamp.valueOf(LocalDateTime.now()).getTime();
+//        long curTimeStamp = Timestamp.valueOf(LocalDateTime.now()).getTime();
         for(int i = 0; i < hallReportPrintQueueVoList.size(); i++)
         {
             if(waitQueueVoList.size() + printQueueList.size() == 30)
@@ -197,7 +198,7 @@ public class HallReportServiceImpl implements HallReportService
                 {
                     continue;
                 }
-                hallReportPrintQueueVo.setTimeout(curTimeStamp - hallReportPrintQueueVo.getTimeout());
+                hallReportPrintQueueVo.setTimeout(hallReportPrintQueueVo.getTimeout().longValue() + 900000);
                 printQueueList.add(hallReportPrintQueueVo);
             }
         }
