@@ -173,6 +173,8 @@ public class HallReportServiceImpl implements HallReportService
         List<HallReportPrintQueueVo> printQueueList = new ArrayList<>();
         HallReportPrintQueueVo hallReportPrintQueueVo;
 //        long curTimeStamp = Timestamp.valueOf(LocalDateTime.now()).getTime();
+        int waitNo = 1;
+        int printNo = 1;
         for(int i = 0; i < hallReportPrintQueueVoList.size(); i++)
         {
             if(waitQueueVoList.size() + printQueueList.size() == 30)
@@ -186,6 +188,7 @@ public class HallReportServiceImpl implements HallReportService
                 {
                     continue;
                 }
+                hallReportPrintQueueVo.setNo(waitNo++);
                 if(hallReportPrintQueueVo.getTimeout() != null)
                 {
                     hallReportPrintQueueVo.setTimeout(null);
@@ -198,6 +201,7 @@ public class HallReportServiceImpl implements HallReportService
                 {
                     continue;
                 }
+                hallReportPrintQueueVo.setNo(printNo++);
                 hallReportPrintQueueVo.setTimeout(hallReportPrintQueueVo.getTimeout().longValue() + 900000);
                 printQueueList.add(hallReportPrintQueueVo);
             }

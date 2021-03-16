@@ -17,7 +17,7 @@ public class HallReportPrintQueueVo implements Serializable
     private String carNum;
 
     @ApiModelProperty(value="队列编号", position=1)
-    private String no;
+    private Integer no;
 
     @ApiModelProperty(value="超时时间", position=2)
     private Long timeout;
@@ -36,11 +36,11 @@ public class HallReportPrintQueueVo implements Serializable
         this.carNum = carNum;
     }
 
-    public String getNo() {
+    public Integer getNo() {
         return no;
     }
 
-    public void setNo(String no) {
+    public void setNo(Integer no) {
         this.no = no;
     }
 

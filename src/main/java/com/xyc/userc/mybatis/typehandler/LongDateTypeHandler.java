@@ -5,10 +5,14 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
 import org.apache.ibatis.type.TypeHandler;
+import org.apache.tomcat.jni.Local;
 
 import java.security.*;
 import java.sql.*;
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /**
  * Created by 1 on 2020/10/24.
@@ -24,8 +28,8 @@ public class LongDateTypeHandler implements TypeHandler<Long>
     @Override
     public void setParameter(PreparedStatement ps, int i, Long parameter, JdbcType jdbcType) throws SQLException
     {
-        Timestamp timestamp = new Timestamp(parameter);
-        ps.setTimestamp(i, timestamp);
+//        Timestamp timestamp = new Timestamp(parameter);
+        ps.setDate(i, new Date(parameter));
     }
 
     @Override
