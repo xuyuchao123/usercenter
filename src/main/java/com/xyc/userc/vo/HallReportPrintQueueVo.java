@@ -25,6 +25,9 @@ public class HallReportPrintQueueVo implements Serializable
     @ApiModelProperty(value="报道时间", position=3)
     private Long reportTime;
 
+    @ApiModelProperty(value="当前状态", position=4)
+    private String status;
+
     public String getCarNum() {
         return carNum;
     }
@@ -55,5 +58,13 @@ public class HallReportPrintQueueVo implements Serializable
 
     public void setReportTime(Long reportTime) {
         this.reportTime = reportTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

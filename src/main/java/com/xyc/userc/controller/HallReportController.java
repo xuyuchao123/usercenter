@@ -18,6 +18,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 1 on 2021/2/1.
@@ -241,8 +242,8 @@ public class HallReportController
         JsonResultObj resultObj = null;
         try
         {
-            List<HallReportPrintQueueVo> hallReportPrintQueueVoList = hallReportService.getReportQueue();
-            resultObj = new JsonResultObj(true,hallReportPrintQueueVoList);
+            Map<String,List<HallReportPrintQueueVo>> stringListMap = hallReportService.getReportQueue();
+            resultObj = new JsonResultObj(true,stringListMap);
         }
         catch (Exception e)
         {

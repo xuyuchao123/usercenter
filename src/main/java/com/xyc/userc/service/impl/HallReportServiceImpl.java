@@ -18,14 +18,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by 1 on 2021/2/1.
@@ -166,11 +164,31 @@ public class HallReportServiceImpl implements HallReportService
     }
 
     @Override
-    public List<HallReportPrintQueueVo> getReportQueue() throws Exception
+    public Map<String,List<HallReportPrintQueueVo>> getReportQueue() throws Exception
     {
         LOGGER.info("进入获取玖隆大厅报道及打印队列方法");
         List<HallReportPrintQueueVo> hallReportPrintQueueVoList = hallReportMapper.selectReportPrintQueue();
+        List<HallReportPrintQueueVo> waitQueueVoList = new ArrayList<>();
+        List<HallReportPrintQueueVo> pringQueueList = new ArrayList<>();
+        HallReportPrintQueueVo hallReportPrintQueueVo;
+        long curTimeStamp = Timestamp.valueOf(LocalDateTime.now()).getTime();
+        for(int i = 0; i < hallReportPrintQueueVoList.size(); i++)
+        {
+            hallReportPrintQueueVo = hallReportPrintQueueVoList.get(i);
+            if("waiting".equals(hallReportPrintQueueVo.getStatus()))
+            {
+                waitQueueVoList.add(hallReportPrintQueueVo);
+            }
+            else
+            {
+                hallReportPrintQueueVo.setTimeout(curTimeStamp - hallReportPrintQueueVo.getTimeout());
+                pringQueueList.add(hallReportPrintQueueVo);
+            }
+        }
+        Map<String,List<HallReportPrintQueueVo>> map = new HashMap<>();
+        map.put("waitingQueue",waitQueueVoList);
+        map.put("printingQueue",pringQueueList);
         LOGGER.info("结束获取玖隆大厅报道及打印队列方法");
-        return hallReportPrintQueueVoList;
+        return map;
     }
 }

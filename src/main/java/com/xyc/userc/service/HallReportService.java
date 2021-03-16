@@ -7,6 +7,7 @@ import com.xyc.userc.vo.HallReportInfoVo;
 import com.xyc.userc.vo.HallReportPrintQueueVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 1 on 2021/2/1.
@@ -27,5 +28,5 @@ public interface HallReportService
 
     List<QRCodeStrInfo> getQRCodeStr() throws Exception;
 
-    List<HallReportPrintQueueVo> getReportQueue() throws  Exception;
+    Map<String,List<HallReportPrintQueueVo>> getReportQueue() throws  Exception;
 }
