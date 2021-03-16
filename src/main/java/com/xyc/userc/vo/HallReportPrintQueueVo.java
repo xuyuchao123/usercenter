@@ -23,7 +23,7 @@ public class HallReportPrintQueueVo implements Serializable
     private Long timeout;
 
     @ApiModelProperty(value="报道时间", position=3)
-    private Integer reportTime;
+    private Long reportTime;
 
     public String getCarNum() {
         return carNum;
@@ -49,11 +49,11 @@ public class HallReportPrintQueueVo implements Serializable
         this.timeout = timeout;
     }
 
-    public Integer getReportTime() {
+    public Long getReportTime() {
         return reportTime;
     }
 
-    public void setReportTime(Integer reportTime) {
+    public void setReportTime(Long reportTime) {
         this.reportTime = reportTime;
     }
 }
