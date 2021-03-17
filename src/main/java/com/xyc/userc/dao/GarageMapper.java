@@ -12,7 +12,8 @@ import java.util.List;
  */
 public interface GarageMapper
 {
-    List<GarageInfoVo> selectGarageInfo(@Param("garageType")String garageType, @Param("garageNum")String garageNum,@Param("garageName")String garageName);
+    List<GarageInfoVo> selectGarageInfo(@Param("garageType")String garageType, @Param("garageNum")String garageNum,
+                                        @Param("garageName")String garageName,@Param("location")String location);
 
     int insert(GarageInfo garageInfo);
 

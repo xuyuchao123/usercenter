@@ -32,36 +32,36 @@ public class GarageServiceImpl implements GarageService
 
 
     @Override
-    public List<GarageInfoVo> getGarageInfo(String garageType, String garageNum, String garageName) throws Exception
+    public List<GarageInfoVo> getGarageInfo(String garageType, String garageNum, String garageName,String location) throws Exception
     {
-        LOGGER.info("进入查询库位配置信息方法 garageType={} garageNum={} garageName={}",garageType,garageNum,garageName);
-        List<GarageInfoVo> garageInfoVoList = garageMapper.selectGarageInfo(garageType,garageNum,garageName);
-        LOGGER.info("结束查询库位配置信息方法 garageType={} garageNum={} garageName={}",garageType,garageNum,garageName);
+        LOGGER.info("进入查询库位配置信息方法 garageType={} garageNum={} garageName={} location={}",garageType,garageNum,garageName,location);
+        List<GarageInfoVo> garageInfoVoList = garageMapper.selectGarageInfo(garageType,garageNum,garageName,location);
+        LOGGER.info("结束查询库位配置信息方法 garageType={} garageNum={} garageName={} location={}",garageType,garageNum,garageName,location);
         return garageInfoVoList;
     }
 
     @Override
-    public void addGarageInfo(String garageType, String garageNum, String garageName, String maxLimit) throws Exception
+    public void addGarageInfo(String garageType, String garageNum, String garageName, String maxLimit,String location) throws Exception
     {
-        LOGGER.info("进入新增库位配置信息方法 garageType={} garageNum={} garageName={} maxLimit={}",garageType,garageNum,garageName,maxLimit);
+        LOGGER.info("进入新增库位配置信息方法 garageType={} garageNum={} garageName={} maxLimit={} location={}",garageType,garageNum,garageName,maxLimit,location);
         Date date = new Date();
         if(!DataUtil.isNumeric(maxLimit))
         {
             LOGGER.error("最大限制量输入格式有误！");
             throw new BusinessException("最大限制量输入格式有误！");
         }
-        GarageInfo garageInfo = new GarageInfo(null,garageType,garageNum,garageName,Integer.valueOf(maxLimit),date,date);
-        List<GarageInfoVo> garageInfoVoList = garageMapper.selectGarageInfo(garageType,garageNum,garageName);
+        GarageInfo garageInfo = new GarageInfo(null,garageType,garageNum,garageName,Integer.valueOf(maxLimit),location,date,date);
+        List<GarageInfoVo> garageInfoVoList = garageMapper.selectGarageInfo(garageType,garageNum,garageName,location);
         if(garageInfoVoList == null || garageInfoVoList.size() == 0)
         {
-            LOGGER.info("库位配置信息不存在，开始插入库位配置信息 garageType={} garageNum={} garageName={}",garageType,garageNum,garageName);
+            LOGGER.info("库位配置信息不存在，开始插入库位配置信息");
             garageMapper.insert(garageInfo);
         }
         else
         {
-            LOGGER.info("库位配置信息已存在！garageType={} garageNum={} garageName={}",garageType,garageNum,garageName);
+            LOGGER.info("库位配置信息已存在！");
         }
-        LOGGER.info("结束新增库位配置信息方法 garageType={} garageNum={} garageName={} maxLimit={}",garageType,garageNum,garageName,maxLimit);
+        LOGGER.info("结束新增库位配置信息方法 garageType={} garageNum={} garageName={} maxLimit={} location={}",garageType,garageNum,garageName,maxLimit,location);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class GarageServiceImpl implements GarageService
             throw new BusinessException("最大限制量输入格式有误！");
         }
         Date date = new Date();
-        List<GarageInfoVo> garageInfoVoList = garageMapper.selectGarageInfo(null,garageNum,null);
+        List<GarageInfoVo> garageInfoVoList = garageMapper.selectGarageInfo(null,garageNum,null,null);
         if(garageInfoVoList == null || garageInfoVoList.size() == 0)
         {
             LOGGER.error("库位配置信息不存在！ garageNum={}",garageNum);
@@ -88,7 +88,7 @@ public class GarageServiceImpl implements GarageService
     public int removeGarageInfo(String garageNum) throws Exception
     {
         LOGGER.info("进入删除库位配置信息方法 garageNum={}",garageNum);
-        List<GarageInfoVo> garageInfoVoList = garageMapper.selectGarageInfo(null,garageNum,null);
+        List<GarageInfoVo> garageInfoVoList = garageMapper.selectGarageInfo(null,garageNum,null,null);
         if(garageInfoVoList == null || garageInfoVoList.size() == 0)
         {
             LOGGER.error("库位配置信息不存在！ garageNum={}",garageNum);
@@ -103,7 +103,7 @@ public class GarageServiceImpl implements GarageService
     public int getMaxLimit(String garageType) throws Exception
     {
         LOGGER.info("开始查询库位最大限制量方法 garageType={}",garageType);
-        List<GarageInfoVo> garageInfoVoList = garageMapper.selectGarageInfo(garageType,null,null);
+        List<GarageInfoVo> garageInfoVoList = garageMapper.selectGarageInfo(garageType,null,null,null);
         if(garageInfoVoList == null || garageInfoVoList.size() == 0)
         {
             LOGGER.error("库位配置信息不存在！ garageType={}",garageType);

@@ -4,7 +4,7 @@
 
     <select id="selectGarageInfo" resultType="com.xyc.userc.vo.GarageInfoVo">
         select gi.GARAGETYPE as garageType, gi.GARAGENUM as garageNum,
-          gi.GARAGENAME as garageName, gi.MAXLIMIT as maxLimit
+          gi.GARAGENAME as garageName, gi.MAXLIMIT as maxLimit, gi.LOCATION as location
         from SYS_GARAGE_INFO gi
         <where>
             <if test="garageType != null">
@@ -16,12 +16,15 @@
             <if test="garageName != null">
                 and gi.GARAGENAME = #{garageName}
             </if>
+            <if test="location != null">
+                and gi.LOCATION = #{location}
+            </if>
         </where>
     </select>
 
     <insert id="insert" parameterType="com.xyc.userc.entity.GarageInfo">
-        insert into SYS_GARAGE_INFO(ID,GARAGETYPE,GARAGENUM,GARAGENAME,MAXLIMIT,GMT_CREATE,GMT_MODIFIED)
-        VALUES (GARAGE_INFO_SEQ.nextval,#{garageType},#{garageNum},#{garageName},#{maxLimit},#{gmtCreate},#{gmtModified})
+        insert into SYS_GARAGE_INFO(ID,GARAGETYPE,GARAGENUM,GARAGENAME,MAXLIMIT,GMT_CREATE,GMT_MODIFIED,LOCATION)
+        VALUES (GARAGE_INFO_SEQ.nextval,#{garageType},#{garageNum},#{garageName},#{maxLimit},#{gmtCreate},#{gmtModified},#{location})
     </insert>
 
     <update id="updateGarageInfo">

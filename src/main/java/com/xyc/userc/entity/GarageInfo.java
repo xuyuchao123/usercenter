@@ -15,15 +15,17 @@ public class GarageInfo implements Serializable
     private String garageNum;
     private String garageName;
     private Integer maxLimit;
+    private String location;
     private Date gmtCreate;
     private Date gmtModified;
 
-    public GarageInfo(Integer id, String garageType, String garageNum, String garageName, Integer maxLimit, Date gmtCreate, Date gmtModified) {
+    public GarageInfo(Integer id, String garageType, String garageNum, String garageName, Integer maxLimit, String location, Date gmtCreate, Date gmtModified) {
         this.id = id;
         this.garageType = garageType;
         this.garageNum = garageNum;
         this.garageName = garageName;
         this.maxLimit = maxLimit;
+        this.location = location;
         this.gmtCreate = gmtCreate;
         this.gmtModified = gmtModified;
     }
@@ -66,6 +68,14 @@ public class GarageInfo implements Serializable
 
     public void setMaxLimit(Integer maxLimit) {
         this.maxLimit = maxLimit;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public Date getGmtCreate() {

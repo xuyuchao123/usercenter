@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public interface HallReportService
 {
-    List<String> addReportInfo(String openId, String mobile, String carNum, String bigLadingBillNo) throws Exception;
+    List<String> addReportInfo(String openId,String bigLadingBillNo) throws Exception;
 
     int getWaitingNum(String openId) throws Exception;
 

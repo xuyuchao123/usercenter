@@ -1,8 +1,11 @@
 package com.xyc.userc.service.impl;
 
+import com.xyc.userc.dao.CarNumOpenIdMapper;
 import com.xyc.userc.dao.HallReportMapper;
+import com.xyc.userc.dao.MobileOpenIdMapper;
 import com.xyc.userc.entity.HallReportComment;
 import com.xyc.userc.entity.HallReportInfo;
+import com.xyc.userc.entity.MobileOpenId;
 import com.xyc.userc.entity.QRCodeStrInfo;
 import com.xyc.userc.service.HallReportService;
 import com.xyc.userc.util.BusinessException;
@@ -38,34 +41,54 @@ public class HallReportServiceImpl implements HallReportService
     @Autowired
     private HallReportMapper hallReportMapper;
 
+    @Autowired
+    private MobileOpenIdMapper mobileOpenIdMapper;
+
+    @Autowired
+    private CarNumOpenIdMapper carNumOpenIdMapper;
+
     @Override
-    public List<String> addReportInfo(String openId, String mobile, String carNum, String bigLadingBillNo) throws Exception
+    public List<String> addReportInfo(String openId,String bigLadingBillNo) throws Exception
     {
-        LOGGER.info("进入新增物流大厅报道记录方法 openid={} mobile={} carNum={} bigLadingBillNo={}",openId,mobile,carNum,bigLadingBillNo);
+        LOGGER.info("进入新增物流大厅报道记录方法 openid={} bigLadingBillNo={}",openId,bigLadingBillNo);
+        List<MobileOpenId> mobileOpenIds = mobileOpenIdMapper.selectByMobileOpenId(null,openId);
+        if(mobileOpenIds == null || mobileOpenIds.size() == 0)
+        {
+            LOGGER.error("手机号未绑定！openId={}",openId);
+            throw new BusinessException(JsonResultEnum.MOBILE_NOT_BINDED);
+        }
+        String mobile = mobileOpenIds.get(0).getMobile();
+        String enabledCarNum = null;
+        enabledCarNum = carNumOpenIdMapper.selectEnabledCarInfo(openId);
+        if(enabledCarNum == null)
+        {
+            LOGGER.error("车牌号未启用！openId={}",openId);
+            throw new BusinessException(JsonResultEnum.CARNUM_NOT_ENABLED);
+        }
         if(bigLadingBillNo == null || "".equals(bigLadingBillNo))
         {
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String timeStr = dateTimeFormatter.format(LocalDateTime.now());
-            LOGGER.info("提单号参数为空,开始查询提单号 carNum={} timeStr",carNum,timeStr);
-            List<String> bigLadingBillNos = hallReportMapper.selectBigLadingBillNo(carNum,mobile,timeStr);
+            LOGGER.info("提单号参数为空,开始查询提单号 enabledCarNum={} timeStr",enabledCarNum,timeStr);
+            List<String> bigLadingBillNos = hallReportMapper.selectBigLadingBillNo(enabledCarNum,mobile,timeStr);
             if(bigLadingBillNos == null || bigLadingBillNos.size() == 0)
             {
-                LOGGER.error("提单号不存在 carNum={} timeStr",carNum,timeStr);
+                LOGGER.error("提单号不存在! enabledCarNum={} timeStr",enabledCarNum,timeStr);
                 throw new BusinessException(JsonResultEnum.BIGLADINGBILLNO_NOT_EXIST);
             }
             if(bigLadingBillNos.size() > 1)
             {
-                LOGGER.info("存在多个提单号,返回提单号列表 carNum={} timeStr",carNum,timeStr);
+                LOGGER.info("存在多个提单号,返回提单号列表 enabledCarNum={} timeStr",enabledCarNum,timeStr);
                 return bigLadingBillNos;
             }
             else
             {
-                LOGGER.info("只有一个提单号,准备新增物流大厅报道记录 carNum={} timeStr",carNum,timeStr);
+                LOGGER.info("只有一个提单号,准备新增物流大厅报道记录 enabledCarNum={} timeStr",enabledCarNum,timeStr);
                 bigLadingBillNo = bigLadingBillNos.get(0);
             }
         }
         int dataStatus = 1;
-        List<HallReportInfo> hallReportInfoList = hallReportMapper.selectHallReportInfo(openId,mobile,carNum,bigLadingBillNo,dataStatus);
+        List<HallReportInfo> hallReportInfoList = hallReportMapper.selectHallReportInfo(openId,mobile,enabledCarNum,bigLadingBillNo,dataStatus);
         if(hallReportInfoList != null && hallReportInfoList.size() == 1)
         {
             int id = hallReportInfoList.get(0).getId();
@@ -75,11 +98,11 @@ public class HallReportServiceImpl implements HallReportService
             return list;
         }
         Date date = new Date();
-        HallReportInfo hallReportInfo = new HallReportInfo(null,openId,mobile,carNum,date,0,0,0,bigLadingBillNo,null);
+        HallReportInfo hallReportInfo = new HallReportInfo(null,openId,mobile,enabledCarNum,date,0,0,0,bigLadingBillNo,null);
         hallReportMapper.insert(hallReportInfo);
         int id = hallReportInfo.getId();
         LOGGER.info("初始化列表序号：id={}",id);
-        LOGGER.info("结束新增物流大厅报道记录方法 openid={} mobile={} carNum={} bigLadingBillNo={}",openId,mobile,carNum,bigLadingBillNo);
+        LOGGER.info("结束新增物流大厅报道记录方法 openid={} bigLadingBillNo={}",openId,bigLadingBillNo);
         List<String> list = new ArrayList<>();
         list.add(String.valueOf(id));
         return list;

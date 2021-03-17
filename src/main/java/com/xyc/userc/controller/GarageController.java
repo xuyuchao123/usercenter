@@ -38,22 +38,23 @@ public class GarageController
     @ApiImplicitParams({
             @ApiImplicitParam(name = "garageType", value = "库位类型", required = true, dataType = "String"),
             @ApiImplicitParam(name = "garageNum", value = "库位编码", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "garageName", value = "库位名称", required = true, dataType = "String")})
+            @ApiImplicitParam(name = "garageName", value = "库位名称", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "location", value = "库区编号", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
-    public JsonResultObj<GarageInfoVo> queryGarageInfo(String garageType,String garageNum,String garageName)
+    public JsonResultObj<GarageInfoVo> queryGarageInfo(String garageType,String garageNum,String garageName,String location)
     {
-        LOGGER.info("开始查询库位配置信息 garageType={} garageNum={} garageName={}",garageType,garageNum,garageName);
+        LOGGER.info("开始查询库位配置信息 garageType={} garageNum={} garageName={} location={}",garageType,garageNum,garageName,location);
         JsonResultObj resultObj = null;
         try
         {
-            List<GarageInfoVo> garageInfoVoList = garageService.getGarageInfo(garageType,garageNum,garageName);
+            List<GarageInfoVo> garageInfoVoList = garageService.getGarageInfo(garageType,garageNum,garageName,location);
             resultObj = new JsonResultObj(true, garageInfoVoList);
         }
         catch (Exception e)
         {
             resultObj = CommonExceptionHandler.handException(e, "查询库位配置信息失败", LOGGER);
         }
-        LOGGER.info("结束查询库位配置信息 garageType={} garageNum={} garageName={}",garageType,garageNum,garageName);
+        LOGGER.info("结束查询库位配置信息 garageType={} garageNum={} garageName={} location={}",garageType,garageNum,garageName,location);
         return resultObj;
     }
 
@@ -63,22 +64,23 @@ public class GarageController
             @ApiImplicitParam(name = "garageType", value = "库位类型", required = true, dataType = "String"),
             @ApiImplicitParam(name = "garageNum", value = "库位编码", required = true, dataType = "String"),
             @ApiImplicitParam(name = "garageName", value = "库位名称", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "maxLimit", value = "最大限制数量", required = true, dataType = "String")})
+            @ApiImplicitParam(name = "maxLimit", value = "最大限制数量", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "location", value = "库区编码", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：新增成功 isSuccess=false：新增失败，resMsg为错误信息")})
-    public JsonResultObj addGarageInfo(String garageType,String garageNum,String garageName,String maxLimit)
+    public JsonResultObj addGarageInfo(String garageType,String garageNum,String garageName,String maxLimit,String location)
     {
-        LOGGER.info("开始新增库位配置信息 garageType={} garageNum={} garageName={} maxLimit={}",garageType,garageNum,garageName,maxLimit);
+        LOGGER.info("开始新增库位配置信息 garageType={} garageNum={} garageName={} maxLimit={} location={}",garageType,garageNum,garageName,maxLimit,location);
         JsonResultObj resultObj = null;
         try
         {
-            garageService.addGarageInfo(garageType,garageNum,garageName,maxLimit);
+            garageService.addGarageInfo(garageType,garageNum,garageName,maxLimit,location);
             resultObj = new JsonResultObj(true);
         }
         catch (Exception e)
         {
             resultObj = CommonExceptionHandler.handException(e, "新增库位配置信息失败", LOGGER);
         }
-        LOGGER.info("结束新增库位配置信息 garageType={} garageNum={} garageName={} maxLimit={}",garageType,garageNum,garageName,maxLimit);
+        LOGGER.info("结束新增库位配置信息 garageType={} garageNum={} garageName={} maxLimit={} location={}",garageType,garageNum,garageName,maxLimit,location);
         return resultObj;
     }
 

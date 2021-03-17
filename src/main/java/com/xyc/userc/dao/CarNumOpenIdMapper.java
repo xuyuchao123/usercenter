@@ -49,7 +49,7 @@ public interface CarNumOpenIdMapper
 
     List<GsCarInfoVo> selectGsCarInfoByCarNum(@Param("carNum")String carNum);
 
-    EnabledCarInfoVo selectEnabledCarInfo(@Param("openId")String openId);
+    String selectEnabledCarInfo(@Param("openId")String openId);
 
     List<Map> selectCarNumInfo(@Param("openId")String openId);
 

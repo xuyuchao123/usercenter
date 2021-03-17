@@ -110,7 +110,7 @@
         </where>
     </select>
 
-    <select id="selectEnabledCarInfo" resultType="com.xyc.userc.vo.EnabledCarInfoVo">
+    <select id="selectEnabledCarInfo" resultType="java.lang.String">
         select
           oc.CARNUMBER as carNum
         from

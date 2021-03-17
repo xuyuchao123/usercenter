@@ -25,6 +25,9 @@ public class GarageInfoVo implements Serializable
     @ApiModelProperty(value="最大限制数", position=4)
     private Integer maxLimit;
 
+    @ApiModelProperty(value="库区编号", position=5)
+    private String location;
+
     public String getGarageType() {
         return garageType;
     }
@@ -55,5 +58,13 @@ public class GarageInfoVo implements Serializable
 
     public void setMaxLimit(Integer maxLimit) {
         this.maxLimit = maxLimit;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

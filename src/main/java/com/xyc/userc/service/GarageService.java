@@ -9,9 +9,9 @@ import java.util.List;
  */
 public interface GarageService
 {
-    List<GarageInfoVo> getGarageInfo(String garageType, String garageNum, String garageName) throws Exception;
+    List<GarageInfoVo> getGarageInfo(String garageType, String garageNum, String garageName,String location) throws Exception;
 
-    void addGarageInfo(String garageType, String garageNum, String garageName,String maxLimit) throws Exception;
+    void addGarageInfo(String garageType, String garageNum, String garageName,String maxLimit,String location) throws Exception;
 
     void modifyGarageInfo(String garageNum,String maxLimit) throws Exception;
 
