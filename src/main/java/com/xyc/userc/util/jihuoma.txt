@@ -1,6 +1,4 @@
-select * from
-        (select *
-        from SYS_REPORT_QUEUE_INFO a
-        left join (select BILLNO from print_affirm@sgps where trunc(printtime) = trunc(sysdate)) b
-        on a.BIG_LADING_BILL_NO = b.BILLNO) c
-        where c.BILLNO is null
+select gi.LOCATION as location from (select distinct STOCKCODE from sell.SJFORECASTTIME
+          where substr(SJ,1,10) = #{timeStr} and BIG_LADING_BILL_NO = #{bigLadingBillNo}) a
+          left join SYS_GARAGE_INFO gi
+          on a.STOCKCODE = gi.GARAGENUM
