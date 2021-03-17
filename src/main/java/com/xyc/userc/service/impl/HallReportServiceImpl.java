@@ -118,7 +118,7 @@ public class HallReportServiceImpl implements HallReportService
         {
             for(int i = 0; i < maps.size(); i++)
             {
-                if(openId.equals((String)maps.get(i).get("openId")))
+                if(openId.equals((String)maps.get(i).get("OPENID")))
                 {
                     waitingNum = i;
                     break;
