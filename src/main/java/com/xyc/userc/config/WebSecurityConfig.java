@@ -125,7 +125,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
     {
         super.configure(web);
         web.ignoring().antMatchers("/mes/**", "/error", "/v2/api-docs", "/swagger-resources/**", "/images/**",
-                "/configuration/security", "/configuration/ui", "/swagger-ui.html", "/webjars/**", "/vendors/**","/MP_verify_M4vEkUcZh16Bd5Ly.txt");
+                "/configuration/security", "/configuration/ui", "/swagger-ui.html", "/webjars/**", "/vendors/**",
+                "/MP_verify_M4vEkUcZh16Bd5Ly.txt","/doc.html");
     }
 
     @Bean
