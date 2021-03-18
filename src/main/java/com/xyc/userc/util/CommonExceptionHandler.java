@@ -28,7 +28,7 @@ public class CommonExceptionHandler
         else
         {
             e.printStackTrace();
-            LOGGER.error(msg + "：{}",e.getMessage());
+            LOGGER.error(msg + "：{}",e);
             return new JsonResultObj(false);
         }
     }
@@ -43,7 +43,7 @@ public class CommonExceptionHandler
         else
         {
             e.printStackTrace();
-            LOGGER.error(msg + "：{}",e.getMessage());
+            LOGGER.error(msg + "：{}",e);
             return new JsonResultObj_Page(false);
         }
     }

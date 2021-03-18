@@ -52,6 +52,10 @@ public class HallReportServiceImpl implements HallReportService
     {
         LOGGER.info("进入新增物流大厅报道记录方法 openid={} bigLadingBillNo={} qrCodeStr={}",openId,bigLadingBillNo,qrCodeStr);
         LOGGER.info("开始验证动态二维码是否过期");
+        if(qrCodeStr == null)
+        {
+            qrCodeStr = "";
+        }
         List<QRCodeStrInfo> qrCodeStrInfoList =  hallReportMapper.selectQRCodeStr(qrCodeStr);
         if(qrCodeStrInfoList == null || qrCodeStrInfoList.size() == 0)
         {
