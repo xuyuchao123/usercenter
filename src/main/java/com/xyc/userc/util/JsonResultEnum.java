@@ -70,8 +70,13 @@ public enum JsonResultEnum
     ROLE_NOT_EXIST(900,"角色不存在或已删除！"),
 
     GARAGEINFO_NOT_EXIST(1000,"库位配置信息不存在！"),
+    LOCATION_NOT_EXIST(1001,"库区信息不存在！"),
 
-    BIGLADINGBILLNO_NOT_EXIST(1100,"提单号不存在！");
+    BIGLADINGBILLNO_NOT_EXIST(1100,"提单号不存在！"),
+
+    QRCODE_EXPIRED(1200,"二维码过期！");
+
+
 
     private Integer code;
     private String message;

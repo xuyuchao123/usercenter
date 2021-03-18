@@ -6,8 +6,8 @@
         <selectKey resultType="int" order="BEFORE" keyProperty="id">
             SELECT REPORT_QUEUE_INFO_SEQ.NEXTVAL FROM DUAL
         </selectKey>
-        insert into SYS_REPORT_QUEUE_INFO(ID,OPENID,MOBILE,CARNUMBER,GMT_CREATE,DATA_STATUS,LATE_WEIGHT,LATE_TIMES,BIG_LADING_BILL_NO,LAST_CALLED_TIME)
-        VALUES (#{id},#{openId},#{mobile},#{carNumber},#{gmtCreate},#{dataStatus},#{lateWeight},#{lateTimes},#{BigLadingBillNo},#{lastCalledTime,jdbcType=DATE})
+        insert into SYS_REPORT_QUEUE_INFO(ID,OPENID,MOBILE,CARNUMBER,GMT_CREATE,DATA_STATUS,LATE_WEIGHT,LATE_TIMES,BIG_LADING_BILL_NO,LAST_CALLED_TIME,LOCATION)
+        VALUES (#{id},#{openId},#{mobile},#{carNumber},#{gmtCreate},#{dataStatus},#{lateWeight},#{lateTimes},#{BigLadingBillNo},#{lastCalledTime,jdbcType=DATE},#{location})
     </insert>
 
     <select id="selectHallReportInfo" resultType="com.xyc.userc.entity.HallReportInfo">
@@ -20,7 +20,8 @@
                LATE_WEIGHT as lateWeight,
                LATE_TIMES as lateTimes,
                BIG_LADING_BILL_NO as bigLadingBillNo,
-               LAST_CALLED_TIME as lastCalledTime
+               LAST_CALLED_TIME as lastCalledTime,
+               LOCATION as location
         from SYS_REPORT_QUEUE_INFO
         <where>
             <if test="openId != null">
@@ -38,15 +39,19 @@
             <if test="dataStatus != null">
                 and DATA_STATUS = #{dataStatus}
             </if>
+            <if test="location != null">
+                and LOCATION = #{location}
+            </if>
         </where>
     </select>
 
     <select id="selectWaitingNum" resultType="java.util.Map">
-        select c.ID as id, c.OPENID as openId from (select a.ID, a.OPENID, a.BIG_LADING_BILL_NO, a.DATA_STATUS, a.LATE_WEIGHT, a.GMT_CREATE, b.BILLNO
+        select c.ID as id, c.OPENID as openId from (select a.ID, a.OPENID, a.BIG_LADING_BILL_NO, a.DATA_STATUS,
+          a.LATE_WEIGHT, a.GMT_CREATE, a.LOCATION, b.BILLNO
           from SYS_REPORT_QUEUE_INFO a
           left join (select DISTINCT BILLNO from print_affirm@sgps where trunc(printtime) = trunc(sysdate)) b
           on a.BIG_LADING_BILL_NO = b.BILLNO) c
-          where c.BILLNO is null
+          where c.BILLNO is null and c.LOCATION = #{location}
           order by c.LATE_WEIGHT,c.GMT_CREATE
     </select>
 
@@ -87,19 +92,31 @@
 
     <select id="selectQRCodeStr" resultType="com.xyc.userc.entity.QRCodeStrInfo">
         select QRCODE_STR as qRCodeStr, GMT_CREATE as gmtCreate
-          from SYS_QRCODE_JL
+        from SYS_QRCODE_JL
+        <where>
+            <if test="qrCodeStr != null">
+                and QRCODE_STR = #{qrCodeStr}
+            </if>
+        </where>
           order by GMT_CREATE
     </select>
 
     <select id="selectReportPrintQueue" resultType="com.xyc.userc.vo.HallReportPrintQueueVo">
         select c.ID as no, c.CARNUMBER as carNum, c.GMT_CREATE as reportTime,
-        c.LAST_CALLED_TIME as timeout, decode(c.DATA_STATUS, 1, 'printing', 0, 'waiting') as status from
+        c.LAST_CALLED_TIME as timeout, decode(c.DATA_STATUS, 1, 'printing', 0, 'waiting') as status, c.LOCATION as location from
         (select a.ID, a.CARNUMBER, a.GMT_CREATE, a.BIG_LADING_BILL_NO, a.LATE_WEIGHT,
-        a.LAST_CALLED_TIME,a.DATA_STATUS, b.BILLNO from SYS_REPORT_QUEUE_INFO a
+        a.LAST_CALLED_TIME,a.DATA_STATUS, a.LOCATION b.BILLNO from SYS_REPORT_QUEUE_INFO a
         left join (select DISTINCT BILLNO from print_affirm@sgps where trunc(printtime) = trunc(sysdate)) b
         on a.BIG_LADING_BILL_NO = b.BILLNO) c
         where c.BILLNO is null
         order by c.LATE_WEIGHT,c.GMT_CREATE
+    </select>
+
+    <select id="selectLocation" resultType="java.lang.String">
+        select gi.LOCATION as location from (select distinct STOCKCODE from sell.SJFORECASTTIME
+          where substr(SJ,1,10) = #{timeStr} and BIG_LADING_BILL_NO = #{bigLadingBillNo}) a
+          left join SYS_GARAGE_INFO gi
+          on a.STOCKCODE = gi.GARAGENUM
     </select>
 
 </mapper>

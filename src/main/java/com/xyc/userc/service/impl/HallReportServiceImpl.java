@@ -48,9 +48,17 @@ public class HallReportServiceImpl implements HallReportService
     private CarNumOpenIdMapper carNumOpenIdMapper;
 
     @Override
-    public List<String> addReportInfo(String openId,String bigLadingBillNo) throws Exception
+    public List<String> addReportInfo(String openId,String bigLadingBillNo, String qrCodeStr) throws Exception
     {
-        LOGGER.info("进入新增物流大厅报道记录方法 openid={} bigLadingBillNo={}",openId,bigLadingBillNo);
+        LOGGER.info("进入新增物流大厅报道记录方法 openid={} bigLadingBillNo={} qrCodeStr={}",openId,bigLadingBillNo,qrCodeStr);
+        LOGGER.info("开始验证动态二维码是否过期");
+        List<QRCodeStrInfo> qrCodeStrInfoList =  hallReportMapper.selectQRCodeStr(qrCodeStr);
+        if(qrCodeStrInfoList == null || qrCodeStrInfoList.size() == 0)
+        {
+            LOGGER.error("动态二维码过期 qrCodeStr={}",qrCodeStr);
+            throw new BusinessException(JsonResultEnum.QRCODE_EXPIRED);
+        }
+
         List<MobileOpenId> mobileOpenIds = mobileOpenIdMapper.selectByMobileOpenId(null,openId);
         if(mobileOpenIds == null || mobileOpenIds.size() == 0)
         {
@@ -58,6 +66,7 @@ public class HallReportServiceImpl implements HallReportService
             throw new BusinessException(JsonResultEnum.MOBILE_NOT_BINDED);
         }
         String mobile = mobileOpenIds.get(0).getMobile();
+
         String enabledCarNum = null;
         enabledCarNum = carNumOpenIdMapper.selectEnabledCarInfo(openId);
         if(enabledCarNum == null)
@@ -65,10 +74,10 @@ public class HallReportServiceImpl implements HallReportService
             LOGGER.error("车牌号未启用！openId={}",openId);
             throw new BusinessException(JsonResultEnum.CARNUM_NOT_ENABLED);
         }
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String timeStr = dateTimeFormatter.format(LocalDateTime.now());
         if(bigLadingBillNo == null || "".equals(bigLadingBillNo))
         {
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            String timeStr = dateTimeFormatter.format(LocalDateTime.now());
             LOGGER.info("提单号参数为空,开始查询提单号 enabledCarNum={} timeStr",enabledCarNum,timeStr);
             List<String> bigLadingBillNos = hallReportMapper.selectBigLadingBillNo(enabledCarNum,mobile,timeStr);
             if(bigLadingBillNos == null || bigLadingBillNos.size() == 0)
@@ -87,8 +96,17 @@ public class HallReportServiceImpl implements HallReportService
                 bigLadingBillNo = bigLadingBillNos.get(0);
             }
         }
+        LOGGER.info("根据提单号查询所在库区编码 bigLadingBillNo={}",bigLadingBillNo);
+        String location = null;
+        location = hallReportMapper.selectLocation(bigLadingBillNo,timeStr);
+        if(location == null || "".equals(location))
+        {
+            LOGGER.error("未找到提单号所在库区 bigLadingBillNo={}", bigLadingBillNo);
+            throw new BusinessException(JsonResultEnum.LOCATION_NOT_EXIST);
+        }
+        LOGGER.info("库区编码 location={}",location);
         int dataStatus = 1;
-        List<HallReportInfo> hallReportInfoList = hallReportMapper.selectHallReportInfo(openId,mobile,enabledCarNum,bigLadingBillNo,dataStatus);
+        List<HallReportInfo> hallReportInfoList = hallReportMapper.selectHallReportInfo(openId,mobile,enabledCarNum,bigLadingBillNo,location,dataStatus);
         if(hallReportInfoList != null && hallReportInfoList.size() == 1)
         {
             int id = hallReportInfoList.get(0).getId();
@@ -98,7 +116,7 @@ public class HallReportServiceImpl implements HallReportService
             return list;
         }
         Date date = new Date();
-        HallReportInfo hallReportInfo = new HallReportInfo(null,openId,mobile,enabledCarNum,date,0,0,0,bigLadingBillNo,null);
+        HallReportInfo hallReportInfo = new HallReportInfo(null,openId,mobile,enabledCarNum,date,0,0,0,bigLadingBillNo,null,location);
         hallReportMapper.insert(hallReportInfo);
         int id = hallReportInfo.getId();
         LOGGER.info("初始化列表序号：id={}",id);
@@ -113,7 +131,20 @@ public class HallReportServiceImpl implements HallReportService
     {
         LOGGER.info("进入查询等待人数方法 openid={}",openId);
         int waitingNum = 0;
-        List<Map> maps = hallReportMapper.selectWaitingNum(openId);
+        List<HallReportInfo> hallReportInfos = hallReportMapper.selectHallReportInfo(openId,null,null,null,null,null);
+        if(hallReportInfos == null || hallReportInfos.size() == 0)
+        {
+            LOGGER.info("大厅报道记录不存在！openid={}",openId);
+            return waitingNum;
+        }
+        HallReportInfo hallReportInfo = hallReportInfos.get(0);
+        //数据状态为 2 表示已打印完成
+        if(hallReportInfo.getDataStatus().intValue() == 2)
+        {
+            LOGGER.info("大厅报道记录已打印完成！openid={}",openId);
+            return waitingNum;
+        }
+        List<Map> maps = hallReportMapper.selectWaitingNum(hallReportInfo.getLocation());
         if(maps != null && maps.size() > 0)
         {
             for(int i = 0; i < maps.size(); i++)
@@ -142,15 +173,16 @@ public class HallReportServiceImpl implements HallReportService
     public HallReportInfoVo getHallReportInfo(String openId) throws Exception
     {
         LOGGER.info("进入查询大厅报道信息方法 openId={}",openId);
-        List<HallReportInfo> hallReportInfoList = hallReportMapper.selectHallReportInfo(openId,null,null,null,null);
+        List<HallReportInfo> hallReportInfoList = hallReportMapper.selectHallReportInfo(openId,null,null,null,null,null);
         if(hallReportInfoList == null || hallReportInfoList.size() == 0)
         {
             LOGGER.error("大厅报道信息不存在 openId={}",openId);
             throw new BusinessException("大厅报道信息不存在!");
         }
         HallReportInfo hallReportInfo = hallReportInfoList.get(0);
-        HallReportInfoVo hallReportInfoVo = new HallReportInfoVo(hallReportInfo.getId(),hallReportInfo.getMobile(),
-                hallReportInfo.getCarNumber(),hallReportInfo.getLateTimes());
+        int id = hallReportInfo.getDataStatus() != 2 ? hallReportInfo.getId() : -1;
+        HallReportInfoVo hallReportInfoVo = new HallReportInfoVo(id,hallReportInfo.getMobile(),
+                hallReportInfo.getCarNumber(),hallReportInfo.getLateTimes(),hallReportInfo.getLocation());
         LOGGER.info("结束查询大厅报道信息方法 openId={}",openId);
         return hallReportInfoVo;
     }
@@ -193,7 +225,7 @@ public class HallReportServiceImpl implements HallReportService
     public List<QRCodeStrInfo> getQRCodeStr() throws Exception
     {
         LOGGER.info("进入获取玖隆大厅报道二维码字符串方法");
-        List<QRCodeStrInfo> qrCodeStrInfoList = hallReportMapper.selectQRCodeStr();
+        List<QRCodeStrInfo> qrCodeStrInfoList = hallReportMapper.selectQRCodeStr(null);
         LOGGER.info("结束获取玖隆大厅厅报道二维码字符串方法");
         return qrCodeStrInfoList;
     }

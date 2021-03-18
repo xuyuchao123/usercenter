@@ -26,11 +26,16 @@ public class HallReportInfoVo implements Serializable
     @ApiModelProperty(value="迟到次数", position=3)
     private Integer lateTimes;
 
-    public HallReportInfoVo(Integer id, String mobile, String carNumber, Integer lateTimes) {
+    @ApiModelProperty(value="库区编码", position=4)
+    private String location;
+
+    public HallReportInfoVo(Integer id, String mobile, String carNumber, Integer lateTimes,String location)
+    {
         this.id = id;
         this.mobile = mobile;
         this.carNumber = carNumber;
         this.lateTimes = lateTimes;
+        this.location = location;
     }
 
     public Integer getId() {
@@ -63,5 +68,13 @@ public class HallReportInfoVo implements Serializable
 
     public void setLateTimes(Integer lateTimes) {
         this.lateTimes = lateTimes;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

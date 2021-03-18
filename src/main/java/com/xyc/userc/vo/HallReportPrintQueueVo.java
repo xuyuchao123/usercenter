@@ -28,6 +28,9 @@ public class HallReportPrintQueueVo implements Serializable
     @ApiModelProperty(value="当前状态", position=4)
     private String status;
 
+    @ApiModelProperty(value="库区编码", position=5)
+    private String location;
+
     public String getCarNum() {
         return carNum;
     }
@@ -66,5 +69,13 @@ public class HallReportPrintQueueVo implements Serializable
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

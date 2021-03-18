@@ -36,11 +36,12 @@ public class HallReportController
 
     @PostMapping("/addHallReportInfo")
     @ApiOperation(value="新增物流大厅报道记录")
-    @ApiImplicitParam(name = "bigLadingBillNo", value = "提单号", required = false, dataType = "String")
+    @ApiImplicitParams({@ApiImplicitParam(name = "bigLadingBillNo", value = "提单号", required = false, dataType = "String"),
+            @ApiImplicitParam(name = "qrCodeStr", value = "二维码", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：新增成功 isSuccess=false：新增失败，resMsg为错误信息")})
-    public JsonResultObj addHallReportInfo(@ApiIgnore HttpServletRequest request,String bigLadingBillNo)
+    public JsonResultObj addHallReportInfo(@ApiIgnore HttpServletRequest request,String bigLadingBillNo, String qrCodeStr)
     {
-        LOGGER.info("开始新增物流大厅报道记录 bigLadingBillNo={}",bigLadingBillNo);
+        LOGGER.info("开始新增物流大厅报道记录 bigLadingBillNo={} qrCodeStr={}",bigLadingBillNo,qrCodeStr);
         JsonResultObj resultObj = null;
         String openId = request.getHeader(UsercConstant.OPENID);
         if(openId == null)
@@ -58,7 +59,7 @@ public class HallReportController
             LOGGER.info("openId={}",openId);
             try
             {
-                List<String> list = hallReportService.addReportInfo(openId,bigLadingBillNo);
+                List<String> list = hallReportService.addReportInfo(openId,bigLadingBillNo,qrCodeStr);
                 if(list.size() == 1)
                 {
                     resultObj = new JsonResultObj(true,list.get(0));
@@ -75,7 +76,7 @@ public class HallReportController
             }
         }
 
-        LOGGER.info("结束新增物流大厅报道记录 bigLadingBillNo={}",bigLadingBillNo);
+        LOGGER.info("结束新增物流大厅报道记录 bigLadingBillNo={} qrCodeStr={}",bigLadingBillNo,qrCodeStr);
         return resultObj;
     }
 
