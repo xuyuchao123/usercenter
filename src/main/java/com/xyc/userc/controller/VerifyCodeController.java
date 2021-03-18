@@ -36,9 +36,9 @@ public class VerifyCodeController
     /*
     * 获取验证码
     * */
-    @RequestMapping(value = "/verifyCode.jpg",method = RequestMethod.GET)
-    @ResponseBody
-    @ApiOperation(value="获取验证码图片")
+//    @RequestMapping(value = "/verifyCode.jpg",method = RequestMethod.GET)
+//    @ResponseBody
+//    @ApiOperation(value="获取验证码图片")
     public void getVerifyCode(HttpServletResponse response, HttpSession session)
     {
         LOGGER.debug("开始生成验证码图片");
