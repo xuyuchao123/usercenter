@@ -1,10 +1,4 @@
-select * from (
+  select qRCodeStr,gmtCreate from (select a.*,rownum rnum from (
         select QRCODE_STR as qRCodeStr, GMT_CREATE as gmtCreate
         from SYS_QRCODE_JL
-        <where>
-            <if test="qrCodeStr != null">
-                and QRCODE_STR = #{qrCodeStr}
-            </if>
-        </where>
-          order by GMT_CREATE) a
-        where a.rownum > 1
+          order by GMT_CREATE) a ) where rnum > 1
