@@ -1,4 +1,10 @@
-select gi.LOCATION as location from (select distinct STOCKCODE from sell.SJFORECASTTIME
-          where substr(SJ,1,10) = #{timeStr} and BIG_LADING_BILL_NO = #{bigLadingBillNo}) a
-          left join SYS_GARAGE_INFO gi
-          on a.STOCKCODE = gi.GARAGENUM
+select * from (
+        select QRCODE_STR as qRCodeStr, GMT_CREATE as gmtCreate
+        from SYS_QRCODE_JL
+        <where>
+            <if test="qrCodeStr != null">
+                and QRCODE_STR = #{qrCodeStr}
+            </if>
+        </where>
+          order by GMT_CREATE) a
+        where a.rownum > 1
