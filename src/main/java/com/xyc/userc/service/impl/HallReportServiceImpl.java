@@ -97,13 +97,14 @@ public class HallReportServiceImpl implements HallReportService
             }
         }
         LOGGER.info("根据提单号查询所在库区编码 bigLadingBillNo={}",bigLadingBillNo);
-        String location = null;
-        location = hallReportMapper.selectLocation(bigLadingBillNo,timeStr);
-        if(location == null || "".equals(location))
+
+        List<String> locationList = hallReportMapper.selectLocation(bigLadingBillNo,timeStr);
+        if(locationList == null || locationList.size() == 0 || "".equals(locationList.get(0)))
         {
             LOGGER.error("未找到提单号所在库区 bigLadingBillNo={}", bigLadingBillNo);
             throw new BusinessException(JsonResultEnum.LOCATION_NOT_EXIST);
         }
+        String location = locationList.get(0);
         LOGGER.info("库区编码 location={}",location);
         int dataStatus = 1;
         List<HallReportInfo> hallReportInfoList = hallReportMapper.selectHallReportInfo(openId,mobile,enabledCarNum,bigLadingBillNo,location,dataStatus);

@@ -36,5 +36,5 @@ public interface HallReportMapper
 
     List<HallReportPrintQueueVo> selectReportPrintQueue();
 
-    String selectLocation(@Param("bigLadingBillNo")String bigLadingBillNo, @Param("timeStr")String timeStr);
+    List<String> selectLocation(@Param("bigLadingBillNo")String bigLadingBillNo, @Param("timeStr")String timeStr);
 }
