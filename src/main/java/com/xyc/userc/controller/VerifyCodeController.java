@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -26,6 +27,7 @@ import java.awt.image.BufferedImage;
 @CrossOrigin
 @RequestMapping("/mes")
 //@Api(tags = "验证码相关api")
+@ApiIgnore
 public class VerifyCodeController
 {
     protected static final Logger LOGGER = LoggerFactory.getLogger(VerifyCodeController.class);

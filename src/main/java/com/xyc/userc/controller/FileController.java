@@ -23,6 +23,7 @@ import java.util.UUID;
 @CrossOrigin
 @RequestMapping("/mes")
 //@Api(tags = "附件管理相关api")
+@ApiIgnore
 public class FileController
 {
     protected static final Logger LOGGER = LoggerFactory.getLogger(FileController.class);
