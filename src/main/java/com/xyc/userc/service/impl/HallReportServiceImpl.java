@@ -111,7 +111,7 @@ public class HallReportServiceImpl implements HallReportService
         String location = locationList.get(0);
         LOGGER.info("库区编码 location={}",location);
         int dataStatus = 1;
-        List<HallReportInfo> hallReportInfoList = hallReportMapper.selectHallReportInfo(openId,mobile,enabledCarNum,bigLadingBillNo,location,dataStatus);
+        List<HallReportInfo> hallReportInfoList = hallReportMapper.selectHallReportInfo(openId,mobile,enabledCarNum,bigLadingBillNo,location,null);
         if(hallReportInfoList != null && hallReportInfoList.size() == 1)
         {
             int id = hallReportInfoList.get(0).getId();
