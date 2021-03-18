@@ -56,7 +56,7 @@ public class HallReportServiceImpl implements HallReportService
         {
             qrCodeStr = "";
         }
-        List<QRCodeStrInfo> qrCodeStrInfoList =  hallReportMapper.selectQRCodeStr(qrCodeStr);
+        List<QRCodeStrInfo> qrCodeStrInfoList =  hallReportMapper.selectQRCodeStr(qrCodeStr,0);
         if(qrCodeStrInfoList == null || qrCodeStrInfoList.size() == 0)
         {
             LOGGER.error("动态二维码过期 qrCodeStr={}",qrCodeStr);
@@ -230,7 +230,7 @@ public class HallReportServiceImpl implements HallReportService
     public List<QRCodeStrInfo> getQRCodeStr() throws Exception
     {
         LOGGER.info("进入获取玖隆大厅报道二维码字符串方法");
-        List<QRCodeStrInfo> qrCodeStrInfoList = hallReportMapper.selectQRCodeStr(null);
+        List<QRCodeStrInfo> qrCodeStrInfoList = hallReportMapper.selectQRCodeStr(null,1);
         LOGGER.info("结束获取玖隆大厅厅报道二维码字符串方法");
         return qrCodeStrInfoList;
     }

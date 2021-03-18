@@ -91,6 +91,7 @@
     </insert>
 
     <select id="selectQRCodeStr" resultType="com.xyc.userc.entity.QRCodeStrInfo">
+        select qRCodeStr,gmtCreate from (select a.*,rownum rnum from (
         select QRCODE_STR as qRCodeStr, GMT_CREATE as gmtCreate
         from SYS_QRCODE_JL
         <where>
@@ -98,7 +99,7 @@
                 and QRCODE_STR = #{qrCodeStr}
             </if>
         </where>
-          order by GMT_CREATE
+        order by GMT_CREATE) a ) where rnum > #{idx}
     </select>
 
     <select id="selectReportPrintQueue" resultType="com.xyc.userc.vo.HallReportPrintQueueVo">

@@ -32,7 +32,7 @@ public interface HallReportMapper
 
     int insertQRCodeStr(QRCodeStrInfo qrCodeStrInfo);
 
-    List<QRCodeStrInfo> selectQRCodeStr(String qrCodeStr);
+    List<QRCodeStrInfo> selectQRCodeStr(@Param("qrCodeStr")String qrCodeStr, @Param("idx")Integer idx);
 
     List<HallReportPrintQueueVo> selectReportPrintQueue();
 
