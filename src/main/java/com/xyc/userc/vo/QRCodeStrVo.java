@@ -17,7 +17,7 @@ public class QRCodeStrVo implements Serializable
     @ApiModelProperty(value="二维码字符串", position=0)
     private List<String> qRCode;
 
-    @ApiModelProperty(value="下次更新时间戳", position=0)
+    @ApiModelProperty(value="下次更新时间戳", position=1)
     private Long nextTick;
 
     public List<String> getqRCode() {
