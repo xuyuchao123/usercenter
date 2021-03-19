@@ -9,6 +9,7 @@ import com.xyc.userc.util.UsercConstant;
 import com.xyc.userc.vo.HallReportCommentVo;
 import com.xyc.userc.vo.HallReportInfoVo;
 import com.xyc.userc.vo.HallReportPrintQueueVo;
+import com.xyc.userc.vo.QRCodeStrVo;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -215,14 +216,14 @@ public class HallReportController
     @GetMapping("/getHallReportQRCodeStr")
     @ApiOperation(value="获取大厅报道二维码字符串")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：获取成功 isSuccess=false：获取失败，resMsg为错误信息")})
-    public JsonResultObj<QRCodeStrInfo> getHallReportQRCodeStr()
+    public JsonResultObj<QRCodeStrVo> getHallReportQRCodeStr()
     {
         LOGGER.info("开始获取大厅报道二维码字符串");
         JsonResultObj resultObj = null;
         try
         {
-            List<QRCodeStrInfo> qrCodeStrInfoList = hallReportService.getQRCodeStr();
-            resultObj = new JsonResultObj(true,qrCodeStrInfoList);
+            QRCodeStrVo qrCodeStrVo = hallReportService.getQRCodeStr();
+            resultObj = new JsonResultObj(true,qrCodeStrVo);
         }
         catch (Exception e)
         {

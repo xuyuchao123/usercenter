@@ -14,6 +14,7 @@ import com.xyc.userc.util.UsercConstant;
 import com.xyc.userc.vo.HallReportCommentVo;
 import com.xyc.userc.vo.HallReportInfoVo;
 import com.xyc.userc.vo.HallReportPrintQueueVo;
+import com.xyc.userc.vo.QRCodeStrVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -227,12 +228,21 @@ public class HallReportServiceImpl implements HallReportService
     }
 
     @Override
-    public List<QRCodeStrInfo> getQRCodeStr() throws Exception
+    public QRCodeStrVo getQRCodeStr() throws Exception
     {
         LOGGER.info("进入获取玖隆大厅报道二维码字符串方法");
         List<QRCodeStrInfo> qrCodeStrInfoList = hallReportMapper.selectQRCodeStr(null,1);
+        List<String> stringList = new ArrayList<>();
+        for(int i = 0; i < qrCodeStrInfoList.size(); i++)
+        {
+            stringList.add(qrCodeStrInfoList.get(i).getqRCodeStr());
+        }
+        Long nextTick = qrCodeStrInfoList.get(qrCodeStrInfoList.size()-1).getGmtCreate() + 60000;
+        QRCodeStrVo qrCodeStrVo = new QRCodeStrVo();
+        qrCodeStrVo.setqRCode(stringList);
+        qrCodeStrVo.setNextTick(nextTick);
         LOGGER.info("结束获取玖隆大厅厅报道二维码字符串方法");
-        return qrCodeStrInfoList;
+        return qrCodeStrVo;
     }
 
     @Override
