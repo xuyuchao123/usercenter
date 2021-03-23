@@ -21,9 +21,10 @@ public class HallReportInfo implements Serializable
     private String BigLadingBillNo;
     private Date lastCalledTime;
     private String location;
+    private String stockCode;
 
     public HallReportInfo(Integer id, String openId, String mobile, String carNumber, Date gmtCreate, Integer dataStatus, Integer lateWeight,
-                          Integer lateTimes, String bigLadingBillNo, Date lastCalledTime, String location)
+                          Integer lateTimes, String bigLadingBillNo, Date lastCalledTime, String location, String stockCode)
     {
         this.id = id;
         this.openId = openId;
@@ -36,6 +37,7 @@ public class HallReportInfo implements Serializable
         BigLadingBillNo = bigLadingBillNo;
         this.lastCalledTime = lastCalledTime;
         this.location = location;
+        this.stockCode = stockCode;
     }
 
     public Integer getId() {
@@ -124,5 +126,13 @@ public class HallReportInfo implements Serializable
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getStockCode() {
+        return stockCode;
+    }
+
+    public void setStockCode(String stockCode) {
+        this.stockCode = stockCode;
     }
 }

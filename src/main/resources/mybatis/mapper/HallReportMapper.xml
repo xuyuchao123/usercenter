@@ -6,8 +6,8 @@
         <selectKey resultType="int" order="BEFORE" keyProperty="id">
             SELECT REPORT_QUEUE_INFO_SEQ.NEXTVAL FROM DUAL
         </selectKey>
-        insert into SYS_REPORT_QUEUE_INFO(ID,OPENID,MOBILE,CARNUMBER,GMT_CREATE,DATA_STATUS,LATE_WEIGHT,LATE_TIMES,BIG_LADING_BILL_NO,LAST_CALLED_TIME,LOCATION)
-        VALUES (#{id},#{openId},#{mobile},#{carNumber},#{gmtCreate},#{dataStatus},#{lateWeight},#{lateTimes},#{BigLadingBillNo},#{lastCalledTime,jdbcType=DATE},#{location})
+        insert into SYS_REPORT_QUEUE_INFO(ID,OPENID,MOBILE,CARNUMBER,GMT_CREATE,DATA_STATUS,LATE_WEIGHT,LATE_TIMES,BIG_LADING_BILL_NO,LAST_CALLED_TIME,LOCATION,STOCKCODE)
+        VALUES (#{id},#{openId},#{mobile},#{carNumber},#{gmtCreate},#{dataStatus},#{lateWeight},#{lateTimes},#{BigLadingBillNo},#{lastCalledTime,jdbcType=DATE},#{location},#{stockCode})
     </insert>
 
     <select id="selectHallReportInfo" resultType="com.xyc.userc.entity.HallReportInfo">
@@ -114,7 +114,7 @@
     </select>
 
     <select id="selectLocation" resultType="java.lang.String">
-        select gi.LOCATION as location from (select distinct STOCKCODE from sell.SJFORECASTTIME
+        select gi.LOCATION as "location", a.STOCKCODE as "stockCode" from (select distinct STOCKCODE from sell.SJFORECASTTIME
           where substr(SJ,1,10) = #{timeStr} and BIG_LADING_BILL_NO = #{bigLadingBillNo}) a
           left join SYS_GARAGE_INFO gi
           on a.STOCKCODE = gi.GARAGENUM

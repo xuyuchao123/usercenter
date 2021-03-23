@@ -103,14 +103,15 @@ public class HallReportServiceImpl implements HallReportService
         }
         LOGGER.info("根据提单号查询所在库区编码 bigLadingBillNo={}",bigLadingBillNo);
 
-        List<String> locationList = hallReportMapper.selectLocation(bigLadingBillNo,timeStr);
-        if(locationList == null || locationList.size() == 0 || "".equals(locationList.get(0)))
+        List<Map> mapList = hallReportMapper.selectLocation(bigLadingBillNo,timeStr);
+        if(mapList == null || mapList.size() == 0 || "".equals(mapList.get(0).get("location").toString()))
         {
             LOGGER.error("未找到提单号所在库区 bigLadingBillNo={}", bigLadingBillNo);
             throw new BusinessException(JsonResultEnum.LOCATION_NOT_EXIST);
         }
-        String location = locationList.get(0);
-        LOGGER.info("库区编码 location={}",location);
+        String location = mapList.get(0).get("location").toString();
+        String stockCode = mapList.get(0).get("stockCode").toString();
+        LOGGER.info("库区编码 location={} 库位编码 stockCode={}",location,stockCode);
         int dataStatus = 1;
         List<HallReportInfo> hallReportInfoList = hallReportMapper.selectHallReportInfo(openId,mobile,enabledCarNum,bigLadingBillNo,location,null);
         if(hallReportInfoList != null && hallReportInfoList.size() == 1)
@@ -122,7 +123,7 @@ public class HallReportServiceImpl implements HallReportService
             return list;
         }
         Date date = new Date();
-        HallReportInfo hallReportInfo = new HallReportInfo(null,openId,mobile,enabledCarNum,date,0,0,0,bigLadingBillNo,null,location);
+        HallReportInfo hallReportInfo = new HallReportInfo(null,openId,mobile,enabledCarNum,date,0,0,0,bigLadingBillNo,null,location,stockCode);
         hallReportMapper.insert(hallReportInfo);
         int id = hallReportInfo.getId();
         LOGGER.info("初始化列表序号：id={}",id);
