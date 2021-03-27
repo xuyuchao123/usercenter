@@ -104,7 +104,7 @@ public class HallReportServiceImpl implements HallReportService
         LOGGER.info("根据提单号查询所在库区编码 bigLadingBillNo={}",bigLadingBillNo);
 
         List<Map> mapList = hallReportMapper.selectLocation(bigLadingBillNo,timeStr);
-        if(mapList == null || mapList.size() == 0 || "".equals(mapList.get(0).get("location").toString()))
+        if(mapList == null || mapList.size() == 0 || " ".equals(mapList.get(0).get("location").toString()))
         {
             LOGGER.error("未找到提单号所在库区 bigLadingBillNo={}", bigLadingBillNo);
             throw new BusinessException(JsonResultEnum.LOCATION_NOT_EXIST);
