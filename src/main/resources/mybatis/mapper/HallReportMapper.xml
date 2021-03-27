@@ -113,7 +113,7 @@
         order by c.LATE_WEIGHT,c.GMT_CREATE
     </select>
 
-    <select id="selectLocation" resultType="java.lang.String">
+    <select id="selectLocation" resultType="java.util.Map">
         select gi.LOCATION as "location", a.STOCKCODE as "stockCode" from (select distinct STOCKCODE from sell.SJFORECASTTIME
           where substr(SJ,1,10) = #{timeStr} and BIG_LADING_BILL_NO = #{bigLadingBillNo}) a
           left join SYS_GARAGE_INFO gi
