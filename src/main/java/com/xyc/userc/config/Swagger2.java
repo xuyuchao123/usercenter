@@ -35,9 +35,9 @@ public class Swagger2
         //在配置好的配置类中增加此段代码即可
         ParameterBuilder ticketPar = new ParameterBuilder();
         List<Parameter> pars = new ArrayList<Parameter>();
-        ticketPar.name("Authorization").description("登录校验")             //name表示名称，description表示描述
+        ticketPar.name("Wechat-Oauth2-Key").description("openId")             //name表示名称，description表示描述
                 .modelRef(new ModelRef("string")).parameterType("header")
-                .required(false).defaultValue("Bearer ").build();           //required表示是否必填，defaultvalue表示默认值
+                .required(false).defaultValue("").build();           //required表示是否必填，defaultvalue表示默认值
         pars.add(ticketPar.build());
 
         return new Docket(DocumentationType.SWAGGER_2)

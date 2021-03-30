@@ -18,8 +18,12 @@ spring:
 
   resources:
     static-locations:
-    - file:D:/opt/weixin/mobile
-    - file:/opt/weixin/mobile
+#    - file:D:/opt/weixin/mobile
+#    - file:/opt/weixin/mobile
+    - file:D:/home/car2/usercenter
+    - file:/home/car2/usercenter
+
+
 
   redis:
     database: 0

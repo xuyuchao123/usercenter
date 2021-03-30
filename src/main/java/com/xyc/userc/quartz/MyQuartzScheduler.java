@@ -25,8 +25,8 @@ public class MyQuartzScheduler
      */
     public void startJob() throws SchedulerException
     {
-        scheduleJob1(scheduler);
-        scheduleJob2(scheduler);
+//        scheduleJob1(scheduler);
+//        scheduleJob2(scheduler);
         scheduler.start();
     }
 
