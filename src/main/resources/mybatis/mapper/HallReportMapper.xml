@@ -21,7 +21,8 @@
                LATE_TIMES as lateTimes,
                BIG_LADING_BILL_NO as bigLadingBillNo,
                LAST_CALLED_TIME as lastCalledTime,
-               LOCATION as location
+               LOCATION as location,
+               STOCKCODE as stockCode
         from SYS_REPORT_QUEUE_INFO
         <where>
             <if test="openId != null">
