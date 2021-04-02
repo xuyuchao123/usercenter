@@ -9,91 +9,71 @@ public class ViolationInfoVo implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
-    private String billDep;
-    private Long billTime;
-    private String billStaff;
-    private String billNum;
-    private String carNumber;
-    private String fineReason;
-    private String fineAmt;
+    private String billingDepartment;
+    private Long billingTime;
+    private String openSingle;
+    private String billingSerialNumber;
+    private String reasonForFine;
+    private String theAmountOfTheFine;
     private String paymentStatus;
 
-    public ViolationInfoVo(Integer id, String billDep, Long billTime, String billStaff, String billNum, String carNumber,
-                           String fineReason, String fineAmt, String paymentStatus) {
-        this.id = id;
-        this.billDep = billDep;
-        this.billTime = billTime;
-        this.billStaff = billStaff;
-        this.billNum = billNum;
-        this.carNumber = carNumber;
-        this.fineReason = fineReason;
-        this.fineAmt = fineAmt;
+    public ViolationInfoVo(String billingDepartment, Long billingTime, String openSingle, String billingSerialNumber,
+                           String reasonForFine, String theAmountOfTheFine, String paymentStatus) {
+        this.billingDepartment = billingDepartment;
+        this.billingTime = billingTime;
+        this.openSingle = openSingle;
+        this.billingSerialNumber = billingSerialNumber;
+        this.reasonForFine = reasonForFine;
+        this.theAmountOfTheFine = theAmountOfTheFine;
         this.paymentStatus = paymentStatus;
     }
 
-    public Integer getId() {
-        return id;
+    public String getBillingDepartment() {
+        return billingDepartment;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setBillingDepartment(String billingDepartment) {
+        this.billingDepartment = billingDepartment;
     }
 
-    public String getBillDep() {
-        return billDep;
+    public Long getBillingTime() {
+        return billingTime;
     }
 
-    public void setBillDep(String billDep) {
-        this.billDep = billDep;
+    public void setBillingTime(Long billingTime) {
+        this.billingTime = billingTime;
     }
 
-    public Long getBillTime() {
-        return billTime;
+    public String getOpenSingle() {
+        return openSingle;
     }
 
-    public void setBillTime(Long billTime) {
-        this.billTime = billTime;
+    public void setOpenSingle(String openSingle) {
+        this.openSingle = openSingle;
     }
 
-    public String getBillStaff() {
-        return billStaff;
+    public String getBillingSerialNumber() {
+        return billingSerialNumber;
     }
 
-    public void setBillStaff(String billStaff) {
-        this.billStaff = billStaff;
+    public void setBillingSerialNumber(String billingSerialNumber) {
+        this.billingSerialNumber = billingSerialNumber;
     }
 
-    public String getBillNum() {
-        return billNum;
+    public String getReasonForFine() {
+        return reasonForFine;
     }
 
-    public void setBillNum(String billNum) {
-        this.billNum = billNum;
+    public void setReasonForFine(String reasonForFine) {
+        this.reasonForFine = reasonForFine;
     }
 
-    public String getCarNumber() {
-        return carNumber;
+    public String getTheAmountOfTheFine() {
+        return theAmountOfTheFine;
     }
 
-    public void setCarNumber(String carNumber) {
-        this.carNumber = carNumber;
-    }
-
-    public String getFineReason() {
-        return fineReason;
-    }
-
-    public void setFineReason(String fineReason) {
-        this.fineReason = fineReason;
-    }
-
-    public String getFineAmt() {
-        return fineAmt;
-    }
-
-    public void setFineAmt(String fineAmt) {
-        this.fineAmt = fineAmt;
+    public void setTheAmountOfTheFine(String theAmountOfTheFine) {
+        this.theAmountOfTheFine = theAmountOfTheFine;
     }
 
     public String getPaymentStatus() {

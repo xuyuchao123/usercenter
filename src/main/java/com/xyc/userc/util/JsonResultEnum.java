@@ -74,7 +74,9 @@ public enum JsonResultEnum
 
     BIGLADINGBILLNO_NOT_EXIST(1100,"提单号不存在！"),
 
-    QRCODE_EXPIRED(1200,"二维码过期！");
+    QRCODE_EXPIRED(1200,"二维码过期！"),
+
+    VIOLATIONINFO_EXIST(1300,"违章信息已存在！");
 
 
 

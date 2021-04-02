@@ -5,6 +5,7 @@ import com.xyc.userc.service.ViolationService;
 import com.xyc.userc.util.CommonExceptionHandler;
 import com.xyc.userc.util.JsonResultObj;
 import com.xyc.userc.util.JsonResultObj_Page;
+import com.xyc.userc.vo.BindedUserRoleVo;
 import com.xyc.userc.vo.DefaultUserRoleVo;
 import com.xyc.userc.vo.ViolationInfoVo;
 import io.swagger.annotations.*;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 @RestController
 @CrossOrigin
-@RequestMapping("/violation")
+@RequestMapping("/mock")
 @Api(tags = "pc端违章查询相关api")
 public class PcViolationController
 {
@@ -33,71 +34,82 @@ public class PcViolationController
     @Resource
     ViolationService violationService;
 
-    @PostMapping("/addViolationInfo")
+    @PostMapping("/form/add")
     @ApiOperation(value="新增违章信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="billDep", value="开单部门", required=true, dataType="String"),
-            @ApiImplicitParam(name="billTime", value="开单时间", required=true, dataType="String"),
-            @ApiImplicitParam(name="billStaff", value="开单人", required=true, dataType="String"),
-            @ApiImplicitParam(name="billNum", value="开单序号", required=true, dataType="String"),
-            @ApiImplicitParam(name="carNumber", value="车牌号", required=true, dataType="String"),
-            @ApiImplicitParam(name="fineReason", value="罚款事由", required=true, dataType="String"),
-            @ApiImplicitParam(name="fineAmt", value="罚款金额", required=true, dataType="String"),
-            @ApiImplicitParam(name="violationImg", value="违章图片", required=true, dataType="File"),
-            @ApiImplicitParam(name="paymentStatus", value="支付状态", required=true, dataType="String")})
+            @ApiImplicitParam(name="billingDepartment", value="开单部门", required=true, dataType="String"),
+            @ApiImplicitParam(name="billingTime", value="开单时间", required=true, dataType="String"),
+            @ApiImplicitParam(name="openSingle", value="开单人", required=true, dataType="String"),
+            @ApiImplicitParam(name="billingSerialNumber", value="开单序号", required=true, dataType="String"),
+            @ApiImplicitParam(name="theAmountOfTheFine", value="罚款金额", required=true, dataType="String"),
+            @ApiImplicitParam(name="illegalPictures", value="违章图片", required=true, dataType="String"),
+            @ApiImplicitParam(name="paymentStatus", value="支付状态", required=true, dataType="String"),
+            @ApiImplicitParam(name="reasonForFine", value="罚款事由", required=true, dataType="String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
-    public JsonResultObj addViolationInfo(String billDep,String billTime,String billStaff,String billNum,String carNumber,
-                                                   String fineReason,String fineAmt, @RequestParam("violationImg") MultipartFile violationImg,
-                                                   String paymentStatus)
+    public JsonResultObj addViolationInfo(@RequestParam("billingDepartment")String billDep,  @RequestParam("billingTime")String billTime,
+                                          @RequestParam("openSingle")String billStaff,       @RequestParam("billingSerialNumber")String billNum,
+                                          @RequestParam("theAmountOfTheFine")String fineAmt, @RequestParam("illegalPictures")String violationImgPath,
+                                          @RequestParam("paymentStatus")String paymentStatus,@RequestParam("reasonForFine")String fineReason)
     {
-        LOGGER.info("开始新增违章信息 billDep={} billTime={} billStaff={} billNum={} carNumber={} fineReason={} fineAmt={} paymentStatus={}"
-                ,billDep,billTime,billStaff,billNum,carNumber,fineReason,fineAmt,paymentStatus);
+        LOGGER.info("开始新增违章信息 billDep={} billTime={} billStaff={} billNum={} fineAmt={} violationImgPath={} paymentStatus={} fineReason={}"
+                ,billDep,billTime,billStaff,billNum,fineAmt,violationImgPath,paymentStatus,fineReason);
         JsonResultObj resultObj = null;
         try
         {
-            Date date = new Date();
-            ViolationInfo violationInfo = new ViolationInfo(null,billDep,new Date(Long.valueOf(billTime)),billStaff,billNum,carNumber,fineReason,fineAmt,null,
-                    paymentStatus,date,1,date,1,1);
-            violationService.addViolationInfo(violationInfo,violationImg);
+            violationService.addViolationInfo(billDep,billTime,billStaff,billNum,fineAmt,violationImgPath,paymentStatus,fineReason);
             resultObj = new JsonResultObj(true);
         }
         catch (Exception e)
         {
             resultObj = CommonExceptionHandler.handException_page(e, "新增违章信息失败", LOGGER);
         }
-        LOGGER.info("结束新增违章信息 billDep={} billTime={} billStaff={} billNum={} carNumber={} fineReason={} fineAmt={} paymentStatus={}"
-                ,billDep,billTime,billStaff,billNum,carNumber,fineReason,fineAmt,paymentStatus);
+        LOGGER.info("结束新增违章信息 billDep={} billTime={} billStaff={} billNum={} fineAmt={} violationImgPath={} paymentStatus={} fineReason={}"
+                ,billDep,billTime,billStaff,billNum,fineAmt,violationImgPath,paymentStatus,fineReason);
         return resultObj;
     }
 
 
-    @PostMapping("/queryViolationInfo")
+    @PostMapping("/form/query")
     @ApiOperation(value="查询违章信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="billStaff", value="开单方式", required=false, dataType="String"),
-            @ApiImplicitParam(name="billDep", value="开单部门", required=true, dataType="String"),
-            @ApiImplicitParam(name="billTime", value="开单时间", required=true, dataType="String"),
-            @ApiImplicitParam(name="carNumber", value="车牌号", required=true, dataType="String"),
-            @ApiImplicitParam(name="paymentStatus", value="支付状态", required=true, dataType="String")})
+            @ApiImplicitParam(name="billingMethod", value="开单方式", required=false, dataType="String"),
+            @ApiImplicitParam(name="billingDepartment", value="开单部门", required=false, dataType="String"),
+            @ApiImplicitParam(name="billingTime", value="开单时间", required=false, dataType="String"),
+            @ApiImplicitParam(name="paymentStatus", value="支付状态", required=false, dataType="String"),
+            @ApiImplicitParam(name="billingSerialNumber", value="开单序号", required=false, dataType="String"),
+            @ApiImplicitParam(name="page", value="当前页码", required=true, dataType="String"),
+            @ApiImplicitParam(name="size", value="每页记录条数", required=true, dataType="String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
-    public JsonResultObj<ViolationInfoVo> queryViolationInfo(String billStaff, String billDep, String billTime, String carNumber, String paymentStatus)
+    public JsonResultObj_Page<ViolationInfoVo> queryViolationInfo(@RequestParam("billingMethod")String billType, @RequestParam("billingDepartment")String billDep,
+                                                                  @RequestParam("billingTime")String billTime, @RequestParam("paymentStatus")String paymentStatus,
+                                                                  @RequestParam("billingSerialNumber")String billNum,
+                                                                  String page, String size)
     {
-        LOGGER.info("开始查询违章信息 billStaff={} billDep={} billTime={} carNumber={} paymentStatus={}"
-                ,billStaff,billDep,billTime,carNumber,paymentStatus);
-        JsonResultObj resultObj = null;
+        LOGGER.info("开始查询违章信息 billType={} billDep={} billTime={} paymentStatus={} billNum={} page={} size={}"
+                ,billType,billDep,billTime,paymentStatus,billNum,page,size);
+        JsonResultObj_Page resultObj_page = null;
         try
         {
-            List<ViolationInfoVo> violationInfoVos = violationService.getViolationInfo(billStaff,billDep,billTime,carNumber,paymentStatus);
-            resultObj = new JsonResultObj(true);
+            List resList = violationService.getViolationInfo(billType,billDep,billTime,paymentStatus,billNum,page,size);
+            List<ViolationInfoVo> violationInfoVos = null;
+            String total = null;
+            if(resList != null && resList.size() == 4)
+            {
+                total = resList.get(0).toString();
+                page = resList.get(1).toString();
+                size = resList.get(2).toString();
+                violationInfoVos = (List<ViolationInfoVo>)resList.get(3);
+            }
+            resultObj_page = new JsonResultObj_Page(true,violationInfoVos,total,page,size);
         }
         catch (Exception e)
         {
-            resultObj = CommonExceptionHandler.handException_page(e, "新增违章信息失败", LOGGER);
+            resultObj_page = CommonExceptionHandler.handException_page(e, "查询违章信息失败", LOGGER);
         }
 
-        LOGGER.info("结束查询违章信息 billStaff={} billDep={} billTime={} carNumber={} paymentStatus={}"
-                ,billStaff,billDep,billTime,carNumber,paymentStatus);
-        return resultObj;
+        LOGGER.info("结束查询违章信息 billType={} billDep={} billTime={} paymentStatus={} billNum={} page={} size={}"
+                ,billType,billDep,billTime,paymentStatus,billNum,page,size);
+        return resultObj_page;
     }
 
 //    @GetMapping(value = "/showViolationImg/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
@@ -143,6 +155,27 @@ public class PcViolationController
         return resultObj;
     }
 
+    @PostMapping("/form/remove")
+    @ApiOperation(value="删除违章信息")
+    @ApiImplicitParam(name="billingSerialNumber", value="开单序号", required=false, dataType="String")
+    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：删除成功 isSuccess=false：删除失败，resMsg为错误信息")})
+    public JsonResultObj removeViolationInfo(@RequestParam("billingSerialNumber")String billNum)
+    {
+        LOGGER.info("开始删除违章信息 billNum={}",billNum);
+        JsonResultObj resultObj = null;
+        try
+        {
+            violationService.removeViolationInfo(billNum);
+            resultObj = new JsonResultObj(true);
+        }
+        catch (Exception e)
+        {
+            resultObj = CommonExceptionHandler.handException_page(e, "删除违章信息失败", LOGGER);
+        }
+
+        LOGGER.info("结束删除违章信息 billNum={}",billNum);
+        return resultObj;
+    }
 
 
 }

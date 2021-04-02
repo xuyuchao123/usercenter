@@ -45,7 +45,7 @@ public class RoleServiceImpl implements RoleService
     private RedisService redisService;
 
     @Override
-    public List<DefaultUserRoleVo> getDefaultUserRole(String mobile, String page, String size) throws Exception
+    public List getDefaultUserRole(String mobile, String page, String size) throws Exception
     {
         LOGGER.info("进入查询用户预置角色信息方法 mobile={} page={} size={}",mobile,page,size);
         if(page == null)
@@ -143,7 +143,7 @@ public class RoleServiceImpl implements RoleService
     }
 
     @Override
-    public List<BindedUserRoleVo> getBindedUserRole(String mobile, String page, String size) throws Exception
+    public List getBindedUserRole(String mobile, String page, String size) throws Exception
     {
         LOGGER.info("进入查询用户已绑定角色配置信息方法 mobile={} page={} size={}",mobile,page,size);
         if(page == null)
@@ -217,7 +217,7 @@ public class RoleServiceImpl implements RoleService
         resList.add(pageInt);
         resList.add(sizeInt);
         resList.add(colBindedRoleVos_page);
-        LOGGER.info("进入查询用户已绑定角色配置信息方法 mobile={} page={} size={}",mobile,page,size);
+        LOGGER.info("结束查询用户已绑定角色配置信息方法 mobile={} page={} size={}",mobile,page,size);
         return resList;
     }
 

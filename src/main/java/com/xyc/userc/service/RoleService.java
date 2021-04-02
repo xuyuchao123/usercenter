@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface RoleService
 {
-    List<DefaultUserRoleVo> getDefaultUserRole(String mobile, String page, String size) throws Exception;
+    List getDefaultUserRole(String mobile, String page, String size) throws Exception;
 
     List<RoleVo> getAllRole() throws Exception;
 
@@ -19,7 +19,7 @@ public interface RoleService
 
     void removeDefaultUserRole(String mobile) throws Exception;
 
-    List<BindedUserRoleVo> getBindedUserRole(String mobile, String page, String size) throws Exception;
+    List getBindedUserRole(String mobile, String page, String size) throws Exception;
 
     void modifyBindedUserRole(String mobile, String role) throws Exception;
 }

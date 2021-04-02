@@ -21,7 +21,11 @@ public interface ViolationMapper
 
     int insertViolationInfo(ViolationInfo violationInfo);
 
-    List<ViolationInfoVo> selectViolationInfo(String billStaff,String billDep,String billTime,String carNumber,String paymentStatus);
+    List<ViolationInfoVo> selectViolationInfo(@Param("billType")String billType, @Param("billDep")String billDep,
+                                              @Param("billTime")String billTime, @Param("paymentStatus")String paymentStatus,
+                                              @Param("billNum")String billNum);
 
     Map<String,Object> selectViolationImg(Integer id);
+
+    void deleteViolationInfo(String billNum);
 }

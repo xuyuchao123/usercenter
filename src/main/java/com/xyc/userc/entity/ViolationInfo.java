@@ -18,18 +18,19 @@ public class ViolationInfo implements Serializable
     private String carNumber;
     private String fineReason;
     private String fineAmt;
-    private byte[] violationImg;
+    private String violationImgPath;
     private String paymentStatus;
     private Date gmtCreate;
     private Integer userCreate;
     private Date gmtModified;
     private Integer userModified;
     private Integer dataStatus;
+    private Integer billType;
 
 
     public ViolationInfo(Integer id, String billDep, Date billTime, String billStaff, String billNum, String carNumber,
-                         String fineReason, String fineAmt, byte[] violationImg, String paymentStatus, Date gmtCreate,
-                         Integer userCreate, Date gmtModified, Integer userModified, Integer dataStatus) {
+                         String fineReason, String fineAmt, String violationImgPath, String paymentStatus, Date gmtCreate,
+                         Integer userCreate, Date gmtModified, Integer userModified, Integer dataStatus, Integer billType) {
         this.id = id;
         this.billDep = billDep;
         this.billTime = billTime;
@@ -38,13 +39,14 @@ public class ViolationInfo implements Serializable
         this.carNumber = carNumber;
         this.fineReason = fineReason;
         this.fineAmt = fineAmt;
-        this.violationImg = violationImg;
+        this.violationImgPath = violationImgPath;
         this.paymentStatus = paymentStatus;
         this.gmtCreate = gmtCreate;
         this.userCreate = userCreate;
         this.gmtModified = gmtModified;
         this.userModified = userModified;
         this.dataStatus = dataStatus;
+        this.billType = billType;
     }
 
     public Integer getId() {
@@ -111,12 +113,12 @@ public class ViolationInfo implements Serializable
         this.fineAmt = fineAmt;
     }
 
-    public byte[] getViolationImg() {
-        return violationImg;
+    public String getViolationImgPath() {
+        return violationImgPath;
     }
 
-    public void setViolationImg(byte[] violationImg) {
-        this.violationImg = violationImg;
+    public void setViolationImgPath(String violationImgPath) {
+        this.violationImgPath = violationImgPath;
     }
 
     public String getPaymentStatus() {
@@ -165,5 +167,13 @@ public class ViolationInfo implements Serializable
 
     public void setDataStatus(Integer dataStatus) {
         this.dataStatus = dataStatus;
+    }
+
+    public Integer getBillType() {
+        return billType;
+    }
+
+    public void setBillType(Integer billType) {
+        this.billType = billType;
     }
 }

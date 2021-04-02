@@ -17,11 +17,15 @@ public interface ViolationService
 
     List<ViolationDetail> getViolationDetail(Integer typeId) throws Exception;
 
-    void addViolationInfo(ViolationInfo violationInfo,MultipartFile violationImg) throws Exception;
+    void addViolationInfo(String billDep,String billTime,String billStaff,String billNum,String fineAmt,
+                          String violationImgPath,String paymentStatus,String fineReason) throws Exception;
 
-    List<ViolationInfoVo> getViolationInfo(String billStaff,String billDep,String billTime,String carNumber,String paymentStatus) throws Exception;
+    List getViolationInfo(String billType,String billDep,String billTime,String paymentStatus,
+                                           String billNum,String page,String size) throws Exception;
 
     byte[] getViolationImg(Integer id) throws Exception;
 
     String uploadViolationImg(MultipartFile violationImg) throws Exception;
+
+    void removeViolationInfo(String billNum) throws Exception;
 }

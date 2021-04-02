@@ -32,19 +32,23 @@
         </where>
     </select>
 
+    <!--<insert id="insertViolationInfo" parameterType="com.xyc.userc.entity.ViolationInfo">-->
+        <!--insert into PC_VIOLATIONINFO(ID,BILL_DEPARTMENT,BILL_TIME,BILL_STAFF,BILL_NUM,CARNUMBER,FINE_REASON,FINE_AMOUNT,VIOLATION_IMG,PAYMENT_STATUS,GMT_CREATE,USER_CREATE,GMT_MODIFIED,USER_MODIFIED,DATA_STATUS)-->
+        <!--VALUES (PC_VIOLATION_SEQ.nextval,#{billDep},#{billTime},#{billStaff},#{billNum},#{carNumber},#{fineReason},#{fineAmt},#{violationImg,typeHandler=org.apache.ibatis.type.BlobTypeHandler},#{paymentStatus},#{gmtCreate},#{userCreate},#{gmtModified},#{userModified},#{dataStatus})-->
+    <!--</insert>-->
+
     <insert id="insertViolationInfo" parameterType="com.xyc.userc.entity.ViolationInfo">
-        insert into PC_VIOLATIONINFO(ID,BILL_DEPARTMENT,BILL_TIME,BILL_STAFF,BILL_NUM,CARNUMBER,FINE_REASON,FINE_AMOUNT,VIOLATION_IMG,PAYMENT_STATUS,GMT_CREATE,USER_CREATE,GMT_MODIFIED,USER_MODIFIED,DATA_STATUS)
-        VALUES (PC_VIOLATION_SEQ.nextval,#{billDep},#{billTime},#{billStaff},#{billNum},#{carNumber},#{fineReason},#{fineAmt},#{violationImg,typeHandler=org.apache.ibatis.type.BlobTypeHandler},#{paymentStatus},#{gmtCreate},#{userCreate},#{gmtModified},#{userModified},#{dataStatus})
+    insert into PC_VIOLATIONINFO(ID,BILL_DEPARTMENT,BILL_TIME,BILL_STAFF,BILL_NUM,CARNUMBER,FINE_REASON,FINE_AMOUNT,VIOLATION_IMG,PAYMENT_STATUS,GMT_CREATE,USER_CREATE,GMT_MODIFIED,USER_MODIFIED,DATA_STATUS,BILL_TYPE)
+    VALUES (PC_VIOLATION_SEQ.nextval,#{billDep},#{billTime},#{billStaff},#{billNum},#{carNumber},#{fineReason},#{fineAmt},#{violationImgPath},#{paymentStatus},#{gmtCreate},#{userCreate},#{gmtModified},#{userModified},#{dataStatus},#{billType})
     </insert>
 
     <select id="selectViolationInfo" resultType="com.xyc.userc.vo.ViolationInfoVo">
-        select a.ID  as id, a.BILL_DEPARTMENT as billDep, a.BILL_TIME as billTime, a.BILL_STAFF as billStaff, a.BILL_NUM as billNum,
-        a.CARNUMBER as carNumber, a.FINE_REASON as fineReason, a.FINE_AMOUNT as fineAmt,
-        a.PAYMENT_STATUS as paymentStatus
+        select a.BILL_DEPARTMENT as billingDepartment, a.BILL_TIME as billingTime, a.BILL_STAFF as openSingle, a.BILL_NUM as billingSerialNumber,
+        a.FINE_REASON as reasonForFine, a.FINE_AMOUNT as theAmountOfTheFine, a.PAYMENT_STATUS as paymentStatus
         from PC_VIOLATIONINFO a
         <where>
-            <if test="billStaff != null">
-                and a.BILL_STAFF = #{billStaff}
+            <if test="billType != null">
+                and a.BILL_TYPE = #{billType}
             </if>
             <if test="billDep != null">
                 and a.BILL_DEPARTMENT = #{billDep}
@@ -52,11 +56,11 @@
             <if test="billTime != null">
                 and to_char(a.BILL_TIME,'yyyy-mm-dd hh:mi:ss') like concat(#{billTime}, '%')
             </if>
-            <if test="carNumber != null">
-                and a.CARNUMBER = #{carNumber}
-            </if>
             <if test="paymentStatus != null">
                 and a.PAYMENT_STATUS = #{paymentStatus}
+            </if>
+            <if test="billNum != null">
+                and a.BILL_NUM = #{billNum}
             </if>
             and a.DATA_STATUS = 1
         </where>
@@ -71,5 +75,10 @@
       select a.VIOLATION_IMG as 'violationImg' from PC_VIOLATIONINFO a where a.ID = #{id} and a.DATA_STATUS = 1
     </select>
 
+    <update id="deleteViolationInfo">
+        update PC_VIOLATIONINFO a
+        set a.DATA_STATUS = 0
+        where a.BILL_NUM = #{billNum}
+    </update>
 
 </mapper>
