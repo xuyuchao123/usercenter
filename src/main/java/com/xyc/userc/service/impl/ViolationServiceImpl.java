@@ -41,6 +41,9 @@ public class ViolationServiceImpl implements ViolationService {
     //获取主机端口
     private String port;
 
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
+
 
     @Autowired
     private ViolationMapper violationMapper;
@@ -75,7 +78,7 @@ public class ViolationServiceImpl implements ViolationService {
         Date date = new Date();
         //获取本机ip
         String host = InetAddress.getLocalHost().getHostAddress();
-        violationImgPath = host + ":" + port + "/static/violationimg/" + violationImgPath;
+        violationImgPath = host + ":" + port + contextPath + "/static/violationimg/" + violationImgPath;
         LOGGER.info("violationImgPath:{}",violationImgPath);
         ViolationInfo violationInfo = new ViolationInfo(null,billDep,new Date(Long.valueOf(billTime)),billStaff,billNum,"",fineReason,fineAmt,violationImgPath,
                 paymentStatus,date,1,date,1,1,1);
