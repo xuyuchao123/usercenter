@@ -80,9 +80,10 @@ public class PcViolationController
             @ApiImplicitParam(name="page", value="当前页码", required=true, dataType="String"),
             @ApiImplicitParam(name="size", value="每页记录条数", required=true, dataType="String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
-    public JsonResultObj_Page<ViolationInfoVo> queryViolationInfo(@RequestParam("billingMethod")String billType, @RequestParam("billingDepartment")String billDep,
-                                                                  @RequestParam("billingTime")String billTime, @RequestParam("paymentStatus")String paymentStatus,
-                                                                  @RequestParam("billingSerialNumber")String billNum,
+    public JsonResultObj_Page<ViolationInfoVo> queryViolationInfo(@RequestParam(value = "billingMethod",required = false)String billType,
+                             @RequestParam(value = "billingDepartment",required = false)String billDep,
+                             @RequestParam(value = "billingTime",required = false)String billTime, @RequestParam(value = "paymentStatus",required = false)String paymentStatus,
+                             @RequestParam(value = "billingSerialNumber",required = false)String billNum,
                                                                   String page, String size)
     {
         LOGGER.info("开始查询违章信息 billType={} billDep={} billTime={} paymentStatus={} billNum={} page={} size={}"
@@ -151,7 +152,7 @@ public class PcViolationController
         {
             resultObj = CommonExceptionHandler.handException_page(e, "查询违章图片失败", LOGGER);
         }
-        LOGGER.info("结束查询违章图片 img {}",violationImg.getOriginalFilename());
+        LOGGER.info("结束上传违章图片 img {}",violationImg.getOriginalFilename());
         return resultObj;
     }
 
