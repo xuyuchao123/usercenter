@@ -11,6 +11,8 @@ import com.xyc.userc.vo.ViolationInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
@@ -25,6 +27,7 @@ import java.util.Map;
  * Created by 1 on 2020/10/22.
  */
 @Service("violationService")
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class ViolationServiceImpl implements ViolationService {
     protected static final Logger LOGGER = LoggerFactory.getLogger(ViolationServiceImpl.class);
 

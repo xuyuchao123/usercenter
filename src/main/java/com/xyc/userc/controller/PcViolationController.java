@@ -36,7 +36,7 @@ public class PcViolationController
     @PostMapping("/addViolationInfo")
     @ApiOperation(value="新增违章信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="billDep", value="开单部门", required=false, dataType="String"),
+            @ApiImplicitParam(name="billDep", value="开单部门", required=true, dataType="String"),
             @ApiImplicitParam(name="billTime", value="开单时间", required=true, dataType="String"),
             @ApiImplicitParam(name="billStaff", value="开单人", required=true, dataType="String"),
             @ApiImplicitParam(name="billNum", value="开单序号", required=true, dataType="String"),
