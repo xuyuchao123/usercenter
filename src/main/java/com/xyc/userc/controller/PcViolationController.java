@@ -100,24 +100,49 @@ public class PcViolationController
         return resultObj;
     }
 
-    @GetMapping(value = "/showViolationImg/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
-    @ApiOperation(value="显示违章图片")
-    @ApiImplicitParam(name="id", value="违章信息id", required=true, dataType="String")
-    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
-    public byte[] showViolationImg(@PathVariable("id") String id)
+//    @GetMapping(value = "/showViolationImg/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
+//    @ApiOperation(value="显示违章图片")
+//    @ApiImplicitParam(name="id", value="违章信息id", required=true, dataType="String")
+//    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
+//    public byte[] showViolationImg(@PathVariable("id") String id)
+//    {
+//        LOGGER.info("开始查询违章图片 id {}",id);
+////        JsonResultObj resultObj = null;
+//        try
+//        {
+//            byte[] bytes = violationService.getViolationImg(Integer.valueOf(id));
+//            return bytes;
+//        }
+//        catch (Exception e)
+//        {
+//           CommonExceptionHandler.handException_page(e, "查询违章图片失败", LOGGER);
+//        }
+//        LOGGER.info("结束查询违章图片 id {}",id);
+//        return null;
+//    }
+
+
+    @GetMapping(value = "/uploadViolationImg")
+    @ApiOperation(value="上传违章图片")
+    @ApiImplicitParam(name="violationImg", value="违章图片", required=true, dataType="File")
+    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true： 上传成功 isSuccess=false：上传失败，resMsg为错误信息")})
+    public JsonResultObj showViolationImg(@RequestParam("violationImg") MultipartFile violationImg)
     {
-        LOGGER.info("开始查询违章图片 id {}",id);
-//        JsonResultObj resultObj = null;
+        LOGGER.info("开始上传违章图片 img {}",violationImg.getOriginalFilename());
+        JsonResultObj resultObj = null;
         try
         {
-            byte[] bytes = violationService.getViolationImg(Integer.valueOf(id));
-            return bytes;
+            String fileNewName = violationService.uploadViolationImg(violationImg);
+            resultObj = new JsonResultObj(true,fileNewName);
         }
         catch (Exception e)
         {
-           CommonExceptionHandler.handException_page(e, "查询违章图片失败", LOGGER);
+            resultObj = CommonExceptionHandler.handException_page(e, "查询违章图片失败", LOGGER);
         }
-        LOGGER.info("结束查询违章图片 id {}",id);
-        return null;
+        LOGGER.info("结束查询违章图片 img {}",violationImg.getOriginalFilename());
+        return resultObj;
     }
+
+
+
 }

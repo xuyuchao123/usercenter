@@ -1,6 +1,8 @@
 package com.xyc.userc.service.impl;
 
 import com.xyc.userc.service.ViolationService;
+import com.xyc.userc.util.BusinessException;
+import com.xyc.userc.util.JsonResultEnum;
 import org.springframework.stereotype.Service;
 
 import com.xyc.userc.dao.ViolationMapper;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.InputStream;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -22,6 +25,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Created by 1 on 2020/10/22.
@@ -81,5 +86,37 @@ public class ViolationServiceImpl implements ViolationService {
         byte[] bytes = (byte[]) map.get("violationImg");
         LOGGER.info("结束查询违章图片方法");
         return bytes;
+    }
+
+    @Override
+    public String uploadViolationImg(MultipartFile violationImg) throws Exception
+    {
+        LOGGER.info("进入上传违章图片方法");
+        if (violationImg.isEmpty())
+        {
+            LOGGER.error("未选择需上传的文件");
+            throw new BusinessException(JsonResultEnum.FILE_NOT_EXIST);
+        }
+        // 设置文件上传后的路径
+        String filePath = "E:" + "/violationimg/";
+        // 获取文件名后缀名
+        String suffix = violationImg.getOriginalFilename();
+        String prefix = suffix.substring(suffix.lastIndexOf(".")+1);
+        //文件重命名
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+        String fileName = uuid +"." +  prefix;
+        //创建文件路径
+        File dest = new File(filePath + fileName);
+        // 检测是否存在目录
+        if (!dest.getParentFile().exists())
+        {
+            //假如文件不存在即重新创建新的文件已防止异常发生
+            dest.getParentFile().mkdirs();
+        }
+        //transferTo（dest）方法将上传文件写到服务器上指定的文件
+        violationImg.transferTo(dest);
+        LOGGER.info("fileNewName:{}",uuid);
+        LOGGER.info("结束上传违章图片方法");
+        return uuid;
     }
 }

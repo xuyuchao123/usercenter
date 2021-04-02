@@ -22,4 +22,6 @@ public interface ViolationService
     List<ViolationInfoVo> getViolationInfo(String billStaff,String billDep,String billTime,String carNumber,String paymentStatus) throws Exception;
 
     byte[] getViolationImg(Integer id) throws Exception;
+
+    String uploadViolationImg(MultipartFile violationImg) throws Exception;
 }
