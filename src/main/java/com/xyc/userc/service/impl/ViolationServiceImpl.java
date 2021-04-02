@@ -75,7 +75,7 @@ public class ViolationServiceImpl implements ViolationService {
         Date date = new Date();
         //获取本机ip
         String host = InetAddress.getLocalHost().getHostAddress();
-        violationImgPath = host + ":" + port + "/violationimg/" + violationImgPath;
+        violationImgPath = host + ":" + port + "/static/violationimg/" + violationImgPath;
         LOGGER.info("violationImgPath:{}",violationImgPath);
         ViolationInfo violationInfo = new ViolationInfo(null,billDep,new Date(Long.valueOf(billTime)),billStaff,billNum,"",fineReason,fineAmt,violationImgPath,
                 paymentStatus,date,1,date,1,1,1);
@@ -155,7 +155,7 @@ public class ViolationServiceImpl implements ViolationService {
             throw new BusinessException(JsonResultEnum.FILE_NOT_EXIST);
         }
         // 设置文件上传后的路径
-        String filePath = "E:" + "/violationimg/";
+        String filePath = "E:" + "/static/violationimg/";
         // 获取文件名后缀名
         String suffix = violationImg.getOriginalFilename();
         String prefix = suffix.substring(suffix.lastIndexOf(".")+1);

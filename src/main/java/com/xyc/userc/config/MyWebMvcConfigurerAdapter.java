@@ -23,7 +23,7 @@ public class MyWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter
     {
         String filePath = "file:" + "E:" + "/violationimg/";
         //指向外部目录
-        registry.addResourceHandler("violationimg//**").addResourceLocations(filePath);
+        registry.addResourceHandler("/static/violationimg//**").addResourceLocations(filePath);
         super.addResourceHandlers(registry);
     }
 
