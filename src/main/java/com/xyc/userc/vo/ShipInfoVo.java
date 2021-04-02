@@ -3,13 +3,14 @@ package com.xyc.userc.vo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by 1 on 2020/11/17.
  */
 @ApiModel(value="船户通行息返回对象类型")
-public class ShipInfoVo
+public class ShipInfoVo implements Serializable
 {
     private static final long serialVersionUID = 1L;
 

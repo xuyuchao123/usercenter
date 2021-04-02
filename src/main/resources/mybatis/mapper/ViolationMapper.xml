@@ -32,5 +32,44 @@
         </where>
     </select>
 
+    <insert id="insertViolationInfo" parameterType="com.xyc.userc.entity.ViolationInfo">
+        insert into PC_VIOLATIONINFO(ID,BILL_DEPARTMENT,BILL_TIME,BILL_STAFF,BILL_NUM,CARNUMBER,FINE_REASON,FINE_AMOUNT,VIOLATION_IMG,PAYMENT_STATUS,GMT_CREATE,USER_CREATE,GMT_MODIFIED,USER_MODIFIED,DATA_STATUS)
+        VALUES (PC_VIOLATION_SEQ.nextval,#{billDep},#{billTime},#{billStaff},#{billNum},#{carNumber},#{fineReason},#{fineAmt},#{violationImg,typeHandler=org.apache.ibatis.type.BlobTypeHandler},#{paymentStatus},#{gmtCreate},#{userCreate},#{gmtModified},#{userModified},#{dataStatus})
+    </insert>
+
+    <select id="selectViolationInfo" resultType="com.xyc.userc.vo.ViolationInfoVo">
+        select a.ID  as id, a.BILL_DEPARTMENT as billDep, a.BILL_TIME as billTime, a.BILL_STAFF as billStaff, a.BILL_NUM as billNum,
+        a.CARNUMBER as carNumber, a.FINE_REASON as fineReason, a.FINE_AMOUNT as fineAmt,
+        a.PAYMENT_STATUS as paymentStatus
+        from PC_VIOLATIONINFO a
+        <where>
+            <if test="billStaff != null">
+                and a.BILL_STAFF = #{billStaff}
+            </if>
+            <if test="billDep != null">
+                and a.BILL_DEPARTMENT = #{billDep}
+            </if>
+            <if test="billTime != null">
+                and to_char(a.BILL_TIME,'yyyy-mm-dd hh:mi:ss') like concat(#{billTime}, '%')
+            </if>
+            <if test="carNumber != null">
+                and a.CARNUMBER = #{carNumber}
+            </if>
+            <if test="paymentStatus != null">
+                and a.PAYMENT_STATUS = #{paymentStatus}
+            </if>
+            and a.DATA_STATUS = 1
+        </where>
+    </select>
+
+
+    <resultMap type="java.util.Map" id="ViolationImgResultMap" >
+        <result  property="violationImg" column="VIOLATION_IMG" jdbcType="BLOB"  typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+    </resultMap>
+
+    <select id="selectViolationImg" resultMap="ViolationImgResultMap">
+      select a.VIOLATION_IMG as 'violationImg' from PC_VIOLATIONINFO a where a.ID = #{id} and a.DATA_STATUS = 1
+    </select>
+
 
 </mapper>
