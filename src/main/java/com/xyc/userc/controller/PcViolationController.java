@@ -122,7 +122,7 @@ public class PcViolationController
 //    }
 
 
-    @GetMapping(value = "/uploadViolationImg")
+    @PostMapping(value = "/uploadViolationImg")
     @ApiOperation(value="上传违章图片")
     @ApiImplicitParam(name="violationImg", value="违章图片", required=true, dataType="File")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true： 上传成功 isSuccess=false：上传失败，resMsg为错误信息")})
