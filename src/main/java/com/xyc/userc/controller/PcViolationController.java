@@ -72,7 +72,7 @@ public class PcViolationController
     @PostMapping("/form/query")
     @ApiOperation(value="查询违章信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="billingMethod", value="开单方式", required=false, dataType="String"),
+            @ApiImplicitParam(name="billingMethod", value="开单方式", required=false, dataType="String",defaultValue = "1：手动开单 2：自动开单"),
             @ApiImplicitParam(name="billingDepartment", value="开单部门", required=false, dataType="String"),
             @ApiImplicitParam(name="billingTime", value="开单时间", required=false, dataType="String"),
             @ApiImplicitParam(name="paymentStatus", value="支付状态", required=false, dataType="String"),

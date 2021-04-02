@@ -98,6 +98,13 @@ public class ViolationServiceImpl implements ViolationService {
         {
             throw new BusinessException(JsonResultEnum.SIZE_NOT_EXIST);
         }
+        if(billType != null)
+        {
+            if(!"1".equals(billType) && !"2".equals(billType))
+            {
+                billType = "0";
+            }
+        }
         if (billTime != null)
         {
             DateTimeFormatter df = DateTimeFormatter.ofPattern("YYYY-MM-dd");
