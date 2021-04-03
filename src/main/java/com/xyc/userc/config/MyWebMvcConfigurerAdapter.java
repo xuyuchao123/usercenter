@@ -21,9 +21,11 @@ public class MyWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry)
     {
-        String filePath = "file:" + "E:" + "/violationimg/";
+        String filePath = "/home/car2/static/violationimg/";
+        String filePath2 = "file:" + "E:" + "/violationimg/";
+
         //指向外部目录
-        registry.addResourceHandler("/static/violationimg/**").addResourceLocations(filePath);
+        registry.addResourceHandler("/static/violationimg/**").addResourceLocations(filePath,filePath2);
         super.addResourceHandlers(registry);
     }
 
