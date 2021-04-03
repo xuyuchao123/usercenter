@@ -37,8 +37,15 @@ public class ViolationServiceImpl implements ViolationService {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(ViolationServiceImpl.class);
 
-    @Value("${server.port}")
+    @Value("${file.rootPath}")
+    private String fileRootPath;
+
+    @Value("${file.sonPath}")
+    private String fileSonPath;
+
+
     //获取主机端口
+    @Value("${server.port}")
     private String port;
 
     @Value("${server.servlet.context-path}")
@@ -146,14 +153,14 @@ public class ViolationServiceImpl implements ViolationService {
         return resList;
     }
 
-    @Override
-    public byte[] getViolationImg(Integer id) throws Exception {
-        LOGGER.info("进入查询违章图片方法");
-        Map<String, Object> map = violationMapper.selectViolationImg(id);
-        byte[] bytes = (byte[]) map.get("violationImg");
-        LOGGER.info("结束查询违章图片方法");
-        return bytes;
-    }
+//    @Override
+//    public byte[] getViolationImg(Integer id) throws Exception {
+//        LOGGER.info("进入查询违章图片方法");
+//        Map<String, Object> map = violationMapper.selectViolationImg(id);
+//        byte[] bytes = (byte[]) map.get("violationImg");
+//        LOGGER.info("结束查询违章图片方法");
+//        return bytes;
+//    }
 
     @Override
     public String uploadViolationImg(MultipartFile violationImg) throws Exception
@@ -165,7 +172,7 @@ public class ViolationServiceImpl implements ViolationService {
             throw new BusinessException(JsonResultEnum.FILE_NOT_EXIST);
         }
         // 设置文件上传后的路径
-        String filePath = "E:" + "/static/violationimg/";
+        String filePath = fileRootPath + fileSonPath;
         // 获取文件名后缀名
         String suffix = violationImg.getOriginalFilename();
         String prefix = suffix.substring(suffix.lastIndexOf(".")+1);

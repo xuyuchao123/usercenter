@@ -23,7 +23,7 @@ public interface ViolationService
     List getViolationInfo(String billType,String billDep,String billTime,String paymentStatus,
                                            String billNum,String page,String size) throws Exception;
 
-    byte[] getViolationImg(Integer id) throws Exception;
+//    byte[] getViolationImg(Integer id) throws Exception;
 
     String uploadViolationImg(MultipartFile violationImg) throws Exception;
 
