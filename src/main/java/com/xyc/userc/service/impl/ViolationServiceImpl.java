@@ -119,36 +119,6 @@ public class ViolationServiceImpl implements ViolationService {
             LOGGER.info("billTime:{}", billTime);
         }
         List<ViolationInfoVo> violationInfoVos = violationMapper.selectViolationInfo(billType, billDep, billTime, paymentStatus, billNum);
-//        int cnt = violationInfoVos.size();
-//        int pageInt = Integer.valueOf(page);
-//        int sizeInt = Integer.valueOf(size);
-//        int pageCnt = cnt % sizeInt != 0 ? cnt / sizeInt + 1 : cnt / sizeInt;
-//        if(pageInt > pageCnt)
-//        {
-//            pageInt = pageCnt;
-//        }
-//        if(pageInt == 0)
-//        {
-//            pageInt = 1;
-//        }
-//        int start = (pageInt - 1) * sizeInt + 1;
-//        int end = start + sizeInt - 1;
-//        LOGGER.info("查询违章信息 start={},end={},cnt={}",start,end,cnt);
-//
-//        List<ViolationInfoVo> violationInfoVos_page = new ArrayList<>();
-//        for(int i = start-1; i <= end-1; i++)
-//        {
-//            if(i >= violationInfoVos.size())
-//            {
-//                break;
-//            }
-//            violationInfoVos_page.add(violationInfoVos.get(i));
-//        }
-//        List resList = new ArrayList();
-//        resList.add(cnt);
-//        resList.add(pageInt);
-//        resList.add(sizeInt);
-//        resList.add(violationInfoVos_page);
         List resList = PageUtil.getPageInfoList(violationInfoVos,page,size);
         LOGGER.info("结束查询违章信息方法");
         return resList;

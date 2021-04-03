@@ -7,10 +7,7 @@ import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.MobileOpenId;
 import com.xyc.userc.service.RedisService;
 import com.xyc.userc.service.RoleService;
-import com.xyc.userc.util.BusinessException;
-import com.xyc.userc.util.JsonResultEnum;
-import com.xyc.userc.util.RoleTypeEnum;
-import com.xyc.userc.util.UsercConstant;
+import com.xyc.userc.util.*;
 import com.xyc.userc.vo.BindedUserRoleVo;
 import com.xyc.userc.vo.DefaultUserRoleVo;
 import com.xyc.userc.vo.RoleVo;
@@ -109,35 +106,7 @@ public class RoleServiceImpl implements RoleService
                 }
             }
         }
-        int cnt = colDefaultRoleVos.size();
-        int pageInt = Integer.valueOf(page);
-        int sizeInt = Integer.valueOf(size);
-        int pageCnt = cnt % sizeInt != 0 ? cnt / sizeInt + 1 : cnt / sizeInt;
-        if(pageInt > pageCnt)
-        {
-            pageInt = pageCnt;
-        }
-        if(pageInt == 0)
-        {
-            pageInt = 1;
-        }
-        int start = (pageInt - 1) * sizeInt + 1;
-        int end = start + sizeInt - 1;
-        LOGGER.info("查询用户预置角色 start={},end={},cnt={}",start,end,cnt);
-        List<DefaultUserRoleVo> colDefaultRoleVos_page = new ArrayList<>();
-        for(int i = start-1; i <= end-1; i++)
-        {
-            if(i >= colDefaultRoleVos.size())
-            {
-                break;
-            }
-            colDefaultRoleVos_page.add(colDefaultRoleVos.get(i));
-        }
-        List resList = new ArrayList();
-        resList.add(cnt);
-        resList.add(pageInt);
-        resList.add(sizeInt);
-        resList.add(colDefaultRoleVos_page);
+        List resList = PageUtil.getPageInfoList(colDefaultRoleVos,page,size);
         LOGGER.info("结束查询用户预置角色信息方法 mobile={} page={} size={}",mobile,page,size);
         return resList;
     }
@@ -186,37 +155,7 @@ public class RoleServiceImpl implements RoleService
                 }
             }
         }
-
-        int cnt = colBindedRoleVos.size();
-        int pageInt = Integer.valueOf(page);
-        int sizeInt = Integer.valueOf(size);
-        int pageCnt = cnt % sizeInt != 0 ? cnt / sizeInt + 1 : cnt / sizeInt;
-        if(pageInt > pageCnt)
-        {
-            pageInt = pageCnt;
-        }
-        if(pageInt == 0)
-        {
-            pageInt = 1;
-        }
-        int start = (pageInt - 1) * sizeInt + 1;
-        int end = start + sizeInt - 1;
-        LOGGER.info("查询用户已绑定角色 start={},end={},cnt={}",start,end,cnt);
-
-        List<BindedUserRoleVo> colBindedRoleVos_page = new ArrayList<>();
-        for(int i = start-1; i <= end-1; i++)
-        {
-            if(i >= colBindedRoleVos.size())
-            {
-                break;
-            }
-            colBindedRoleVos_page.add(colBindedRoleVos.get(i));
-        }
-        List resList = new ArrayList();
-        resList.add(cnt);
-        resList.add(pageInt);
-        resList.add(sizeInt);
-        resList.add(colBindedRoleVos_page);
+        List resList = PageUtil.getPageInfoList(colBindedRoleVos,page,size);
         LOGGER.info("结束查询用户已绑定角色配置信息方法 mobile={} page={} size={}",mobile,page,size);
         return resList;
     }
