@@ -14,8 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -81,10 +83,10 @@ public class PcViolationController
             @ApiImplicitParam(name="size", value="每页记录条数", required=true, dataType="String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
     public JsonResultObj_Page<ViolationInfoVo> queryViolationInfo(@RequestParam(value = "billingMethod",required = false)String billType,
-                             @RequestParam(value = "billingDepartment",required = false)String billDep,
-                             @RequestParam(value = "billingTime",required = false)String billTime, @RequestParam(value = "paymentStatus",required = false)String paymentStatus,
-                             @RequestParam(value = "billingSerialNumber",required = false)String billNum,
-                                                                  String page, String size)
+                                                                  @RequestParam(value = "billingDepartment",required = false)String billDep,
+                                                                  @RequestParam(value = "billingTime",required = false)String billTime, @RequestParam(value = "paymentStatus",required = false)String paymentStatus,
+                                                                  @RequestParam(value = "billingSerialNumber",required = false)String billNum,
+                                                                  String page, String size, @ApiIgnore HttpServletRequest request)
     {
         LOGGER.info("开始查询违章信息 billType={} billDep={} billTime={} paymentStatus={} billNum={} page={} size={}"
                 ,billType,billDep,billTime,paymentStatus,billNum,page,size);
