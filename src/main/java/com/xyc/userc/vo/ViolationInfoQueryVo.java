@@ -8,31 +8,44 @@ import javax.validation.constraints.NotNull;
 /**
  * Created by 1 on 2021/4/6.
  */
-@ApiModel(value="违章信息请求参数对象类型")
+@ApiModel(value="违章信息查询请求参数对象类型")
 public class ViolationInfoQueryVo
 {
-    @ApiModelProperty(value="开单方式", required = false, dataType="String",position = 0,example = "1：手动开单 2：自动开单 3")
+    @ApiModelProperty(value="开单方式", required = false, dataType="String",example = "1：手动开单 2：自动开单 3")
     private String billingMethod;
 
-    @ApiModelProperty(value="开单部门", required = false, dataType="String",position = 1)
+    @ApiModelProperty(value="开单部门", required = false, dataType="String")
     private String billingDepartment;
 
-    @ApiModelProperty(value="开单时间", required = false, dataType="String",position = 2)
+    @ApiModelProperty(value="开单时间", required = false, dataType="String")
     private String billingTime;
 
-    @ApiModelProperty(value="支付状态", required = false, dataType="String",position = 3)
+    @ApiModelProperty(value="支付状态", required = false, dataType="String")
     private String paymentStatus;
 
-    @ApiModelProperty(value="开单序号", required = false, dataType="String",position = 4)
+    @ApiModelProperty(value="开单序号", required = false, dataType="String")
     private String billingSerialNumber;
 
     @NotNull(message = "page不能为空")
-    @ApiModelProperty(value="当前页码", required = true, dataType="String",position = 5)
+    @ApiModelProperty(value="当前页码", required = true, dataType="String")
     private String page;
 
     @NotNull(message = "size不能为空")
-    @ApiModelProperty(value="每页记录条数", required = true, dataType="String",position = 6)
+    @ApiModelProperty(value="每页记录条数", required = true, dataType="String")
     private String size;
+
+    @Override
+    public String toString() {
+        return "ViolationInfoQueryVo{" +
+                "billingMethod='" + billingMethod + '\'' +
+                ", billingDepartment='" + billingDepartment + '\'' +
+                ", billingTime='" + billingTime + '\'' +
+                ", paymentStatus='" + paymentStatus + '\'' +
+                ", billingSerialNumber='" + billingSerialNumber + '\'' +
+                ", page='" + page + '\'' +
+                ", size='" + size + '\'' +
+                '}';
+    }
 
     public String getBillingMethod() {
         return billingMethod;

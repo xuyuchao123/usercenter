@@ -97,14 +97,6 @@ public class ViolationServiceImpl implements ViolationService {
     public List getViolationInfo(String billType,String billDep,String billTime,String paymentStatus,
                                                   String billNum,String page,String size) throws Exception {
         LOGGER.info("进入查询违章信息方法");
-        if(page == null)
-        {
-            throw new BusinessException(JsonResultEnum.PAGE_NOT_EXIST);
-        }
-        if(size == null)
-        {
-            throw new BusinessException(JsonResultEnum.SIZE_NOT_EXIST);
-        }
         if(billType != null)
         {
             if(!"1".equals(billType) && !"2".equals(billType))

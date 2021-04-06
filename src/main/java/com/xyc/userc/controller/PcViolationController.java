@@ -5,10 +5,7 @@ import com.xyc.userc.service.ViolationService;
 import com.xyc.userc.util.CommonExceptionHandler;
 import com.xyc.userc.util.JsonResultObj;
 import com.xyc.userc.util.JsonResultObj_Page;
-import com.xyc.userc.vo.BindedUserRoleVo;
-import com.xyc.userc.vo.DefaultUserRoleVo;
-import com.xyc.userc.vo.ViolationInfoQueryVo;
-import com.xyc.userc.vo.ViolationInfoVo;
+import com.xyc.userc.vo.*;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,35 +39,22 @@ public class PcViolationController
 
     @PostMapping("/form/add")
     @ApiOperation(value="新增违章信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name="billingDepartment", value="开单部门", required=true, dataType="String"),
-            @ApiImplicitParam(name="billingTime", value="开单时间", required=true, dataType="String"),
-            @ApiImplicitParam(name="openSingle", value="开单人", required=true, dataType="String"),
-            @ApiImplicitParam(name="billingSerialNumber", value="开单序号", required=true, dataType="String"),
-            @ApiImplicitParam(name="theAmountOfTheFine", value="罚款金额", required=true, dataType="String"),
-            @ApiImplicitParam(name="illegalPictures", value="违章图片", required=true, dataType="String"),
-            @ApiImplicitParam(name="paymentStatus", value="支付状态", required=true, dataType="String"),
-            @ApiImplicitParam(name="reasonForFine", value="罚款事由", required=true, dataType="String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
-    public JsonResultObj addViolationInfo(@RequestParam("billingDepartment")String billDep,  @RequestParam("billingTime")String billTime,
-                                          @RequestParam("openSingle")String billStaff,       @RequestParam("billingSerialNumber")String billNum,
-                                          @RequestParam("theAmountOfTheFine")String fineAmt, @RequestParam("illegalPictures")String violationImgPath,
-                                          @RequestParam("paymentStatus")String paymentStatus,@RequestParam("reasonForFine")String fineReason)
+    public JsonResultObj addViolationInfo(@Validated ViolationInfoAddVo vo)
     {
-        LOGGER.info("开始新增违章信息 billDep={} billTime={} billStaff={} billNum={} fineAmt={} violationImgPath={} paymentStatus={} fineReason={}"
-                ,billDep,billTime,billStaff,billNum,fineAmt,violationImgPath,paymentStatus,fineReason);
+        LOGGER.info("开始新增违章信息 {}",vo.toString());
         JsonResultObj resultObj = null;
         try
         {
-            violationService.addViolationInfo(billDep,billTime,billStaff,billNum,fineAmt,violationImgPath,paymentStatus,fineReason);
+            violationService.addViolationInfo(vo.getBillingDepartment(),vo.getBillingTime(),vo.getOpenSingle(),vo.getBillingSerialNumber(),
+                    vo.getTheAmountOfTheFine(),vo.getIllegalPictures(),vo.getPaymentStatus(),vo.getReasonForFine());
             resultObj = new JsonResultObj(true);
         }
         catch (Exception e)
         {
             resultObj = CommonExceptionHandler.handException_page(e, "新增违章信息失败", LOGGER);
         }
-        LOGGER.info("结束新增违章信息 billDep={} billTime={} billStaff={} billNum={} fineAmt={} violationImgPath={} paymentStatus={} fineReason={}"
-                ,billDep,billTime,billStaff,billNum,fineAmt,violationImgPath,paymentStatus,fineReason);
+        LOGGER.info("结束新增违章信息 {}",vo.toString());
         return resultObj;
     }
 
@@ -125,8 +109,9 @@ public class PcViolationController
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
     public JsonResultObj_Page<ViolationInfoVo> queryViolationInfo(@Validated ViolationInfoQueryVo vo)
     {
-        LOGGER.info("开始查询违章信息 billType={} billDep={} billTime={} paymentStatus={} billNum={} page={} size={}",vo.getBillingMethod(),
-                vo.getBillingDepartment(),vo.getBillingTime(),vo.getPaymentStatus(),vo.getBillingSerialNumber(),vo.getPage(),vo.getSize());
+//        LOGGER.info("开始查询违章信息 billType={} billDep={} billTime={} paymentStatus={} billNum={} page={} size={}",vo.getBillingMethod(),
+//                vo.getBillingDepartment(),vo.getBillingTime(),vo.getPaymentStatus(),vo.getBillingSerialNumber(),vo.getPage(),vo.getSize());
+        LOGGER.info("开始查询违章信息 {}",vo.toString());
         JsonResultObj_Page resultObj_page = null;
         try
         {
@@ -150,8 +135,7 @@ public class PcViolationController
             resultObj_page = CommonExceptionHandler.handException_page(e, "查询违章信息失败", LOGGER);
         }
 
-        LOGGER.info("结束查询违章信息 billType={} billDep={} billTime={} paymentStatus={} billNum={} page={} size={}",vo.getBillingMethod(),
-                vo.getBillingDepartment(),vo.getBillingTime(),vo.getPaymentStatus(),vo.getBillingSerialNumber(),vo.getPage(),vo.getSize());
+        LOGGER.info("结束查询违章信息 {}",vo.toString());
         return resultObj_page;
     }
 
