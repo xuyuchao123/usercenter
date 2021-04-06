@@ -200,7 +200,7 @@ public class PcViolationController
 
     @PostMapping("/form/remove")
     @ApiOperation(value="删除违章信息")
-    @ApiImplicitParam(name="billingSerialNumber", value="开单序号", required=false, dataType="String[]")
+    @ApiImplicitParam(name="billingSerialNumber", value="开单序号", required=true, allowMultiple=true, dataType = "String")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：删除成功 isSuccess=false：删除失败，resMsg为错误信息")})
     public JsonResultObj removeViolationInfo(@NotNull(message = "开单序号不能为空") @RequestParam("billingSerialNumber")String[] billNums)
     {
