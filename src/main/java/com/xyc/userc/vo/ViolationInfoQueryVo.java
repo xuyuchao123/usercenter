@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @ApiModel(value="违章信息请求参数对象类型")
 public class ViolationInfoQueryVo
 {
-    @ApiModelProperty(value="开单方式", required = false, dataType="String",example = "1：手动开单 2：自动开单")
+    @ApiModelProperty(value="开单方式", required = false, dataType="String",example = "1：手动开单 2：自动开单 3")
     private String billingMethod;
 
     @ApiModelProperty(value="开单部门", required = false, dataType="String")
