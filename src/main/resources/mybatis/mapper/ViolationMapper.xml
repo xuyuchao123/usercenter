@@ -78,7 +78,10 @@
     <update id="deleteViolationInfo">
         update PC_VIOLATIONINFO a
         set a.DATA_STATUS = 0
-        where a.BILL_NUM = #{billNum}
+        where a.BILL_NUM IN
+        <foreach collection="list" open="(" close=")" separator="," item="billNum" index="i">
+            #{billNum}
+        </foreach>
     </update>
 
 </mapper>

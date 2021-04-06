@@ -27,5 +27,5 @@ public interface ViolationMapper
 
     Map<String,Object> selectViolationImg(Integer id);
 
-    void deleteViolationInfo(String billNum);
+    void deleteViolationInfo(@Param("list")List billNumList);
 }

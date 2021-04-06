@@ -27,5 +27,5 @@ public interface ViolationService
 
     String uploadViolationImg(MultipartFile violationImg) throws Exception;
 
-    void removeViolationInfo(String billNum) throws Exception;
+    void removeViolationInfo(List billNumList) throws Exception;
 }

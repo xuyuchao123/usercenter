@@ -166,10 +166,14 @@ public class ViolationServiceImpl implements ViolationService {
     }
 
     @Override
-    public void removeViolationInfo(String billNum) throws Exception
+    public void removeViolationInfo(List billNumList) throws Exception
     {
         LOGGER.info("开始删除违章信息方法");
-        violationMapper.deleteViolationInfo(billNum);
+        if(billNumList.size() == 0)
+        {
+            return;
+        }
+        violationMapper.deleteViolationInfo(billNumList);
         LOGGER.info("结束删除违章信息方法");
     }
 }

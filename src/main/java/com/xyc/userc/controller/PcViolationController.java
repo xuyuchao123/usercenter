@@ -20,7 +20,9 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -73,55 +75,55 @@ public class PcViolationController
     }
 
 
+//    @PostMapping("/form/query")
+//    @ApiOperation(value="查询违章信息")
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name="billingMethod", value="开单方式", required=false, dataType="String",defaultValue = "1：手动开单 2：自动开单"),
+//            @ApiImplicitParam(name="billingDepartment", value="开单部门", required=false, dataType="String"),
+//            @ApiImplicitParam(name="billingTime", value="开单时间", required=false, dataType="String"),
+//            @ApiImplicitParam(name="paymentStatus", value="支付状态", required=false, dataType="String"),
+//            @ApiImplicitParam(name="billingSerialNumber", value="开单序号", required=false, dataType="String"),
+//            @ApiImplicitParam(name="page", value="当前页码", required=true, dataType="String"),
+//            @ApiImplicitParam(name="size", value="每页记录条数", required=true, dataType="String")})
+//    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
+//    public JsonResultObj_Page<ViolationInfoVo> queryViolationInfo(@RequestParam(value = "billingMethod",required = false)String billType,
+//                                                                  @RequestParam(value = "billingDepartment",required = false)String billDep,
+//                                                                  @RequestParam(value = "billingTime",required = false)String billTime, @RequestParam(value = "paymentStatus",required = false)String paymentStatus,
+//                                                                  @RequestParam(value = "billingSerialNumber",required = false)String billNum,
+//                                                                  String page, String size, @ApiIgnore HttpServletRequest request)
+//    {
+//        LOGGER.info("开始查询违章信息 billType={} billDep={} billTime={} paymentStatus={} billNum={} page={} size={}"
+//                ,billType,billDep,billTime,paymentStatus,billNum,page,size);
+//        JsonResultObj_Page resultObj_page = null;
+//        try
+//        {
+//            List resList = violationService.getViolationInfo(billType,billDep,billTime,paymentStatus,billNum,page,size);
+//            List<ViolationInfoVo> violationInfoVos = null;
+//            String total = null;
+//            if(resList != null && resList.size() == 4)
+//            {
+//                total = resList.get(0).toString();
+//                page = resList.get(1).toString();
+//                size = resList.get(2).toString();
+//                violationInfoVos = (List<ViolationInfoVo>)resList.get(3);
+//            }
+//            resultObj_page = new JsonResultObj_Page(true,violationInfoVos,total,page,size);
+//        }
+//        catch (Exception e)
+//        {
+//            resultObj_page = CommonExceptionHandler.handException_page(e, "查询违章信息失败", LOGGER);
+//        }
+//
+//        LOGGER.info("结束查询违章信息 billType={} billDep={} billTime={} paymentStatus={} billNum={} page={} size={}"
+//                ,billType,billDep,billTime,paymentStatus,billNum,page,size);
+//        return resultObj_page;
+//    }
+
+
     @PostMapping("/form/query")
     @ApiOperation(value="查询违章信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name="billingMethod", value="开单方式", required=false, dataType="String",defaultValue = "1：手动开单 2：自动开单"),
-            @ApiImplicitParam(name="billingDepartment", value="开单部门", required=false, dataType="String"),
-            @ApiImplicitParam(name="billingTime", value="开单时间", required=false, dataType="String"),
-            @ApiImplicitParam(name="paymentStatus", value="支付状态", required=false, dataType="String"),
-            @ApiImplicitParam(name="billingSerialNumber", value="开单序号", required=false, dataType="String"),
-            @ApiImplicitParam(name="page", value="当前页码", required=true, dataType="String"),
-            @ApiImplicitParam(name="size", value="每页记录条数", required=true, dataType="String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
-    public JsonResultObj_Page<ViolationInfoVo> queryViolationInfo(@RequestParam(value = "billingMethod",required = false)String billType,
-                                                                  @RequestParam(value = "billingDepartment",required = false)String billDep,
-                                                                  @RequestParam(value = "billingTime",required = false)String billTime, @RequestParam(value = "paymentStatus",required = false)String paymentStatus,
-                                                                  @RequestParam(value = "billingSerialNumber",required = false)String billNum,
-                                                                  String page, String size, @ApiIgnore HttpServletRequest request)
-    {
-        LOGGER.info("开始查询违章信息 billType={} billDep={} billTime={} paymentStatus={} billNum={} page={} size={}"
-                ,billType,billDep,billTime,paymentStatus,billNum,page,size);
-        JsonResultObj_Page resultObj_page = null;
-        try
-        {
-            List resList = violationService.getViolationInfo(billType,billDep,billTime,paymentStatus,billNum,page,size);
-            List<ViolationInfoVo> violationInfoVos = null;
-            String total = null;
-            if(resList != null && resList.size() == 4)
-            {
-                total = resList.get(0).toString();
-                page = resList.get(1).toString();
-                size = resList.get(2).toString();
-                violationInfoVos = (List<ViolationInfoVo>)resList.get(3);
-            }
-            resultObj_page = new JsonResultObj_Page(true,violationInfoVos,total,page,size);
-        }
-        catch (Exception e)
-        {
-            resultObj_page = CommonExceptionHandler.handException_page(e, "查询违章信息失败", LOGGER);
-        }
-
-        LOGGER.info("结束查询违章信息 billType={} billDep={} billTime={} paymentStatus={} billNum={} page={} size={}"
-                ,billType,billDep,billTime,paymentStatus,billNum,page,size);
-        return resultObj_page;
-    }
-
-
-    @PostMapping("/form/query2")
-    @ApiOperation(value="查询违章信息2")
-    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
-    public JsonResultObj_Page<ViolationInfoVo> queryViolationInfo2(@Validated ViolationInfoQueryVo vo)
+    public JsonResultObj_Page<ViolationInfoVo> queryViolationInfo(@Validated ViolationInfoQueryVo vo)
     {
         LOGGER.info("开始查询违章信息 billType={} billDep={} billTime={} paymentStatus={} billNum={} page={} size={}",vo.getBillingMethod(),
                 vo.getBillingDepartment(),vo.getBillingTime(),vo.getPaymentStatus(),vo.getBillingSerialNumber(),vo.getPage(),vo.getSize());
@@ -198,15 +200,22 @@ public class PcViolationController
 
     @PostMapping("/form/remove")
     @ApiOperation(value="删除违章信息")
-    @ApiImplicitParam(name="billingSerialNumber", value="开单序号", required=false, dataType="String")
+    @ApiImplicitParam(name="billingSerialNumber", value="开单序号", required=false, dataType="String[]")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：删除成功 isSuccess=false：删除失败，resMsg为错误信息")})
-    public JsonResultObj removeViolationInfo(@RequestParam("billingSerialNumber")String billNum)
+    public JsonResultObj removeViolationInfo(@NotNull(message = "开单序号不能为空") @RequestParam("billingSerialNumber")String[] billNums)
     {
-        LOGGER.info("开始删除违章信息 billNum={}",billNum);
+//        StringBuilder sb = new StringBuilder();
+        List<String> billNumList = new ArrayList<>();
+        for(int i = 0; i < billNums.length; i++)
+        {
+            billNumList.add(billNums[i]);
+        }
+        LOGGER.info("开始删除违章信息 billNum={}",billNumList.toString());
+
         JsonResultObj resultObj = null;
         try
         {
-            violationService.removeViolationInfo(billNum);
+            violationService.removeViolationInfo(billNumList);
             resultObj = new JsonResultObj(true);
         }
         catch (Exception e)
@@ -214,7 +223,7 @@ public class PcViolationController
             resultObj = CommonExceptionHandler.handException_page(e, "删除违章信息失败", LOGGER);
         }
 
-        LOGGER.info("结束删除违章信息 billNum={}",billNum);
+        LOGGER.info("结束删除违章信息 billNum={}",billNumList.toString());
         return resultObj;
     }
 
