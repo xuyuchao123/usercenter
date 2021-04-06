@@ -58,7 +58,7 @@ public class PcViolationController
         return resultObj;
     }
 
-    @PostMapping("/form/query")
+    @PostMapping(value = "/form/query", produces="application/json")
     @ApiOperation(value="查询违章信息")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
     public JsonResultObj_Page<ViolationInfoVo> queryViolationInfo(@Validated ViolationInfoQueryVo vo)
