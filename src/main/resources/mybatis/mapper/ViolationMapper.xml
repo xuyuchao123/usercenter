@@ -44,7 +44,7 @@
 
     <select id="selectViolationInfo" resultType="com.xyc.userc.vo.ViolationInfoVo">
         select a.BILL_DEPARTMENT as billingDepartment, a.BILL_TIME as billingTime, a.BILL_STAFF as openSingle, a.BILL_NUM as billingSerialNumber,
-        a.FINE_REASON as reasonForFine, a.FINE_AMOUNT as theAmountOfTheFine, a.PAYMENT_STATUS as paymentStatus
+        a.FINE_REASON as reasonForFine, a.FINE_AMOUNT as theAmountOfTheFine, a.PAYMENT_STATUS as paymentStatus,a.VIOLATION_IMG as illegalPictures
         from PC_VIOLATIONINFO a
         <where>
             <if test="billType != null">
