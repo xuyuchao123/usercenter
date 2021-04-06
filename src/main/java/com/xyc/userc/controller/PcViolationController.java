@@ -7,11 +7,13 @@ import com.xyc.userc.util.JsonResultObj;
 import com.xyc.userc.util.JsonResultObj_Page;
 import com.xyc.userc.vo.BindedUserRoleVo;
 import com.xyc.userc.vo.DefaultUserRoleVo;
+import com.xyc.userc.vo.ViolationInfoQueryVo;
 import com.xyc.userc.vo.ViolationInfoVo;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
@@ -112,6 +114,42 @@ public class PcViolationController
 
         LOGGER.info("结束查询违章信息 billType={} billDep={} billTime={} paymentStatus={} billNum={} page={} size={}"
                 ,billType,billDep,billTime,paymentStatus,billNum,page,size);
+        return resultObj_page;
+    }
+
+
+    @PostMapping("/form/query2")
+    @ApiOperation(value="查询违章信息2")
+    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
+    public JsonResultObj_Page<ViolationInfoVo> queryViolationInfo2(@Validated ViolationInfoQueryVo vo)
+    {
+        LOGGER.info("开始查询违章信息 billType={} billDep={} billTime={} paymentStatus={} billNum={} page={} size={}",vo.getBillingMethod(),
+                vo.getBillingDepartment(),vo.getBillingTime(),vo.getPaymentStatus(),vo.getBillingSerialNumber(),vo.getPage(),vo.getSize());
+        JsonResultObj_Page resultObj_page = null;
+        try
+        {
+            List resList = violationService.getViolationInfo(vo.getBillingMethod(),vo.getBillingDepartment(),vo.getBillingTime(),
+                    vo.getPaymentStatus(),vo.getBillingSerialNumber(),vo.getPage(),vo.getSize());
+            List<ViolationInfoVo> violationInfoVos = null;
+            String total = null;
+            String page = null;
+            String size = null;
+            if(resList != null && resList.size() == 4)
+            {
+                total = resList.get(0).toString();
+                page = resList.get(1).toString();
+                size = resList.get(2).toString();
+                violationInfoVos = (List<ViolationInfoVo>)resList.get(3);
+            }
+            resultObj_page = new JsonResultObj_Page(true,violationInfoVos,total,page,size);
+        }
+        catch (Exception e)
+        {
+            resultObj_page = CommonExceptionHandler.handException_page(e, "查询违章信息失败", LOGGER);
+        }
+
+        LOGGER.info("结束查询违章信息 billType={} billDep={} billTime={} paymentStatus={} billNum={} page={} size={}",vo.getBillingMethod(),
+                vo.getBillingDepartment(),vo.getBillingTime(),vo.getPaymentStatus(),vo.getBillingSerialNumber(),vo.getPage(),vo.getSize());
         return resultObj_page;
     }
 
