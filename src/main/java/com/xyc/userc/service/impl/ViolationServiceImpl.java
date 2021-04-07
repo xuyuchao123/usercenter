@@ -99,7 +99,15 @@ public class ViolationServiceImpl implements ViolationService {
         LOGGER.info("进入查询违章信息方法");
         if(billType != null)
         {
-            if(!"1".equals(billType) && !"2".equals(billType))
+            if("手动开单".equals(billType))
+            {
+                billType = "1";
+            }
+            else if("自动开单".equals(billType))
+            {
+                billType = "2";
+            }
+            else
             {
                 billType = "0";
             }
