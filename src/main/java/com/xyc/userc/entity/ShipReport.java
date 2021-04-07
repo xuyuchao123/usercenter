@@ -1,11 +1,12 @@
 package com.xyc.userc.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by 1 on 2020/9/22.
  */
-public class ShipReport
+public class ShipReport implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
