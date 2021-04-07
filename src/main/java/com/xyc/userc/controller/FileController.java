@@ -37,7 +37,7 @@ public class FileController
 //    @ApiImplicitParams({@ApiImplicitParam(name = "file", value = "要上传的附件", required = true),
 //            @ApiImplicitParam(name = "", value = "", required = true, dataType = "String")})
 //    @ApiResponses({@ApiResponse(code = 200, message = "isSuccess=true：绑定成功 isSuccess=false：绑定失败，resMsg为错误信息")})
-    public JsonResultObj bindMobile(@ApiIgnore HttpServletRequest request,@RequestParam("strs") String[] strs)
+    public JsonResultObj bindMobile(@ApiIgnore HttpServletRequest request,@RequestBody Student[] students)
     {
 //        LOGGER.info("开始上传附件 filename:{}", file.getOriginalFilename());
         JsonResultObj resultObj = null;
