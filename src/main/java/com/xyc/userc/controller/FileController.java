@@ -37,21 +37,20 @@ public class FileController
 //    @ApiImplicitParams({@ApiImplicitParam(name = "file", value = "要上传的附件", required = true),
 //            @ApiImplicitParam(name = "", value = "", required = true, dataType = "String")})
 //    @ApiResponses({@ApiResponse(code = 200, message = "isSuccess=true：绑定成功 isSuccess=false：绑定失败，resMsg为错误信息")})
-    public JsonResultObj bindMobile(@ApiIgnore HttpServletRequest request, @RequestParam("attachment")MultipartFile file,
-                                    Student student)
+    public JsonResultObj bindMobile(@ApiIgnore HttpServletRequest request, Student student)
     {
-        LOGGER.info("开始上传附件 filename:{}", file.getOriginalFilename());
+//        LOGGER.info("开始上传附件 filename:{}", file.getOriginalFilename());
         JsonResultObj resultObj = null;
-        try
-        {
-            fileService.uploadAttach(file);
-            resultObj = new JsonResultObj(true);
-        }
-        catch (Exception e)
-        {
-            resultObj = CommonExceptionHandler.handException(e, "上传附件失败", LOGGER);
-        }
-        LOGGER.info("结束上传附件 filename:{}", file.getOriginalFilename());
+//        try
+//        {
+//            fileService.uploadAttach(file);
+//            resultObj = new JsonResultObj(true);
+//        }
+//        catch (Exception e)
+//        {
+//            resultObj = CommonExceptionHandler.handException(e, "上传附件失败", LOGGER);
+//        }
+//        LOGGER.info("结束上传附件 filename:{}", file.getOriginalFilename());
         return resultObj;
     }
 }
