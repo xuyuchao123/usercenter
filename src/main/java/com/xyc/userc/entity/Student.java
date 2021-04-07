@@ -13,6 +13,9 @@ public class Student implements Serializable
     private String stuName;
     private String stuSubject;
 
+    public Student() {
+    }
+
     public Integer getStuId() {
         return stuId;
     }
