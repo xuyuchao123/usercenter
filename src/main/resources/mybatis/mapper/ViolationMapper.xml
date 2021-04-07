@@ -60,7 +60,7 @@
                 and a.PAYMENT_STATUS = #{paymentStatus}
             </if>
             <if test="billNum != null">
-                and a.BILL_NUM = #{billNum}
+                and a.BILL_NUM like concat(concat('%',#{billNum}),'%')
             </if>
             and a.DATA_STATUS = 1
         </where>
