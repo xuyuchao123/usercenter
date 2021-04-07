@@ -37,7 +37,7 @@ public class PcViolationController
     @Resource
     ViolationService violationService;
 
-    @PostMapping("/form/add")
+    @PostMapping(value="/form/add",produces="application/json")
     @ApiOperation(value="新增违章信息")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
     public JsonResultObj addViolationInfo(@Validated ViolationInfoAddVo vo)
@@ -113,7 +113,7 @@ public class PcViolationController
 //    }
 
 
-    @PostMapping(value = "/uploadViolationImg")
+    @PostMapping(value = "/uploadViolationImg",produces="application/json")
     @ApiOperation(value="上传违章图片")
     @ApiImplicitParam(name="violationImg", value="违章图片", required=true, dataType="File")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true： 上传成功 isSuccess=false：上传失败，resMsg为错误信息")})
@@ -134,7 +134,7 @@ public class PcViolationController
         return resultObj;
     }
 
-    @PostMapping("/form/remove")
+    @PostMapping(value="/form/remove",produces="application/json")
     @ApiOperation(value="删除违章信息")
     @ApiImplicitParam(name="billingSerialNumber", value="开单序号", required=true, allowMultiple=true, dataType = "String")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：删除成功 isSuccess=false：删除失败，resMsg为错误信息")})
