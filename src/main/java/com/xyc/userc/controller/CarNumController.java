@@ -292,7 +292,7 @@ public class CarNumController
     @ApiOperation(value="校验行驶证信息")
     @ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：校验成功 isSuccess=false：校验失败，resMsg为错误信息")})
-    public JsonResultObj checkDrivinglicense(@NotNull(message = "车牌号不能为空") String carNum)
+    public JsonResultObj checkDrivinglicense(@NotNull(message = "车牌号不能为空") @RequestParam("carNum") String carNum)
     {
         LOGGER.info("开始校验行驶证信息 carNum={}",carNum);
         JsonResultObj jsonResultObj = null;
