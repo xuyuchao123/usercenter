@@ -61,7 +61,7 @@
         decode(f.ATTACHMENT,null,false,true) as hasDrivingLicense from
         SYS_OPENID_CARNUMBER oc
         lef join FG_CARYB_FILE@SUPC f
-        on oc.CARNUMBER = f.CAR_NOA
+        on oc.CARNUMBER = f.CAR_NO
         <where>
             <if test="openId != null">
                 and oc.OPENID = #{openId}
