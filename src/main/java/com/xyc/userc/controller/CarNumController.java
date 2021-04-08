@@ -55,8 +55,8 @@ public class CarNumController
             try
             {
                 LOGGER.info("获取到用户openId={}", openId);
-                CarNumOpenIdVo carNumOpenIdVo = carNumService.getCarNum(openId);
-                resultObj = new JsonResultObj(true, carNumOpenIdVo);
+                List<CarNumOpenIdVo> carNumOpenIdVos = carNumService.getCarNum(openId);
+                resultObj = new JsonResultObj(true, carNumOpenIdVos);
             }
             catch (Exception e)
             {

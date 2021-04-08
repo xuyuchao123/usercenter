@@ -53,10 +53,15 @@
     </resultMap>
 
     <select id="selectByOpenId" resultMap="BaseResultMap">
-        select DISTINCT oc.ID, oc.OPENID, oc.CARNUMBER, oc.ENGINENUM, oc.IDENTNUM, oc.EMISSIONSTD,
-        oc.FLEETNAME,oc.REGDATE,oc.DEPARTMENT, oc.IS_DELETED, oc.IS_ENABLED, oc.USER_CREATE,
-        oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED from
+        select DISTINCT oc.ID as id, oc.OPENID as openId, oc.CARNUMBER as carNum,
+        oc.ENGINENUM as engineNum, oc.IDENTNUM as identNum, oc.EMISSIONSTD as emissionStd,
+        oc.FLEETNAME as fleetName,oc.REGDATE as regDate,oc.DEPARTMENT as department,
+        oc.IS_DELETED as isDeleted, oc.IS_ENABLED as isEnabled, oc.USER_CREATE as userCreate,
+        oc.USER_MODIFIED as userModified, oc.GMT_CREATE as gmtCreate, oc.GMT_MODIFIED as gmtModified,
+        decode(f.ATTACHMENT,null,false,true) as hasDrivingLicense from
         SYS_OPENID_CARNUMBER oc
+        lef join FG_CARYB_FILE@SUPC f
+        on oc.CARNUMBER = f.CAR_NOA
         <where>
             <if test="openId != null">
                 and oc.OPENID = #{openId}

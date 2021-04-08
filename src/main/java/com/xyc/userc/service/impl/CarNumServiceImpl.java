@@ -56,20 +56,12 @@ public class CarNumServiceImpl implements CarNumService
 
 
     @Override
-    public CarNumOpenIdVo getCarNum(String openId) throws Exception
+    public List<CarNumOpenIdVo> getCarNum(String openId) throws Exception
     {
         LOGGER.info("进入查询车牌号方法 openId:{}",openId);
-        List<CarNumOpenId> carNumOpenIdList = carNumOpenIdMapper.selectByOpenId(openId);
-        boolean hasResult = false;
-        if(carNumOpenIdList != null && carNumOpenIdList.size() > 0)
-        {
-            hasResult = true;
-        }
-        CarNumOpenIdVo carNumOpenIdVo = new CarNumOpenIdVo();
-        carNumOpenIdVo.setHasResult(hasResult);
-        carNumOpenIdVo.setCarNumOpenIds(carNumOpenIdList);
+        List<CarNumOpenIdVo> carNumOpenIdVos = carNumOpenIdMapper.selectByOpenId(openId);
         LOGGER.info("结束查询车牌号方法 openId:{}",openId);
-        return carNumOpenIdVo;
+        return carNumOpenIdVos;
     }
 
     @Override
@@ -391,5 +383,13 @@ public class CarNumServiceImpl implements CarNumService
         int  licenseCnt = carNumOpenIdMapper.selectDrivingLicense(carNum);
         LOGGER.info("结束校验行驶证信息方法carNum={} licenseCnt={}",carNum,licenseCnt);
         return licenseCnt > 0 ? true : false;
+    }
+
+    @Override
+    public void refreshCarNumFrozen() throws Exception
+    {
+        LOGGER.info("进入更新车牌号冻结情况方法");
+        LOGGER.info("结束更新车牌号冻结情况方法");
+
     }
 }

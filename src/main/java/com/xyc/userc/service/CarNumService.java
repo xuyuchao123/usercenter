@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public interface CarNumService
 {
-    CarNumOpenIdVo getCarNum(String openId) throws Exception;
+    List<CarNumOpenIdVo> getCarNum(String openId) throws Exception;
 
     void removeCarNum(String carNum, String openId) throws Exception;
 
@@ -34,4 +34,6 @@ public interface CarNumService
     List queryEnvInfo(String carNum, String startDate, String page, String size) throws Exception;
 
     boolean queryDrivinglicense(String carNum) throws Exception;
+
+    void refreshCarNumFrozen() throws Exception;
 }
