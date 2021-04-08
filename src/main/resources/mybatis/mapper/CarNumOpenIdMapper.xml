@@ -52,7 +52,7 @@
         <result column="is_enabled" jdbcType="VARCHAR" property="isEnabled" />
     </resultMap>
 
-    <select id="selectByOpenId" resultMap="BaseResultMap">
+    <select id="selectByOpenId" resultType="com.xyc.userc.vo.CarNumOpenIdVo">
         select DISTINCT oc.ID as id, oc.OPENID as openId, oc.CARNUMBER as carNum,
         oc.ENGINENUM as engineNum, oc.IDENTNUM as identNum, oc.EMISSIONSTD as emissionStd,
         oc.FLEETNAME as fleetName,oc.REGDATE as regDate,oc.DEPARTMENT as department,
