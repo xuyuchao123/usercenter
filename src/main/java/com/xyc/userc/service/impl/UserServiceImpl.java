@@ -12,6 +12,7 @@ import com.xyc.userc.util.BusinessException;
 import com.xyc.userc.util.JsonResultEnum;
 import com.xyc.userc.util.RoleTypeEnum;
 import com.xyc.userc.vo.CarNumInfoVo;
+import com.xyc.userc.vo.CarNumOpenIdVo;
 import com.xyc.userc.vo.UserInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -205,10 +206,10 @@ public class UserServiceImpl implements UserService
                             && !roleCodeList.contains(RoleTypeEnum.ROLE_SJ_0.getRoleCode())))
                 {
                     LOGGER.info("原角色为司机或者HLDD，重新绑定后角色不为司机和HLDD，开始判断该oopenId下是否有绑定的车牌号 openId={}",openId);
-                    List<CarNumOpenId> carNumOpenIdList =  carNumOpenIdMapper.selectByOpenId(openId);
-                    if(carNumOpenIdList != null && carNumOpenIdList.size() > 0)
+                    List<CarNumOpenIdVo> carNumOpenIdVos =  carNumOpenIdMapper.selectByOpenId(openId);
+                    if(carNumOpenIdVos != null && carNumOpenIdVos.size() > 0)
                     {
-                        LOGGER.info("该oopenId下有绑定的车牌号,开始删除这些车牌号的绑定关系 openId={},车牌号数量：{}",openId,carNumOpenIdList.size());
+                        LOGGER.info("该oopenId下有绑定的车牌号,开始删除这些车牌号的绑定关系 openId={},车牌号数量：{}",openId,carNumOpenIdVos.size());
                         int delCnt = carNumOpenIdMapper.deleteByCarNumOpenId(null,openId);
                         LOGGER.info("成功删除 {} 个车牌号",delCnt);
                     }
@@ -300,14 +301,14 @@ public class UserServiceImpl implements UserService
         if(maps != null && maps.size() > 0)
         {
             LOGGER.info("openid 已绑定手机号 openid={}",openId);
-            List<CarNumOpenId> carNumOpenIdList = carNumOpenIdMapper.selectByOpenId(openId);
+            List<CarNumOpenIdVo> carNumOpenIdVos = carNumOpenIdMapper.selectByOpenId(openId);
             boolean needInsert = true;
-            if(carNumOpenIdList != null && carNumOpenIdList.size() > 0)
+            if(carNumOpenIdVos != null && carNumOpenIdVos.size() > 0)
             {
                 //遍历已绑定的车牌号，若其中包含 carNum 则无需再次绑定
-                for(CarNumOpenId carNumOpenId : carNumOpenIdList)
+                for(CarNumOpenIdVo carNumOpenIdVo : carNumOpenIdVos)
                 {
-                    if(carNumOpenId.getCarNum().equals(carNum))
+                    if(carNumOpenIdVo.getCarNum().equals(carNum))
                     {
                         needInsert = false;
                         break;
