@@ -2,6 +2,7 @@ package com.xyc.userc.service;
 
 import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.vo.CarNumInOutTimeVo;
+import com.xyc.userc.vo.CarNumOpenIdVo;
 import com.xyc.userc.vo.EnvInfoVo;
 import com.xyc.userc.vo.GsCarInfoVo;
 
@@ -14,7 +15,7 @@ import java.util.Map;
  */
 public interface CarNumService
 {
-    List<CarNumOpenId> getCarNum(String openId) throws Exception;
+    CarNumOpenIdVo getCarNum(String openId) throws Exception;
 
     void removeCarNum(String carNum, String openId) throws Exception;
 

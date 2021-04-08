@@ -5,10 +5,7 @@ import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.User;
 import com.xyc.userc.service.CarNumService;
 import com.xyc.userc.util.*;
-import com.xyc.userc.vo.CarNumInOutTimeVo;
-import com.xyc.userc.vo.CarNumInfoAddVo;
-import com.xyc.userc.vo.EnvInfoVo;
-import com.xyc.userc.vo.GsCarInfoVo;
+import com.xyc.userc.vo.*;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +40,7 @@ public class CarNumController
     @PostMapping("/queryCarNum")
     @ApiOperation(value="查询车牌号")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功 isSuccess=false：查询失败，resMsg为错误信息")})
-    public JsonResultObj queryCarNum(@ApiIgnore HttpServletRequest request)
+    public JsonResultObj<CarNumOpenIdVo> queryCarNum(@ApiIgnore HttpServletRequest request)
     {
         LOGGER.info("开始查询车牌号");
         JsonResultObj resultObj = null;
@@ -58,8 +55,8 @@ public class CarNumController
             try
             {
                 LOGGER.info("获取到用户openId={}", openId);
-                List<CarNumOpenId> carNumOpenIdList = carNumService.getCarNum(openId);
-                resultObj = new JsonResultObj(true, carNumOpenIdList);
+                CarNumOpenIdVo carNumOpenIdVo = carNumService.getCarNum(openId);
+                resultObj = new JsonResultObj(true, carNumOpenIdVo);
             }
             catch (Exception e)
             {

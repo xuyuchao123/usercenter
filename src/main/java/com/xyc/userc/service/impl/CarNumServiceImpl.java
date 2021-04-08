@@ -56,12 +56,20 @@ public class CarNumServiceImpl implements CarNumService
 
 
     @Override
-    public List<CarNumOpenId> getCarNum(String openId) throws Exception
+    public CarNumOpenIdVo getCarNum(String openId) throws Exception
     {
         LOGGER.info("进入查询车牌号方法 openId:{}",openId);
         List<CarNumOpenId> carNumOpenIdList = carNumOpenIdMapper.selectByOpenId(openId);
+        boolean hasResult = false;
+        if(carNumOpenIdList != null && carNumOpenIdList.size() > 0)
+        {
+            hasResult = true;
+        }
+        CarNumOpenIdVo carNumOpenIdVo = new CarNumOpenIdVo();
+        carNumOpenIdVo.setHasResult(hasResult);
+        carNumOpenIdVo.setCarNumOpenIds(carNumOpenIdList);
         LOGGER.info("结束查询车牌号方法 openId:{}",openId);
-        return carNumOpenIdList;
+        return carNumOpenIdVo;
     }
 
     @Override
