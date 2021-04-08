@@ -288,7 +288,7 @@ public class CarNumController
         return resultObj_Page;
     }
 
-    @PostMapping("/checkDrivinglicense")
+    @PostMapping("/checkdrivinglicense")
     @ApiOperation(value="校验行驶证信息")
     @ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：校验成功 isSuccess=false：校验失败，resMsg为错误信息")})
