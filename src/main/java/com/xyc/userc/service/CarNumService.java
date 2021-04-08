@@ -19,7 +19,7 @@ public interface CarNumService
     void removeCarNum(String carNum, String openId) throws Exception;
 
     void addCarNum(String carNum, String openId, String engineNum, String identNum,
-                   String emissionStd, String fleetName, Date regDate, String department) throws Exception;
+                   String emissionStd, String fleetName, Date regDate, String department,String drivingLicense) throws Exception;
 
     void modifyCarNumByOpenId(String oldCarNum, String newCarNum, String engineNum, String identNum,
                               String emissionStd, String fleetName, Date regDate, String department, String openId) throws Exception;
@@ -31,4 +31,6 @@ public interface CarNumService
     List<GsCarInfoVo> queryGsCarInfo(String carNum) throws Exception;
 
     List queryEnvInfo(String carNum, String startDate, String page, String size) throws Exception;
+
+    boolean queryDrivinglicense(String carNum) throws Exception;
 }

@@ -133,7 +133,7 @@ public class CarNumServiceImpl implements CarNumService
 
     @Override
     public void addCarNum(String carNum,String openId,String engineNum,String identNum,String emissionStd,
-                          String fleetName,Date regDate, String department) throws Exception
+                          String fleetName,Date regDate, String department, String drivingLicense) throws Exception
     {
         LOGGER.info("进入新增车牌号方法carNum={} openId={}",carNum,openId);
         LOGGER.info("开始检查车牌号是否已被绑定carNum={} openId={}",carNum,openId);
@@ -145,10 +145,25 @@ public class CarNumServiceImpl implements CarNumService
             LOGGER.info("该车牌号已被绑定，不能重复绑定 carNum={} openId={}",carNum,openId);
             throw new BusinessException(JsonResultEnum.CARNUM_BINDED);
         }
+        if(drivingLicense != null && !drivingLicense.equals(""))
+        {
+            LOGGER.info("开始检查车牌号是否已上传过行驶证 carNum={} openId={}",carNum,openId);
+            int licenseCnt = carNumOpenIdMapper.selectDrivingLicense(carNum);
+            if(licenseCnt > 0)
+            {
+                LOGGER.info("该车牌号已上传过行驶证，不能重复上传 carNum={} openId={}",carNum,openId);
+                throw new BusinessException(JsonResultEnum.DRIVINGLICENSE_EXIST);
+            }
+        }
         int insertCnt = carNumOpenIdMapper.insert(carNumOpenId);
         if(insertCnt > 0)
         {
             LOGGER.info("新增车牌成功 carNum={} openId={}",carNum,openId);
+            if(drivingLicense != null && !drivingLicense.equals(""))
+            {
+                LOGGER.info("开始上传行驶证 carNum={} openId={} drivingLicense{}",carNum,openId,drivingLicense);
+                carNumOpenIdMapper.insertDrivingLicense(carNum,openId,drivingLicense);
+            }
             LOGGER.info("开始更新redis中用户车牌号信息 openId={}",openId);
             redisService.updateRedis(openId);
             LOGGER.info("结束更新redis中用户车牌号信息 openId={}",openId);
@@ -361,7 +376,12 @@ public class CarNumServiceImpl implements CarNumService
         return resList;
     }
 
-
-
-
+    @Override
+    public boolean queryDrivinglicense(String carNum) throws Exception
+    {
+        LOGGER.info("进入校验行驶证信息方法carNum={}",carNum);
+        int  licenseCnt = carNumOpenIdMapper.selectDrivingLicense(carNum);
+        LOGGER.info("结束校验行驶证信息方法carNum={} licenseCnt={}",carNum,licenseCnt);
+        return licenseCnt > 0 ? true : false;
+    }
 }

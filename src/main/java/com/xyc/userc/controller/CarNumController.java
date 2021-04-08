@@ -6,6 +6,7 @@ import com.xyc.userc.entity.User;
 import com.xyc.userc.service.CarNumService;
 import com.xyc.userc.util.*;
 import com.xyc.userc.vo.CarNumInOutTimeVo;
+import com.xyc.userc.vo.CarNumInfoAddVo;
 import com.xyc.userc.vo.EnvInfoVo;
 import com.xyc.userc.vo.GsCarInfoVo;
 import io.swagger.annotations.*;
@@ -18,6 +19,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.NotNull;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -100,19 +102,10 @@ public class CarNumController
 
     @PostMapping("/addCarNum")
     @ApiOperation(value="新增车牌号")
-    @ApiImplicitParams({@ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "engineNum", value = "发动机号", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "identNum", value = "车辆识别号", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "emissionStd", value = "排放标准", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "fleetName", value = "车队名称", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "regDate", value = "注册日期", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "department", value = "业务管理部门", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：新增成功 isSuccess=false：新增失败，resMsg为错误信息")})
-    public JsonResultObj addCarNum(String carNum, String engineNum, String identNum,String emissionStd,String fleetName,
-                                   String regDate, String department, @ApiIgnore HttpServletRequest request)
+    public JsonResultObj addCarNum(CarNumInfoAddVo vo, @ApiIgnore HttpServletRequest request)
     {
-        LOGGER.info("开始新增车牌号 carNum={} engineNum={} identNum={} emissionStd={} fleetName={} regDate={} department={}",
-                carNum,engineNum,identNum,emissionStd,fleetName,regDate,department);
+        LOGGER.info("开始新增车牌号 {}",vo.toString());
         JsonResultObj resultObj = null;
         String openId = request.getHeader(UsercConstant.OPENID);
         if(openId == null)
@@ -125,8 +118,9 @@ public class CarNumController
             try
             {
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(Long.valueOf(regDate));
-                carNumService.addCarNum(carNum,openId,engineNum,identNum,emissionStd,fleetName,calendar.getTime(),department);
+                calendar.setTimeInMillis(Long.valueOf(vo.getRegDate()));
+                carNumService.addCarNum(vo.getCarNum(),openId,vo.getEngineNum(),vo.getIdentNum(),vo.getEmissionStd(),
+                        vo.getFleetName(),calendar.getTime(),vo.getDepartment(),vo.getDrivingLicense());
                 resultObj = new JsonResultObj(true);
             }
             catch (Exception e)
@@ -134,8 +128,7 @@ public class CarNumController
                 resultObj = CommonExceptionHandler.handException(e, "新增车牌号失败", LOGGER);
             }
         }
-        LOGGER.info("结束新增车牌号 carNum={} engineNum={} identNum={} emissionStd={} fleetName={} regDate={} department={}",
-                carNum,engineNum,identNum,emissionStd,fleetName,regDate,department);
+        LOGGER.info("结束新增车牌号 {}",vo.toString());
         return resultObj;
     }
 
@@ -293,5 +286,26 @@ public class CarNumController
         }
         LOGGER.info("结束查询环保管控信息 carNum={},startDate={},page={},size={}",carNum,startDate,page,size);
         return resultObj_Page;
+    }
+
+    @PostMapping("/checkDrivinglicense")
+    @ApiOperation(value="校验行驶证信息")
+    @ApiImplicitParam(name = "carNum", value = "车牌号", required = true, dataType = "String")
+    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：校验成功 isSuccess=false：校验失败，resMsg为错误信息")})
+    public JsonResultObj checkDrivinglicense(@NotNull(message = "车牌号不能为空") String carNum)
+    {
+        LOGGER.info("开始校验行驶证信息 carNum={}",carNum);
+        JsonResultObj jsonResultObj = null;
+        try
+        {
+            boolean b = carNumService.queryDrivinglicense(carNum);
+            jsonResultObj = new JsonResultObj(true,b);
+        }
+        catch (Exception e)
+        {
+            jsonResultObj = CommonExceptionHandler.handException_page(e, "校验行驶证信息失败", LOGGER);
+        }
+        LOGGER.info("结束校验行驶证信息 carNum={}",carNum);
+        return jsonResultObj;
     }
 }

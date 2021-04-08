@@ -46,8 +46,9 @@ public enum JsonResultEnum
     CARNUM_NOT_EXIST(202, "车牌号不存在或已删除!"),
     CARNUM_ENABLED(203, "车牌号已在启用状态!"),
     CARNUM_BLACKLIST_EXIST(204,"车牌号已被拉黑!"),
-    CARNUM_PARAM_NOT_EXIST(205,"车牌号参数为空！"),
+    CARNUM_PARAM_NOT_EXIST(205,"车牌号不能为空！"),
     CARNUM_NOT_ENABLED(206,"车牌号未启用！"),
+    DRIVINGLICENSE_EXIST(207,"行驶证已存在！"),
 
     MOBILE_NOT_BINDED(300, "手机号未绑定！"),
 //    MOBILE_BLACKLIST_EXIST(301,"手机号已被拉黑!"),

@@ -57,4 +57,8 @@ public interface CarNumOpenIdMapper
 
     List<Map> confirmCarNumExist(@Param("openId")String openId, @Param("carNum")String carNum);
 
+    int selectDrivingLicense(String carNum);
+
+    int insertDrivingLicense(@Param("carNum")String carNum, @Param("openId")String openId, @Param("drivingLicense")String drivingLicense);
+
 }

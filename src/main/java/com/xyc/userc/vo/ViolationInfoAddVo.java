@@ -43,19 +43,7 @@ public class ViolationInfoAddVo
     @ApiModelProperty(value="罚款事由", required = true, dataType="String")
     private String reasonForFine;
 
-    @Override
-    public String toString() {
-        return "ViolationInfoAddVo{" +
-                "billingDepartment='" + billingDepartment + '\'' +
-                ", billingTime='" + billingTime + '\'' +
-                ", openSingle='" + openSingle + '\'' +
-                ", billingSerialNumber='" + billingSerialNumber + '\'' +
-                ", theAmountOfTheFine='" + theAmountOfTheFine + '\'' +
-                ", illegalPictures='" + illegalPictures + '\'' +
-                ", paymentStatus='" + paymentStatus + '\'' +
-                ", reasonForFine='" + reasonForFine + '\'' +
-                '}';
-    }
+
 
     public String getBillingDepartment() {
         return billingDepartment;

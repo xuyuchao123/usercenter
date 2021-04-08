@@ -459,5 +459,26 @@
         order by b.CROSSTIME desc
     </select>
 
+    <select id="selectDrivingLicense" resultType="java.lang.String">
+        select count(*) from FG_CARYB_FILE@SUPC where CAR_NO = #{carNum}
+    </select>
+
+    <insert id="insertDrivingLicense">
+        insert into FG_CARYB_FILE@SUPC
+		(ATTACHMENT,
+		CAR_NO,
+		SUPP_ID,
+		SUPP_NAME,
+		REC_CREATOR,
+		REC_CREATE_TIME) values
+		(
+			#{drivingLicense},
+			#{carNum},
+			''
+			'',
+			#{openId},
+			TO_CHAR (SYSDATE, 'yyyyMMddHH24miss')
+		)
+    </insert>
 
 </mapper>
