@@ -33,7 +33,7 @@ public class CarNumOpenIdVo  implements Serializable
     private Date gmtModified;
 
     @ApiModelProperty(value="是否已上传行驶证，返回true表示已上传，返回false表示未上传")
-    private boolean hasDrivingLicense;
+    private String hasDrivingLicense;
 
     public Integer getId() {
         return id;
@@ -155,11 +155,11 @@ public class CarNumOpenIdVo  implements Serializable
         this.gmtModified = gmtModified;
     }
 
-    public boolean isHasDrivingLicense() {
+    public String getHasDrivingLicense() {
         return hasDrivingLicense;
     }
 
-    public void setHasDrivingLicense(boolean hasDrivingLicense) {
+    public void setHasDrivingLicense(String hasDrivingLicense) {
         this.hasDrivingLicense = hasDrivingLicense;
     }
 }
