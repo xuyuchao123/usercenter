@@ -28,6 +28,12 @@ public class JsonResultObj_Page<T> extends JsonResultObj<T>
         super(isSuccess,jsonResultEnum);
     }
 
+    //请求失败并返回失败原因
+    public JsonResultObj_Page(boolean isSuccess, Integer resCode, String msg)
+    {
+        super(isSuccess,resCode,msg);
+    }
+
     //请求成功/失败并返回数据对象,resMsg为默认值
     public JsonResultObj_Page(boolean isSuccess, T resData, String total,String page, String size)
     {

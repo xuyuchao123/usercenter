@@ -20,8 +20,8 @@ public class CommonExceptionHandler
             }
             else
             {
-                LOGGER.error(msg + "：{}", ((BusinessException)e).getMessage());
-                return new JsonResultObj(false, JsonResultEnum.FAIL.getCode(), ((BusinessException)e).getMessage());
+                LOGGER.error(msg + "：{}", e.getMessage());
+                return new JsonResultObj(false, JsonResultEnum.FAIL.getCode(), e.getMessage());
             }
 
         }
@@ -37,8 +37,17 @@ public class CommonExceptionHandler
     {
         if(e instanceof BusinessException)
         {
-            LOGGER.error(msg + "：{}", ((BusinessException)e).getJsonResultEnum().getMessage());
-            return new JsonResultObj_Page(false,((BusinessException)e).getJsonResultEnum());
+            if(((BusinessException)e).getJsonResultEnum() != null)
+            {
+                LOGGER.error(msg + "：{}", ((BusinessException)e).getJsonResultEnum().getMessage());
+                return new JsonResultObj_Page(false,((BusinessException)e).getJsonResultEnum());
+            }
+            else
+            {
+                LOGGER.error(msg + "：{}", e.getMessage());
+                return new JsonResultObj_Page(false, JsonResultEnum.FAIL.getCode(), e.getMessage());
+            }
+
         }
         else
         {

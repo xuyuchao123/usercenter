@@ -303,7 +303,7 @@ public class CarNumController
         }
         catch (Exception e)
         {
-            jsonResultObj = CommonExceptionHandler.handException_page(e, "校验行驶证信息失败", LOGGER);
+            jsonResultObj = CommonExceptionHandler.handException(e, "校验行驶证信息失败", LOGGER);
         }
         LOGGER.info("结束校验行驶证信息 carNum={}",carNum);
         return jsonResultObj;
