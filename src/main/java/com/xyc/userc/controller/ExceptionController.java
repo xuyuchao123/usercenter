@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,6 +42,12 @@ public class ExceptionController
             }
             LOGGER.error("系统错误：{}", sb.toString());
             return new JsonResultObj(false,JsonResultEnum.FAIL.getCode(),sb.toString());
+        }
+        if(e instanceof MissingServletRequestParameterException)
+        {
+            String message = e.getMessage();
+            LOGGER.error("系统错误：{}", message);
+            return new JsonResultObj(false,JsonResultEnum.FAIL.getCode(),message);
         }
         e.printStackTrace();
         LOGGER.error("系统错误：", e);
