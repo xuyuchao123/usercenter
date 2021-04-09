@@ -1,5 +1,6 @@
 package com.xyc.userc.dao;
 
+import com.xyc.userc.entity.CarNumFrozen;
 import com.xyc.userc.entity.CarNumOpenId;
 import com.xyc.userc.entity.MobileOpenId;
 import com.xyc.userc.vo.*;
@@ -61,4 +62,11 @@ public interface CarNumOpenIdMapper
 
     int insertDrivingLicense(@Param("carNum")String carNum, @Param("openId")String openId, @Param("drivingLicense")String drivingLicense);
 
+    List<CarNumFrozen> selectCarNumFrozen();
+
+    List<Map> selectCarNumAViolationInfo();
+
+    void insertAllCarNumFrozen(@Param("list")List<CarNumFrozen> carNumFrozenList);
+
+    void updateAllCarNumFrozen(@Param("list")List<CarNumFrozen> carNumFrozenList);
 }

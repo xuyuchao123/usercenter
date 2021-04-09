@@ -16,6 +16,8 @@ public class UsercConstant
 
     public static final Map<String,String> ROLECODERELMAP_REV;
 
+    public static final Integer FROZEN_PERIOD = 7;
+
     static
     {
         ROLECODERELMAP = new HashMap<>();

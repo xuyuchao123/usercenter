@@ -305,4 +305,18 @@ public class CarNumController
         LOGGER.info("结束校验行驶证信息 carNum={}",carNum);
         return jsonResultObj;
     }
+
+    @GetMapping("/checkjob")
+    @ApiOperation(value="测试自动任务")
+    public void checkjob()
+    {
+        try
+        {
+            carNumService.refreshCarNumFrozen();
+        }
+        catch (Exception e)
+        {
+            CommonExceptionHandler.handException(e, "校验行驶证信息失败", LOGGER);
+        }
+    }
 }
