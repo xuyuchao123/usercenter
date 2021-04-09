@@ -391,9 +391,10 @@ public class CarNumServiceImpl implements CarNumService
             frozenMap.put(carNumFrozen.getCarNum(),carNumFrozen);
         }
         //从安全系统获取车辆A类违章信息
-        List<Map> violationInfoList = carNumOpenIdMapper.selectCarNumAViolationInfo();
+//        List<Map> violationInfoList = carNumOpenIdMapper.selectCarNumAViolationInfo();
 
         //测试数据
+        List<Map> violationInfoList = new ArrayList<>();
         Map<String,Object> tstmap = new HashMap();
         tstmap.put("carNum","aaaa");
         tstmap.put("violationTimes",2);
