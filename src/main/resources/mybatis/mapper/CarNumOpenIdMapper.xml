@@ -486,6 +486,12 @@
 		)
     </insert>
 
+    <select id="selectCarNumFrozen" resultType="com.xyc.userc.entity.CarNumFrozen">
+        select a.ID as id, a.CARNUMBER as carNum, a.FROZEN_STATUS as frozenStatus, a.START_DATE as startDate,
+         a.EXPIRE_DATE as expireDate, a.GMT_CREATE as gmtCreate, a.GMT_MODIFIED as gmtModified, a.VIOLATION_TIMES as violationTimes
+         from SYS_CARNUM_FROZEN a
+    </select>
+
     <insert id="insertAllCarNumFrozen" parameterType="java.util.List">
         insert all
         <foreach collection="list" separator=" " item="carnumfrozen">
