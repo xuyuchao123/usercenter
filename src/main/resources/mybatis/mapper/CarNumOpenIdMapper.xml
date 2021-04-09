@@ -496,7 +496,7 @@
         insert all
         <foreach collection="list" separator=" " item="carnumfrozen">
             into SYS_CARNUM_FROZEN (ID,CARNUMBER,FROZEN_STATUS,START_DATE,EXPIRE_DATE,GMT_CREATE,GMT_MODIFIED,VIOLATION_TIMES)
-            values (CARNUM_FROZEN_SEQ.nextval,#{carnumfrozen.carNum},#{carnumfrozen.frozenStatus},#{carnumfrozen.startDate},
+            values (get_carnumfrozen_seq,#{carnumfrozen.carNum},#{carnumfrozen.frozenStatus},#{carnumfrozen.startDate},
             #{carnumfrozen.expireDate},#{carnumfrozen.gmtCreate},#{carnumfrozen.gmtModified},#{carnumfrozen.violationTimes})
         </foreach>
         select 1 from dual
