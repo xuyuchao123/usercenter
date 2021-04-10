@@ -412,10 +412,10 @@ public class CarNumServiceImpl implements CarNumService
 
         LocalDateTime localDateTime = LocalDateTime.now();
         Date date = DateUtils.localDateTime2Date(localDateTime);
-        //首次违章的车牌号列表，
+        //需要冻结的车牌号列表
         List<CarNumFrozen> insertList = new ArrayList<>();
         //当前未冻结，需要再次进行冻结的车牌号列表
-        List<CarNumFrozen> recoverList = new ArrayList<>();
+//        List<CarNumFrozen> recoverList = new ArrayList<>();
         //当前已冻结，违章次数增加，需要修改冻结期限的车牌号列表
         List<CarNumFrozen> delayList = new ArrayList<>();
         //冻结期限到期，需要解冻的车牌号列表
@@ -427,41 +427,24 @@ public class CarNumServiceImpl implements CarNumService
                 String loopCarNum = map.get("carNum").toString();
                 int loopTimes = (Integer)map.get("violationTimes");
                 CarNumFrozen tmpCarNumFrozen = frozenMap.get(loopCarNum);
-                if(tmpCarNumFrozen == null)     //没有冻结记录
+                if(tmpCarNumFrozen == null)     //当前车牌号未冻结
                 {
                     Date expireDate = DateUtils.localDateTime2Date(localDateTime.plusDays(loopTimes * UsercConstant.FROZEN_PERIOD));
                     CarNumFrozen instCarNumFrozen = new CarNumFrozen(null,loopCarNum,1,date,expireDate,date,date,loopTimes);
                     insertList.add(instCarNumFrozen);
                 }
-                else    //有冻结记录
+                else    //车牌号已冻结
                 {
                     int preTimes = tmpCarNumFrozen.getViolationTimes().intValue();
-                    if(tmpCarNumFrozen.getFrozenStatus().intValue() == 0)       //在解冻状态
+                    if(preTimes < loopTimes)  //有新的违章记录
                     {
-                        if(preTimes < loopTimes)  //有新的违章记录
-                        {
-                            Date expireDate = DateUtils.localDateTime2Date(localDateTime.plusDays((loopTimes- preTimes)*UsercConstant.FROZEN_PERIOD));
-                            tmpCarNumFrozen.setFrozenStatus(1);
-                            tmpCarNumFrozen.setStartDate(date);
-                            tmpCarNumFrozen.setExpireDate(expireDate);
-                            tmpCarNumFrozen.setGmtModified(date);
-                            tmpCarNumFrozen.setViolationTimes(loopTimes);
-                            recoverList.add(tmpCarNumFrozen);
-                        }
+                        Date expireDate = DateUtils.localDateTime2Date(DateUtils.date2LocalDateTime(tmpCarNumFrozen.getExpireDate())
+                                .plusDays(loopTimes*UsercConstant.FROZEN_PERIOD));
+                        tmpCarNumFrozen.setExpireDate(expireDate);
+                        tmpCarNumFrozen.setGmtModified(date);
+                        tmpCarNumFrozen.setViolationTimes(loopTimes);
+                        delayList.add(tmpCarNumFrozen);
                         frozenMap.remove(loopCarNum);
-                    }
-                    else    //在冻结状态
-                    {
-                        if(preTimes < loopTimes)  //有新的违章记录
-                        {
-                            Date expireDate = DateUtils.localDateTime2Date(DateUtils.date2LocalDateTime(tmpCarNumFrozen.getExpireDate())
-                                    .plusDays((loopTimes- preTimes)*UsercConstant.FROZEN_PERIOD));
-                            tmpCarNumFrozen.setExpireDate(expireDate);
-                            tmpCarNumFrozen.setGmtModified(date);
-                            tmpCarNumFrozen.setViolationTimes(loopTimes);
-                            delayList.add(tmpCarNumFrozen);
-                            frozenMap.remove(loopCarNum);
-                        }
                     }
                 }
             }
@@ -477,11 +460,10 @@ public class CarNumServiceImpl implements CarNumService
                 unfreezeList.add(tmpCarNumFrozen2);
             }
         }
-        recoverList.addAll(delayList);
-        recoverList.addAll(unfreezeList);
-        if(recoverList.size() > 0)
+        delayList.addAll(unfreezeList);
+        if(delayList.size() > 0)
         {
-            carNumOpenIdMapper.updateAllCarNumFrozen(recoverList);
+            carNumOpenIdMapper.updateAllCarNumFrozen(delayList);
         }
         if(insertList.size() > 0)
         {
