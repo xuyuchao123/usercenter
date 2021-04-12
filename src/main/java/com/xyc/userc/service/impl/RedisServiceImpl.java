@@ -271,6 +271,8 @@ public class RedisServiceImpl implements RedisService
             userInfoVo.setGh(gh);
             String json = JSON.toJSONString(userInfoVo);
             LOGGER.info("json:{}",json);
+            redisTemplate.setKeySerializer(RedisSerializer.string());
+            redisTemplate.setValueSerializer(RedisSerializer.string());
             redisTemplate.opsForValue().set(openId,json);
         }
     }
