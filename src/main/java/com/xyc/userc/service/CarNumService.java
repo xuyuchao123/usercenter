@@ -1,10 +1,7 @@
 package com.xyc.userc.service;
 
 import com.xyc.userc.entity.CarNumOpenId;
-import com.xyc.userc.vo.CarNumInOutTimeVo;
-import com.xyc.userc.vo.CarNumOpenIdVo;
-import com.xyc.userc.vo.EnvInfoVo;
-import com.xyc.userc.vo.GsCarInfoVo;
+import com.xyc.userc.vo.*;
 
 import java.util.Date;
 import java.util.List;
@@ -23,7 +20,8 @@ public interface CarNumService
                    String emissionStd, String fleetName, Date regDate, String department,String drivingLicense) throws Exception;
 
     void modifyCarNumByOpenId(String oldCarNum, String newCarNum, String engineNum, String identNum,
-                              String emissionStd, String fleetName, Date regDate, String department, String openId) throws Exception;
+                              String emissionStd, String fleetName, Date regDate, String department,
+                              String openId, String drivingLicense) throws Exception;
 
     void enableCarNum(String carNum, String openId) throws Exception;
 
@@ -36,4 +34,6 @@ public interface CarNumService
     boolean queryDrivinglicense(String carNum) throws Exception;
 
     void refreshCarNumFrozen() throws Exception;
+
+    List<CarNumFrozenVo> queryCarNumFrozen(String carNum) throws Exception;
 }

@@ -62,7 +62,11 @@ public interface CarNumOpenIdMapper
 
     int insertDrivingLicense(@Param("carNum")String carNum, @Param("openId")String openId, @Param("drivingLicense")String drivingLicense);
 
-    List<CarNumFrozen> selectCarNumFrozen();
+    void updateDrivingLicense(@Param("carNum")String carNum, @Param("drivingLicense")String drivingLicense);
+
+    List<CarNumFrozen> selectCarNumFrozen(@Param("frozenStatus")Integer frozenStatus);
+
+    List<CarNumFrozenVo> selectCarNumFrozenVo(@Param("carNum")String carNum,@Param("frozenStatus")Integer frozenStatus);
 
     List<Map> selectCarNumAViolationInfo();
 

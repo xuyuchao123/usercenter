@@ -173,17 +173,31 @@ public class CarNumServiceImpl implements CarNumService
 
     @Override
     public void modifyCarNumByOpenId(String oldCarNum, String newCarNum, String engineNum, String identNum,
-                                     String emissionStd, String fleetName, Date regDate, String department, String openId) throws Exception
+                                     String emissionStd, String fleetName, Date regDate, String department,
+                                     String openId, String drivingLicense) throws Exception
     {
-        LOGGER.info("进入修改车牌号方法 oldCarNum={} newCarNum={} engineNum={} identNum={} emissionStd={} fleetName={} regDate={} department={} openId={}",
-                oldCarNum,newCarNum,engineNum,identNum,emissionStd,fleetName,regDate,department,openId);
+        LOGGER.info("进入修改车牌号方法");
         int selectCnt = carNumOpenIdMapper.selectCntByCarNumOpenId(oldCarNum,openId);
         if(selectCnt == 1)
         {
-            carNumOpenIdMapper.updateCarNum(oldCarNum,newCarNum,engineNum,identNum,emissionStd,fleetName,regDate,department,openId,new Date());
-            LOGGER.info("成功修改车牌号 openId={}",openId);
-
-            LOGGER.info("开始更新redis中用户车牌号信息openId={}",openId);
+            carNumOpenIdMapper.updateCarNum(oldCarNum,newCarNum,engineNum,identNum,emissionStd,fleetName,regDate,
+                    department,openId,new Date());
+            if(drivingLicense != null && !drivingLicense.equals(""))
+            {
+                LOGGER.info("开始修改行驶证信息 newCarNum={}",newCarNum);
+                int licenseCnt = carNumOpenIdMapper.selectDrivingLicense(newCarNum);
+                if(licenseCnt > 0)
+                {
+                    LOGGER.info("该车牌号已上传过行驶证, newCarNum={} ",newCarNum);
+                    carNumOpenIdMapper.updateDrivingLicense(newCarNum,drivingLicense);
+                }
+                else
+                {
+                    LOGGER.info("该车牌号未上传过行驶证, newCarNum={} ",newCarNum);
+                    carNumOpenIdMapper.insertDrivingLicense(newCarNum,openId,drivingLicense);
+                }
+            }
+            LOGGER.info("成功修改车牌号 openId={} 开始更新redis中用户车牌号信息openId={}",openId);
             redisService.updateRedis(openId);
             LOGGER.info("结束更新redis中用户车牌号信息 openId={}",openId);
         }
@@ -192,8 +206,7 @@ public class CarNumServiceImpl implements CarNumService
             LOGGER.info("该用户未绑定该车牌，修改失败 openId={}",openId);
             throw new BusinessException(JsonResultEnum.CARNUM_NOT_BINDED);
         }
-        LOGGER.info("结束修改车牌号方法 oldCarNum={} newCarNum={} engineNum={} identNum={} emissionStd={} fleetName={} regDate={} department={} openId={}",
-                oldCarNum,newCarNum,engineNum,identNum,emissionStd,fleetName,regDate,department,openId);
+        LOGGER.info("结束修改车牌号方法");
     }
 
     @Override
@@ -384,7 +397,7 @@ public class CarNumServiceImpl implements CarNumService
     public void refreshCarNumFrozen() throws Exception
     {
         LOGGER.info("进入更新车牌号冻结情况方法");
-        List<CarNumFrozen> carNumFrozens = carNumOpenIdMapper.selectCarNumFrozen();
+        List<CarNumFrozen> carNumFrozens = carNumOpenIdMapper.selectCarNumFrozen(1);
         Map<String,CarNumFrozen> frozenMap = new HashMap<>();
         for(CarNumFrozen carNumFrozen : carNumFrozens)
         {
@@ -471,5 +484,14 @@ public class CarNumServiceImpl implements CarNumService
         }
         LOGGER.info("结束更新车牌号冻结情况方法");
 
+    }
+
+    @Override
+    public List<CarNumFrozenVo> queryCarNumFrozen(String carNum) throws Exception
+    {
+        LOGGER.info("进入查询车牌号违章冻结信息方法 carNum={}",carNum);
+        List<CarNumFrozenVo> CarNumFrozenVos = carNumOpenIdMapper.selectCarNumFrozenVo(carNum,1);
+        LOGGER.info("结束查询车牌号违章冻结信息方法 carNum={}",carNum);
+        return CarNumFrozenVos;
     }
 }

@@ -475,21 +475,49 @@
 		SUPP_ID,
 		SUPP_NAME,
 		REC_CREATOR,
-		REC_CREATE_TIME) values
+		REC_CREATE_TIME,
+		FILE_NAME) values
 		(
 			#{drivingLicense},
 			#{carNum},
 			'',
 			'',
 			#{openId},
-			TO_CHAR (SYSDATE, 'yyyyMMddHH24miss')
+			TO_CHAR (SYSDATE, 'yyyyMMddHH24miss'),
+			'wechat'
 		)
     </insert>
+
+    <update id="updateDrivingLicense">
+        update FG_CARYB_FILE@SUPC a
+        set a.ATTACHMENT = #{drivingLicense}
+        where a.CAR_NO = #{carNum}
+    </update>
 
     <select id="selectCarNumFrozen" resultType="com.xyc.userc.entity.CarNumFrozen">
         select a.ID as id, a.CARNUMBER as carNum, a.FROZEN_STATUS as frozenStatus, a.START_DATE as startDate,
          a.EXPIRE_DATE as expireDate, a.GMT_CREATE as gmtCreate, a.GMT_MODIFIED as gmtModified, a.VIOLATION_TIMES as violationTimes
          from SYS_CARNUM_FROZEN a
+        <where>
+            <if test="frozenStatus != null">
+                and a.FROZEN_STATUS = #{frozenStatus}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCarNumFrozenVo" resultType="com.xyc.userc.vo.CarNumFrozenVo">
+        select a.CARNUMBER as carNum, a.START_DATE as startDate,
+        a.EXPIRE_DATE as expireDate, a.GMT_CREATE as gmtCreate,
+        a.GMT_MODIFIED as gmtModified, a.VIOLATION_TIMES as violationTimes
+        from SYS_CARNUM_FROZEN a
+        <where>
+            <if test="carNum != null">
+                and a.CARNUMBER = #{carNum}
+            </if>
+            <if test="frozenStatus != null">
+                and a.FROZEN_STATUS = #{frozenStatus}
+            </if>
+        </where>
     </select>
 
     <insert id="insertAllCarNumFrozen" parameterType="java.util.List">

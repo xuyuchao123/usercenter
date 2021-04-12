@@ -131,20 +131,10 @@ public class CarNumController
 
     @PostMapping("/updateCarNum")
     @ApiOperation(value="修改车牌号")
-    @ApiImplicitParams({@ApiImplicitParam(name="oldCarNum", value="原来的车牌号", required=true, dataType="String"),
-            @ApiImplicitParam(name="newCarNum", value="新的车牌号", required=true, dataType="String"),
-            @ApiImplicitParam(name = "engineNum", value = "发动机号", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "identNum", value = "车辆识别号", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "emissionStd", value = "排放标准", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "fleetName", value = "车队名称", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "regDate", value = "注册日期", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "department", value = "业务管理部门", required = true, dataType = "String")})
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：修改成功 isSuccess=false：修改失败，resMsg为错误信息")})
-    public JsonResultObj updateCarNum(String oldCarNum, String newCarNum, String engineNum, String identNum,
-                                      String emissionStd, String fleetName, String regDate, String department, @ApiIgnore HttpServletRequest request)
+    public JsonResultObj updateCarNum(CarNumInfoUptVo vo, @ApiIgnore HttpServletRequest request)
     {
-        LOGGER.info("开始修改车牌号 oldCarNum={} newCarNum={} engineNum={} identNum={} emissionStd={} fleetName={} regDate={} department={}",
-                oldCarNum, newCarNum,engineNum,identNum,emissionStd,fleetName,regDate,department);
+        LOGGER.info("开始修改车牌号 {}",vo.toString());
         JsonResultObj resultObj = null;
         String openId = request.getHeader(UsercConstant.OPENID);
         if(openId == null)
@@ -157,8 +147,9 @@ public class CarNumController
             try
             {
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(Long.valueOf(regDate));
-                carNumService.modifyCarNumByOpenId(oldCarNum,newCarNum,engineNum,identNum,emissionStd,fleetName,calendar.getTime(),department,openId);
+                calendar.setTimeInMillis(Long.valueOf(vo.getRegDate()));
+                carNumService.modifyCarNumByOpenId(vo.getOldCarNum(),vo.getNewCarNum(),vo.getEngineNum(),vo.getIdentNum(),
+                        vo.getEmissionStd(),vo.getFleetName(),calendar.getTime(),vo.getDepartment(),vo.getDrivingLicense(),openId);
                 resultObj = new JsonResultObj(true);
             }
             catch (Exception e)
@@ -166,8 +157,7 @@ public class CarNumController
                 resultObj = CommonExceptionHandler.handException(e, "修改车牌号失败", LOGGER);
             }
         }
-        LOGGER.info("结束修改车牌号 oldCarNum={} newCarNum={} engineNum={} identNum={} emissionStd={} fleetName={} regDate={} department={}",
-                oldCarNum, newCarNum,engineNum,identNum,emissionStd,fleetName,regDate,department);
+        LOGGER.info("结束修改车牌号 {}",vo.toString());
         return resultObj;
     }
 
@@ -306,6 +296,29 @@ public class CarNumController
         return jsonResultObj;
     }
 
+    @PostMapping("/querycarnumfrozen")
+    @ApiOperation(value="查询车牌号违章冻结信息")
+    @ApiImplicitParam(name = "carNum", value = "车牌号", required = false, dataType = "String")
+    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功，isSuccess=false：查询失败，resMsg为错误信息")})
+    public JsonResultObj<CarNumFrozenVo> queryCarNumFrozen(@RequestParam(value = "carNum",required = false) String carNum)
+    {
+        LOGGER.info("开始查询车牌号违章冻结信息 carNum={}",carNum);
+        JsonResultObj jsonResultObj = null;
+        try
+        {
+            List<CarNumFrozenVo> carNumFrozenVos = carNumService.queryCarNumFrozen(carNum);
+            jsonResultObj = new JsonResultObj(true,carNumFrozenVos);
+        }
+        catch (Exception e)
+        {
+            jsonResultObj = CommonExceptionHandler.handException(e, "校验行驶证信息失败", LOGGER);
+        }
+        LOGGER.info("结束校验行驶证信息 carNum={}",carNum);
+        return jsonResultObj;
+    }
+
+
+
     @GetMapping("/checkjob")
     @ApiOperation(value="测试自动任务")
     public void checkjob()
@@ -316,7 +329,7 @@ public class CarNumController
         }
         catch (Exception e)
         {
-            CommonExceptionHandler.handException(e, "校验行驶证信息失败", LOGGER);
+            CommonExceptionHandler.handException(e, "测试自动任务失败", LOGGER);
         }
     }
 }
