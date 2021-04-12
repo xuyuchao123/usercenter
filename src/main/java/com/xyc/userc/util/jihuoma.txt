@@ -1,1 +1,12 @@
-ozABO1VoeU8AVcFx45udA0EsnwSc
+SELECT
+	S.ID,
+	S.CreateUserID,
+	S.ViolationName,
+	T.SCDisciplinaryTypeName,
+	S.CreateDate
+FROM
+	[ShaGang].[dbo].[SCInspections] S,
+	[ShaGang].[dbo].[SCDisciplinaryContentTests] T
+WHERE
+	T.ID = S.SCViolationTypeID
+AND T.SCDisciplinaryTypeName = 'A类条款 道路交通类'
