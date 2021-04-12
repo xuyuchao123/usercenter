@@ -10,7 +10,7 @@ import org.springframework.context.annotation.PropertySources;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@MapperScan("com.xyc.userc.dao")
+//@MapperScan("com.xyc.userc.dao")
 @EnableTransactionManagement
 @ComponentScan(basePackages = { "com.xyc", "com.avei.shriety.wx_sdk" })
 @PropertySources({ @PropertySource(value = "classpath:wechat.properties", encoding = "UTF-8") })

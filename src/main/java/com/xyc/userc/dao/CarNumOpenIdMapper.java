@@ -68,8 +68,6 @@ public interface CarNumOpenIdMapper
 
     List<CarNumFrozenVo> selectCarNumFrozenVo(@Param("carNum")String carNum,@Param("frozenStatus")Integer frozenStatus);
 
-    List<Map> selectCarNumAViolationInfo();
-
     void insertAllCarNumFrozen(@Param("list")List<CarNumFrozen> carNumFrozenList);
 
     void updateAllCarNumFrozen(@Param("list")List<CarNumFrozen> carNumFrozenList);

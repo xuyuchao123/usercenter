@@ -16,6 +16,12 @@ spring:
     username: uc
     password: user
 
+  datasource2:
+      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      url: jdbc:sqlserver://10.99.0.219:1433;DatabaseName=ShaGang
+      username: erp1
+      password: 11111
+
   resources:
     static-locations:
 #    - file:D:/opt/weixin/mobile
