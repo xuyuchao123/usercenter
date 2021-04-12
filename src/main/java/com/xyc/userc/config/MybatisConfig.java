@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
@@ -28,9 +29,10 @@ public class MybatisConfig
         @Primary
         public SqlSessionFactory sqlSessionFactory(@Qualifier("dataSource") DataSource dataSource) throws Exception
         {
-            SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-            factoryBean.setDataSource(dataSource);
-            return factoryBean.getObject();
+            SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+            sqlSessionFactoryBean.setDataSource(dataSource);
+            sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResource("classpath:mybatis/mapper/*.xml"));
+            return sqlSessionFactoryBean.getObject();
         }
 
         @Bean
@@ -55,11 +57,12 @@ public class MybatisConfig
     public static class Db2
     {
         @Bean
-        public SqlSessionFactory sqlSessionFactory2(@Qualifier("dataSource2") DataSource dataSource) throws Exception
+        public SqlSessionFactory sqlSessionFactory2(@Qualifier("dataSource2") DataSource dataSource2) throws Exception
         {
-            SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-            factoryBean.setDataSource(dataSource);
-            return factoryBean.getObject();
+            SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+            sqlSessionFactoryBean.setDataSource(dataSource2);
+            sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResource("classpath:mybatis/mapper2/*.xml"));
+            return sqlSessionFactoryBean.getObject();
         }
 
         @Bean
@@ -69,9 +72,9 @@ public class MybatisConfig
         }
 
         @Bean
-        public DataSourceTransactionManager dataSourceTransactionManager2(@Qualifier("dataSource2") DataSource dataSource)
+        public DataSourceTransactionManager dataSourceTransactionManager2(@Qualifier("dataSource2") DataSource dataSource2)
         {
-            return new DataSourceTransactionManager(dataSource);
+            return new DataSourceTransactionManager(dataSource2);
         }
     }
 

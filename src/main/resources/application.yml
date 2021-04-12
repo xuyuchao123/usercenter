@@ -57,7 +57,8 @@ spring:
       shutdown-timeout: 0
 
 mybatis:
-  mapper-locations: classpath:mybatis/mapper/*.xml
+#  配置多数据源时，mapper-locations 配置项不会生效，需在配置SqlSessionFactoryBean时手动指定
+#  mapper-locations: classpath:mybatis/mapper/*.xml
   type-aliases-package: com.xyc.userc.entity
   config-location: classpath:mybatis/mybatis-config.xml
   type-handlers-package: com.xyc.userc.mybatis.typehandler
