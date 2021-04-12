@@ -160,6 +160,16 @@
 				</includes>
 				<filtering>false</filtering>
 			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*.xml</include>
+					<include>**/*.png</include>
+					<include>**/*.properties</include>
+					<include>**/*.bpmn</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
 		</resources>
 	</build>
 
