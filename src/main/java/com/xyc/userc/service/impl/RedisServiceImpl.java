@@ -270,6 +270,7 @@ public class RedisServiceImpl implements RedisService
             String gh = userMapper.selectUserId(userInfoVo.getMobilePhone());
             userInfoVo.setGh(gh);
             String json = JSON.toJSONString(userInfoVo);
+            LOGGER.info("json:{}",json);
             redisTemplate.opsForValue().set(openId,json);
         }
     }
