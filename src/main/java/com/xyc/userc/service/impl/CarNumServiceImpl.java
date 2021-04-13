@@ -491,11 +491,12 @@ public class CarNumServiceImpl implements CarNumService
     }
 
     @Override
-    public List<CarNumFrozenVo> queryCarNumFrozen(String carNum) throws Exception
+    public List queryCarNumFrozen(String carNum,String frozenStatus,String page,String size) throws Exception
     {
-        LOGGER.info("进入查询车牌号违章冻结信息方法 carNum={}",carNum);
-        List<CarNumFrozenVo> CarNumFrozenVos = carNumOpenIdMapper.selectCarNumFrozenVo(carNum,1);
-        LOGGER.info("结束查询车牌号违章冻结信息方法 carNum={}",carNum);
-        return CarNumFrozenVos;
+        LOGGER.info("进入查询车牌号违章冻结信息方法");
+        List<CarNumFrozenVo> carNumFrozenVos = carNumOpenIdMapper.selectCarNumFrozenVo(carNum,Integer.valueOf(frozenStatus));
+        List resList = PageUtil.getPageInfoList(carNumFrozenVos,page,size);
+        LOGGER.info("结束查询车牌号违章冻结信息方法");
+        return resList;
     }
 }

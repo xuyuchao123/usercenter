@@ -35,5 +35,5 @@ public interface CarNumService
 
     void refreshCarNumFrozen() throws Exception;
 
-    List<CarNumFrozenVo> queryCarNumFrozen(String carNum) throws Exception;
+    List queryCarNumFrozen(String carNum, String frozenStatus, String page, String size) throws Exception;
 }

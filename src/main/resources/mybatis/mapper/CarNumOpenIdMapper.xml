@@ -506,9 +506,10 @@
     </select>
 
     <select id="selectCarNumFrozenVo" resultType="com.xyc.userc.vo.CarNumFrozenVo">
-        select a.CARNUMBER as carNum, a.START_DATE as startDate,
-        a.EXPIRE_DATE as expireDate, a.GMT_CREATE as gmtCreate,
-        a.GMT_MODIFIED as gmtModified, a.VIOLATION_TIMES as violationTimes
+        select a.CARNUMBER as carNum, a.FROZEN_STATUS as frozenStatus,
+        a.START_DATE as startDate, a.EXPIRE_DATE as expireDate,
+        a.VIOLATION_TIMES as violationTimes, a.VIO_HANDLE_STATUS as violationHndStatus,
+        a.LAST_VIOLATIONTIME as lastViolationTime
         from SYS_CARNUM_FROZEN a
         <where>
             <if test="carNum != null">

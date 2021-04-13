@@ -9,6 +9,7 @@ import com.xyc.userc.vo.*;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -298,23 +299,33 @@ public class CarNumController
 
     @PostMapping("/querycarnumfrozen")
     @ApiOperation(value="查询车牌号违章冻结信息")
-    @ApiImplicitParam(name = "carNum", value = "车牌号", required = false, dataType = "String")
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功，isSuccess=false：查询失败，resMsg为错误信息")})
-    public JsonResultObj<CarNumFrozenVo> queryCarNumFrozen(@RequestParam(value = "carNum",required = false) String carNum)
+    public JsonResultObj_Page<CarNumFrozenVo> queryCarNumFrozen(@Validated CarNumFrozenQueryVo vo)
     {
-        LOGGER.info("开始查询车牌号违章冻结信息 carNum={}",carNum);
-        JsonResultObj jsonResultObj = null;
+        LOGGER.info("开始查询车牌号违章冻结信息 {}",vo.toString());
+        JsonResultObj_Page jsonResultObjPage = null;
         try
         {
-            List<CarNumFrozenVo> carNumFrozenVos = carNumService.queryCarNumFrozen(carNum);
-            jsonResultObj = new JsonResultObj(true,carNumFrozenVos);
+            List resList = carNumService.queryCarNumFrozen(vo.getCarNum(),vo.getFrozenStatus(),vo.getPage(),vo.getSize());
+            List<CarNumFrozenVo> carNumFrozenVos = null;
+            String total = null;
+            String page = null;
+            String size = null;
+            if(resList != null && resList.size() == 4)
+            {
+                total = resList.get(0).toString();
+                page = resList.get(1).toString();
+                size = resList.get(2).toString();
+                carNumFrozenVos = (List<CarNumFrozenVo>)resList.get(3);
+            }
+            jsonResultObjPage = new JsonResultObj_Page(true,carNumFrozenVos,total,page,size);
         }
         catch (Exception e)
         {
-            jsonResultObj = CommonExceptionHandler.handException(e, "校验行驶证信息失败", LOGGER);
+            jsonResultObjPage = CommonExceptionHandler.handException_page(e, "查询车牌号违章冻结信息失败", LOGGER);
         }
-        LOGGER.info("结束校验行驶证信息 carNum={}",carNum);
-        return jsonResultObj;
+        LOGGER.info("结束查询车牌号违章冻结信息 {}",vo.toString());
+        return jsonResultObjPage;
     }
 
 
