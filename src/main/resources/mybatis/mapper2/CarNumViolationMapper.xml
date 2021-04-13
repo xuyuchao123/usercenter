@@ -17,4 +17,8 @@
     AND T.SCDisciplinaryTypeName = 'A类条款 道路交通类'
 </select>
 
+    <select id="tst" resultType="java.lang.Integer">
+        select count(*) from [ShaGang].[dbo].[SCInspections];
+    </select>
+
 </mapper>

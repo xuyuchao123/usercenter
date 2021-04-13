@@ -408,6 +408,7 @@ public class CarNumServiceImpl implements CarNumService
             frozenMap.put(carNumFrozen.getCarNum(),carNumFrozen);
         }
         //从安全系统获取车辆A类违章信息
+        int cnt = carNumViolationMapper.tst();
         List<Map> violationInfoList = carNumViolationMapper.selectCarNumAViolationInfo();
 
         //测试数据

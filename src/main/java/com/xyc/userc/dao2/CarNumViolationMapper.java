@@ -9,4 +9,6 @@ import java.util.Map;
 public interface CarNumViolationMapper
 {
     List<Map> selectCarNumAViolationInfo();
+
+    int tst();
 }
