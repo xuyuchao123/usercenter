@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xyc.userc.dao2.CarNumViolationMapper">
 
-<select id="selectCarNumAViolationInfo" resultMap="java.util.Map">
+<select id="selectCarNumAViolationInfo" resultType="java.util.Map">
     SELECT
       S.ID,
       S.CreateUserID,
@@ -17,8 +17,8 @@
     AND T.SCDisciplinaryTypeName = 'A类条款 道路交通类'
 </select>
 
-    <select id="tst" resultType="java.lang.Integer">
-        select count(*) from [ShaGang].[dbo].[SCInspections];
-    </select>
+    <!--<select id="tst" resultType="java.lang.Integer">-->
+        <!--select count(*) from [ShaGang].[dbo].[SCInspections];-->
+    <!--</select>-->
 
 </mapper>
