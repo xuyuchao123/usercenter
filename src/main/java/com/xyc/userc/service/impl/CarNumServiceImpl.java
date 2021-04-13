@@ -408,26 +408,26 @@ public class CarNumServiceImpl implements CarNumService
             frozenMap.put(carNumFrozen.getCarNum(),carNumFrozen);
         }
         //从安全系统获取车辆A类违章信息
-        int cnt = carNumViolationMapper.tst();
-//        List<Map> violationInfoList = carNumViolationMapper.selectCarNumAViolationInfo();
+//        int cnt = carNumViolationMapper.tst();
+        List<Map> violationInfoList = carNumViolationMapper.selectCarNumAViolationInfo();
 
 
         //测试数据
-        List<Map> violationInfoList = new ArrayList<>();
-        Map<String,Object> tstmap = new HashMap();
-        tstmap.put("carNum","aaaa");
-        tstmap.put("violationTimes",2);
-        violationInfoList.add(tstmap);
-
-        Map<String,Object> tstmap2 = new HashMap();
-        tstmap2.put("carNum","bbbb");
-        tstmap2.put("violationTimes",1);
-        violationInfoList.add(tstmap2);
-
-        Map<String,Object> tstmap3 = new HashMap();
-        tstmap3.put("carNum","cccc");
-        tstmap3.put("violationTimes",3);
-        violationInfoList.add(tstmap3);
+//        List<Map> violationInfoList = new ArrayList<>();
+//        Map<String,Object> tstmap = new HashMap();
+//        tstmap.put("carNum","aaaa");
+//        tstmap.put("violationTimes",2);
+//        violationInfoList.add(tstmap);
+//
+//        Map<String,Object> tstmap2 = new HashMap();
+//        tstmap2.put("carNum","bbbb");
+//        tstmap2.put("violationTimes",1);
+//        violationInfoList.add(tstmap2);
+//
+//        Map<String,Object> tstmap3 = new HashMap();
+//        tstmap3.put("carNum","cccc");
+//        tstmap3.put("violationTimes",3);
+//        violationInfoList.add(tstmap3);
 
         LocalDateTime localDateTime = LocalDateTime.now();
         Date date = DateUtils.localDateTime2Date(localDateTime);
