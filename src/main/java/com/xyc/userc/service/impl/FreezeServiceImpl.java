@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -129,7 +131,51 @@ public class FreezeServiceImpl implements FreezeService
             frozenMap.put(carNumFrozen.getCarNum(),carNumFrozen);
         }
         //从安全系统获取车辆A类违章信息
-        List<Map> violationInfoList = carNumViolationMapper.selectCarNumAViolationInfo();
+//        List<Map> violationInfoList = carNumViolationMapper.selectCarNumAViolationInfo();
+
+        //测试数据
+        Date date1 = new Date(1619168786000l);
+        Date date2 = new Date(1619168882000l);
+        Date date3 = new Date(1619168782000l);
+        Date date4 = new Date(1619168732000l);
+        Date date5 = new Date(1619162782000l);
+        Date date6 = new Date(1619168789000l);
+        Date date7 = new Date(1619168389000l);
+        List<Map> violationInfoList = new ArrayList<>();
+        Map map1 = new HashMap();
+        map1.put("carNum","aaaa");
+        map1.put("lastViolationTime",date1);
+        violationInfoList.add(map1);
+
+        Map map2 = new HashMap();
+        map2.put("carNum","aaaa");
+        map2.put("lastViolationTime",date2);
+        violationInfoList.add(map2);
+
+        Map map3 = new HashMap();
+        map3.put("carNum","aaaa");
+        map3.put("lastViolationTime",date3);
+        violationInfoList.add(map3);
+
+        Map map4 = new HashMap();
+        map4.put("carNum","kkkk");
+        map4.put("lastViolationTime",date4);
+        violationInfoList.add(map4);
+
+        Map map5 = new HashMap();
+        map5.put("carNum","kkkk");
+        map5.put("lastViolationTime",date5);
+        violationInfoList.add(map5);
+
+        Map map6 = new HashMap();
+        map6.put("carNum","lll");
+        map6.put("lastViolationTime",date6);
+        violationInfoList.add(map6);
+
+        Map map7 = new HashMap();
+        map7.put("carNum","mmm");
+        map7.put("lastViolationTime",date7);
+        violationInfoList.add(map7);
 
         List<Map> groupList = new ArrayList<>();
         int tmpCnt = 0;
