@@ -70,9 +70,9 @@
         insert all
         <foreach collection="list" separator=" " item="carnumfrozen">
             into SYS_CARNUM_FROZEN (ID,CARNUMBER,FROZEN_STATUS,START_DATE,EXPIRE_DATE,GMT_CREATE,GMT_MODIFIED,
-            VIOLATION_TIMES,VIO_HANDLE_STATUS,LAST_VIOLATIONTIME)
-            values (get_carnumfrozen_seq,#{carnumfrozen.carNum},#{carnumfrozen.frozenStatus},#{carnumfrozen.startDate},
-            #{carnumfrozen.expireDate},#{carnumfrozen.gmtCreate},#{carnumfrozen.gmtModified},#{carnumfrozen.violationTimes},
+            VIOLATION_TIMES,LAST_VIOLATIONTIME)
+            values (get_carnumfrozen_seq,#{carnumfrozen.carNum},#{carnumfrozen.frozenStatus},#{carnumfrozen.startDate,jdbcType=DATE},
+            #{carnumfrozen.expireDate,jdbcType=DATE},#{carnumfrozen.gmtCreate},#{carnumfrozen.gmtModified},#{carnumfrozen.violationTimes},
             #{carnumfrozen.LastViolationTime})
         </foreach>
         select 1 from dual
@@ -80,9 +80,9 @@
 
     <update id="updateAllCarNumFrozen" parameterType="java.util.List">
         <foreach collection="list" item="carnumfrozen" index="index" open="begin" close=";end;" separator=";">
-            update SYS_CARNUM_FROZEN set FROZEN_STATUS = #{carnumfrozen.frozenStatus},EXPIRE_DATE = #{carnumfrozen.expireDate},
+            update SYS_CARNUM_FROZEN set FROZEN_STATUS = #{carnumfrozen.frozenStatus},EXPIRE_DATE = #{carnumfrozen.expireDate,jdbcType=DATE},
             GMT_MODIFIED = #{carnumfrozen.gmtModified}, VIOLATION_TIMES = #{carnumfrozen.violationTimes},
-            LAST_VIOLATIONTIME = #{carnumfrozen.LastViolationTime}
+            LAST_VIOLATIONTIME = #{carnumfrozen.LastViolationTime,jdbcType=DATE}
             where ID = #{carnumfrozen.id}
         </foreach>
     </update>

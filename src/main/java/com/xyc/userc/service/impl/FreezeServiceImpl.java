@@ -206,7 +206,7 @@ public class FreezeServiceImpl implements FreezeService
                     Map<String,Object> tmpMap = new HashMap<>();
                     tmpMap.put("carNum",map.get("carNum").toString());
                     tmpMap.put("violationTimes",++tmpCnt);
-                    tmpMap.put("lastViolationTime",map.get("lastViolationTime").toString());
+                    tmpMap.put("lastViolationTime",(Date)map.get("lastViolationTime"));
                     groupList.add(tmpMap);
                     preMap = tmpMap;
                     preCarNum = map.get("carNum").toString();
