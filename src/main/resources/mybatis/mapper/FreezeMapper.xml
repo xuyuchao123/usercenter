@@ -10,8 +10,11 @@
     <select id="selectCarNumFrozenVo" resultMap="selectCarNumFrozenVoMap">
         select a.CARNUMBER as carNum, a.FROZEN_STATUS as frozenStatus,
         a.START_DATE as startDate, a.EXPIRE_DATE as expireDate,
-        a.VIOLATION_TIMES as violationTimes,a.LAST_VIOLATIONTIME as lastViolationTime
+        a.VIOLATION_TIMES as violationTimes,a.LAST_VIOLATIONTIME as lastViolationTime,
+        decode(b.CAR,null,0,1) as violationHndStatus
         from SYS_CARNUM_FROZEN a
+        left join (select DISTINCT car from sell.view_final_wzlb) b
+        on a.carnumber = b.car
         <where>
             <if test="carNum != null">
                 and a.CARNUMBER = #{carNum}
