@@ -58,25 +58,35 @@ public class FreezeServiceImpl implements FreezeService
         }
         LOGGER.info("要冻结的车牌列表：{}",carNums.toArray().toString());
         List<CarNumFrozen> carNumFrozens = freezeMapper.selectByCarNums(carNums);
-        Map<String,Integer> carNumFrozStatMap = new HashMap<>();
+        Map<String,CarNumFrozen> carNumFrozStatMap = new HashMap<>();
         for(CarNumFrozen carNumFrozen : carNumFrozens)
         {
-            carNumFrozStatMap.put(carNumFrozen.getCarNum(),carNumFrozen.getFrozenStatus());
+            carNumFrozStatMap.put(carNumFrozen.getCarNum(),carNumFrozen);
         }
+        List<CarNumFrozen> uptList = new ArrayList<>();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        Date date = DateUtils.localDateTime2Date(localDateTime);
         for(String carNum : carNums)
         {
-            if(carNumFrozStatMap.get(carNum) == null)
+            CarNumFrozen tmpCarNumFrozen = carNumFrozStatMap.get(carNum);
+            if(tmpCarNumFrozen == null)
             {
                 LOGGER.error("车牌号不存在 carNum={}",carNum);
                 throw new BusinessException(JsonResultEnum.CARNUM_NOT_EXIST);
             }
-            if(carNumFrozStatMap.get(carNum).intValue() == 1)
+            if(tmpCarNumFrozen.getFrozenStatus() == 1)
             {
                 LOGGER.error("车牌号已在冻结状态 carNum={}",carNum);
                 throw new BusinessException(JsonResultEnum.CARNUM_FROZEN);
             }
+            tmpCarNumFrozen.setStartDate(date);
+            Date expireDate = DateUtils.localDateTime2Date(localDateTime.plusDays(tmpCarNumFrozen.getViolationTimes().intValue() * UsercConstant.FROZEN_PERIOD));
+            tmpCarNumFrozen.setExpireDate(expireDate);
+            tmpCarNumFrozen.setFrozenStatus(1);
+            tmpCarNumFrozen.setGmtModified(date);
+            uptList.add(tmpCarNumFrozen);
         }
-        freezeMapper.updateCarNumFrozens(carNumFrozenAddVos);
+        freezeMapper.updateCarNumFrozens(uptList);
         LOGGER.info("结束冻结车牌号方法");
 
     }
@@ -134,7 +144,7 @@ public class FreezeServiceImpl implements FreezeService
                 Map<String,Object> tmpMap = new HashMap<>();
                 tmpMap.put("carNum",map.get("carNum").toString());
                 tmpMap.put("violationTimes",++tmpCnt);
-                tmpMap.put("lastViolationTime",map.get("lastViolationTime").toString());        //lastViolationTime类型待确认
+                tmpMap.put("lastViolationTime",(Date)map.get("lastViolationTime"));        //lastViolationTime类型待确认
                 groupList.add(tmpMap);
                 preMap = tmpMap;
             }
@@ -171,17 +181,15 @@ public class FreezeServiceImpl implements FreezeService
                 String loopCarNum = map.get("carNum").toString();
                 int loopTimes = (Integer)map.get("violationTimes");
                 Date LastViolationTime = (Date)map.get("lastViolationTime");    //lastViolationTime类型转换待确认
-                int violationHndStatus = 0;                                     //有无未处理违章记录待确认
                 CarNumFrozen tmpCarNumFrozen = frozenMap.get(loopCarNum);
                 if(tmpCarNumFrozen == null)     //当前车牌号没有冻结记录
                 {
-                    CarNumFrozen instCarNumFrozen = new CarNumFrozen(null,loopCarNum,0,null,null,date,date,loopTimes,violationHndStatus,LastViolationTime);
+                    CarNumFrozen instCarNumFrozen = new CarNumFrozen(null,loopCarNum,0,null,null,date,date,loopTimes,LastViolationTime);
                     insertList.add(instCarNumFrozen);
                 }
                 else                            //当前车牌号有冻结记录
                 {
                     tmpCarNumFrozen.setViolationTimes(loopTimes);
-                    tmpCarNumFrozen.setViolationHndStatus(violationHndStatus);
                     tmpCarNumFrozen.setGmtModified(date);
                     tmpCarNumFrozen.setLastViolationTime(LastViolationTime);
                     //判断当前记录是否要解冻

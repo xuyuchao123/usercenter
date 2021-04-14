@@ -26,12 +26,10 @@ public class CarNumFrozen implements Serializable
 
     private Integer violationTimes;
 
-    private Integer violationHndStatus;
-
     private Date LastViolationTime;
 
     public CarNumFrozen(Integer id, String carNum, Integer frozenStatus, Date startDate, Date expireDate,
-                        Date gmtCreate, Date gmtModified, Integer violationTimes, Integer violationHndStatus, Date lastViolationTime) {
+                        Date gmtCreate, Date gmtModified, Integer violationTimes, Date lastViolationTime) {
         this.id = id;
         this.carNum = carNum;
         this.frozenStatus = frozenStatus;
@@ -40,7 +38,6 @@ public class CarNumFrozen implements Serializable
         this.gmtCreate = gmtCreate;
         this.gmtModified = gmtModified;
         this.violationTimes = violationTimes;
-        this.violationHndStatus = violationHndStatus;
         LastViolationTime = lastViolationTime;
     }
 
@@ -106,14 +103,6 @@ public class CarNumFrozen implements Serializable
 
     public void setViolationTimes(Integer violationTimes) {
         this.violationTimes = violationTimes;
-    }
-
-    public Integer getViolationHndStatus() {
-        return violationHndStatus;
-    }
-
-    public void setViolationHndStatus(Integer violationHndStatus) {
-        this.violationHndStatus = violationHndStatus;
     }
 
     public Date getLastViolationTime() {

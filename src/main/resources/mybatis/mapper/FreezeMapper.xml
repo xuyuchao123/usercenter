@@ -25,8 +25,8 @@
 
     <select id="selectCarNumFrozen" resultType="com.xyc.userc.entity.CarNumFrozen">
         select a.ID as id, a.CARNUMBER as carNum, a.FROZEN_STATUS as frozenStatus, a.START_DATE as startDate,
-        a.EXPIRE_DATE as expireDate, a.GMT_CREATE as gmtCreate, a.GMT_MODIFIED as gmtModified, a.VIOLATION_TIMES as violationTimes,
-        a.VIO_HANDLE_STATUS as violationHndStatus, a.LAST_VIOLATIONTIME as LastViolationTime
+        a.EXPIRE_DATE as expireDate, a.GMT_CREATE as gmtCreate, a.GMT_MODIFIED as gmtModified,
+        a.VIOLATION_TIMES as violationTimes,a.LAST_VIOLATIONTIME as LastViolationTime
         from SYS_CARNUM_FROZEN a
         <where>
             <if test="carNum != null">
@@ -40,8 +40,8 @@
 
     <select id="selectByCarNums" resultType="com.xyc.userc.entity.CarNumFrozen">
         select DISTINCT a.ID as id, a.CARNUMBER as carNum, a.FROZEN_STATUS as frozenStatus, a.START_DATE as startDate,
-        a.EXPIRE_DATE as expireDate, a.GMT_CREATE as gmtCreate, a.GMT_MODIFIED as gmtModified, a.VIOLATION_TIMES as violationTimes,
-        a.VIO_HANDLE_STATUS as violationHndStatus, a.LAST_VIOLATIONTIME as LastViolationTime
+        a.EXPIRE_DATE as expireDate, a.GMT_CREATE as gmtCreate, a.GMT_MODIFIED as gmtModified,
+        a.VIOLATION_TIMES as violationTimes,a.LAST_VIOLATIONTIME as LastViolationTime
         from SYS_CARNUM_FROZEN a
         where a.CARNUMBER IN
         <foreach collection="list" open="(" close=")" separator="," item="carNum" index="i">
@@ -49,11 +49,11 @@
         </foreach>
     </select>
 
-    <update id="updateCarNumFrozens" parameterType="com.xyc.userc.vo.CarNumFrozenAddVo">
-        <foreach collection="list" item="carNumFrozenAddVo" index="index" open="begin" close=";end;" separator=";">
-        update SYS_CARNUM_FROZEN a set a.FROZEN_STATUS = 1, a.START_DATE = SYSDATE, a.GMT_MODIFIED = SYSDATE,
-        a.EXPIRE_DATE = #{carNumFrozenAddVo.expireDate,typeHandler=com.xyc.userc.mybatis.typehandler.LongDateTypeHandler}
-        where a.CARNUMBER = #{carNumFrozenAddVo.carNum}
+    <update id="updateCarNumFrozens" parameterType="com.xyc.userc.entity.CarNumFrozen">
+        <foreach collection="list" item="carNumFrozen" index="index" open="begin" close=";end;" separator=";">
+        update SYS_CARNUM_FROZEN a set a.FROZEN_STATUS = #{carNumFrozen.frozenStatus}, a.START_DATE = #{carNumFrozen.frozenStatus},
+        a.GMT_MODIFIED = #{carNumFrozen.gmtModified},a.EXPIRE_DATE = #{carNumFrozen.expireDate}
+        where a.CARNUMBER = #{carNumFrozen.carNum}
         </foreach>
     </update>
 
@@ -67,11 +67,11 @@
     <insert id="insertAllCarNumFrozen" parameterType="java.util.List">
         insert all
         <foreach collection="list" separator=" " item="carnumfrozen">
-            into SYS_CARNUM_FROZEN (ID,CARNUMBER,FROZEN_STATUS,START_DATE,EXPIRE_DATE,GMT_CREATE,GMT_MODIFIED,VIOLATION_TIMES,
-            VIO_HANDLE_STATUS,VIO_HANDLE_STATUS,LAST_VIOLATIONTIME)
+            into SYS_CARNUM_FROZEN (ID,CARNUMBER,FROZEN_STATUS,START_DATE,EXPIRE_DATE,GMT_CREATE,GMT_MODIFIED,
+            VIOLATION_TIMES,VIO_HANDLE_STATUS,LAST_VIOLATIONTIME)
             values (get_carnumfrozen_seq,#{carnumfrozen.carNum},#{carnumfrozen.frozenStatus},#{carnumfrozen.startDate},
             #{carnumfrozen.expireDate},#{carnumfrozen.gmtCreate},#{carnumfrozen.gmtModified},#{carnumfrozen.violationTimes},
-            #{carnumfrozen.violationHndStatus},#{carnumfrozen.LastViolationTime})
+            #{carnumfrozen.LastViolationTime})
         </foreach>
         select 1 from dual
     </insert>
@@ -80,7 +80,7 @@
         <foreach collection="list" item="carnumfrozen" index="index" open="begin" close=";end;" separator=";">
             update SYS_CARNUM_FROZEN set FROZEN_STATUS = #{carnumfrozen.frozenStatus},EXPIRE_DATE = #{carnumfrozen.expireDate},
             GMT_MODIFIED = #{carnumfrozen.gmtModified}, VIOLATION_TIMES = #{carnumfrozen.violationTimes},
-            VIO_HANDLE_STATUS = #{carnumfrozen.violationHndStatus}, LAST_VIOLATIONTIME = #{carnumfrozen.LastViolationTime}
+            LAST_VIOLATIONTIME = #{carnumfrozen.LastViolationTime}
             where ID = #{carnumfrozen.id}
         </foreach>
     </update>

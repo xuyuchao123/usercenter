@@ -15,15 +15,10 @@ public class CarNumFrozenAddVo
     @ApiModelProperty(value="车牌号", required = true, dataType="String")
     private String carNum;
 
-    @NotNull(message = "expireDate不能为空")
-    @ApiModelProperty(value="冻结到期日期", required = true, dataType="String")
-    private Long expireDate;
-
     @Override
     public String toString() {
         return "CarNumFrozenAddVo{" +
                 "carNum='" + carNum + '\'' +
-                ", expireDate='" + expireDate + '\'' +
                 '}';
     }
 
@@ -35,11 +30,4 @@ public class CarNumFrozenAddVo
         this.carNum = carNum;
     }
 
-    public Long getExpireDate() {
-        return expireDate;
-    }
-
-    public void setExpireDate(Long expireDate) {
-        this.expireDate = expireDate;
-    }
 }

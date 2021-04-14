@@ -2,23 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xyc.userc.dao2.CarNumViolationMapper">
 
-<select id="selectCarNumAViolationInfo" resultType="java.util.Map">
-    SELECT
-      S.ID,
-      S.CreateUserID,
-      S.ViolationName,
-      T.SCDisciplinaryTypeName,
-      S.CreateDate
-    FROM
-      [ShaGang].[dbo].[SCInspections] S,
-      [ShaGang].[dbo].[SCDisciplinaryContentTests] T
-    WHERE
-      T.ID = S.SCViolationTypeID
-    AND T.SCDisciplinaryTypeName = 'A类条款 道路交通类'
-</select>
+    <resultMap id="selectCarNumAViolationInfoMap" type="java.util.Map">
+        <result column="CarNum" property="carNum" />
+        <result column="FindDate" property="lastViolationTime" />
+    </resultMap>
 
-    <!--<select id="tst" resultType="java.lang.Integer">-->
-        <!--select count(*) from [ShaGang].[dbo].[SCInspections];-->
-    <!--</select>-->
+    <select id="selectCarNumAViolationInfo" resultMap="selectCarNumAViolationInfoMap">
+        SELECT
+          S.CarNum,
+          S.FindDate
+        FROM
+          [ShaGang].[dbo].[SCInspections] S,
+          [ShaGang].[dbo].[SCDisciplinaryContentTests] T
+        WHERE
+          T.ID = S.SCViolationTypeID
+        AND T.SCDisciplinaryTypeName = 'A类条款 道路交通类'
+        AND S.CarNum is not null
+        ORDER BY S.CreateUserID,S.CreateDate desc
+    </select>
 
 </mapper>
