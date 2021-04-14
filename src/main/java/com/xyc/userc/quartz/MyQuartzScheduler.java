@@ -1,7 +1,7 @@
 package com.xyc.userc.quartz;
 
 import com.xyc.userc.quartz.job.BlackListInOutJob;
-import com.xyc.userc.quartz.job.CarNumFrozenJob;
+import com.xyc.userc.quartz.job.CarNumViolationJob;
 import com.xyc.userc.quartz.job.HallReportQRCodeStrJob;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,7 +141,7 @@ public class MyQuartzScheduler
     //车牌号违章冻结自动任务
     private void scheduleJob3(Scheduler scheduler) throws SchedulerException
     {
-        JobDetail jobDetail = JobBuilder.newJob(CarNumFrozenJob.class).withIdentity("job3", "group3").build();
+        JobDetail jobDetail = JobBuilder.newJob(CarNumViolationJob.class).withIdentity("job3", "group3").build();
         CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule("0 0/10 * * * ? *");
         CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity("job3", "group3")
                 .withSchedule(cronScheduleBuilder).build();

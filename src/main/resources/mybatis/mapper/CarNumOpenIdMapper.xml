@@ -494,50 +494,10 @@
         where a.CAR_NO = #{carNum}
     </update>
 
-    <select id="selectCarNumFrozen" resultType="com.xyc.userc.entity.CarNumFrozen">
-        select a.ID as id, a.CARNUMBER as carNum, a.FROZEN_STATUS as frozenStatus, a.START_DATE as startDate,
-         a.EXPIRE_DATE as expireDate, a.GMT_CREATE as gmtCreate, a.GMT_MODIFIED as gmtModified, a.VIOLATION_TIMES as violationTimes
-         from SYS_CARNUM_FROZEN a
-        <where>
-            <if test="frozenStatus != null">
-                and a.FROZEN_STATUS = #{frozenStatus}
-            </if>
-        </where>
-    </select>
 
-    <select id="selectCarNumFrozenVo" resultType="com.xyc.userc.vo.CarNumFrozenVo">
-        select a.CARNUMBER as carNum, a.FROZEN_STATUS as frozenStatus,
-        a.START_DATE as startDate, a.EXPIRE_DATE as expireDate,
-        a.VIOLATION_TIMES as violationTimes, a.VIO_HANDLE_STATUS as violationHndStatus,
-        a.LAST_VIOLATIONTIME as lastViolationTime
-        from SYS_CARNUM_FROZEN a
-        <where>
-            <if test="carNum != null">
-                and a.CARNUMBER = #{carNum}
-            </if>
-            <if test="frozenStatus != null">
-                and a.FROZEN_STATUS = #{frozenStatus}
-            </if>
-        </where>
-    </select>
 
-    <insert id="insertAllCarNumFrozen" parameterType="java.util.List">
-        insert all
-        <foreach collection="list" separator=" " item="carnumfrozen">
-            into SYS_CARNUM_FROZEN (ID,CARNUMBER,FROZEN_STATUS,START_DATE,EXPIRE_DATE,GMT_CREATE,GMT_MODIFIED,VIOLATION_TIMES)
-            values (get_carnumfrozen_seq,#{carnumfrozen.carNum},#{carnumfrozen.frozenStatus},#{carnumfrozen.startDate},
-            #{carnumfrozen.expireDate},#{carnumfrozen.gmtCreate},#{carnumfrozen.gmtModified},#{carnumfrozen.violationTimes})
-        </foreach>
-        select 1 from dual
-    </insert>
 
-    <update id="updateAllCarNumFrozen" parameterType="java.util.List">
-        <foreach collection="list" item="carnumfrozen" index="index" open="begin" close=";end;" separator=";">
-          update SYS_CARNUM_FROZEN set FROZEN_STATUS = #{carnumfrozen.frozenStatus}, START_DATE = #{carnumfrozen.startDate},
-            EXPIRE_DATE = #{carnumfrozen.expireDate}, GMT_MODIFIED = #{carnumfrozen.gmtModified}, VIOLATION_TIMES = #{carnumfrozen.violationTimes}
-          where ID = #{carnumfrozen.id}
-        </foreach>
-    </update>
+
 
 
 

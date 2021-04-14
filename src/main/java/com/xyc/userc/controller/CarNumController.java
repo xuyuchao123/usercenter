@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -296,39 +297,6 @@ public class CarNumController
         LOGGER.info("结束校验行驶证信息 carNum={}",carNum);
         return jsonResultObj;
     }
-
-    @PostMapping("/querycarnumfrozen")
-    @ApiOperation(value="查询车牌号违章冻结信息")
-    @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：查询成功，isSuccess=false：查询失败，resMsg为错误信息")})
-    public JsonResultObj_Page<CarNumFrozenVo> queryCarNumFrozen(@Validated CarNumFrozenQueryVo vo)
-    {
-        LOGGER.info("开始查询车牌号违章冻结信息 {}",vo.toString());
-        JsonResultObj_Page jsonResultObjPage = null;
-        try
-        {
-            List resList = carNumService.queryCarNumFrozen(vo.getCarNum(),vo.getFrozenStatus(),vo.getPage(),vo.getSize());
-            List<CarNumFrozenVo> carNumFrozenVos = null;
-            String total = null;
-            String page = null;
-            String size = null;
-            if(resList != null && resList.size() == 4)
-            {
-                total = resList.get(0).toString();
-                page = resList.get(1).toString();
-                size = resList.get(2).toString();
-                carNumFrozenVos = (List<CarNumFrozenVo>)resList.get(3);
-            }
-            jsonResultObjPage = new JsonResultObj_Page(true,carNumFrozenVos,total,page,size);
-        }
-        catch (Exception e)
-        {
-            jsonResultObjPage = CommonExceptionHandler.handException_page(e, "查询车牌号违章冻结信息失败", LOGGER);
-        }
-        LOGGER.info("结束查询车牌号违章冻结信息 {}",vo.toString());
-        return jsonResultObjPage;
-    }
-
-
 
     @GetMapping("/checkjob")
     @ApiOperation(value="测试自动任务")

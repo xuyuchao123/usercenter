@@ -33,7 +33,5 @@ public interface CarNumService
 
     boolean queryDrivinglicense(String carNum) throws Exception;
 
-    void refreshCarNumFrozen() throws Exception;
 
-    List queryCarNumFrozen(String carNum, String frozenStatus, String page, String size) throws Exception;
 }

@@ -64,11 +64,4 @@ public interface CarNumOpenIdMapper
 
     void updateDrivingLicense(@Param("carNum")String carNum, @Param("drivingLicense")String drivingLicense);
 
-    List<CarNumFrozen> selectCarNumFrozen(@Param("frozenStatus")Integer frozenStatus);
-
-    List<CarNumFrozenVo> selectCarNumFrozenVo(@Param("carNum")String carNum,@Param("frozenStatus")Integer frozenStatus);
-
-    void insertAllCarNumFrozen(@Param("list")List<CarNumFrozen> carNumFrozenList);
-
-    void updateAllCarNumFrozen(@Param("list")List<CarNumFrozen> carNumFrozenList);
 }

@@ -397,108 +397,100 @@ public class CarNumServiceImpl implements CarNumService
         return licenseCnt > 0 ? true : false;
     }
 
-    @Override
-    public void refreshCarNumFrozen() throws Exception
-    {
-        LOGGER.info("进入更新车牌号冻结情况方法");
-        List<CarNumFrozen> carNumFrozens = carNumOpenIdMapper.selectCarNumFrozen(1);
-        Map<String,CarNumFrozen> frozenMap = new HashMap<>();
-        for(CarNumFrozen carNumFrozen : carNumFrozens)
-        {
-            frozenMap.put(carNumFrozen.getCarNum(),carNumFrozen);
-        }
-        //从安全系统获取车辆A类违章信息
-//        int cnt = carNumViolationMapper.tst();
-        List<Map> violationInfoList = carNumViolationMapper.selectCarNumAViolationInfo();
-
-
-        //测试数据
-//        List<Map> violationInfoList = new ArrayList<>();
-//        Map<String,Object> tstmap = new HashMap();
-//        tstmap.put("carNum","aaaa");
-//        tstmap.put("violationTimes",2);
-//        violationInfoList.add(tstmap);
+//    @Override
+//    public void refreshCarNumFrozen() throws Exception
+//    {
+//        LOGGER.info("进入更新车牌号冻结情况方法");
+//        List<CarNumFrozen> carNumFrozens = carNumOpenIdMapper.selectCarNumFrozen(1);
+//        Map<String,CarNumFrozen> frozenMap = new HashMap<>();
+//        for(CarNumFrozen carNumFrozen : carNumFrozens)
+//        {
+//            frozenMap.put(carNumFrozen.getCarNum(),carNumFrozen);
+//        }
+//        //从安全系统获取车辆A类违章信息
+////        int cnt = carNumViolationMapper.tst();
+//        List<Map> violationInfoList = carNumViolationMapper.selectCarNumAViolationInfo();
 //
-//        Map<String,Object> tstmap2 = new HashMap();
-//        tstmap2.put("carNum","bbbb");
-//        tstmap2.put("violationTimes",1);
-//        violationInfoList.add(tstmap2);
 //
-//        Map<String,Object> tstmap3 = new HashMap();
-//        tstmap3.put("carNum","cccc");
-//        tstmap3.put("violationTimes",3);
-//        violationInfoList.add(tstmap3);
+//        //测试数据
+////        List<Map> violationInfoList = new ArrayList<>();
+////        Map<String,Object> tstmap = new HashMap();
+////        tstmap.put("carNum","aaaa");
+////        tstmap.put("violationTimes",2);
+////        violationInfoList.add(tstmap);
+////
+////        Map<String,Object> tstmap2 = new HashMap();
+////        tstmap2.put("carNum","bbbb");
+////        tstmap2.put("violationTimes",1);
+////        violationInfoList.add(tstmap2);
+////
+////        Map<String,Object> tstmap3 = new HashMap();
+////        tstmap3.put("carNum","cccc");
+////        tstmap3.put("violationTimes",3);
+////        violationInfoList.add(tstmap3);
+//
+//        LocalDateTime localDateTime = LocalDateTime.now();
+//        Date date = DateUtils.localDateTime2Date(localDateTime);
+//        //需要冻结的车牌号列表
+//        List<CarNumFrozen> insertList = new ArrayList<>();
+//        //当前未冻结，需要再次进行冻结的车牌号列表
+////        List<CarNumFrozen> recoverList = new ArrayList<>();
+//        //当前已冻结，违章次数增加，需要修改冻结期限的车牌号列表
+//        List<CarNumFrozen> delayList = new ArrayList<>();
+//        //冻结期限到期，需要解冻的车牌号列表
+//        List<CarNumFrozen> unfreezeList = new ArrayList<>();
+//        if(violationInfoList != null && violationInfoList.size()>0)
+//        {
+//            for(Map map : violationInfoList)
+//            {
+//                String loopCarNum = map.get("carNum").toString();
+//                int loopTimes = (Integer)map.get("violationTimes");
+//                CarNumFrozen tmpCarNumFrozen = frozenMap.get(loopCarNum);
+//                if(tmpCarNumFrozen == null)     //当前车牌号未冻结
+//                {
+//                    Date expireDate = DateUtils.localDateTime2Date(localDateTime.plusDays(loopTimes * UsercConstant.FROZEN_PERIOD));
+//                    CarNumFrozen instCarNumFrozen = new CarNumFrozen(null,loopCarNum,1,date,expireDate,date,date,loopTimes);
+//                    insertList.add(instCarNumFrozen);
+//                }
+//                else    //车牌号已冻结
+//                {
+//                    int preTimes = tmpCarNumFrozen.getViolationTimes().intValue();
+//                    if(preTimes < loopTimes)  //有新的违章记录
+//                    {
+//                        Date expireDate = DateUtils.localDateTime2Date(DateUtils.date2LocalDateTime(tmpCarNumFrozen.getExpireDate())
+//                                .plusDays(loopTimes*UsercConstant.FROZEN_PERIOD));
+//                        tmpCarNumFrozen.setExpireDate(expireDate);
+//                        tmpCarNumFrozen.setGmtModified(date);
+//                        tmpCarNumFrozen.setViolationTimes(loopTimes);
+//                        delayList.add(tmpCarNumFrozen);
+//                        frozenMap.remove(loopCarNum);
+//                    }
+//                }
+//            }
+//        }
+//        Set<String> keySet = frozenMap.keySet();
+//        for(String key : keySet)
+//        {
+//            CarNumFrozen tmpCarNumFrozen2 = frozenMap.get(key);
+//            if(date.compareTo(tmpCarNumFrozen2.getExpireDate()) >= 0)      //当前日期大于等于冻结到期日，需要解冻
+//            {
+//                tmpCarNumFrozen2.setFrozenStatus(0);
+//                tmpCarNumFrozen2.setGmtModified(date);
+//                unfreezeList.add(tmpCarNumFrozen2);
+//            }
+//        }
+//        delayList.addAll(unfreezeList);
+//        if(delayList.size() > 0)
+//        {
+//            carNumOpenIdMapper.updateAllCarNumFrozen(delayList);
+//        }
+//        if(insertList.size() > 0)
+//        {
+//            carNumOpenIdMapper.insertAllCarNumFrozen(insertList);
+//        }
+//        LOGGER.info("结束更新车牌号冻结情况方法");
+//
+//    }
 
-        LocalDateTime localDateTime = LocalDateTime.now();
-        Date date = DateUtils.localDateTime2Date(localDateTime);
-        //需要冻结的车牌号列表
-        List<CarNumFrozen> insertList = new ArrayList<>();
-        //当前未冻结，需要再次进行冻结的车牌号列表
-//        List<CarNumFrozen> recoverList = new ArrayList<>();
-        //当前已冻结，违章次数增加，需要修改冻结期限的车牌号列表
-        List<CarNumFrozen> delayList = new ArrayList<>();
-        //冻结期限到期，需要解冻的车牌号列表
-        List<CarNumFrozen> unfreezeList = new ArrayList<>();
-        if(violationInfoList != null && violationInfoList.size()>0)
-        {
-            for(Map map : violationInfoList)
-            {
-                String loopCarNum = map.get("carNum").toString();
-                int loopTimes = (Integer)map.get("violationTimes");
-                CarNumFrozen tmpCarNumFrozen = frozenMap.get(loopCarNum);
-                if(tmpCarNumFrozen == null)     //当前车牌号未冻结
-                {
-                    Date expireDate = DateUtils.localDateTime2Date(localDateTime.plusDays(loopTimes * UsercConstant.FROZEN_PERIOD));
-                    CarNumFrozen instCarNumFrozen = new CarNumFrozen(null,loopCarNum,1,date,expireDate,date,date,loopTimes);
-                    insertList.add(instCarNumFrozen);
-                }
-                else    //车牌号已冻结
-                {
-                    int preTimes = tmpCarNumFrozen.getViolationTimes().intValue();
-                    if(preTimes < loopTimes)  //有新的违章记录
-                    {
-                        Date expireDate = DateUtils.localDateTime2Date(DateUtils.date2LocalDateTime(tmpCarNumFrozen.getExpireDate())
-                                .plusDays(loopTimes*UsercConstant.FROZEN_PERIOD));
-                        tmpCarNumFrozen.setExpireDate(expireDate);
-                        tmpCarNumFrozen.setGmtModified(date);
-                        tmpCarNumFrozen.setViolationTimes(loopTimes);
-                        delayList.add(tmpCarNumFrozen);
-                        frozenMap.remove(loopCarNum);
-                    }
-                }
-            }
-        }
-        Set<String> keySet = frozenMap.keySet();
-        for(String key : keySet)
-        {
-            CarNumFrozen tmpCarNumFrozen2 = frozenMap.get(key);
-            if(date.compareTo(tmpCarNumFrozen2.getExpireDate()) >= 0)      //当前日期大于等于冻结到期日，需要解冻
-            {
-                tmpCarNumFrozen2.setFrozenStatus(0);
-                tmpCarNumFrozen2.setGmtModified(date);
-                unfreezeList.add(tmpCarNumFrozen2);
-            }
-        }
-        delayList.addAll(unfreezeList);
-        if(delayList.size() > 0)
-        {
-            carNumOpenIdMapper.updateAllCarNumFrozen(delayList);
-        }
-        if(insertList.size() > 0)
-        {
-            carNumOpenIdMapper.insertAllCarNumFrozen(insertList);
-        }
-        LOGGER.info("结束更新车牌号冻结情况方法");
 
-    }
-
-    @Override
-    public List queryCarNumFrozen(String carNum,String frozenStatus,String page,String size) throws Exception
-    {
-        LOGGER.info("进入查询车牌号违章冻结信息方法");
-        List<CarNumFrozenVo> carNumFrozenVos = carNumOpenIdMapper.selectCarNumFrozenVo(carNum,Integer.valueOf(frozenStatus));
-        List resList = PageUtil.getPageInfoList(carNumFrozenVos,page,size);
-        LOGGER.info("结束查询车牌号违章冻结信息方法");
-        return resList;
-    }
 }

@@ -145,7 +145,7 @@ public class PcViolationController
         {
             billNumList.add(billNums[i]);
         }
-        LOGGER.info("开始删除违章信息 billNum={}",billNumList.toString());
+        LOGGER.info("开始删除违章信息 billNums={}",billNums.toString());
 
         JsonResultObj resultObj = null;
         try
@@ -158,7 +158,7 @@ public class PcViolationController
             resultObj = CommonExceptionHandler.handException_page(e, "删除违章信息失败", LOGGER);
         }
 
-        LOGGER.info("结束删除违章信息 billNum={}",billNumList.toString());
+        LOGGER.info("结束删除违章信息 billNums={}",billNums.toString());
         return resultObj;
     }
 
