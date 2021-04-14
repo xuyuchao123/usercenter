@@ -4,7 +4,7 @@
 
     <resultMap id="BaseResultMap" type="com.xyc.userc.entity.PcUser">
         <id column="id" jdbcType="BIGINT" property="id" />
-        <result column="user_num" jdbcType="VARCHAR" property="userNum" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
         <result column="user_realname" jdbcType="VARCHAR" property="userRealName" />
         <result column="mobile" jdbcType="VARCHAR" property="mobile" />
         <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />

@@ -2,7 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xyc.userc.dao.FreezeMapper">
 
-    <select id="selectCarNumFrozenVo" resultType="com.xyc.userc.vo.CarNumFrozenVo">
+    <resultMap id="selectCarNumFrozenVoMap" type="com.xyc.userc.vo.CarNumFrozenVo">
+        <result column="startDate" property="startDate" typeHandler="com.xyc.userc.mybatis.typehandler.LongDateTypeHandler" />
+        <result column="expireDate" property="expireDate" typeHandler="com.xyc.userc.mybatis.typehandler.LongDateTypeHandler" />
+    </resultMap>
+
+    <select id="selectCarNumFrozenVo" resultMap="selectCarNumFrozenVoMap">
         select a.CARNUMBER as carNum, a.FROZEN_STATUS as frozenStatus,
         a.START_DATE as startDate, a.EXPIRE_DATE as expireDate,
         a.VIOLATION_TIMES as violationTimes, a.VIO_HANDLE_STATUS as violationHndStatus,

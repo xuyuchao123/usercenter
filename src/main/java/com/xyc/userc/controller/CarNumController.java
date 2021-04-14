@@ -304,7 +304,7 @@ public class CarNumController
     {
         try
         {
-            carNumService.refreshCarNumFrozen();
+//            carNumService.refreshCarNumFrozen();
         }
         catch (Exception e)
         {

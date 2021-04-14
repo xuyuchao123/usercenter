@@ -36,7 +36,12 @@ public class FreezeServiceImpl implements FreezeService
     public List queryCarNumFrozen(String carNum, String frozenStatus, String page, String size) throws Exception
     {
         LOGGER.info("进入查询车牌号违章冻结信息方法");
-        List<CarNumFrozenVo> carNumFrozenVos = freezeMapper.selectCarNumFrozenVo(carNum,Integer.valueOf(frozenStatus));
+        Integer frozenStatusInt = null;
+        if(frozenStatus != null && (frozenStatus.equals("0") || frozenStatus.equals("1")))
+        {
+            frozenStatusInt = Integer.valueOf(frozenStatus);
+        }
+        List<CarNumFrozenVo> carNumFrozenVos = freezeMapper.selectCarNumFrozenVo(carNum,frozenStatusInt);
         List resList = PageUtil.getPageInfoList(carNumFrozenVos,page,size);
         LOGGER.info("结束查询车牌号违章冻结信息方法");
         return resList;
