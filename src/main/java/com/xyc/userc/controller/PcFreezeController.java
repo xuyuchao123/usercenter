@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("/freeze")
-@Api(tags = "pc端违章查询相关api")
+@Api(tags = "pc端违章冻结相关api")
 public class PcFreezeController
 {
     protected static final Logger LOGGER = LoggerFactory.getLogger(PcFreezeController.class);
