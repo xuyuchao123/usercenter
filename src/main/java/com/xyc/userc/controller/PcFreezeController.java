@@ -103,4 +103,18 @@ public class PcFreezeController
         LOGGER.info("结束解冻车牌号 carNums={}",carNums.toArray().toString());
         return jsonResultObj;
     }
+
+    @GetMapping("/checkjob")
+    @ApiOperation(value="测试自动任务")
+    public void checkjob()
+    {
+        try
+        {
+            freezeService.refreshCarNumViolation();
+        }
+        catch (Exception e)
+        {
+            CommonExceptionHandler.handException(e, "测试自动任务失败", LOGGER);
+        }
+    }
 }

@@ -298,17 +298,4 @@ public class CarNumController
         return jsonResultObj;
     }
 
-    @GetMapping("/checkjob")
-    @ApiOperation(value="测试自动任务")
-    public void checkjob()
-    {
-        try
-        {
-//            carNumService.refreshCarNumFrozen();
-        }
-        catch (Exception e)
-        {
-            CommonExceptionHandler.handException(e, "测试自动任务失败", LOGGER);
-        }
-    }
 }

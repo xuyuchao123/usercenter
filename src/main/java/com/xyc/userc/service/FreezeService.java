@@ -17,4 +17,5 @@ public interface FreezeService
     void unFreezeCarNum(List<String> carNums) throws Exception;
 
     void refreshCarNumViolation() throws Exception;
+
 }

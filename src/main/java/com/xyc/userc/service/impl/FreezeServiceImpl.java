@@ -224,4 +224,6 @@ public class FreezeServiceImpl implements FreezeService
         LOGGER.info("结束更新车牌号违章情况方法");
 
     }
+
+
 }
