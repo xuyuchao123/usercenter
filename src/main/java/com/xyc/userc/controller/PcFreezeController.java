@@ -89,7 +89,7 @@ public class PcFreezeController
     @ApiResponses({@ApiResponse(code = 200,  message = "isSuccess=true：解冻成功，isSuccess=false：解冻失败，resMsg为错误信息")})
     public JsonResultObj<CarNumFrozenVo> unFreezeCarNum(@NotNull(message = "车牌号列表不能为空") @RequestParam("carNum")List<String> carNums)
     {
-        LOGGER.info("开始解冻车牌号 carNums={}",carNums.toArray().toString());
+        LOGGER.info("开始解冻车牌号 carNums={}",carNums.toString());
         JsonResultObj jsonResultObj = null;
         try
         {
@@ -100,7 +100,7 @@ public class PcFreezeController
         {
             jsonResultObj = CommonExceptionHandler.handException(e, "冻结车牌号失败", LOGGER);
         }
-        LOGGER.info("结束解冻车牌号 carNums={}",carNums.toArray().toString());
+        LOGGER.info("结束解冻车牌号 carNums={}",carNums.toString());
         return jsonResultObj;
     }
 
