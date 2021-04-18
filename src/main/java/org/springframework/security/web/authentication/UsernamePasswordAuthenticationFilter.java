@@ -7,7 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.xyc.userc.controller.CarNumController;
 import com.xyc.userc.security.MesCodeAuthenticationToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,6 +36,8 @@ public class UsernamePasswordAuthenticationFilter extends AbstractAuthentication
 
     private boolean postOnly = true;
 
+    protected static final Logger LOGGER = LoggerFactory.getLogger(UsernamePasswordAuthenticationFilter.class);
+
     public UsernamePasswordAuthenticationFilter() {
         super(new AntPathRequestMatcher("/login", "POST"));
     }
@@ -55,6 +60,7 @@ public class UsernamePasswordAuthenticationFilter extends AbstractAuthentication
             {
                 String username = this.obtainUsername(request);
                 String password = this.obtainPassword(request);
+                LOGGER.debug("测试日志输出");
                 if(username == null)
                 {
                     username = "";
