@@ -18,8 +18,8 @@
     </delete>
 
     <insert id="insert" parameterType="com.xyc.userc.entity.PcRole">
-        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-            SELECT LAST_INSERT_ID()
+        <selectKey keyProperty="id" order="BEFORE" resultType="int">
+            SELECT PC_ROLE_SEQ.NEXTVAL FROM DUAL
         </selectKey>
         insert into pc_role (id, role_name, permission_id,
         application_id, is_deleted, gmt_create,

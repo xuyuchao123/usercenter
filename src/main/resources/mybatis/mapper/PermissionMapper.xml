@@ -18,8 +18,8 @@
   </delete>
 
   <insert id="insert" parameterType="com.xyc.userc.entity.Permission">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
+    <selectKey keyProperty="id" order="BEFORE" resultType="int">
+      SELECT PC_PERMISSION_SEQ.NEXTVAL FROM DUAL
     </selectKey>
     insert into pc_permission (id, permission_name, is_deleted, 
       gmt_create, gmt_modified, user_create, 

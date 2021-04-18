@@ -22,7 +22,7 @@
 
   <insert id="insert" parameterType="com.xyc.userc.entity.Application">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
+      SELECT PC_APPLICATION_SEQ.NEXTVAL FROM DUAL
     </selectKey>
     insert into pc_application (id, app_id, app_name, app_uri, parent_id,
       is_deleted, gmt_create, gmt_modified, 

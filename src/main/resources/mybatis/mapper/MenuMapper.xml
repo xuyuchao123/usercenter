@@ -16,8 +16,8 @@
   </delete>
 
   <insert id="insert" parameterType="com.xyc.userc.entity.Menu">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
+    <selectKey keyProperty="id" order="BEFORE" resultType="int">
+      SELECT PC_MENU_SEQ.NEXTVAL FROM DUAL
     </selectKey>
     insert into pc_menu (id, menu_name,
       gmt_create, gmt_modified, parent_id
