@@ -77,19 +77,25 @@ public class ViolationServiceImpl implements ViolationService {
     {
         LOGGER.info("进入新增违章信息方法");
         List<ViolationInfoVo> violationInfoVos = violationMapper.selectViolationInfo(null,null,null,null,billNum);
-        if(violationInfoVos != null && violationInfoVos.size() > 0)
-        {
-            LOGGER.error("该违章序列号已存在 billNum={}", billNum);
-            throw new BusinessException(JsonResultEnum.VIOLATIONINFO_EXIST);
-        }
         Date date = new Date();
         //获取本机ip
         String host = InetAddress.getLocalHost().getHostAddress();
         violationImgPath = "//"+ host + ":" + port + contextPath + "/static/violationimg/" + violationImgPath;
         LOGGER.info("violationImgPath:{}",violationImgPath);
-        ViolationInfo violationInfo = new ViolationInfo(null,billDep,new Date(Long.valueOf(billTime)),billStaff,billNum,"",fineReason,fineAmt,violationImgPath,
-                paymentStatus,date,1,date,1,1,1);
-        int insertCnt = violationMapper.insertViolationInfo(violationInfo);
+        if(violationInfoVos != null && violationInfoVos.size() > 0)
+        {
+            LOGGER.info("该违章序列号已存在 billNum={}", billNum);
+//            throw new BusinessException(JsonResultEnum.VIOLATIONINFO_EXIST);
+            ViolationInfo violationInfo = new ViolationInfo(null,billDep,new Date(Long.valueOf(billTime)),billStaff,billNum,null,fineReason,fineAmt,violationImgPath,
+                    paymentStatus,null,null,date,1,null,null);
+            violationMapper.updateViolationInfo(violationInfo);
+        }
+        else
+        {
+            ViolationInfo violationInfo = new ViolationInfo(null,billDep,new Date(Long.valueOf(billTime)),billStaff,billNum,"",fineReason,fineAmt,violationImgPath,
+                    paymentStatus,date,1,date,1,1,1);
+            int insertCnt = violationMapper.insertViolationInfo(violationInfo);
+        }
         LOGGER.info("结束新增违章信息方法");
     }
 

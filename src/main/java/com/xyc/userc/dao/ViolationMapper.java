@@ -21,6 +21,8 @@ public interface ViolationMapper
 
     int insertViolationInfo(ViolationInfo violationInfo);
 
+    void updateViolationInfo(ViolationInfo violationInfo);
+
     List<ViolationInfoVo> selectViolationInfo(@Param("billType")String billType, @Param("billDep")String billDep,
                                               @Param("billTime")String billTime, @Param("paymentStatus")String paymentStatus,
                                               @Param("billNum")String billNum);
