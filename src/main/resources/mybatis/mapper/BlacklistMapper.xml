@@ -3,10 +3,10 @@
 <mapper namespace="com.xyc.userc.dao.BlacklistMapper">
 
     <resultMap id="BaseVoResultMap" type="com.xyc.userc.vo.BlacklistVo">
-        <result column="CARNUM" jdbcType="VARCHAR" property="carNum" />
-        <result column="REASON" jdbcType="VARCHAR" property="reason" />
-        <result column="USER_NAME" jdbcType="VARCHAR" property="createName" />
-        <result column="CREATEMOBILE" jdbcType="VARCHAR" property="createMobile" />
+        <result column="CARNUM"  property="carNum" />
+        <result column="REASON"  property="reason" />
+        <result column="USER_NAME"  property="createName" />
+        <result column="CREATEMOBILE"  property="createMobile" />
         <result column="GMT_CREATE"  property="gmtCreate" typeHandler="com.xyc.userc.mybatis.typehandler.LongDateTypeHandler"/>
     </resultMap>
 
