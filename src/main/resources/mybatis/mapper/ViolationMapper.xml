@@ -42,7 +42,7 @@
     VALUES (PC_VIOLATION_SEQ.nextval,#{billDep},#{billTime},#{billStaff},#{billNum},#{carNumber},#{fineReason},#{fineAmt},#{violationImgPath},#{paymentStatus},#{gmtCreate},#{userCreate},#{gmtModified},#{userModified},#{dataStatus},#{billType})
     </insert>
 
-    <update id="updateViolationInfo" parameterType="ViolationInfo">
+    <update id="updateViolationInfo" parameterType="com.xyc.userc.entity.ViolationInfo">
         update PC_VIOLATIONINFO
         set
           BILL_DEPARTMENT = #{billDep},
