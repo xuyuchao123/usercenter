@@ -7,7 +7,7 @@
         <result column="REASON" jdbcType="VARCHAR" property="reason" />
         <result column="USER_NAME" jdbcType="VARCHAR" property="createName" />
         <result column="CREATEMOBILE" jdbcType="VARCHAR" property="createMobile" />
-        <result column="GMT_CREATE" jdbcType="TIMESTAMP" javaType="java.lang.Long" property="gmtCreate" typeHandler="com.xyc.userc.mybatis.typehandler.LongDateTypeHandler"/>
+        <result column="GMT_CREATE"  property="gmtCreate" typeHandler="com.xyc.userc.mybatis.typehandler.LongDateTypeHandler"/>
     </resultMap>
 
     <resultMap id="BaseResultMap" type="com.xyc.userc.entity.Blacklist">

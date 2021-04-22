@@ -5,6 +5,7 @@
     <resultMap id="selectCarNumFrozenVoMap" type="com.xyc.userc.vo.CarNumFrozenVo">
         <result column="startDate" property="startDate" typeHandler="com.xyc.userc.mybatis.typehandler.LongDateTypeHandler" />
         <result column="expireDate" property="expireDate" typeHandler="com.xyc.userc.mybatis.typehandler.LongDateTypeHandler" />
+        <result column="lastViolationTime" property="lastViolationTime" typeHandler="com.xyc.userc.mybatis.typehandler.LongDateTypeHandler" />
     </resultMap>
 
     <select id="selectCarNumFrozenVo" resultMap="selectCarNumFrozenVoMap">
