@@ -17,6 +17,9 @@ public class BlacklistVo implements Serializable
     private String createMobile;
     private Long gmtCreate;
 
+    public BlacklistVo() {
+    }
+
     public BlacklistVo(String carNum, String reason, String createName, String createMobile, Long gmtCreate) {
         this.carNum = carNum;
         this.reason = reason;
