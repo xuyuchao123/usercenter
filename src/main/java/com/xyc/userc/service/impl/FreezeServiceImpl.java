@@ -80,7 +80,16 @@ public class FreezeServiceImpl implements FreezeService
                 throw new BusinessException(JsonResultEnum.CARNUM_FROZEN);
             }
             tmpCarNumFrozen.setStartDate(date);
-            Date expireDate = DateUtils.localDateTime2Date(localDateTime.plusDays(tmpCarNumFrozen.getViolationTimes().intValue() * UsercConstant.FROZEN_PERIOD));
+            int tmpViolationTime = tmpCarNumFrozen.getViolationTimes().intValue();
+            Date expireDate = null;
+            if(tmpViolationTime == 1)  //违章一次冻结1个月
+            {
+                expireDate = DateUtils.localDateTime2Date(localDateTime.plusMonths(1));
+            }
+            else if(tmpViolationTime == 2)  //违章两次冻结6个月
+            {
+                expireDate = DateUtils.localDateTime2Date(localDateTime.plusMonths(6));
+            }
             tmpCarNumFrozen.setExpireDate(expireDate);
             tmpCarNumFrozen.setFrozenStatus(1);
             tmpCarNumFrozen.setGmtModified(date);

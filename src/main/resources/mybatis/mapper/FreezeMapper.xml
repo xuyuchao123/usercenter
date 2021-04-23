@@ -55,7 +55,7 @@
     <update id="updateCarNumFrozens" parameterType="com.xyc.userc.entity.CarNumFrozen">
         <foreach collection="list" item="carNumFrozen" index="index" open="begin" close=";end;" separator=";">
         update SYS_CARNUM_FROZEN a set a.FROZEN_STATUS = #{carNumFrozen.frozenStatus}, a.START_DATE = #{carNumFrozen.startDate},
-        a.GMT_MODIFIED = #{carNumFrozen.gmtModified},a.EXPIRE_DATE = #{carNumFrozen.expireDate}
+        a.GMT_MODIFIED = #{carNumFrozen.gmtModified},a.EXPIRE_DATE = #{carNumFrozen.expireDate,jdbcType=DATE}
         where a.CARNUMBER = #{carNumFrozen.carNum}
         </foreach>
     </update>
