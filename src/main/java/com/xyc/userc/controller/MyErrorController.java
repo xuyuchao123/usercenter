@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
@@ -48,7 +49,7 @@ public class MyErrorController extends AbstractErrorController
 
     @RequestMapping
     @ResponseBody
-    public JsonResultObj error(HttpServletRequest request)
+    public JsonResultObj error(HttpServletRequest request, HttpServletResponse response)
     {
         JsonResultObj jsonResultObj;
         Map<String, Object> body = this.getErrorAttributes(request, this.isIncludeStackTrace(request, MediaType.ALL));
@@ -58,6 +59,7 @@ public class MyErrorController extends AbstractErrorController
         {
             LOGGER.error("权限不足! 访问路径：{}",body.get("path"));
             jsonResultObj = new JsonResultObj(false, JsonResultEnum.NO_PERMISSION);
+            response.setStatus(200);
         }
         else
         {
