@@ -74,7 +74,7 @@
         select sr.id from
         pc_role sr
         left join pc_permission_requestpath spr on sr.permission_id = spr.permission_id
-        left join pc_requestpath srp on spr.requestpath_id = srp.id where srp.url = #{url}
+        left join pc_requestpath srp on spr.requestpath_id = srp.id where srp.url like concat(#{url},'%')
     </select>
 
 </mapper>
