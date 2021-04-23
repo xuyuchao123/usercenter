@@ -37,6 +37,9 @@ public class ViolationInfoVo implements Serializable
     @ApiModelProperty(value="违章图片路径", position=7)
     private String illegalPictures;
 
+    public ViolationInfoVo() {
+    }
+
     public ViolationInfoVo(String billingDepartment, Long billingTime, String openSingle, String billingSerialNumber,
                            String reasonForFine, String theAmountOfTheFine, String paymentStatus, String illegalPictures) {
         this.billingDepartment = billingDepartment;
