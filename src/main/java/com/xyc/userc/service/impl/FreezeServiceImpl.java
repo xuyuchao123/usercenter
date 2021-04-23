@@ -246,7 +246,8 @@ public class FreezeServiceImpl implements FreezeService
                     tmpCarNumFrozen.setGmtModified(date);
                     tmpCarNumFrozen.setLastViolationTime(LastViolationTime);
                     //判断当前记录是否要解冻,违章次数大于等于三次则不再自动解冻
-                    if(loopTimes < 3 && date.compareTo(tmpCarNumFrozen.getExpireDate()) >= 0)
+                    if(loopTimes < 3 && tmpCarNumFrozen.getExpireDate() != null &&
+                            date.compareTo(tmpCarNumFrozen.getExpireDate()) >= 0)
                     {
                         tmpCarNumFrozen.setFrozenStatus(0);
                     }
@@ -260,6 +261,7 @@ public class FreezeServiceImpl implements FreezeService
         {
             CarNumFrozen tmpCarNumFrozen2 = frozenMap.get(key);
             if(tmpCarNumFrozen2.getViolationTimes().intValue() < 3 &&
+                    tmpCarNumFrozen2.getExpireDate() != null &&
                     date.compareTo(tmpCarNumFrozen2.getExpireDate()) >= 0)      //违章次数小于3次且当前日期大于等于冻结到期日，需要解冻
             {
                 tmpCarNumFrozen2.setFrozenStatus(0);
