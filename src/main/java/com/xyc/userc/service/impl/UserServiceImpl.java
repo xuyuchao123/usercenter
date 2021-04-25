@@ -277,6 +277,8 @@ public class UserServiceImpl implements UserService
 //                userInfoVo.setGh(gh);
 //            }
             userInfoVo.setGh(gh);
+            redisTemplate.setKeySerializer(RedisSerializer.string());
+//            redisTemplate.setValueSerializer(RedisSerializer.string());
             redisTemplate.opsForValue().set(openId, JSON.toJSONString(userInfoVo));
 
             //构建user对象返回
