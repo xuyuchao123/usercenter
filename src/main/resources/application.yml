@@ -29,8 +29,6 @@ spring:
     - file:D:/home/car2/usercenter
     - file:/home/car2/usercenter
 
-
-
   redis:
     database: 0
     # Redis服务器地址
@@ -52,9 +50,13 @@ spring:
         # 连接池中的最小空闲连接
         min-idle: 0
     # 连接超时时间（毫秒）
-    timeout: 2000
+    timeout: 3000
     lettuce:
       shutdown-timeout: 0
+
+  cache:
+    ehcache:
+      config: ehcache.xml
 
 mybatis:
 #  配置多数据源时，mapper-locations 配置项不会生效，需在配置SqlSessionFactoryBean时手动指定
