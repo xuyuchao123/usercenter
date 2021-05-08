@@ -31,9 +31,7 @@ public class MyCommandLineRunner implements CommandLineRunner
     public void run(String... args) throws Exception
     {
         LOGGER.info("开始存入用户信息至redis");
-//        redisTemplate.setKeySerializer(RedisSerializer.string());
-//        redisTemplate.setValueSerializer(RedisSerializer.json());
-//        Object obj = (String)redisTemplate.opsForValue().get("tst");
+
         redisService.storeUserInfoVo();
 
         LOGGER.info("结束存入用户信息至redis");

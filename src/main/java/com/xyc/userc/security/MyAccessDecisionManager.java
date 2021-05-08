@@ -55,6 +55,6 @@ public class MyAccessDecisionManager implements AccessDecisionManager
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return true;
-    }
+    return true;
+}
 }

@@ -81,8 +81,8 @@ server:
     context-path: /mobile
 
 file:
-#  rootPath: /home/car2/static
-  rootPath: E:/static
+  rootPath: /home/car2/static
+#  rootPath: E:/static
   sonPath: /violationimg/
 
 

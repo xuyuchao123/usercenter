@@ -191,6 +191,10 @@ public class FreezeServiceImpl implements FreezeService
         for(int i = 0; i < violationInfoList.size(); i++)
         {
             Map map = violationInfoList.get(i);
+            if(map.get("carNum") == null || "".equals(map.get("carNum").toString()))
+            {
+                continue;
+            }
             if(i == 0)
             {
                 preCarNum = map.get("carNum").toString();
