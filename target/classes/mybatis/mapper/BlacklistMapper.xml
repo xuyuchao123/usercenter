@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyc.userc.dao.BlacklistMapper">
+
+    <resultMap id="BaseVoResultMap" type="com.xyc.userc.vo.BlacklistVo">
+        <result column="CARNUM"  property="carNum" />
+        <result column="REASON"  property="reason" />
+        <result column="USER_NAME"  property="createName" />
+        <result column="CREATEMOBILE"  property="createMobile" />
+        <result column="GMT_CREATE"  property="gmtCreate" typeHandler="com.xyc.userc.mybatis.typehandler.LongDateTypeHandler"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMap" type="com.xyc.userc.entity.Blacklist">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="CARNUM" jdbcType="VARCHAR" property="carNum" />
+        <result column="REASON" jdbcType="VARCHAR" property="reason" />
+        <result column="USER_CREATE" jdbcType="VARCHAR" property="userCreate" />
+        <result column="GMT_CREATE" jdbcType="DATE" property="gmtCreate" />
+        <result column="USER_MODIFIED" jdbcType="VARCHAR" property="userModified" />
+        <result column="GMT_MODIFIED" jdbcType="DATE" property="gmtModified" />
+        <result column="IS_ENABLE" jdbcType="NUMERIC" property="isEnable" />
+    </resultMap>
+
+    <resultMap id="BlackListEnterResultMap" type="com.xyc.userc.entity.BlackListEnter">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="CARNUM" jdbcType="VARCHAR" property="carNum" />
+        <result column="ENTER_DATE" jdbcType="VARCHAR" property="enterDate" />
+        <result column="STATUS" jdbcType="NUMERIC" property="status" />
+    </resultMap>
+
+    <select id="selectBlacklist" resultMap="BaseVoResultMap">
+        select * from (
+        select b.CARNUM, b.REASON,
+        u.USER_NAME, u.MOBILE as CREATEMOBILE, b.GMT_CREATE,rownum as rn
+        from SYS_BLACKLIST b
+        left join PC_USER u
+        on b.USER_CREATE = u.ID
+        <where>
+            <if test="carNum != null">
+                and b.CARNUM like concat(concat('%',#{carNum}),'%')
+            </if>
+            <if test="createName != null">
+                and u.USER_NAME like concat(concat('%',#{createName}),'%')
+            </if>
+            <if test="createMobile != null">
+                and u.MOBILE = #{createMobile}
+            </if>
+            and b.IS_ENABLE = 1
+            and rownum <![CDATA[ <= ]]> #{end})
+        </where>
+        where rn <![CDATA[ >= ]]> #{start}
+    </select>
+
+    <select id="selectBlacklistCnt" resultType="java.lang.Integer">
+        select count(*)
+        from SYS_BLACKLIST b
+        left join PC_USER u
+        on b.USER_CREATE = u.ID
+        <where>
+            <if test="carNum != null">
+                and b.CARNUM like concat(concat('%',#{carNum}),'%')
+            </if>
+            <if test="createName != null">
+                and u.USER_NAME like concat(concat('%',#{createName}),'%')
+            </if>
+            <if test="createMobile != null">
+                and u.MOBILE = #{createMobile}
+            </if>
+            and b.IS_ENABLE = 1
+        </where>
+    </select>
+
+    <select id="selectByCarNum" resultMap="BaseResultMap">
+        select *
+        from SYS_BLACKLIST b
+        where b.CARNUM = #{carNum}
+        and b.IS_ENABLE = 1
+    </select>
+
+    <update id="deleteBlacklist">
+        update SYS_BLACKLIST b
+        set b.IS_ENABLE = 0
+        where b.CARNUM = #{carNum}
+    </update>
+
+    <insert id="insertBlacklist">
+        insert into SYS_BLACKLIST(ID,CARNUM,REASON,USER_CREATE,GMT_CREATE,USER_MODIFIED,GMT_MODIFIED,IS_ENABLE)
+        values(BLACKLIST_SEQ.nextval,#{carNum},#{reason},#{userCreate},#{gmtCreate},#{userModified},#{gmtModified},#{isEnable})
+    </insert>
+
+    <select id="selectBlacklistEnter" resultMap="BlackListEnterResultMap">
+        select * from SYS_BLACKLIST_ENTER
+    </select>
+
+    <!--<select id="selectBlackListInInfo" resultType="java.util.Map">-->
+        <!--select b.CARNUM, NVL(aa.CROSSDATE,' ') as CROSSDATE from SYS_BLACKLIST b-->
+        <!--left join-->
+        <!--(-->
+            <!--select distinct a.PLATENO, substr(a.CROSSTIME,0,10) as CROSSDATE-->
+            <!--from T_ZZYY_RC_CAR_HIK@rcdb a-->
+            <!--where a.CROSSTIME <![CDATA[ >= ]]> #{startTime}-->
+            <!--and a.CROSSTIME <![CDATA[ <= ]]> #{endTime}-->
+            <!--and (a.CARINOUTSTRING = '0' or a.CARINOUTSTRING = '入场')-->
+        <!--) aa-->
+        <!--on b.CARNUM = aa.PLATENO-->
+        <!--where b.IS_ENABLE = 1-->
+    <!--</select>-->
+
+    <select id="selectBlackListInInfo" resultType="java.util.Map">
+        select b.CARNUM, NVL(aa.CROSSDATE,' ') as CROSSDATE from SYS_BLACKLIST b
+        left join
+        (
+        select distinct cf.CAR_NUMBER, substr(cf.CROSSTIME,0,10) as CROSSDATE
+        from report.carinfo cf
+        where cf.CROSSTIME <![CDATA[ >= ]]> #{startTime}
+        and cf.CROSSTIME <![CDATA[ <= ]]> #{endTime}
+        and cf.CARINOUTSTRING = '入场'
+        ) aa
+        on b.CARNUM = aa.CAR_NUMBER
+        where b.IS_ENABLE = 1
+    </select>
+
+    <insert id="insertBlacklistEnter">
+        insert into SYS_BLACKLIST_ENTER(ID,CARNUM,ENTER_DATE,STATUS)
+        values(BLACKLIST_ENTER_SEQ.nextval,#{carNum},#{enterDate},1)
+    </insert>
+
+    <update id="updateCurDateValidStat">
+        update SYS_BLACKLIST_ENTER be
+        set be.ENTER_DATE = #{curDate}, be.STATUS = 1
+        where be.CARNUM IN
+        <foreach collection="list" open="(" close=")" separator="," item="carNum" index="i">
+            #{carNum}
+        </foreach>
+    </update>
+
+    <update id="updateStatInvalid">
+        update SYS_BLACKLIST_ENTER be
+        set be.STATUS = 0
+        where be.CARNUM IN
+        <foreach collection="list" open="(" close=")" separator="," item="carNum" index="i">
+            #{carNum}
+        </foreach>
+    </update>
+
+</mapper>

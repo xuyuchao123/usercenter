@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyc.userc.dao.UserMapper">
+
+  <resultMap id="BaseResultMap" type="com.xyc.userc.entity.User">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_num" jdbcType="VARCHAR" property="userNum" />
+    <result column="user_realname" jdbcType="VARCHAR" property="userRealName" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
+    <result column="is_enable" jdbcType="TINYINT" property="isEnable" />
+    <result column="is_locked" jdbcType="TINYINT" property="isLocked" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="user_create" jdbcType="BIGINT" property="userCreate" />
+    <result column="user_modified" jdbcType="BIGINT" property="userModified" />
+    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+  </resultMap>
+
+
+  <!--关联的嵌套查询，多次sql查询得到所需对象，可配置懒加载提高性能。column可配置多个，用逗号隔开-->
+  <resultMap id="selectByUsernameMap" type="com.xyc.userc.entity.User" extends="BaseResultMap">
+    <collection property="roles" column="{userId=id}" fetchType="eager"
+                select="com.xyc.userc.dao.RoleMapper.selectByUserId" />
+  </resultMap>
+
+
+  <!--<select id="selectUserRoleByOpenId" resultType="java.util.Map">-->
+    <!--select m.id as mobileOpenIdId, r.ID as roleId, r.ROLE_CODE as roleCode, r.ROLE_NAME as roleName,-->
+     <!--r.IS_DELETED as isDeleted, r.GMT_CREATE as gmtCreate, r.GMT_MODIFIED as gmtModified,-->
+     <!--r.PARENT_ROLE_ID as parentRoleId from-->
+    <!--(select decode(u.type, 'SJ', 'SJ0',u.type) as type,u.OPENID from SYS_USER u) uu-->
+    <!--left join SYS_MOBILE_OPENID m-->
+    <!--on uu.OPENID = m.OPENID-->
+    <!--left join SYS_ROLE r-->
+    <!--on uu.type = r.ROLE_CODE-->
+    <!--where m.OPENID = #{openId}-->
+    <!--and r.IS_DELETED = 0-->
+  <!--</select>-->
+
+  <select id="selectUserRoleByMobile" resultType="java.util.Map">
+    select ITEM, USER_ID FROM HLJLYXX where PHONE_NO = #{mobile}
+  </select>
+
+  <select id="selectUserRoleByOpenIdRoleCode" resultType="java.util.Map">
+    select ITEM, USER_ID FROM HLJLYXX hl
+    left join SYS_MOBILE_OPENID mo
+    on hl.phone_no = mo.mobile
+    where mo.openid = #{openId} and hl.ITEM = #{roleCode}
+  </select>
+
+  <select id="selectUserId" resultType="java.lang.String">
+    select DISTINCT User_ID FROM HLJLYXX where PHONE_NO = #{mobile}
+  </select>
+
+  <update id="updateRoleIdByMobileOpenId">
+    update SYS_USER_ROLE ur
+    set ur.ROLE_ID = #{roleId},ur.GMT_MODIFIED = #{gmtModified}
+    where ur.MOBILE_OPENID_ID = #{mobileOpenIdId}
+  </update>
+
+  <update id="updateRoleIdByMobileOpenIdRoleId">
+    update SYS_USER_ROLE ur
+    set ur.ROLE_ID = #{roleId},ur.GMT_MODIFIED = #{gmtModified}
+    where ur.MOBILE_OPENID_ID = #{mobileOpenIdId} and ur.ROLE_ID = #{oriRoleId}
+  </update>
+
+  <select id="selectUserInfoVo" resultType="com.xyc.userc.vo.UserInfoVo">
+    select mo.OPENID as openId,
+    mo.MOBILE as mobilePhone, r.ROLE_CODE as roleCode,
+    js.LASTSTOCKCODE as lastStockCode,
+    js.JLYOPERATORTIME as operatorTime
+    from SYS_MOBILE_OPENID mo
+    left join SYS_USER_ROLE ur
+    on mo.ID = ur.MOBILE_OPENID_ID
+    left join SYS_ROLE r
+    on ur.ROLE_ID = r.ID
+    left join SYS_JLY_STOCKCODE js
+    on mo.OPENID = js.OPENID
+    <where>
+      <if test="openId != null">
+        and mo.OPENID = #{openId}
+      </if>
+      and r.IS_DELETED = 0
+    </where>
+    order by mo.OPENID
+  </select>
+
+  <!--<select id="selectUserIdByMobile" resultType="java.util.Map">-->
+    <!--select hlm.PHONE_NO, hlm.User_ID FROM -->
+    <!--(select * HLJLYXX-->
+    <!--union all -->
+    <!--select * from MANAGERINFO) hlm-->
+    <!--where PHONE_NO IN-->
+    <!--<foreach collection="list" open="(" close=")" separator="," item="mobile" index="i">-->
+      <!--#{mobile}-->
+    <!--</foreach>-->
+  <!--</select>-->
+
+  <select id="selectAllUserId" resultType="java.util.Map">
+    select hlm.PHONE_NO, hlm.User_ID FROM
+    (select * from HLJLYXX
+    union all
+    select * from MANAGERINFO) hlm
+  </select>
+
+  <select id="selectStockCodeInfo" resultType="java.util.Map">
+    select js.LASTSTOCKCODE,
+    js.JLYOPERATORTIME
+    from SYS_JLY_STOCKCODE js
+    where js.OPENID = #{openId}
+  </select>
+
+</mapper>

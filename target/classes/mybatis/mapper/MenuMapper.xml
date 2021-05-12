@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyc.userc.dao.MenuMapper">
+
+  <resultMap id="BaseResultMap" type="com.xyc.userc.entity.Menu">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from pc_menu
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.xyc.userc.entity.Menu">
+    <selectKey keyProperty="id" order="BEFORE" resultType="int">
+      SELECT PC_MENU_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    insert into pc_menu (id, menu_name,
+      gmt_create, gmt_modified, parent_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{menuName,jdbcType=VARCHAR},
+      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, #{parentId,jdbcType=BIGINT}
+      )
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.xyc.userc.entity.Menu">
+    update pc_menu
+    set menu_name = #{menuName,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      parent_id = #{parentId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+    select id, menu_name, gmt_create, gmt_modified, parent_id
+    from pc_menu
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, menu_name, gmt_create, gmt_modified, parent_id
+    from pc_menu
+  </select>
+
+  <select id="selectByPermissionId" resultMap="BaseResultMap">
+    select m.id, m.menu_name, m.gmt_create, m.gmt_modified, m.parent_id from
+    pc_permission_menu pm
+    left join pc_menu m on pm.menu_id = m.id
+    where pm.permission_id = #{permissionId}
+  </select>
+
+</mapper>

@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyc.userc.dao.CarNumOpenIdMapper">
+
+    <resultMap id="BaseResultMapC" type="com.xyc.userc.entity.CarNumOpenId">
+        <id column="id" jdbcType="NUMERIC" property="id" />
+        <result column="openid" jdbcType="VARCHAR" property="openId" />
+        <result column="carnumber" jdbcType="VARCHAR" property="carNum" />
+        <result column="ENGINENUM" jdbcType="VARCHAR" property="engineNum" />
+        <result column="IDENTNUM" jdbcType="VARCHAR" property="identNum" />
+        <result column="EMISSIONSTD" jdbcType="VARCHAR" property="emissionStd" />
+        <result column="FLEETNAME" jdbcType="VARCHAR" property="fleetName" />
+        <result column="REGDATE" jdbcType="VARCHAR" property="regDate" />
+        <result column="DEPARTMENT" jdbcType="VARCHAR" property="department" />
+        <result column="is_deleted" jdbcType="NUMERIC" property="isDeleted" />
+        <result column="is_enabled" jdbcType="VARCHAR" property="isEnabled" />
+        <result column="user_create" jdbcType="VARCHAR" property="userCreate" />
+        <result column="user_modified" jdbcType="VARCHAR" property="userModified" />
+        <result column="gmt_create" jdbcType="VARCHAR" property="gmtCreate" />
+        <result column="gmt_modified" jdbcType="VARCHAR" property="gmtModified" />
+
+    </resultMap>
+
+
+    <resultMap id="BaseResultMap" type="com.xyc.userc.entity.CarNumOpenId">
+        <id column="id" jdbcType="NUMERIC" property="id" />
+        <result column="openid" jdbcType="VARCHAR" property="openId" />
+        <result column="carnumber" jdbcType="VARCHAR" property="carNum" />
+        <result column="ENGINENUM" jdbcType="VARCHAR" property="engineNum" />
+        <result column="IDENTNUM" jdbcType="VARCHAR" property="identNum" />
+        <result column="EMISSIONSTD" jdbcType="VARCHAR" property="emissionStd" />
+        <result column="FLEETNAME" jdbcType="VARCHAR" property="fleetName" />
+        <result column="REGDATE" jdbcType="VARCHAR" property="regDate" />
+        <result column="DEPARTMENT" jdbcType="VARCHAR" property="department" />
+        <result column="is_deleted" jdbcType="NUMERIC" property="isDeleted" />
+        <result column="is_enabled" jdbcType="VARCHAR" property="isEnabled" />
+        <result column="user_create" jdbcType="VARCHAR" property="userCreate" />
+        <result column="user_modified" jdbcType="NUMERIC" property="userModified" />
+        <result column="gmt_create" jdbcType="VARCHAR" property="gmtCreate" />
+        <result column="gmt_modified" jdbcType="VARCHAR" property="gmtModified" />
+
+    </resultMap>
+    <resultMap id="BaseVoResultMap" type="com.xyc.userc.entity.CarNumOpenId">
+        <id column="id" jdbcType="NUMERIC" property="id" />
+        <result column="openid" jdbcType="VARCHAR" property="openId" />
+        <result column="carnumber" jdbcType="VARCHAR" property="carNum" />
+        <result column="is_deleted" jdbcType="NUMERIC" property="isDeleted" />
+        <result column="user_create" jdbcType="NUMERIC" property="userCreate" />
+        <result column="user_modified" jdbcType="NUMERIC" property="userModified" />
+        <result column="gmt_create" jdbcType="VARCHAR" property="gmtCreate" />
+        <result column="gmt_modified" jdbcType="VARCHAR" property="gmtModified" />
+        <result column="is_enabled" jdbcType="VARCHAR" property="isEnabled" />
+    </resultMap>
+
+    <select id="selectByOpenId" resultType="com.xyc.userc.vo.CarNumOpenIdVo">
+        select DISTINCT oc.ID as id, oc.OPENID as openId, oc.CARNUMBER as carNum,
+        oc.ENGINENUM as engineNum, oc.IDENTNUM as identNum, oc.EMISSIONSTD as emissionStd,
+        oc.FLEETNAME as fleetName,oc.REGDATE as regDate,oc.DEPARTMENT as department,
+        oc.IS_DELETED as isDeleted, oc.IS_ENABLED as isEnabled, oc.USER_CREATE as userCreate,
+        oc.USER_MODIFIED as userModified, oc.GMT_CREATE as gmtCreate, oc.GMT_MODIFIED as gmtModified,
+        decode(f.ATTACHMENT,null,'false','true') as hasDrivingLicense from
+        SYS_OPENID_CARNUMBER oc
+        left join FG_CARYB_FILE@SUPC f
+        on oc.CARNUMBER = f.CAR_NO
+        <where>
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
+            </if>
+            and oc.IS_DELETED = 0
+        </where>
+    </select>
+
+    <select id="selectByMobile" resultMap="BaseResultMap">
+        select DISTINCT oc.ID, oc.OPENID, oc.CARNUMBER, oc.ENGINENUM, oc.IDENTNUM, oc.EMISSIONSTD,
+        oc.FLEETNAME,oc.REGDATE,oc.DEPARTMENT, oc.IS_DELETED, oc.IS_ENABLED, oc.USER_CREATE,
+        oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED from
+        SYS_OPENID_CARNUMBER oc
+        left join SYS_MOBILE_OPENID mo
+        on oc.OPENID = mo.OPENID
+        <where>
+            <if test="mobile != null">
+                and mo.MOBILE = #{mobile}
+            </if>
+            and oc.IS_DELETED = 0
+        </where>
+    </select>
+
+    <select id="selectByOpenIdCarNum" resultMap="BaseResultMapC">
+        select oc.ID, oc.OPENID, oc.CARNUMBER,oc.ENGINENUM, oc.IDENTNUM, oc.EMISSIONSTD,
+        oc.FLEETNAME,oc.REGDATE, oc.DEPARTMENT, oc.IS_DELETED, oc.IS_ENABLED, oc.USER_CREATE,
+        oc.USER_MODIFIED, oc.GMT_CREATE, oc.GMT_MODIFIED from
+        SYS_OPENID_CARNUMBER oc
+        <where>
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
+            </if>
+            <if test="carNum != null">
+                and oc.CARNUMBER = #{carNum}
+            </if>
+            and oc.IS_DELETED = 0
+        </where>
+    </select>
+
+    <select id="confirmEnabledCarNumExist" resultType="int">
+        select count(*) from SYS_OPENID_CARNUMBER oc
+        <where>
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
+            </if>
+            <if test="carNum != null">
+                and oc.CARNUMBER = #{carNum}
+            </if>
+            and oc.IS_DELETED = 0
+            and oc.IS_ENABLED = 1
+        </where>
+    </select>
+
+    <select id="selectEnabledCarInfo" resultType="java.lang.String">
+        select
+          oc.CARNUMBER as carNum
+        from
+          SYS_OPENID_CARNUMBER oc
+        <where>
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
+            </if>
+            and oc.IS_DELETED = 0
+            and oc.IS_ENABLED = 1
+        </where>
+    </select>
+
+
+    <update id="deleteByCarNumOpenId">
+        update SYS_OPENID_CARNUMBER oc
+        set oc.IS_DELETED = 1
+        <where>
+            <if test="carNum != null">
+                and oc.CARNUMBER = #{carNum}
+            </if>
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
+            </if>
+            and oc.IS_DELETED = 0
+        </where>
+    </update>
+
+    <update id="updateCarNumEnable">
+        update SYS_OPENID_CARNUMBER oc
+        set oc.IS_ENABLED = #{isEnable},
+            oc.GMT_MODIFIED = #{gmtModified}
+        <where>
+            <if test="carNum != null">
+                and oc.CARNUMBER = #{carNum}
+            </if>
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
+            </if>
+            and oc.IS_DELETED = 0
+        </where>
+    </update>
+
+    <select id="selectMobileOpenIdIdByOpenId" resultType="java.lang.Integer">
+        select DISTINCT mo.id
+        from SYS_OPENID_CARNUMBER oc
+        left join SYS_MOBILE_OPENID mo
+        on oc.openid = mo.openid
+        where oc.OPENID = #{openId}
+        and oc.IS_DELETED = 0
+    </select>
+
+    <insert id="insert">
+        insert into SYS_OPENID_CARNUMBER(ID,OPENID,CARNUMBER,IS_DELETED,USER_CREATE,USER_MODIFIED,GMT_CREATE,GMT_MODIFIED,IS_ENABLED,ENGINENUM,IDENTNUM,EMISSIONSTD,FLEETNAME,REGDATE,DEPARTMENT)
+        VALUES (OPENID_CARNUM_SEQ.nextval,#{openId},#{carNum},#{isDeleted},#{userCreate},#{userModified},#{gmtCreate},#{gmtModified},#{isEnabled},#{engineNum},#{identNum},#{emissionStd},#{fleetName},#{regDate,jdbcType=DATE},#{department})
+    </insert>
+
+    <update id="updateCarNum">
+        update SYS_OPENID_CARNUMBER oc
+        set oc.CARNUMBER = #{newCarNum},
+            oc.ENGINENUM = #{engineNum},
+            oc.IDENTNUM = #{identNum},
+            oc.EMISSIONSTD = #{emissionStd},
+            oc.FLEETNAME = #{fleetName},
+            oc.REGDATE = #{regDate},
+            oc.DEPARTMENT = #{department},
+          oc.GMT_MODIFIED = #{gmtModified}
+        where oc.OPENID = #{openId}
+        and oc.CARNUMBER = #{oldCarNum}
+        and oc.IS_DELETED = 0
+    </update>
+
+    <select id="selectCntByCarNumOpenId" resultType="java.lang.Integer">
+        select count(*) from SYS_OPENID_CARNUMBER oc
+        <where>
+            <if test="oldCarNum != null">
+                and oc.CARNUMBER = #{oldCarNum}
+            </if>
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
+            </if>
+            and oc.IS_DELETED = 0
+        </where>
+    </select>
+
+    <select id="selectCarNumInOutTime" resultType="com.xyc.userc.vo.CarNumInOutTimeVo">
+        select distinct a.PLATENO as carNum, a.CROSSTIME as inOutTime,
+        decode(a.CARINOUTSTRING, '0', '入场', '1', '出场', a.CARINOUTSTRING) as inOutType
+        from T_ZZYY_RC_CAR_HIK@rcdb a
+        inner join SYS_OPENID_CARNUMBER b
+        on b.OPENID = #{openId}
+        and b.IS_DELETED = 0
+        and a.PLATENO = b.CARNUMBER
+        where a.CROSSTIME <![CDATA[ >= ]]> #{startTime}
+        and a.CROSSTIME <![CDATA[ <= ]]> #{endTime}
+        order by a.PLATENO, a.CROSSTIME
+    </select>
+
+    <select id="selectGsCarInfoByCarNum" resultType="com.xyc.userc.vo.GsCarInfoVo">
+        select g.CLSBDH as clsbdh, g.FDJH as fdjh
+        from SYS_GSCAR_INFO g
+        <where>
+            <if test="carNum != null">
+                and g.HPHM = #{carNum}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCarNumInfo" resultType="java.util.Map">
+        select oc.OPENID, oc.CARNUMBER,oc.IS_ENABLED
+        from SYS_OPENID_CARNUMBER oc
+        <where>
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
+            </if>
+            and oc.IS_DELETED = 0
+        </where>
+        order by oc.OPENID
+    </select>
+
+    <select id="selectCarNumInfoVo" resultType="com.xyc.userc.vo.CarNumInfoVo">
+        select oc.CARNUMBER as carNum, oc.IS_ENABLED as isEnable
+        from SYS_OPENID_CARNUMBER oc
+        <where>
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
+            </if>
+            and oc.IS_DELETED = 0
+        </where>
+    </select>
+
+    <select id="confirmCarNumExist" resultType="java.util.Map">
+        select mo.ID, r.ROLE_CODE, r.ID as ROLEID
+        from SYS_OPENID_CARNUMBER oc
+        left join SYS_MOBILE_OPENID mo
+        on oc.OPENID = mo.OPENID
+        left join SYS_USER_ROLE ur
+        on mo.ID = ur.MOBILE_OPENID_ID
+        left join SYS_ROLE r
+        on ur.ROLE_ID = r.id
+        <where>
+            <if test="carNum != null">
+                and oc.CARNUMBER = #{carNum}
+            </if>
+            <if test="openId != null">
+                and oc.OPENID = #{openId}
+            </if>
+            and oc.IS_DELETED = 0
+            and r.IS_DELETED = 0
+        </where>
+    </select>
+
+    <!--<select id="selectEnvInfo" resultType="com.xyc.userc.vo.EnvInfoVo">-->
+        <!--select * from-->
+        <!--(select aa.bumen as bumen, aa.car_number as carNumber,aa.car_vin_number as carVinNumber,-->
+          <!--aa.engine_number as engineNumber, aa.paif as paif, bb.crosstime as crossTime,rownum as id-->
+        <!--from (select DISTINCT a.bumen,a.car_number,a.car_vin_number,a.engine_number,a.paif-->
+          <!--from sell.cdp a) aa-->
+        <!--left join (select b.PLATENO,b.crosstime-->
+                    <!--from T_ZZYY_RC_CAR_HIK@rcdb b-->
+                    <!--where b.crosstime like concat(#{startDate},'%')-->
+                    <!--and (b.carinoutstring = '入场' or b.carinoutstring = '0')) bb-->
+        <!--on aa.car_number = bb.PLATENO-->
+        <!--<where>-->
+            <!--<if test="carNum != null">-->
+                <!--and aa.car_number = #{carNum}-->
+            <!--</if>-->
+            <!--and rownum <![CDATA[ <= ]]> #{end})-->
+        <!--</where>-->
+        <!--where id <![CDATA[ >= ]]> #{start}-->
+    <!--</select>-->
+
+    <!--<select id="selectEnvInfo" resultType="com.xyc.userc.vo.EnvInfoVo">-->
+        <!--select * from-->
+        <!--(select cf.BUMEN as bumen, cf.CAR_NUMBER as carNumber, cf.CAR_VIN_NUMBER as carVinNumber,-->
+          <!--cf.ENGINE_NUMBER as engineNumber, cf.PAIF as paif, cf.CROSSTIME as crossTime, cf.FORECAST_TIME as forecastTime,-->
+          <!--cf.ZCRQ as zcrq, cf.CARINOUTSTRING as carInOutString, cf.ENTRANCENAME as entranceName, cf.HWMC as hwmc,-->
+          <!--cf.YSL as ysl, cf.CDMC as cdmc, cf.VEHICLEURL as vehicleUrl, rownum as id-->
+        <!--from report.carinfo cf-->
+        <!--<where>-->
+            <!--<if test="carNum != null">-->
+              <!--and cf.car_number = #{carNum}-->
+            <!--</if>-->
+            <!--and cf.CROSSTIME like concat(#{startDate},'%')-->
+            <!--and rownum <![CDATA[ <= ]]> #{end}-->
+            <!--order by cf.CROSSTIME desc)-->
+        <!--</where>-->
+        <!--where id <![CDATA[ >= ]]> #{start}-->
+    <!--</select>-->
+
+    <select id="selectEnvInfo" resultType="com.xyc.userc.vo.EnvInfoVo">
+        select * from (
+        select cf.BUMEN          as bumen,
+        cf.CAR_NUMBER     as carNumber,
+        cf.CAR_VIN_NUMBER as carVinNumber,
+        cf.ENGINE_NUMBER  as engineNumber,
+        cf.PAIF           as paif,
+        cf.CROSSTIME      as crossTime,
+        cf.FORECAST_TIME  as forecastTime,
+        cf.ZCRQ           as zcrq,
+        cf.CARINOUTSTRING as carInOutString,
+        cf.ENTRANCENAME   as entranceName,
+        cf.HWMC           as hwmc,
+        cf.YSL            as ysl,
+        cf.CDMC           as cdmc,
+        cf.VEHICLEURL     as vehicleUrl,
+        rownum            as id
+        from (
+        SELECT a.BUMEN,
+        a.FORECAST_TIME,
+        a.CAR_NUMBER,
+        a.CAR_VIN_NUMBER,
+        a.ENGINE_NUMBER,
+        a.PAIF,
+        a.HWMC,
+        a.YSL,
+        a.CDMC,
+        a.ZCRQ,
+        b.CARINOUTSTRING,
+        b.CROSSTIME,
+        b.ENTRANCENAME,
+        b.VEHICLEURL
+        FROM report.CDPINFO a,
+        (SELECT *
+        FROM (SELECT "PLATENO",
+        "CROSSTIME",
+        "VEHICLEURL",
+        DECODE ("CARINOUTSTRING",
+        '0', '入场',
+        '1', '出场',
+        "CARINOUTSTRING")
+        "CARINOUTSTRING",
+        "RELEASEMODENAME",
+        "PARKNAME",
+        "ENTRANCENAME",
+        RANK ()
+        OVER (
+        PARTITION BY plateno,
+        TRUNC (
+        TO_DATE (
+        crosstime,
+        'yyyy-MM-dd hh24:mi:ss'))
+        ORDER BY crosstime ASC)
+        seq
+        FROM report.rcview
+        <where>
+            AND     "PARKNAME" IN ('杨锦公路', '玖隆桥洞')
+            AND (   (    DECODE ("CARINOUTSTRING",
+            '0', '入场',
+            '1', '出场',
+            "CARINOUTSTRING") = '入场'
+            AND releasemodename != '禁止放行')
+            OR DECODE ("CARINOUTSTRING",
+            '0', '入场',
+            '1', '出场',
+            "CARINOUTSTRING") = '出场')
+            and CROSSTIME like concat(#{startDate}, '%')
+            <if test="carNum != null">
+                and PLATENO = #{carNum}
+            </if>
+        </where>
+        )
+        WHERE seq = 1 ) b
+        WHERE     a.car_number = b.plateno
+        AND REPLACE (SUBSTR (b.CROSSTIME, 0, 10), '-', '') =
+        a.FORECAST_TIME
+        order by b.CROSSTIME desc
+        ) cf
+        ) where id <![CDATA[ <= ]]> #{end} and id <![CDATA[ >= ]]> #{start}
+    </select>
+
+
+    <!--<select id="selectEnvInfoCnt" resultType="java.lang.Integer">-->
+        <!--select count(*)-->
+        <!--from (select DISTINCT a.bumen,a.car_number,a.car_vin_number,a.engine_number,a.paif-->
+        <!--from sell.cdp a) aa-->
+        <!--left join (select b.PLATENO,b.crosstime-->
+        <!--from T_ZZYY_RC_CAR_HIK@rcdb b-->
+        <!--where b.crosstime like concat(#{startDate},'%')-->
+        <!--and (b.carinoutstring = '入场' or b.carinoutstring = '0')) bb-->
+        <!--on aa.car_number = bb.PLATENO-->
+        <!--<where>-->
+            <!--<if test="carNum != null">-->
+                <!--and aa.car_number = #{carNum}-->
+            <!--</if>-->
+        <!--</where>-->
+    <!--</select>-->
+
+    <!--<select id="selectEnvInfoCnt" resultType="java.lang.Integer">-->
+        <!--select count(*)-->
+        <!--from report.carinfo cf-->
+        <!--<where>-->
+            <!--<if test="carNum != null">-->
+              <!--and cf.CAR_NUMBER = #{carNum}-->
+            <!--</if>-->
+            <!--and cf.CROSSTIME like concat(#{startDate},'%')-->
+        <!--</where>-->
+    <!--</select>-->
+
+    <select id="selectEnvInfoCnt" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM report.CDPINFO a,
+        (SELECT *
+        FROM (SELECT "PLATENO",
+        "CROSSTIME",
+        "VEHICLEURL",
+        DECODE ("CARINOUTSTRING",
+        '0', '入场',
+        '1', '出场',
+        "CARINOUTSTRING")
+        "CARINOUTSTRING",
+        "RELEASEMODENAME",
+        "PARKNAME",
+        "ENTRANCENAME",
+        RANK ()
+        OVER (
+        PARTITION BY plateno,
+        TRUNC (
+        TO_DATE (
+        crosstime,
+        'yyyy-MM-dd hh24:mi:ss'))
+        ORDER BY crosstime ASC)
+        seq
+        FROM report.rcview
+        <where>
+            AND     "PARKNAME" IN ('杨锦公路', '玖隆桥洞')
+            AND (   (    DECODE ("CARINOUTSTRING",
+            '0', '入场',
+            '1', '出场',
+            "CARINOUTSTRING") = '入场'
+            AND releasemodename != '禁止放行')
+            OR DECODE ("CARINOUTSTRING",
+            '0', '入场',
+            '1', '出场',
+            "CARINOUTSTRING") = '出场')
+            and CROSSTIME like concat(#{startDate}, '%')
+            <if test="carNum != null">
+                and PLATENO = #{carNum}
+            </if>
+        </where>
+        )
+        WHERE seq = 1 ) b
+        WHERE     a.car_number = b.plateno
+        AND REPLACE (SUBSTR (b.CROSSTIME, 0, 10), '-', '') =
+        a.FORECAST_TIME
+        order by b.CROSSTIME desc
+    </select>
+
+    <select id="selectDrivingLicense" resultType="java.lang.Integer">
+        select count(*) from FG_CARYB_FILE@SUPC where CAR_NO = #{carNum}
+    </select>
+
+    <insert id="insertDrivingLicense">
+        insert into FG_CARYB_FILE@SUPC
+		(ATTACHMENT,
+		CAR_NO,
+		SUPP_ID,
+		SUPP_NAME,
+		REC_CREATOR,
+		REC_CREATE_TIME,
+		FILE_NAME) values
+		(
+			#{drivingLicense},
+			#{carNum},
+			'',
+			'',
+			#{openId},
+			TO_CHAR (SYSDATE, 'yyyyMMddHH24miss'),
+			'wechat'
+		)
+    </insert>
+
+    <update id="updateDrivingLicense">
+        update FG_CARYB_FILE@SUPC a
+        set a.ATTACHMENT = #{drivingLicense}
+        where a.CAR_NO = #{carNum}
+    </update>
+
+
+
+
+
+
+
+
+</mapper>

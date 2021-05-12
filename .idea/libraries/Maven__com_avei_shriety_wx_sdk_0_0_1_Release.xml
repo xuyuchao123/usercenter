@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.avei.shriety:wx_sdk:0.0.1-Release">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/avei/shriety/wx_sdk/0.0.1-Release/wx_sdk-0.0.1-Release.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/avei/shriety/wx_sdk/0.0.1-Release/wx_sdk-0.0.1-Release-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/avei/shriety/wx_sdk/0.0.1-Release/wx_sdk-0.0.1-Release-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

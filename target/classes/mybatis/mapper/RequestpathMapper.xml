@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyc.userc.dao.RequestpathMapper">
+
+    <resultMap id="BaseResultMap" type="com.xyc.userc.entity.Requestpath">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="url" jdbcType="VARCHAR" property="url" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+    </resultMap>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select id, url, description
+        from pc_requestpath
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPermissionId" resultMap="BaseResultMap">
+        select * from pc_permission_requestpath spr
+        left join pc_requestpath sr on spr.requestpath_id = sr.id
+        where spr.permission_id = #{permissionId}
+    </select>
+
+</mapper>

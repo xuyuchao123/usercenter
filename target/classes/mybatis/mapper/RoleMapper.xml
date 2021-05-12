@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyc.userc.dao.RoleMapper">
+
+  <resultMap id="BaseResultMap" type="com.xyc.userc.entity.Role">
+    <id column="id" jdbcType="NUMERIC" property="id" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    <result column="is_deleted" jdbcType="NUMERIC" property="isDeleted" />
+    <result column="gmt_create" jdbcType="VARCHAR" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="VARCHAR" property="gmtModified" />
+    <result column="parent_role_id" jdbcType="NUMERIC" property="parentRoleId" />
+  </resultMap>
+
+
+  <select id="selectByOpenId" resultMap="BaseResultMap">
+    select DISTINCT r.id, r.role_code, r.role_name, r.is_deleted,
+      r.gmt_create,r.gmt_modified, r.parent_role_id
+    from sys_role r
+    left join sys_user_role ur
+      on r.id = ur.role_id
+    left join sys_mobile_openid mo
+      on ur.mobile_openid_id = mo.id
+    where mo.openid = #{openId}
+      and r.is_deleted = '0'
+  </select>
+
+  <select id="selectMobileOpenIdRoleVo" resultType="com.xyc.userc.vo.MobileOpenIdRoleVo">
+    select DISTINCT r.role_code as roleCode, mo.id as mobileOpenIdId, ur.role_id as roleId
+    from sys_role r
+    left join sys_user_role ur
+      on r.id = ur.role_id
+    left join sys_mobile_openid mo
+      on ur.mobile_openid_id = mo.id
+    where mo.openid = #{openId}
+      and r.is_deleted = '0'
+  </select>
+
+  <insert id="insertUserRole">
+    insert into SYS_USER_ROLE (ID,MOBILE_OPENID_ID,ROLE_ID,GMT_CREATE,GMT_MODIFIED)
+    values (USER_ROLE_SEQ.nextval,#{mobileOpenIdId},#{roleId},#{gmtCreate},#{gmtModified})
+  </insert>
+
+  <update id="updateUserRole">
+    update SYS_USER_ROLE ur
+    set ur.ROLE_ID = #{roleId}, ur.GMT_MODIFIED = #{gmtModified}
+    where ur.MOBILE_OPENID_ID = #{mobileOpenIdId}
+  </update>
+
+  <select id="selectByRoleCode" resultType="com.xyc.userc.entity.Role">
+    select r.id, r.role_code, r.role_name, r.is_deleted,
+      r.gmt_create,r.gmt_modified, r.parent_role_id
+    from SYS_ROLE r
+    where r.ROLE_CODE = #{roleCode}
+    and r.IS_DELETED = 0
+  </select>
+
+  <delete id="deleteUserRole" >
+    delete from SYS_USER_ROLE ur
+    where ur.MOBILE_OPENID_ID = #{mobileOpenIdId}
+  </delete>
+
+
+  <select id="selectDefaultUserRole" resultType="com.xyc.userc.vo.DefaultUserRoleVo">
+    select distinct hl.USER_ID as jobNum, hl.PHONE_NO as mobile, hl.ITEM as roleIds
+    from HLJLYXX hl
+    <where>
+      <if test="mobile != null">
+        and hl.PHONE_NO = #{mobile}
+      </if>
+    </where>
+    order by hl.PHONE_NO
+  </select>
+
+  <select id="selectAllRole" resultType="com.xyc.userc.vo.RoleVo">
+    select r.ID as id, r.ROLE_NAME as roleName, r.ROLE_CODE as roleCode
+    from SYS_ROLE r
+    where r.IS_DELETED = 0
+  </select>
+
+  <delete id="deleteDefaultUserRole">
+    delete from MANAGERINFO m
+    where m.PHONE_NO = #{mobile}
+  </delete>
+
+  <insert id="insertDefaultUserRole">
+    insert into MANAGERINFO (USER_ID,PHONE_NO,ITEM,ITEM1) VALUES (#{jobNum},#{mobile},#{preRoleCode},' ')
+  </insert>
+
+  <select id="selectBindedUserRole" resultType="com.xyc.userc.vo.BindedUserRoleVo">
+    select mo.MOBILE, r.ROLE_ID as roleIds, r.GMT_MODIFIED as gmtModified
+    from SYS_USER_ROLE r
+    left join SYS_MOBILE_OPENID mo
+    on r.MOBILE_OPENID_ID = mo.ID
+    <where>
+      <if test="mobile != null">
+        and mo.mobile = #{mobile}
+      </if>
+    </where>
+    order by mo.mobile,r.GMT_MODIFIED DESC
+  </select>
+
+  <select id="refreshDefaultUserRole" statementType="CALLABLE">
+    {call REFDEFROLE()}
+  </select>
+
+
+</mapper>

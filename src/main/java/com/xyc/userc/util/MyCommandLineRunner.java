@@ -32,7 +32,7 @@ public class MyCommandLineRunner implements CommandLineRunner
     {
         LOGGER.info("开始存入用户信息至redis");
 
-        redisService.storeUserInfoVo();
+//        redisService.storeUserInfoVo();
 
         LOGGER.info("结束存入用户信息至redis");
     }

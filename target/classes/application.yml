@@ -1,0 +1,88 @@
+spring:
+  application:
+    name: mobile
+  mvc:
+    date-format: yyyy-MM-dd
+#    static-path-pattern: /static/**
+#  datasource:
+#    driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/usercenter?useUnicode=true&characterEncoding=utf8&useSSL=false
+#    username: root
+#    password: 1
+
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@10.99.1.55:1521:sgxzs
+    username: uc
+    password: user
+
+  datasource2:
+      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      url: jdbc:sqlserver://10.99.0.219:1433;DatabaseName=ShaGang
+      username: erp1
+      password: 11111
+
+  resources:
+    static-locations:
+#    - file:D:/opt/weixin/mobile
+#    - file:/opt/weixin/mobile
+    - file:D:/home/car2/usercenter
+    - file:/home/car2/usercenter
+
+  redis:
+    database: 0
+    # Redis服务器地址
+#    host: 127.0.0.1
+    host: 10.99.1.52
+    # Redis服务器连接端口
+    port: 6379
+    # Redis服务器连接密码（默认为空）
+#        password: 123456
+    # 配置连接池
+    jedis:
+      pool:
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 8
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1
+        # 连接池中的最大空闲连接
+        max-idle: 500
+        # 连接池中的最小空闲连接
+        min-idle: 0
+    # 连接超时时间（毫秒）
+    timeout: 3000
+    lettuce:
+      shutdown-timeout: 0
+
+  cache:
+    ehcache:
+      config: ehcache.xml
+
+mybatis:
+#  配置多数据源时，mapper-locations 配置项不会生效，需在配置SqlSessionFactoryBean时手动指定
+#  mapper-locations: classpath:mybatis/mapper/*.xml
+  type-aliases-package: com.xyc.userc.entity
+  config-location: classpath:mybatis/mybatis-config.xml
+  type-handlers-package: com.xyc.userc.mybatis.typehandler
+
+logging:
+#  level:
+#   com.xyc.dao.mapper: debug
+#   org.activiti.engine.impl.persistence.entity: trace
+  config: classpath:logback-spring.xml
+#  path: d:/log/activitiService.log
+
+swagger:
+  enable: true
+
+server:
+  port: 3333
+  servlet:
+    context-path: /mobile
+
+file:
+  rootPath: /home/car2/static
+#  rootPath: E:/static
+  sonPath: /violationimg/
+
+

@@ -7,6 +7,7 @@ import com.xyc.userc.service.PcRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,7 @@ public class PcRoleServiceImpl implements PcRoleService
 
     //通过请求路径查询对应权限
     @Override
+    @Cacheable(value="requestUrlRoleIds", key="#url")
     public List<Long> queryIdListByPath(String url) throws Exception
     {
         LOGGER.debug("进入通过请求路径获取对应权限id列表方法 url={}",url);

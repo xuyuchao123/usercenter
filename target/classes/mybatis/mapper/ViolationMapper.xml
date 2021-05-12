@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyc.userc.dao.ViolationMapper">
+
+    <resultMap id="BaseResultMap" type="com.xyc.userc.entity.Violation">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="TYPENAME" jdbcType="VARCHAR" property="typeName" />
+        <result column="IS_DELETED" jdbcType="NUMERIC" property="isDeleted" />
+    </resultMap>
+
+    <resultMap id="BaseDetailResultMap" type="com.xyc.userc.entity.ViolationDetail">
+        <id column="ID" jdbcType="NUMERIC" property="id" />
+        <result column="ITEMNAME" jdbcType="VARCHAR" property="itemName" />
+        <result column="FINEAMT" jdbcType="VARCHAR" property="fineAmt" />
+        <result column="IS_DELETED" jdbcType="NUMERIC" property="isDeleted" />
+    </resultMap>
+
+    <select id="selectAllViolation" resultMap="BaseResultMap">
+        select * from
+        SYS_VIOLATION v
+        where v.IS_DELETED = 0
+    </select>
+
+    <select id="selectViolationDetail" resultMap="BaseDetailResultMap">
+        select * from
+        SYS_VIOLATION_DETAIL vd
+        <where>
+            <if test="typeId != null">
+                and vd.VIOLATION_ID = #{typeId}
+            </if>
+            and vd.IS_DELETED = 0
+        </where>
+    </select>
+
+    <!--<insert id="insertViolationInfo" parameterType="com.xyc.userc.entity.ViolationInfo">-->
+        <!--insert into PC_VIOLATIONINFO(ID,BILL_DEPARTMENT,BILL_TIME,BILL_STAFF,BILL_NUM,CARNUMBER,FINE_REASON,FINE_AMOUNT,VIOLATION_IMG,PAYMENT_STATUS,GMT_CREATE,USER_CREATE,GMT_MODIFIED,USER_MODIFIED,DATA_STATUS)-->
+        <!--VALUES (PC_VIOLATION_SEQ.nextval,#{billDep},#{billTime},#{billStaff},#{billNum},#{carNumber},#{fineReason},#{fineAmt},#{violationImg,typeHandler=org.apache.ibatis.type.BlobTypeHandler},#{paymentStatus},#{gmtCreate},#{userCreate},#{gmtModified},#{userModified},#{dataStatus})-->
+    <!--</insert>-->
+
+    <insert id="insertViolationInfo" parameterType="com.xyc.userc.entity.ViolationInfo">
+    insert into PC_VIOLATIONINFO(ID,BILL_DEPARTMENT,BILL_TIME,BILL_STAFF,BILL_NUM,CARNUMBER,FINE_REASON,FINE_AMOUNT,VIOLATION_IMG,PAYMENT_STATUS,GMT_CREATE,USER_CREATE,GMT_MODIFIED,USER_MODIFIED,DATA_STATUS,BILL_TYPE)
+    VALUES (PC_VIOLATION_SEQ.nextval,#{billDep},#{billTime},#{billStaff},#{billNum},#{carNumber},#{fineReason},#{fineAmt},#{violationImgPath},#{paymentStatus},#{gmtCreate},#{userCreate},#{gmtModified},#{userModified},#{dataStatus},#{billType})
+    </insert>
+
+    <update id="updateViolationInfo" parameterType="com.xyc.userc.entity.ViolationInfo">
+        update PC_VIOLATIONINFO
+        set
+          BILL_DEPARTMENT = #{billDep},
+          BILL_TIME = #{billTime},
+          BILL_STAFF = #{billStaff},
+          FINE_REASON = #{fineReason},
+          FINE_AMOUNT = #{fineAmt},
+          VIOLATION_IMG = #{violationImgPath},
+          PAYMENT_STATUS = #{paymentStatus},
+          GMT_MODIFIED = #{gmtModified},
+          USER_MODIFIED = #{userModified}
+        where BILL_NUM = #{billNum}
+    </update>
+
+    <resultMap id="ViolationInfoVoMap" type="com.xyc.userc.vo.ViolationInfoVo">
+        <result column="billingTime" property="billingTime" typeHandler="com.xyc.userc.mybatis.typehandler.LongDateTypeHandler" />
+    </resultMap>
+
+    <select id="selectViolationInfo" resultMap="ViolationInfoVoMap" >
+        select a.BILL_DEPARTMENT as billingDepartment, a.BILL_TIME as billingTime, a.BILL_STAFF as openSingle, a.BILL_NUM as billingSerialNumber,
+        a.FINE_REASON as reasonForFine, a.FINE_AMOUNT as theAmountOfTheFine, a.PAYMENT_STATUS as paymentStatus,a.VIOLATION_IMG as illegalPictures
+        from PC_VIOLATIONINFO a
+        <where>
+            <if test="billType != null">
+                and a.BILL_TYPE = #{billType}
+            </if>
+            <if test="billDep != null">
+                and a.BILL_DEPARTMENT = #{billDep}
+            </if>
+            <if test="billTime != null">
+                and to_char(a.BILL_TIME,'yyyy-mm-dd hh:mi:ss') like concat(#{billTime}, '%')
+            </if>
+            <if test="paymentStatus != null">
+                and a.PAYMENT_STATUS = #{paymentStatus}
+            </if>
+            <if test="billNum != null">
+                and a.BILL_NUM like concat(concat('%',#{billNum}),'%')
+            </if>
+            and a.DATA_STATUS = 1
+        </where>
+    </select>
+
+
+    <resultMap type="java.util.Map" id="ViolationImgResultMap" >
+        <result  property="violationImg" column="VIOLATION_IMG" jdbcType="BLOB"  typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+    </resultMap>
+
+    <select id="selectViolationImg" resultMap="ViolationImgResultMap">
+      select a.VIOLATION_IMG as 'violationImg' from PC_VIOLATIONINFO a where a.ID = #{id} and a.DATA_STATUS = 1
+    </select>
+
+    <update id="deleteViolationInfo">
+        update PC_VIOLATIONINFO a
+        set a.DATA_STATUS = 0
+        where a.BILL_NUM IN
+        <foreach collection="list" open="(" close=")" separator="," item="billNum" index="i">
+            #{billNum}
+        </foreach>
+    </update>
+
+</mapper>

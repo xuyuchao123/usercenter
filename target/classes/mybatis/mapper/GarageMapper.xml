@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyc.userc.dao.GarageMapper">
+
+    <select id="selectGarageInfo" resultType="com.xyc.userc.vo.GarageInfoVo">
+        select gi.GARAGETYPE as garageType, gi.GARAGENUM as garageNum,
+          gi.GARAGENAME as garageName, gi.MAXLIMIT as maxLimit, gi.LOCATION as location
+        from SYS_GARAGE_INFO gi
+        <where>
+            <if test="garageType != null">
+                and gi.GARAGETYPE = #{garageType}
+            </if>
+            <if test="garageNum != null">
+                and gi.GARAGENUM = #{garageNum}
+            </if>
+            <if test="garageName != null">
+                and gi.GARAGENAME = #{garageName}
+            </if>
+            <if test="location != null">
+                and gi.LOCATION = #{location}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="com.xyc.userc.entity.GarageInfo">
+        insert into SYS_GARAGE_INFO(ID,GARAGETYPE,GARAGENUM,GARAGENAME,MAXLIMIT,GMT_CREATE,GMT_MODIFIED,LOCATION)
+        VALUES (GARAGE_INFO_SEQ.nextval,#{garageType},#{garageNum},#{garageName},#{maxLimit},#{gmtCreate},#{gmtModified},#{location})
+    </insert>
+
+    <update id="updateGarageInfo">
+        update SYS_GARAGE_INFO gi
+        set gi.MAXLIMIT = #{maxLimit},
+            gi.GMT_MODIFIED = #{gmtModified}
+        where gi.GARAGENUM = #{garageNum}
+    </update>
+
+    <delete id="deleteByGarageNum">
+        delete from SYS_GARAGE_INFO gi
+        where gi.GARAGENUM = #{garageNum}
+    </delete>
+
+</mapper>

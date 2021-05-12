@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyc.userc.dao.MobileOpenIdMapper">
+
+    <resultMap id="BaseResultMap" type="com.xyc.userc.entity.MobileOpenId">
+        <id column="id" jdbcType="NUMERIC" property="id" />
+        <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+        <result column="nickname" jdbcType="VARCHAR" property="nickName" />
+        <result column="openid" jdbcType="VARCHAR" property="openId" />
+        <result column="user_create" jdbcType="VARCHAR" property="userCreate" />
+        <result column="gmt_create" jdbcType="VARCHAR" property="gmtCreate" />
+    </resultMap>
+
+    <insert id="insertMobileOpenId"  parameterType="com.xyc.userc.entity.MobileOpenId">
+        <selectKey resultType="int" order="BEFORE" keyProperty="id">
+            SELECT MOBILE_OPENID_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        insert into SYS_MOBILE_OPENID (ID,MOBILE,NICKNAME,OPENID,USER_CREATE,GMT_CREATE)
+        VALUES (#{id},#{mobile},#{nickName},#{openId},#{userCreate},#{gmtCreate})
+    </insert>
+
+    <select id="selectByMobileOpenId" resultMap="BaseResultMap">
+        select DISTINCT mo.ID, mo.MOBILE, mo.NICKNAME, mo.OPENID, mo.USER_CREATE, mo.GMT_CREATE
+         from SYS_MOBILE_OPENID mo
+        <where>
+            <if test="mobile != null">
+                and mo.MOBILE = #{mobile}
+            </if>
+            <if test="openId != null">
+                and mo.OPENID = #{openId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByMobileOpenIdRole" resultType="java.util.Map">
+        select  mo.ID, mo.MOBILE, mo.OPENID, mo.USER_CREATE, mo.GMT_CREATE,
+        ur.ROLE_ID,r.ROLE_CODE
+        from SYS_MOBILE_OPENID mo
+        left join SYS_USER_ROLE ur
+        on mo.ID = ur.MOBILE_OPENID_ID
+        left join SYS_ROLE r
+        on ur.ROLE_ID = r.ID
+        <where>
+            <if test="mobile != null">
+                and mo.MOBILE = #{mobile}
+            </if>
+            <if test="openId != null">
+                and mo.OPENID = #{openId}
+            </if>
+        </where>
+    </select>
+
+
+
+    <update id="updateMobile">
+        update SYS_MOBILE_OPENID mo
+        set mo.MOBILE = #{mobile}
+        where mo.OPENID = #{openId}
+    </update>
+
+</mapper>

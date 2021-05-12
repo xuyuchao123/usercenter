@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xyc.userc.dao2.CarNumViolationMapper">
+
+    <resultMap id="selectCarNumAViolationInfoMap" type="java.util.Map">
+        <result column="CarNum" property="carNum" />
+        <result column="FindDate" property="lastViolationTime" />
+    </resultMap>
+
+    <!--<select id="selectCarNumAViolationInfo" resultMap="selectCarNumAViolationInfoMap">-->
+        <!--SELECT-->
+          <!--S.CarNum,-->
+          <!--S.FindDate-->
+        <!--FROM-->
+          <!--[ShaGang].[dbo].[SCInspections] S,-->
+          <!--[ShaGang].[dbo].[SCDisciplinaryContentTests] T-->
+        <!--WHERE-->
+          <!--T.ID = S.SCViolationTypeID-->
+        <!--AND T.SCDisciplinaryTypeName = 'A类条款 道路交通类'-->
+        <!--AND S.CarNum is not null-->
+        <!--ORDER BY S.CreateUserID,S.CreateDate desc-->
+    <!--</select>-->
+
+    <select id="selectCarNumAViolationInfo" resultMap="selectCarNumAViolationInfoMap">
+        SELECT
+            S.CarNum,
+            S.FindDate
+        FROM
+            [ShaGang].[dbo].[SCInspections] S,
+            [ShaGang].[dbo].[HIHiddenDangerTypes] H,
+            [ShaGang].[dbo].[SCDisciplinaryContents] T
+        WHERE
+            T.ID= S.SCViolationTypeID
+            AND T.SCDisciplinaryTypeName= '红牌问题A类条款 道路交通类'
+            AND S.HIHiddenDangerTypeID= H.ID --AND T.SCDisciplinaryTypeName='A类条款道路交通类'
+
+            AND H.Name= '道路交通车辆' --AND S.AssessmentType=1
+
+        ORDER BY
+            s.CreateDate DESC
+    </select>
+
+</mapper>
